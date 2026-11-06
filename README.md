@@ -74,6 +74,12 @@ Si cambiás envíos, cupones o el envío gratis en `lib/tienda.ts`, cambialos ta
 2. Entrá a <http://localhost:3000> en el navegador.
 3. Para apagarla, volvé a la terminal y apretá `Ctrl + C`.
 
+## Publicar en AWS
+
+`infra/pokedeke.yml` crea todo: los archivos privados en S3, CloudFront delante y un permiso para que GitHub publique sin claves guardadas.
+
+Cuando existen las variables de GitHub `AWS_BUCKET`, `AWS_DISTRIBUCION` y `AWS_ROL`, la página se publica en AWS en vez de GitHub Pages. GitHub Pages no permite tiendas en línea: sirve solo para la demo.
+
 ## La demo en GitHub
 
 La demo se publica sola en GitHub Pages: cada cambio que llega a la rama `main` se arma y se publica en un par de minutos. Eso lo hace `.github/workflows/publicar-demo.yml`.

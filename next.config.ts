@@ -1,17 +1,18 @@
 import type { NextConfig } from "next";
 
 /**
- * GitHub Pages sirve archivos ya armados, sin servidor, y desde una subcarpeta.
- * Con NEXT_PUBLIC_RUTA_BASE definida se arma esa versión; sin ella, todo sigue
- * igual que siempre en la compu.
+ * AWS y GitHub Pages sirven archivos ya armados, sin servidor. GitHub además
+ * los pone en una subcarpeta (NEXT_PUBLIC_RUTA_BASE). Sin esas variables, todo
+ * sigue igual que siempre en la compu.
  */
 const rutaBase = process.env.NEXT_PUBLIC_RUTA_BASE;
+const archivosArmados = Boolean(rutaBase) || process.env.ARCHIVOS_ARMADOS === "si";
 
 const nextConfig: NextConfig = {
-  ...(rutaBase
+  ...(archivosArmados
     ? {
         output: "export",
-        basePath: rutaBase,
+        ...(rutaBase ? { basePath: rutaBase } : {}),
         images: { unoptimized: true },
       }
     : { cacheComponents: true, partialPrefetching: true }),

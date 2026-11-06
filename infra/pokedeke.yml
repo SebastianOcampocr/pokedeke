@@ -1,0 +1,161 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >-
+  Pagina publica de Pokedeke en S3 y CloudFront, y el permiso para que GitHub
+  la publique. Los archivos quedan privados: solo CloudFront puede leerlos.
+
+Parameters:
+  RepositorioGitHub:
+    Type: String
+    Default: SebastianOcampocr/pokedeke
+
+Resources:
+  Archivos:
+    Type: AWS::S3::Bucket
+    Properties:
+      OwnershipControls:
+        Rules:
+          - ObjectOwnership: BucketOwnerEnforced
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+
+  AccesoDeCloudFront:
+    Type: AWS::CloudFront::OriginAccessControl
+    Properties:
+      OriginAccessControlConfig:
+        Name: !Sub "${AWS::StackName}-archivos"
+        OriginAccessControlOriginType: s3
+        SigningBehavior: always
+        SigningProtocol: sigv4
+
+  # S3 no entiende /catalogo: hay que pedirle /catalogo.html.
+  Rutas:
+    Type: AWS::CloudFront::Function
+    Properties:
+      Name: !Sub "${AWS::StackName}-rutas"
+      AutoPublish: true
+      FunctionConfig:
+        Comment: Convierte las rutas de la tienda en archivos html
+        Runtime: cloudfront-js-2.0
+      FunctionCode: |
+        function handler(event) {
+          var request = event.request;
+          var uri = request.uri;
+          if (uri.length > 1 && uri.charAt(uri.length - 1) === "/") {
+            uri = uri.slice(0, -1);
+          }
+          if (uri === "" || uri === "/") {
+            request.uri = "/index.html";
+          } else if (uri.lastIndexOf(".") <= uri.lastIndexOf("/")) {
+            request.uri = uri + ".html";
+          } else {
+            request.uri = uri;
+          }
+          return request;
+        }
+
+  Distribucion:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Comment: Pokedeke
+        Enabled: true
+        DefaultRootObject: index.html
+        HttpVersion: http2and3
+        IPV6Enabled: true
+        PriceClass: PriceClass_100
+        Origins:
+          - Id: archivos
+            DomainName: !GetAtt Archivos.RegionalDomainName
+            OriginAccessControlId: !GetAtt AccesoDeCloudFront.Id
+            S3OriginConfig:
+              OriginAccessIdentity: ""
+        DefaultCacheBehavior:
+          TargetOriginId: archivos
+          ViewerProtocolPolicy: redirect-to-https
+          AllowedMethods: [GET, HEAD]
+          CachedMethods: [GET, HEAD]
+          Compress: true
+          # CachingOptimized, administrada por AWS.
+          CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6
+          FunctionAssociations:
+            - EventType: viewer-request
+              FunctionARN: !GetAtt Rutas.FunctionARN
+        CustomErrorResponses:
+          - ErrorCode: 403
+            ResponseCode: 404
+            ResponsePagePath: /404.html
+            ErrorCachingMinTTL: 60
+          - ErrorCode: 404
+            ResponseCode: 404
+            ResponsePagePath: /404.html
+            ErrorCachingMinTTL: 60
+
+  PermisoDeLectura:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref Archivos
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: SoloCloudFront
+            Effect: Allow
+            Principal:
+              Service: cloudfront.amazonaws.com
+            Action: s3:GetObject
+            Resource: !Sub "${Archivos.Arn}/*"
+            Condition:
+              StringEquals:
+                AWS:SourceArn: !Sub "arn:${AWS::Partition}:cloudfront::${AWS::AccountId}:distribution/${Distribucion}"
+
+  # GitHub entra con una identidad temporal: no hay claves guardadas en ningún lado.
+  ProveedorGitHub:
+    Type: AWS::IAM::OIDCProvider
+    Properties:
+      Url: https://token.actions.githubusercontent.com
+      ClientIdList:
+        - sts.amazonaws.com
+
+  RolDePublicacion:
+    Type: AWS::IAM::Role
+    Properties:
+      Description: GitHub publica la pagina de Pokedeke y no puede hacer nada mas
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Federated: !Ref ProveedorGitHub
+            Action: sts:AssumeRoleWithWebIdentity
+            Condition:
+              StringEquals:
+                token.actions.githubusercontent.com:aud: sts.amazonaws.com
+                token.actions.githubusercontent.com:sub: !Sub "repo:${RepositorioGitHub}:ref:refs/heads/main"
+      Policies:
+        - PolicyName: publicar-pagina
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action: s3:ListBucket
+                Resource: !GetAtt Archivos.Arn
+              - Effect: Allow
+                Action:
+                  - s3:PutObject
+                  - s3:DeleteObject
+                Resource: !Sub "${Archivos.Arn}/*"
+              - Effect: Allow
+                Action: cloudfront:CreateInvalidation
+                Resource: !Sub "arn:${AWS::Partition}:cloudfront::${AWS::AccountId}:distribution/${Distribucion}"
+
+Outputs:
+  Bucket:
+    Value: !Ref Archivos
+  Distribucion:
+    Value: !Ref Distribucion
+  Direccion:
+    Value: !Sub "https://${Distribucion.DomainName}"
+  Rol:
+    Value: !GetAtt RolDePublicacion.Arn
