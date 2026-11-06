@@ -74,7 +74,8 @@ jobs:
       - run: npm run build
         env:
           NEXT_PUBLIC_RUTA_BASE: /${{ github.event.repository.name }}
-          NEXT_PUBLIC_PEDIDOS_URL: ${{ vars.PEDIDOS_URL }}
+          # El catálogo se lee siempre; los pedidos reales solo con la tienda abierta.
+          NEXT_PUBLIC_PEDIDOS_URL: ${{ vars.TIENDA_ABIERTA == 'si' && vars.PEDIDOS_URL || '' }}
       - uses: actions/upload-pages-artifact@v5
         with:
           path: out

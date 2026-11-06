@@ -4,8 +4,10 @@ Demo visual de la tienda en línea de Pokedeke, con el estilo Rótulo. Por ahora
 
 Los productos, el precio y el stock son reales y salen de la hoja de Google. La página funciona en dos modos:
 
-- **Demo:** sin `PEDIDOS_URL`. Sale el aviso negro y los pedidos se guardan solo en el navegador. Nadie debe pagar.
-- **Tienda abierta:** con `PEDIDOS_URL`. Los pedidos caen en la hoja y llegan por correo. Es plata de verdad.
+- **Demo:** sale el aviso negro y los pedidos se guardan solo en el navegador. Nadie debe pagar.
+- **Tienda abierta:** con la variable de GitHub `TIENDA_ABIERTA` en `si`. Los pedidos caen en la hoja y llegan por correo. Es plata de verdad.
+
+En ambos modos el inventario se lee de la hoja por medio de la variable `PEDIDOS_URL`.
 
 ## Cómo se actualiza el inventario
 
