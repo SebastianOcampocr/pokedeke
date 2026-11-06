@@ -22,6 +22,21 @@
   --shadow-dura: 4px 4px 0 #141414;
 }
 
+/*
+ * La marca es una sola, con modo oscuro o sin él. "only light" les dice a los
+ * navegadores que no recoloreen la página. La regla de abajo no cambia nada a
+ * la vista: Samsung Internet recolorea menos cuando la página trae esa consulta.
+ */
+:root {
+  color-scheme: only light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: only light;
+  }
+}
+
 html {
   scroll-behavior: smooth;
 }

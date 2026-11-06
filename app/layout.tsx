@@ -33,6 +33,9 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: "#FFCE1F",
+  // Samsung Internet solo respeta la página si esta dice que maneja el modo
+  // oscuro. Los colores se quedan fijos con `color-scheme` en globals.css.
+  colorScheme: "light dark",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
