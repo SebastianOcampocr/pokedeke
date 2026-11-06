@@ -1,0 +1,224 @@
+import Link from "next/link";
+import { buscarProducto, PRODUCTOS } from "@/lib/productos";
+import { LEMA, LUGAR, TIENDA } from "@/lib/tienda";
+import { Contador } from "./Contador";
+import { Deke } from "./Deke";
+import { FotoProducto } from "./FotoProducto";
+import { Revelar } from "./Revelar";
+
+const ESTANTES = [
+  [
+    "etb-ascended-heroes",
+    "booster-box-30th-celebration",
+    "tin-mega-charizard",
+    "dragon-shield-matte-dorado",
+  ],
+  [
+    "booster-bundle-prismatic-evolutions",
+    "battle-deck-mega-lucario-ex",
+    "sleeves-pokemon-center",
+    "blister-3-sobres-perfect-order",
+  ],
+];
+
+function Estanteria() {
+  return (
+    <div
+      aria-hidden="true"
+      className="marco shadow-dura relative flex flex-col gap-2 bg-crema p-3 pb-4"
+    >
+      {ESTANTES.map((fila, indice) => (
+        <div key={fila[0]} className="flex flex-col">
+          <div className="flex items-end justify-around gap-1">
+            {fila.map((slug) => {
+              const producto = buscarProducto(slug);
+              if (!producto) return null;
+              return (
+                <div
+                  key={slug}
+                  className="relative h-20 min-w-0 flex-1 sm:h-28"
+                >
+                  <FotoProducto
+                    producto={producto}
+                    alt=""
+                    sizes="130px"
+                    className="object-bottom"
+                  />
+                </div>
+              );
+            })}
+            {indice === 1 ? (
+              <Deke animo="guino" className="deke h-20 shrink-0 sm:h-28" />
+            ) : null}
+          </div>
+          <div className="h-2.5 rounded-sm bg-tinta" />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+const NUMEROS = [
+  { valor: PRODUCTOS.length, texto: "productos para escoger" },
+  {
+    valor: PRODUCTOS.filter((producto) => producto.carta).length,
+    texto: "cartas para la vitrina",
+  },
+  { valor: 7, texto: "provincias con envío" },
+  { valor: 1, texto: "mezzanine repleto" },
+  { valor: 0, texto: "bodegas gigantes" },
+];
+
+/** La historia en corto: de dónde sale todo lo que vende Pokedeke. */
+export function ElMezzanine() {
+  return (
+    <section className="border-y-3 border-tinta bg-amarillo">
+      <div className="mx-auto grid max-w-6xl items-center gap-7 px-4 py-9 lg:grid-cols-2 lg:gap-12 lg:py-14">
+        <div className="flex flex-col gap-3">
+          <h2 className="font-display text-[34px] leading-none text-azul lg:text-5xl">
+            {LEMA}
+          </h2>
+          <p className="max-w-lg text-[17px] leading-snug font-medium">
+            Otros tienen bodega. Nosotros tenemos un mezzanine en el{" "}
+            {LUGAR.nombre} y una carta con patas que lo cuida. De ahí sale cada
+            pedido de {TIENDA.nombre}, empacado por nosotros.
+          </p>
+          <Link href="/nosotros" className="boton boton-rojo w-full md:w-fit">
+            Conocé el mezzanine
+          </Link>
+        </div>
+        <Revelar>
+          <Estanteria />
+        </Revelar>
+        <dl className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:col-span-2 lg:grid-cols-5">
+          {NUMEROS.map((numero) => (
+            <div key={numero.texto} className="marco bg-crema p-3">
+              <dd className="font-display text-3xl leading-none text-rojo md:text-4xl">
+                <Contador valor={numero.valor} />
+              </dd>
+              <dt className="mt-1 text-[13px] leading-tight font-bold">
+                {numero.texto}
+              </dt>
+            </div>
+          ))}
+        </dl>
+      </div>
+    </section>
+  );
+}
+
+const PASOS = [
+  {
+    titulo: "Escogés",
+    texto: "Buscá en el catálogo y armá tu carrito con lo que te guste.",
+  },
+  {
+    titulo: "Pagás por SINPE",
+    texto: "Te damos el monto exacto y nos mandás el comprobante.",
+  },
+  {
+    titulo: "Te llega",
+    texto: `Retirás en el ${LUGAR.nombre} o te lo mandamos por Correos.`,
+  },
+];
+
+export function ComoFunciona() {
+  return (
+    <section className="flex flex-col gap-5">
+      <Revelar efecto="sello">
+        <h2 className="font-display text-[22px] text-rojo md:text-3xl">
+          Así de fácil
+        </h2>
+      </Revelar>
+      <ol className="grid gap-5 md:grid-cols-3">
+        {PASOS.map((paso, indice) => (
+          <li key={paso.titulo}>
+            <Revelar indice={indice}>
+              <div className="marco flex h-full gap-3.5 bg-crema p-4">
+                <span className="flex size-12 shrink-0 -rotate-3 items-center justify-center rounded-md border-2 border-tinta bg-azul font-display text-2xl text-white">
+                  {indice + 1}
+                </span>
+                <div>
+                  <h3 className="text-lg font-extrabold">{paso.titulo}</h3>
+                  <p className="text-[15px] leading-snug">{paso.texto}</p>
+                </div>
+              </div>
+            </Revelar>
+          </li>
+        ))}
+      </ol>
+    </section>
+  );
+}
+
+const CAMINOS = [
+  {
+    titulo: "Quiero probar suerte",
+    texto: "Sobres y blisters",
+    categoria: "Booster pack",
+    slug: "sobre-chaos-rising",
+    color: "bg-azul text-white",
+  },
+  {
+    titulo: "Voy a abrir varios",
+    texto: "Bundles y cajas",
+    categoria: "Booster bundle",
+    slug: "booster-bundle-prismatic-evolutions",
+    color: "bg-rojo text-white",
+  },
+  {
+    titulo: "Ando buscando una carta",
+    texto: "Sueltas y gradadas",
+    categoria: "Carta suelta (single)",
+    slug: "mew-ex-carta-suelta",
+    color: "bg-amarillo text-tinta",
+  },
+  {
+    titulo: "Es para regalar",
+    texto: "Cajas misteriosas",
+    categoria: "Caja misteriosa",
+    slug: "caja-misteriosa-mediana",
+    color: "bg-verde text-white",
+  },
+];
+
+export function QueBuscas() {
+  return (
+    <section className="flex flex-col gap-5">
+      <Revelar efecto="sello">
+        <h2 className="font-display text-[22px] text-rojo md:text-3xl">
+          ¿Qué andás buscando?
+        </h2>
+      </Revelar>
+      <div className="grid grid-cols-2 gap-5 lg:grid-cols-4">
+        {CAMINOS.map((camino, indice) => {
+          const producto = buscarProducto(camino.slug);
+          if (!producto) return null;
+          return (
+            <Revelar key={camino.titulo} indice={indice}>
+              <Link
+                href={`/catalogo?categoria=${encodeURIComponent(camino.categoria)}`}
+                className="marco tarjeta flex h-full flex-col overflow-hidden"
+              >
+                <span className={`flex grow flex-col p-3 ${camino.color}`}>
+                  <span className="text-[17px] leading-tight font-extrabold">
+                    {camino.titulo}
+                  </span>
+                  <span className="text-sm font-medium">{camino.texto}</span>
+                </span>
+                <span className="brillo block h-28 shrink-0 border-t-3 border-tinta bg-crema lg:h-36">
+                  <FotoProducto
+                    producto={producto}
+                    alt=""
+                    sizes="(min-width: 1024px) 260px, 45vw"
+                    className="p-2"
+                  />
+                </span>
+              </Link>
+            </Revelar>
+          );
+        })}
+      </div>
+    </section>
+  );
+}

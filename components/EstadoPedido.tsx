@@ -1,0 +1,157 @@
+"use client";
+
+import { useSearchParams } from "next/navigation";
+import { useState } from "react";
+import { colones } from "@/lib/formato";
+import { usePedidos, type Estado, type Pedido } from "@/lib/pedidos";
+import { Deke } from "./Deke";
+import { IconoCheque } from "./Iconos";
+
+const PASOS: { estado: Estado; texto: string }[] = [
+  { estado: "Pendiente de pago", texto: "Estamos esperando tu pago" },
+  { estado: "Pagado", texto: "Recibimos tu pago" },
+  { estado: "Enviado", texto: "Tu pedido va en camino" },
+  { estado: "Entregado", texto: "Ya lo tenés en tus manos" },
+];
+
+function Seguimiento({ pedido }: { pedido: Pedido }) {
+  const actual = PASOS.findIndex((paso) => paso.estado === pedido.estado);
+
+  return (
+    <div className="marco shadow-dura flex flex-col gap-5 p-5">
+      <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+        <h2 className="font-display text-2xl text-azul">{pedido.numero}</h2>
+        <p className="text-xl font-extrabold">{colones(pedido.total)}</p>
+      </div>
+
+      {pedido.estado === "Cancelado" ? (
+        <p className="rounded-md bg-gris-claro p-3 font-bold">
+          Este pedido se canceló. Si creés que es un error, escribinos.
+        </p>
+      ) : (
+        <ol className="flex flex-col">
+          {PASOS.map((paso, indice) => {
+            // Mientras no paguen, el primer paso espera: todavía no va con cheque.
+            const hecho =
+              indice <= actual && pedido.estado !== "Pendiente de pago";
+            const esperando = indice === actual && !hecho;
+            return (
+              <li key={paso.estado} className="flex gap-3">
+                <div className="ml-8 flex flex-col items-center">
+                  <span
+                    style={{ animationDelay: `${indice * 110}ms` }}
+                    className={`saltar relative flex size-9 shrink-0 items-center justify-center rounded-full border-3 border-tinta ${
+                      hecho
+                        ? "bg-verde text-white"
+                        : esperando
+                          ? "bg-amarillo"
+                          : "bg-white"
+                    }`}
+                  >
+                    {hecho ? <IconoCheque tamano={18} /> : null}
+                    {indice === actual ? (
+                      <Deke className="deke absolute top-1/2 -left-9 h-10 -translate-y-1/2" />
+                    ) : null}
+                  </span>
+                  {indice < PASOS.length - 1 ? (
+                    <span className="h-7 w-[3px] bg-tinta" />
+                  ) : null}
+                </div>
+                <div className={indice === actual ? "pt-0.5" : "pt-1.5"}>
+                  <p className={indice === actual ? "font-extrabold" : "text-gris"}>
+                    {paso.estado}
+                  </p>
+                  {indice === actual ? (
+                    <p className="text-sm">{paso.texto}</p>
+                  ) : null}
+                </div>
+              </li>
+            );
+          })}
+        </ol>
+      )}
+
+      {pedido.guia ? (
+        <p>
+          Número de guía: <strong>{pedido.guia}</strong>
+        </p>
+      ) : null}
+
+      <div className="border-t-2 border-tinta pt-3 text-[15px]">
+        <p className="font-bold">{pedido.envio}</p>
+        <ul className="mt-1">
+          {pedido.lineas.map((linea) => (
+            <li key={linea.id}>
+              {linea.cantidad} × {linea.nombre}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+}
+
+export function EstadoPedido({ numeroInicial = "" }: { numeroInicial?: string }) {
+  const pedidos = usePedidos();
+  const [numero, setNumero] = useState(numeroInicial);
+  const [buscado, setBuscado] = useState(numeroInicial);
+
+  const limpio = buscado.trim().toUpperCase();
+  const pedido = pedidos.find((opcion) => opcion.numero === limpio);
+
+  return (
+    <div className="mx-auto flex max-w-xl flex-col gap-6">
+      <form
+        className="flex flex-col gap-3"
+        onSubmit={(evento) => {
+          evento.preventDefault();
+          setBuscado(numero);
+        }}
+      >
+        <div>
+          <label htmlFor="numero" className="rotulo-campo">
+            Número de pedido
+          </label>
+          <input
+            id="numero"
+            className="campo uppercase"
+            placeholder="TCG-0001"
+            required
+            value={numero}
+            onChange={(evento) => setNumero(evento.target.value)}
+          />
+        </div>
+        <div>
+          <label htmlFor="correo-pedido" className="rotulo-campo">
+            Correo
+          </label>
+          <input
+            id="correo-pedido"
+            type="email"
+            className="campo"
+            placeholder="En la demo no hace falta"
+          />
+        </div>
+        <button type="submit" className="boton boton-rojo">
+          Ver mi pedido
+        </button>
+        <p className="text-sm text-gris">
+          Para probar, usá TCG-0001, TCG-0002, TCG-0003 o TCG-0004.
+        </p>
+      </form>
+
+      {limpio && pedido ? <Seguimiento pedido={pedido} /> : null}
+      {limpio && !pedido && pedidos.length > 0 ? (
+        <p role="alert" className="marco bg-crema p-4 font-bold">
+          No hallamos ese pedido. Revisá el número e intentá otra vez.
+        </p>
+      ) : null}
+    </div>
+  );
+}
+
+export function EstadoPedidoDesdeEnlace() {
+  const parametros = useSearchParams();
+  const numero = parametros.get("numero") ?? "";
+  return <EstadoPedido key={numero} numeroInicial={numero} />;
+}
