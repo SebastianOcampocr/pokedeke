@@ -1,0 +1,342 @@
+#!/usr/bin/env node
+/**
+ * Convierte la pestaña "Catálogo web" de la hoja en datos/catalogo.json.
+ *
+ * Lee el CSV publicado de esa pestaña (variable CATALOGO_CSV_URL) o un archivo
+ * local con `--archivo ruta.csv`. Si Google no responde, deja el catálogo como
+ * está. Si la pestaña cambió de forma, falla y tampoco lo toca.
+ */
+import { appendFile, readdir, readFile, writeFile } from "node:fs/promises";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+const RAIZ = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const CARPETA_FOTOS = path.join(RAIZ, "public/productos");
+
+const COLUMNAS_OBLIGATORIAS = [
+  "ID",
+  "Producto",
+  "Categoría",
+  "Juego",
+  "En stock",
+  "Precio sugerido (₡)",
+  "Precio de venta (₡)",
+];
+
+const CORTAS = {
+  ETB: "ETB",
+  "Booster bundle": "Bundle",
+  "Booster box": "Box",
+  "Booster pack": "Sobre",
+  "Blister / sleeved booster": "Blister",
+  "Tin o caja de colección": "Tin",
+  "Colección premium / UPC": "Premium",
+  "Carta suelta (single)": "Suelta",
+  "Carta gradada": "Gradada",
+  Mazos: "Mazo",
+  "Sleeves y fundas": "Sleeves",
+  Accesorios: "Accesorio",
+  Otro: "Otro",
+};
+
+const DESCRIPCIONES = {
+  ETB: "Elite Trainer Box: la caja completa, con sobres, fundas, dados y separadores.",
+  "Booster bundle": "Paquete de sobres listo para abrir de una.",
+  "Booster box": "La caja de sobres completa.",
+  "Booster pack": "Un sobre para probar suerte.",
+  "Blister / sleeved booster": "Sobres en su empaque individual.",
+  "Tin o caja de colección": "Lata o caja de colección con sobres.",
+  "Colección premium / UPC": "Colección especial para quien quiere la pieza grande.",
+};
+
+const ETIQUETAS = ["Nuevo", "Preventa", "Oferta"];
+const CARTAS = ["Carta suelta (single)", "Carta gradada"];
+
+export function leerCsv(texto) {
+  const filas = [];
+  let fila = [];
+  let celda = "";
+  let entreComillas = false;
+
+  for (let i = 0; i < texto.length; i += 1) {
+    const letra = texto[i];
+    if (entreComillas) {
+      if (letra === '"' && texto[i + 1] === '"') {
+        celda += '"';
+        i += 1;
+      } else if (letra === '"') {
+        entreComillas = false;
+      } else {
+        celda += letra;
+      }
+    } else if (letra === '"') {
+      entreComillas = true;
+    } else if (letra === ",") {
+      fila.push(celda);
+      celda = "";
+    } else if (letra === "\n") {
+      fila.push(celda);
+      filas.push(fila);
+      fila = [];
+      celda = "";
+    } else if (letra !== "\r") {
+      celda += letra;
+    }
+  }
+  if (celda || fila.length > 0) {
+    fila.push(celda);
+    filas.push(fila);
+  }
+  return filas;
+}
+
+const sinAcentos = (texto) =>
+  texto.normalize("NFD").replace(/\p{M}/gu, "").toLowerCase();
+
+export const aSlug = (texto) =>
+  sinAcentos(texto)
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+
+/** "₡50.000" y "50000" dan 50000. Lo que no sea un monto da 0. */
+export function aMonto(texto) {
+  return Number(String(texto ?? "").split(",")[0].replace(/\D/g, "")) || 0;
+}
+
+function aEntero(texto) {
+  return Number.parseInt(String(texto ?? "").replace(/[^\d-]/g, ""), 10) || 0;
+}
+
+/** De dd/mm/yyyy a la fecha que entiende el reloj de preventas. */
+function aFecha(texto) {
+  const partes = String(texto ?? "").trim().match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  if (!partes) return undefined;
+  const [, dia, mes, anio] = partes;
+  return `${anio}-${mes.padStart(2, "0")}-${dia.padStart(2, "0")}T12:00:00-06:00`;
+}
+
+const esSi = (texto) => /^s[ií]$/i.test(String(texto ?? "").trim());
+const esNo = (texto) => /^no$/i.test(String(texto ?? "").trim());
+
+/** Mismas palabras en cualquier orden: "preventa-" no cuenta como palabra. */
+function claveDeFoto(slug) {
+  return slug
+    .replace(/^preventa-/, "")
+    .split("-")
+    .filter(Boolean)
+    .sort()
+    .join("-");
+}
+
+async function fotosGuardadas() {
+  const nombres = (await readdir(CARPETA_FOTOS))
+    .filter((nombre) => nombre.endsWith(".webp"))
+    .map((nombre) => nombre.replace(/\.webp$/, ""))
+    .sort();
+  const existentes = new Set(nombres);
+  const porClave = new Map();
+
+  for (const nombre of nombres) {
+    // etb-x-2 es otra vista de etb-x, pero battle-academy-2 es su propio producto.
+    const vista = nombre.match(/^(.+)-(\d)$/);
+    const base = vista && existentes.has(vista[1]) ? vista[1] : nombre;
+    const clave = claveDeFoto(base);
+    porClave.set(clave, [...(porClave.get(clave) ?? []), nombre]);
+  }
+  return { existentes, porClave };
+}
+
+function fotosDelProducto(nombre, celda, { existentes, porClave }, avisos) {
+  const propias = String(celda ?? "")
+    .split(/[\s,;]+/)
+    .filter(Boolean)
+    .flatMap((foto) => {
+      if (/^https?:\/\//.test(foto)) return [foto];
+      const archivo = foto.replace(/\.webp$/, "");
+      if (existentes.has(archivo)) return [`/productos/${archivo}.webp`];
+      avisos.push(`${nombre}: no existe la foto "${foto}".`);
+      return [];
+    });
+  if (propias.length > 0) return propias;
+
+  const texto = sinAcentos(nombre)
+    .replace(/elite trainer box/g, "etb")
+    .replace(/booster pack/g, "sobre");
+  return (porClave.get(claveDeFoto(aSlug(texto))) ?? []).map(
+    (archivo) => `/productos/${archivo}.webp`,
+  );
+}
+
+function datosDeCarta(nombre) {
+  const partes = nombre.match(/#\s*([\w/-]+)\s*(?:\((.+)\))?\s*$/);
+  return {
+    coleccion: partes?.[2]?.trim() ?? "",
+    numero: partes?.[1] ?? "",
+    rareza: "",
+    condicion: "",
+  };
+}
+
+function descripcionDe(producto, carta) {
+  if (carta?.coleccion && carta.numero) {
+    return `Carta de la colección ${carta.coleccion}, número ${carta.numero}.`;
+  }
+  return DESCRIPCIONES[producto] ?? "";
+}
+
+export function armarCatalogo(textoCsv, fotos) {
+  const filas = leerCsv(textoCsv);
+  const indiceTitulos = filas.findIndex(
+    (fila) => fila[0]?.trim() === "ID" && fila.includes("Producto"),
+  );
+  if (indiceTitulos === -1) {
+    throw new Error('No hallé la fila de títulos de "Catálogo web".');
+  }
+
+  const titulos = filas[indiceTitulos].map((titulo) => titulo.trim());
+  const faltan = COLUMNAS_OBLIGATORIAS.filter(
+    (columna) => !titulos.includes(columna),
+  );
+  if (faltan.length > 0) {
+    throw new Error(`Faltan columnas en "Catálogo web": ${faltan.join(", ")}.`);
+  }
+
+  const lotes = filas
+    .slice(indiceTitulos + 1)
+    .map((fila) => Object.fromEntries(titulos.map((t, i) => [t, fila[i] ?? ""])))
+    .filter((fila) => fila.ID?.trim() && fila.Producto?.trim());
+  if (lotes.length === 0) {
+    throw new Error('"Catálogo web" vino sin productos.');
+  }
+
+  const avisos = [];
+  const grupos = new Map();
+  lotes.forEach((lote, indice) => {
+    const nombre = lote.Producto.trim();
+    if (sinAcentos(lote.Juego ?? "").trim() !== "pokemon") return;
+    if (esNo(lote["Publicado (sí/no)"])) return;
+
+    const clave = aSlug(nombre);
+    const grupo = grupos.get(clave) ?? { clave, nombre, lotes: [], orden: 0 };
+    grupo.lotes.push(lote);
+    grupo.orden = indice + 1;
+    grupos.set(clave, grupo);
+  });
+
+  const productos = [...grupos.values()].flatMap((grupo) => {
+    const recientes = [...grupo.lotes].reverse();
+    const ultimo = (columna) =>
+      recientes.map((lote) => lote[columna]?.trim()).find(Boolean) ?? "";
+
+    const precio =
+      recientes.map((lote) => aMonto(lote["Precio de venta (₡)"])).find(Boolean) ||
+      recientes.map((lote) => aMonto(lote["Precio sugerido (₡)"])).find(Boolean) ||
+      0;
+    if (!precio) {
+      avisos.push(`${grupo.nombre}: quedó fuera porque no tiene precio.`);
+      return [];
+    }
+
+    const categoria = ultimo("Categoría") || "Otro";
+    const carta = CARTAS.includes(categoria) ? datosDeCarta(grupo.nombre) : undefined;
+    const etiqueta = ETIQUETAS.find((opcion) => opcion === ultimo("Etiqueta"));
+    const llegada = aFecha(ultimo("Llega (preventas)"));
+    const fotosFinales = fotosDelProducto(
+      grupo.nombre,
+      ultimo("Fotos (URL)"),
+      fotos,
+      avisos,
+    );
+    if (fotosFinales.length === 0) {
+      avisos.push(`${grupo.nombre}: todavía no tiene foto.`);
+    }
+
+    return [
+      {
+        id: grupo.lotes[0].ID.trim(),
+        slug: grupo.clave,
+        nombre: ultimo("Nombre para mostrar") || grupo.nombre,
+        juego: "Pokémon",
+        categoria,
+        categoriaCorta: CORTAS[categoria] ?? categoria,
+        idioma: ultimo("Idioma"),
+        precio,
+        stock: Math.max(
+          grupo.lotes.reduce((suma, lote) => suma + aEntero(lote["En stock"]), 0),
+          0,
+        ),
+        ...(etiqueta ? { etiqueta } : {}),
+        ...(esSi(ultimo("Destacado (sí/no)")) ? { destacado: true } : {}),
+        vendidos: grupo.lotes.reduce(
+          (suma, lote) => suma + aEntero(lote.Vendidas),
+          0,
+        ),
+        orden: grupo.orden,
+        fotos: fotosFinales,
+        descripcion: ultimo("Descripción") || descripcionDe(categoria, carta),
+        ...(llegada ? { llegada } : {}),
+        ...(carta ? { carta } : {}),
+      },
+    ];
+  });
+
+  return { productos, avisos };
+}
+
+async function descargar(url) {
+  for (let intento = 1; intento <= 3; intento += 1) {
+    try {
+      const respuesta = await fetch(url, {
+        redirect: "follow",
+        signal: AbortSignal.timeout(20_000),
+      });
+      if (respuesta.ok) return await respuesta.text();
+      console.log(`Intento ${intento}: Google respondió ${respuesta.status}.`);
+    } catch (error) {
+      console.log(`Intento ${intento}: ${error.message}`);
+    }
+    await new Promise((listo) => setTimeout(listo, 3000 * intento));
+  }
+  return null;
+}
+
+function opcion(nombre) {
+  const indice = process.argv.indexOf(`--${nombre}`);
+  return indice === -1 ? undefined : process.argv[indice + 1];
+}
+
+async function principal() {
+  const archivo = opcion("archivo");
+  const salida = opcion("salida") ?? path.join(RAIZ, "datos/catalogo.json");
+  const url = process.env.CATALOGO_CSV_URL;
+
+  if (!archivo && !url) {
+    console.log("Falta CATALOGO_CSV_URL: el catálogo se queda como está.");
+    return;
+  }
+
+  const texto = archivo ? await readFile(archivo, "utf8") : await descargar(url);
+  if (texto === null) {
+    console.log("::warning::Google no respondió: el catálogo se queda como está.");
+    return;
+  }
+
+  const { productos, avisos } = armarCatalogo(texto, await fotosGuardadas());
+  await writeFile(salida, `${JSON.stringify(productos, null, 2)}\n`);
+
+  const resumen = [
+    `Catálogo: ${productos.length} productos, ${productos.filter((p) => p.stock > 0).length} con stock.`,
+    ...avisos.map((aviso) => `- ${aviso}`),
+  ].join("\n");
+  console.log(resumen);
+  if (process.env.GITHUB_STEP_SUMMARY) {
+    await appendFile(process.env.GITHUB_STEP_SUMMARY, `${resumen}\n`);
+  }
+}
+
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  principal().catch((error) => {
+    console.error(`::error::${error.message}`);
+    process.exit(1);
+  });
+}

@@ -113,7 +113,7 @@ export function TarjetaProducto({
   const detalle = [
     agotado ? "Agotado" : null,
     producto.categoriaCorta,
-    producto.idioma === "Otro" ? null : producto.idioma,
+    producto.idioma === "Otro" ? null : producto.idioma || null,
     producto.llegada ? `Llega el ${fechaCorta(producto.llegada)}` : null,
   ]
     .filter(Boolean)

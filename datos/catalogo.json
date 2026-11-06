@@ -1,0 +1,266 @@
+[
+  {
+    "id": "C001",
+    "slug": "rotom-197-destined-rivals",
+    "nombre": "Rotom #197 (Destined Rivals)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "",
+    "precio": 2000,
+    "stock": 0,
+    "vendidos": 1,
+    "orden": 1,
+    "fotos": [
+      "/productos/rotom-197-destined-rivals.webp"
+    ],
+    "descripcion": "Carta de la colección Destined Rivals, número 197.",
+    "carta": {
+      "coleccion": "Destined Rivals",
+      "numero": "197",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C002",
+    "slug": "eevee-ex-174-promo",
+    "nombre": "Eevee ex #174 (Promo)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "",
+    "precio": 8000,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 2,
+    "fotos": [
+      "/productos/eevee-ex-174-promo.webp"
+    ],
+    "descripcion": "Carta de la colección Promo, número 174.",
+    "carta": {
+      "coleccion": "Promo",
+      "numero": "174",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C003",
+    "slug": "nidorina-101-promo",
+    "nombre": "Nidorina #101 (Promo)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "",
+    "precio": 1500,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 3,
+    "fotos": [],
+    "descripcion": "Carta de la colección Promo, número 101.",
+    "carta": {
+      "coleccion": "Promo",
+      "numero": "101",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C004",
+    "slug": "sylveon-ex-100-promo",
+    "nombre": "Sylveon ex #100 (Promo)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "",
+    "precio": 1000,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 4,
+    "fotos": [],
+    "descripcion": "Carta de la colección Promo, número 100.",
+    "carta": {
+      "coleccion": "Promo",
+      "numero": "100",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C005",
+    "slug": "mew-ex-066-30th-celebration",
+    "nombre": "Mew ex #066 (30th Celebration)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "",
+    "precio": 1500,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 5,
+    "fotos": [
+      "/productos/mew-ex-066-30th-celebration.webp"
+    ],
+    "descripcion": "Carta de la colección 30th Celebration, número 066.",
+    "carta": {
+      "coleccion": "30th Celebration",
+      "numero": "066",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C006",
+    "slug": "umbreon-ex-60-prismatic-evolutions",
+    "nombre": "Umbreon ex #60 (Prismatic Evolutions)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "",
+    "precio": 3500,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 6,
+    "fotos": [
+      "/productos/umbreon-ex-60-prismatic-evolutions.webp"
+    ],
+    "descripcion": "Carta de la colección Prismatic Evolutions, número 60.",
+    "carta": {
+      "coleccion": "Prismatic Evolutions",
+      "numero": "60",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C007",
+    "slug": "solgaleo-gx-158-chinese-30th-celebration",
+    "nombre": "Solgaleo GX #158 (Chinese 30th Celebration)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Chino",
+    "precio": 1500,
+    "stock": 0,
+    "vendidos": 1,
+    "orden": 7,
+    "fotos": [],
+    "descripcion": "Carta de la colección Chinese 30th Celebration, número 158.",
+    "carta": {
+      "coleccion": "Chinese 30th Celebration",
+      "numero": "158",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C008",
+    "slug": "greninja-break-41-30th-celebration",
+    "nombre": "Greninja BREAK #41 (30th Celebration)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "",
+    "precio": 5500,
+    "stock": 0,
+    "vendidos": 1,
+    "orden": 8,
+    "fotos": [
+      "/productos/greninja-break-41-30th-celebration.webp"
+    ],
+    "descripcion": "Carta de la colección 30th Celebration, número 41.",
+    "carta": {
+      "coleccion": "30th Celebration",
+      "numero": "41",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C009",
+    "slug": "rayquaza-ex-85-30th-celebration",
+    "nombre": "Rayquaza EX #85 (30th Celebration)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "",
+    "precio": 11000,
+    "stock": 0,
+    "vendidos": 1,
+    "orden": 9,
+    "fotos": [],
+    "descripcion": "Carta de la colección 30th Celebration, número 85.",
+    "carta": {
+      "coleccion": "30th Celebration",
+      "numero": "85",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C010",
+    "slug": "pikachu-ex-150-30th-celebration",
+    "nombre": "Pikachu ex #150 (30th Celebration)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "",
+    "precio": 26000,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 10,
+    "fotos": [
+      "/productos/pikachu-ex-150-30th-celebration.webp"
+    ],
+    "descripcion": "Carta de la colección 30th Celebration, número 150.",
+    "carta": {
+      "coleccion": "30th Celebration",
+      "numero": "150",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C011",
+    "slug": "espeon-v-513-chinese-gem-pack-2",
+    "nombre": "Espeon V #513 (Chinese Gem Pack 2)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Chino",
+    "precio": 1500,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 11,
+    "fotos": [],
+    "descripcion": "Carta de la colección Chinese Gem Pack 2, número 513.",
+    "carta": {
+      "coleccion": "Chinese Gem Pack 2",
+      "numero": "513",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C012",
+    "slug": "altaria-gx-96-chinese-csm1cc",
+    "nombre": "Altaria GX #96 (Chinese CSM1cC)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Chino",
+    "precio": 1000,
+    "stock": 0,
+    "vendidos": 1,
+    "orden": 12,
+    "fotos": [],
+    "descripcion": "Carta de la colección Chinese CSM1cC, número 96.",
+    "carta": {
+      "coleccion": "Chinese CSM1cC",
+      "numero": "96",
+      "rareza": "",
+      "condicion": ""
+    }
+  }
+]

@@ -10,7 +10,7 @@ import {
   useCarrito,
 } from "@/lib/carrito";
 import { calcularTotales, colones } from "@/lib/formato";
-import { buscarProducto, esPreventa } from "@/lib/productos";
+import { disponibles, esPreventa } from "@/lib/productos";
 import { AgregarRapido } from "./AgregarRapido";
 import { BarraEnvio } from "./BarraEnvio";
 import { Cantidad } from "./Cantidad";
@@ -105,16 +105,18 @@ function FormularioCupon({ activo }: { activo: string | null }) {
   );
 }
 
-const COMPLEMENTOS = [
-  "toploaders-ultra-pro-x25",
-  "dragon-shield-perfect-fit",
-  "sobre-abyss-eye",
-];
+const CATEGORIAS_COMPLEMENTO = ["Accesorios", "Sleeves y fundas", "Booster pack"];
 
 /** Lo que casi siempre falta: se ofrece solo si no está en el carrito. */
 function Complementos({ enCarrito }: { enCarrito: string[] }) {
-  const opciones = COMPLEMENTOS.filter((slug) => !enCarrito.includes(slug))
-    .flatMap((slug) => buscarProducto(slug) ?? [])
+  const opciones = disponibles()
+    .filter(
+      (producto) =>
+        CATEGORIAS_COMPLEMENTO.includes(producto.categoria) &&
+        !esPreventa(producto) &&
+        !enCarrito.includes(producto.slug),
+    )
+    .sort((a, b) => a.precio - b.precio)
     .slice(0, 2);
   if (opciones.length === 0) return null;
 

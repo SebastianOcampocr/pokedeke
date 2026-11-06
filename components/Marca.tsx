@@ -1,25 +1,25 @@
 import Link from "next/link";
-import { buscarProducto, PRODUCTOS } from "@/lib/productos";
+import {
+  conFoto,
+  disponibles,
+  esCarta,
+  type Producto,
+} from "@/lib/productos";
 import { LEMA, LUGAR, TIENDA } from "@/lib/tienda";
 import { Contador } from "./Contador";
 import { Deke } from "./Deke";
 import { FotoProducto } from "./FotoProducto";
 import { Revelar } from "./Revelar";
 
-const ESTANTES = [
-  [
-    "etb-ascended-heroes",
-    "booster-box-30th-celebration",
-    "tin-mega-charizard",
-    "dragon-shield-matte-dorado",
-  ],
-  [
-    "booster-bundle-prismatic-evolutions",
-    "battle-deck-mega-lucario-ex",
-    "sleeves-pokemon-center",
-    "blister-3-sobres-perfect-order",
-  ],
-];
+/** Lo sellado luce mejor en el estante; las cartas llenan lo que falte. */
+function estantes() {
+  const conImagen = disponibles().filter(conFoto);
+  const piezas = [
+    ...conImagen.filter((producto) => !esCarta(producto)),
+    ...conImagen.filter(esCarta),
+  ].slice(0, 8);
+  return [piezas.slice(0, 4), piezas.slice(4)];
+}
 
 function Estanteria() {
   return (
@@ -27,26 +27,22 @@ function Estanteria() {
       aria-hidden="true"
       className="marco shadow-dura relative flex flex-col gap-2 bg-crema p-3 pb-4"
     >
-      {ESTANTES.map((fila, indice) => (
-        <div key={fila[0]} className="flex flex-col">
-          <div className="flex items-end justify-around gap-1">
-            {fila.map((slug) => {
-              const producto = buscarProducto(slug);
-              if (!producto) return null;
-              return (
-                <div
-                  key={slug}
-                  className="relative h-20 min-w-0 flex-1 sm:h-28"
-                >
-                  <FotoProducto
-                    producto={producto}
-                    alt=""
-                    sizes="130px"
-                    className="object-bottom"
-                  />
-                </div>
-              );
-            })}
+      {estantes().map((fila, indice) => (
+        <div key={indice} className="flex flex-col">
+          <div className="flex min-h-20 items-end justify-around gap-1 sm:min-h-28">
+            {fila.map((producto) => (
+              <div
+                key={producto.slug}
+                className="relative h-20 min-w-0 flex-1 sm:h-28"
+              >
+                <FotoProducto
+                  producto={producto}
+                  alt=""
+                  sizes="130px"
+                  className="object-bottom"
+                />
+              </div>
+            ))}
             {indice === 1 ? (
               <Deke animo="guino" className="deke h-20 shrink-0 sm:h-28" />
             ) : null}
@@ -59,9 +55,9 @@ function Estanteria() {
 }
 
 const NUMEROS = [
-  { valor: PRODUCTOS.length, texto: "productos para escoger" },
+  { valor: disponibles().length, texto: "productos para escoger" },
   {
-    valor: PRODUCTOS.filter((producto) => producto.carta).length,
+    valor: disponibles().filter(esCarta).length,
     texto: "cartas para la vitrina",
   },
   { valor: 7, texto: "provincias con envío" },
@@ -155,34 +151,50 @@ const CAMINOS = [
   {
     titulo: "Quiero probar suerte",
     texto: "Sobres y blisters",
-    categoria: "Booster pack",
-    slug: "sobre-chaos-rising",
+    categorias: ["Booster pack", "Blister / sleeved booster"],
     color: "bg-azul text-white",
   },
   {
     titulo: "Voy a abrir varios",
     texto: "Bundles y cajas",
-    categoria: "Booster bundle",
-    slug: "booster-bundle-prismatic-evolutions",
+    categorias: ["Booster bundle", "Booster box"],
     color: "bg-rojo text-white",
   },
   {
     titulo: "Ando buscando una carta",
     texto: "Sueltas y gradadas",
-    categoria: "Carta suelta (single)",
-    slug: "mew-ex-carta-suelta",
+    categorias: ["Carta suelta (single)", "Carta gradada"],
     color: "bg-amarillo text-tinta",
   },
   {
     titulo: "Es para regalar",
-    texto: "Cajas misteriosas",
-    categoria: "Caja misteriosa",
-    slug: "caja-misteriosa-mediana",
+    texto: "ETB y colecciones",
+    categorias: ["ETB", "Colección premium / UPC", "Tin o caja de colección"],
     color: "bg-verde text-white",
   },
 ];
 
+/** La categoría con algo en stock, y su pieza con foto para la tarjeta. */
+function ejemploDe(categorias: string[]) {
+  for (const categoria of categorias) {
+    const opciones: Producto[] = disponibles().filter(
+      (producto) => producto.categoria === categoria,
+    );
+    if (opciones.length > 0) {
+      return { categoria, producto: opciones.find(conFoto) ?? opciones[0] };
+    }
+  }
+  return null;
+}
+
 export function QueBuscas() {
+  const caminos = CAMINOS.flatMap((camino) => {
+    const ejemplo = ejemploDe(camino.categorias);
+    return ejemplo ? [{ ...camino, ...ejemplo }] : [];
+  });
+  // Con un solo camino no hay nada que escoger.
+  if (caminos.length < 2) return null;
+
   return (
     <section className="flex flex-col gap-5">
       <Revelar efecto="sello">
@@ -191,33 +203,29 @@ export function QueBuscas() {
         </h2>
       </Revelar>
       <div className="grid grid-cols-2 gap-5 lg:grid-cols-4">
-        {CAMINOS.map((camino, indice) => {
-          const producto = buscarProducto(camino.slug);
-          if (!producto) return null;
-          return (
-            <Revelar key={camino.titulo} indice={indice}>
-              <Link
-                href={`/catalogo?categoria=${encodeURIComponent(camino.categoria)}`}
-                className="marco tarjeta flex h-full flex-col overflow-hidden"
-              >
-                <span className={`flex grow flex-col p-3 ${camino.color}`}>
-                  <span className="text-[17px] leading-tight font-extrabold">
-                    {camino.titulo}
-                  </span>
-                  <span className="text-sm font-medium">{camino.texto}</span>
+        {caminos.map((camino, indice) => (
+          <Revelar key={camino.titulo} indice={indice}>
+            <Link
+              href={`/catalogo?categoria=${encodeURIComponent(camino.categoria)}`}
+              className="marco tarjeta flex h-full flex-col overflow-hidden"
+            >
+              <span className={`flex grow flex-col p-3 ${camino.color}`}>
+                <span className="text-[17px] leading-tight font-extrabold">
+                  {camino.titulo}
                 </span>
-                <span className="brillo block h-28 shrink-0 border-t-3 border-tinta bg-crema lg:h-36">
-                  <FotoProducto
-                    producto={producto}
-                    alt=""
-                    sizes="(min-width: 1024px) 260px, 45vw"
-                    className="p-2"
-                  />
-                </span>
-              </Link>
-            </Revelar>
-          );
-        })}
+                <span className="text-sm font-medium">{camino.texto}</span>
+              </span>
+              <span className="brillo relative block h-28 shrink-0 border-t-3 border-tinta bg-crema lg:h-36">
+                <FotoProducto
+                  producto={camino.producto}
+                  alt=""
+                  sizes="(min-width: 1024px) 260px, 45vw"
+                  className="p-2"
+                />
+              </span>
+            </Link>
+          </Revelar>
+        ))}
       </div>
     </section>
   );

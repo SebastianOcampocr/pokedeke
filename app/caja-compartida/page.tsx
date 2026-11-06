@@ -1,13 +1,7 @@
 import type { Metadata } from "next";
-import { TableroCaja } from "@/components/CajaCompartida";
 import { Pasos, Preguntas } from "@/components/ComoSirve";
-import { Cuenta } from "@/components/Cuenta";
 import { Deke } from "@/components/Deke";
-import { CabeceraPagina, ZonaBlanca } from "@/components/Estructura";
-import { FotoProducto } from "@/components/FotoProducto";
-import { CAJA_COMPARTIDA, CUPO_COMPARTIDA } from "@/lib/caja-compartida";
-import { colones, fechaCorta } from "@/lib/formato";
-import { buscarProducto } from "@/lib/productos";
+import { BotonGrupo, CabeceraPagina, ZonaBlanca } from "@/components/Estructura";
 
 export const metadata: Metadata = {
   title: "Caja compartida",
@@ -62,64 +56,34 @@ const PREGUNTAS = [
 ];
 
 export default function PaginaCajaCompartida() {
-  const caja = buscarProducto(CAJA_COMPARTIDA.caja);
-  const sobreSuelto = buscarProducto("sobre-chaos-rising");
-  if (!caja || !sobreSuelto) return null;
-  const libres = CAJA_COMPARTIDA.sobres - CAJA_COMPARTIDA.ocupados.length;
-
-  const cuentas = [
-    { rotulo: "La caja completa", monto: caja.precio },
-    { rotulo: "Un sobre suelto", monto: sobreSuelto.precio },
-  ];
-
   return (
     <>
       <CabeceraPagina
         titulo="Caja compartida"
-        texto="Una caja trae 36 sobres. Comprás solo los que querás y la abrimos en vivo entre todos."
+        texto="Próximamente: una caja trae 36 sobres. Comprás solo los que querás y la abrimos en vivo entre todos."
       />
       <ZonaBlanca>
         <div className="flex flex-col gap-10">
-          <Pasos titulo="Cómo sirve" pasos={PASOS} />
-
-          <section className="marco shadow-dura grid gap-5 bg-crema p-5 md:grid-cols-[220px_minmax(0,1fr)] md:p-7">
-            <div className="brillo brillo-solo relative h-48 md:h-full">
-              <FotoProducto producto={caja} alt={caja.nombre} sizes="220px" />
-            </div>
-            <div className="flex flex-col gap-3">
-              <p className="w-fit -rotate-1 rounded-md border-2 border-tinta bg-rojo px-2 py-0.5 text-sm font-bold text-white">
-                En vivo el {fechaCorta(CAJA_COMPARTIDA.fecha)}, 7 p. m.
-              </p>
-              <h2 className="font-display text-[26px] leading-none text-azul md:text-4xl">
-                {CAJA_COMPARTIDA.nombre}
-              </h2>
-              <p className="text-[17px] font-medium">
-                <strong>{colones(CUPO_COMPARTIDA.precio)}</strong> cada sobre.
-                Quedan {libres} de {CAJA_COMPARTIDA.sobres}.
-              </p>
-              <dl className="flex flex-wrap gap-x-6 gap-y-1 text-[15px]">
-                {cuentas.map((cuenta) => (
-                  <div key={cuenta.rotulo} className="flex gap-1.5">
-                    <dt>{cuenta.rotulo}:</dt>
-                    <dd className="font-bold">{colones(cuenta.monto)}</dd>
-                  </div>
-                ))}
-              </dl>
-              <Cuenta llegada={CAJA_COMPARTIDA.fecha} />
-            </div>
+          <Pasos titulo="Cómo va a servir" pasos={PASOS} />
+          <section className="marco shadow-dura flex flex-col gap-3 bg-crema p-5 md:p-7">
+            <p className="w-fit -rotate-1 rounded-md border-2 border-tinta bg-rojo px-2 py-0.5 text-sm font-bold text-white">
+              Próximamente
+            </p>
+            <h2 className="font-display text-[26px] leading-none text-azul md:text-4xl">
+              Todavía no hay una caja abierta
+            </h2>
+            <p className="max-w-2xl text-[17px] font-medium">
+              Cuando armemos la primera, avisamos por el grupo de WhatsApp con
+              la fecha y el precio de cada sobre.
+            </p>
+            <BotonGrupo className="w-full md:w-fit" />
           </section>
-
-          <div className="grid gap-8 lg:grid-cols-2">
-            <TableroCaja />
-            <div className="flex flex-col gap-4">
-              <Preguntas titulo="Lo que siempre preguntan" preguntas={PREGUNTAS} />
-              <div className="flex items-center gap-3">
-                <Deke animo="guino" className="deke h-20 shrink-0" />
-                <p className="font-medium">
-                  Yo abro los sobres frente a todos, sin cortes ni enredos.
-                </p>
-              </div>
-            </div>
+          <Preguntas titulo="Lo que siempre preguntan" preguntas={PREGUNTAS} />
+          <div className="flex items-center gap-3">
+            <Deke animo="guino" className="deke h-20 shrink-0" />
+            <p className="font-medium">
+              Yo abro los sobres frente a todos, sin cortes ni enredos.
+            </p>
           </div>
         </div>
       </ZonaBlanca>

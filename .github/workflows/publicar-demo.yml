@@ -1,28 +1,71 @@
-# Cada cambio que llega a main se arma y se publica en GitHub Pages.
+# Publica la demo en GitHub Pages con cada cambio en main y cada vez que el
+# catálogo de la hoja de Google cambia.
 name: Publicar demo
 
 on:
   push:
     branches: [main]
   workflow_dispatch:
+  schedule:
+    - cron: "*/10 * * * *"
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 concurrency:
   group: pages
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
-  publicar:
+  revisar:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    outputs:
+      publicar: ${{ steps.cambios.outputs.publicar }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+      - name: Traer el catálogo de la hoja
+        run: node scripts/traer-catalogo.mjs
+        env:
+          CATALOGO_CSV_URL: ${{ vars.CATALOGO_CSV_URL }}
+      - name: Guardar el catálogo si cambió
+        id: cambios
+        run: |
+          if git diff --quiet datos/catalogo.json; then
+            if [ "$GITHUB_EVENT_NAME" = "schedule" ]; then
+              echo "publicar=no" >> "$GITHUB_OUTPUT"
+            else
+              echo "publicar=si" >> "$GITHUB_OUTPUT"
+            fi
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add datos/catalogo.json
+            git commit -m "Actualizar catálogo desde la hoja"
+            git pull --rebase origin main
+            git push origin HEAD:main
+            echo "publicar=si" >> "$GITHUB_OUTPUT"
+          fi
+
+  publicar:
+    needs: revisar
+    if: needs.revisar.outputs.publicar == 'si'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.despliegue.outputs.page_url }}
     steps:
       - uses: actions/checkout@v7
+        with:
+          ref: main
       - uses: actions/setup-node@v7
         with:
           node-version: 24

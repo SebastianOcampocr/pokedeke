@@ -9,7 +9,6 @@ export const LOGROS = [
   { id: "joya", marca: "◆", titulo: "Manos de oro", texto: "Te salió una joya en un sobre." },
   { id: "lista", marca: "♥", titulo: "Lista larga", texto: "Guardaste 5 productos en tu lista." },
   { id: "guia", marca: "?", titulo: "Bien asesorado", texto: "Dejaste que Deke te ayudara a escoger." },
-  { id: "compartida", marca: "36", titulo: "Vecino de caja", texto: "Apartaste un sobre en una caja compartida." },
   { id: "pedido", marca: "₡", titulo: "Cliente de confianza", texto: "Hiciste tu primer pedido." },
   { id: "cedula", marca: "ID", titulo: "Papeles al día", texto: "Sacaste tu Cédula de Coleccionista." },
   { id: "shiny", marca: "S", titulo: "Descubriste el secreto", texto: "Volviste shiny a Deke." },

@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useLayoutEffect, useRef, useState, type CSSProperties } from "react";
 import { guardarSobre, useAlbum, vaciarAlbum } from "@/lib/album";
@@ -9,16 +8,20 @@ import { aplicarCupon, useCarrito } from "@/lib/carrito";
 import { lanzarConfeti } from "@/lib/confeti";
 import { colones } from "@/lib/formato";
 import { ganarLogro } from "@/lib/logros";
-import { cartasSueltas, type Producto } from "@/lib/productos";
-import { abrirSobre, CUPON_SOBRE, type ResultadoSobre } from "@/lib/sobre";
+import type { Producto } from "@/lib/productos";
+import {
+  abrirSobre,
+  cartasDelSobre,
+  CUPON_SOBRE,
+  type ResultadoSobre,
+} from "@/lib/sobre";
 import { cambiarSonido, sonar, useSonido } from "@/lib/sonido";
-import { RUTA_BASE } from "@/lib/tienda";
 import { Deke, DorsoCarta, type AnimoDeke } from "./Deke";
+import { FotoProducto } from "./FotoProducto";
 import { SobreDibujo } from "./SobreDibujo";
 
 type Fase = "cerrado" | "saliendo" | "cartas";
 
-const TOTAL_CARTAS = 5;
 const ARRASTRE_PARA_ABRIR = 0.62;
 
 function CartaDelSobre({
@@ -63,12 +66,11 @@ function CartaDelSobre({
               data-holo="foil"
               className={`relative block size-full ${volteada && joya ? "carta-joya" : ""}`}
             >
-              <Image
-                src={`${RUTA_BASE}${carta.fotos[0]}`}
+              <FotoProducto
+                producto={carta}
                 alt=""
-                fill
                 sizes="(min-width: 1024px) 176px, 33vw"
-                className="object-contain"
+                className="mix-blend-normal"
               />
             </span>
           </span>
@@ -146,11 +148,12 @@ function PremioDelSobre({ premio }: { premio: boolean }) {
 function Album() {
   const hidratado = useHidratado();
   const { cartas, sobres } = useAlbum();
-  const todas = cartasSueltas();
+  const todas = cartasDelSobre();
   const conseguidas = hidratado
     ? todas.filter((carta) => cartas.includes(carta.slug)).length
     : 0;
-  const avance = Math.round((conseguidas / todas.length) * 100);
+  const avance =
+    todas.length > 0 ? Math.round((conseguidas / todas.length) * 100) : 0;
 
   return (
     <section aria-labelledby="titulo-album" className="flex flex-col gap-4">
@@ -188,12 +191,11 @@ function Album() {
                   data-holo="foil"
                   className="saltar relative block size-full"
                 >
-                  <Image
-                    src={`${RUTA_BASE}${carta.fotos[0]}`}
+                  <FotoProducto
+                    producto={carta}
                     alt=""
-                    fill
                     sizes="(min-width: 1024px) 104px, 22vw"
-                    className="object-contain"
+                    className="mix-blend-normal"
                   />
                 </Link>
               ) : (
@@ -217,6 +219,20 @@ function Album() {
 }
 
 export function SobreDelDia() {
+  if (cartasDelSobre().length === 0) {
+    return (
+      <div className="flex items-center gap-4">
+        <Deke className="deke h-24 shrink-0" />
+        <p className="max-w-lg text-[17px] font-medium">
+          Hoy no quedan cartas para el sobre. Volvé cuando entren más.
+        </p>
+      </div>
+    );
+  }
+  return <JuegoDelSobre />;
+}
+
+function JuegoDelSobre() {
   const { cartas: enAlbum, sobres } = useAlbum();
   const [fase, setFase] = useState<Fase>("cerrado");
   const [resultado, setResultado] = useState<ResultadoSobre | null>(null);
@@ -257,7 +273,7 @@ export function SobreDelDia() {
     ganarLogro("sobre");
     const enTotal = new Set([...enAlbum, ...slugs]).size;
     if (enTotal >= 10) ganarLogro("album");
-    if (enTotal >= cartasSueltas().length) ganarLogro("completo");
+    if (enTotal >= cartasDelSobre().length) ganarLogro("completo");
     reloj.current = window.setTimeout(() => setFase("cartas"), 640);
   }
 
@@ -282,7 +298,7 @@ export function SobreDelDia() {
     setTodasDeUna(false);
     setVolteadas(siguientes);
     sonar("voltear");
-    if (siguientes.length === TOTAL_CARTAS) festejar(resultado);
+    if (siguientes.length === resultado.cartas.length) festejar(resultado);
   }
 
   function voltearTodas() {
@@ -292,7 +308,7 @@ export function SobreDelDia() {
     festejar(resultado);
   }
 
-  const listo = volteadas.length === TOTAL_CARTAS;
+  const listo = Boolean(resultado) && volteadas.length === resultado?.cartas.length;
   const animo: AnimoDeke =
     fase === "cerrado"
       ? "feliz"
@@ -379,7 +395,7 @@ export function SobreDelDia() {
                   carta={carta}
                   indice={indice}
                   volteada={volteadas.includes(indice)}
-                  joya={resultado.joya && indice === TOTAL_CARTAS - 1}
+                  joya={resultado.joya && indice === resultado.cartas.length - 1}
                   nueva={nuevas.includes(carta.slug)}
                   retrasoGiro={todasDeUna ? indice * 130 : 0}
                   alVoltear={() => voltear(indice)}

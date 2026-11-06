@@ -1,14 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { categoriasConProducto, hayPreventas } from "@/lib/productos";
 
 const AVISOS = [
-  "¡Hay sobres!",
-  "¡Hay cajas!",
-  "¡Hay Charizard!",
-  "¡Hay preventas!",
-  "¡Hay sleeves!",
+  ...categoriasConProducto().map(({ texto }) => `¡Hay ${texto.toLowerCase()}!`),
+  ...(hayPreventas() ? ["¡Hay preventas!"] : []),
 ];
+
+if (AVISOS.length === 0) AVISOS.push("¡Pase adelante!");
 
 /** El letrero colgado de la portada: cambia solo y se mece si lo tocan. */
 export function Letrero({ className = "" }: { className?: string }) {

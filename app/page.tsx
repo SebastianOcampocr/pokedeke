@@ -13,28 +13,16 @@ import { SoloAqui } from "@/components/SoloAqui";
 import { RejillaProductos } from "@/components/TarjetaProducto";
 import { Vitrina } from "@/components/Vitrina";
 import {
-  buscarProducto,
+  cartasSueltas,
+  categoriasConProducto,
+  conFoto,
+  destacados as elegirDestacados,
+  disponibles,
   esPreventa,
   novedadesVariadas,
-  PRODUCTOS,
   type Producto,
 } from "@/lib/productos";
 import { LEMA } from "@/lib/tienda";
-
-const ATAJOS = [
-  { texto: "ETB", categoria: "ETB" },
-  { texto: "Booster box", categoria: "Booster box" },
-  { texto: "Bundles", categoria: "Booster bundle" },
-  { texto: "Sobres", categoria: "Booster pack" },
-  { texto: "Blisters", categoria: "Blister / sleeved booster" },
-  { texto: "Tins", categoria: "Tin o caja de colección" },
-  { texto: "Mazos", categoria: "Mazos" },
-  { texto: "Cartas sueltas", categoria: "Carta suelta (single)" },
-  { texto: "Gradadas", categoria: "Carta gradada" },
-  { texto: "Cajas misteriosas", categoria: "Caja misteriosa" },
-  { texto: "Sleeves", categoria: "Sleeves y fundas" },
-  { texto: "Accesorios", categoria: "Accesorios" },
-];
 
 function Seccion({
   titulo,
@@ -45,6 +33,8 @@ function Seccion({
   enlace: string;
   productos: Producto[];
 }) {
+  if (productos.length === 0) return null;
+
   return (
     <section className="flex flex-col gap-5">
       <div className="flex items-center justify-between gap-4">
@@ -65,39 +55,43 @@ function Seccion({
   );
 }
 
+const PIEZAS_HERO = [
+  {
+    clase: "size-[min(27vw,7rem)] -rotate-6 lg:size-36 xl:size-40",
+    retraso: "650ms",
+    k: "22px",
+  },
+  {
+    clase: "z-10 size-[min(36vw,9rem)] rotate-2 lg:size-48 xl:size-56",
+    retraso: "800ms",
+    k: "10px",
+  },
+  {
+    clase: "size-[min(27vw,7rem)] rotate-6 lg:size-36 xl:size-44",
+    retraso: "950ms",
+    k: "30px",
+  },
+];
+
+/** Los tres productos con foto de mayor precio: el del centro es el más caro. */
 function VitrinaHero() {
-  const piezas = [
-    {
-      slug: "booster-bundle-prismatic-evolutions",
-      clase: "size-[min(27vw,7rem)] -rotate-6 lg:size-36 xl:size-40",
-      retraso: "650ms",
-      k: "22px",
-    },
-    {
-      slug: "etb-ascended-heroes",
-      clase: "z-10 size-[min(36vw,9rem)] rotate-2 lg:size-48 xl:size-56",
-      retraso: "800ms",
-      k: "10px",
-    },
-    {
-      slug: "charizard-ex-carta-suelta",
-      clase: "size-[min(27vw,7rem)] rotate-6 lg:size-36 xl:size-44",
-      retraso: "950ms",
-      k: "30px",
-    },
-  ];
+  const [centro, ...otros] = elegirDestacados(99)
+    .filter(conFoto)
+    .slice(0, 3);
+  const orden = [otros[0], centro, otros[1]];
+
   return (
     <div
       data-paralaje=""
       className="relative flex items-end justify-center -space-x-3 pt-2 max-[319px]:scale-[0.85]"
     >
-      {piezas.map((pieza) => {
-        const producto = buscarProducto(pieza.slug);
+      {PIEZAS_HERO.map((pieza, indice) => {
+        const producto = orden[indice];
         if (!producto) return null;
         return (
           <Link
-            key={pieza.slug}
-            href={`/producto/${pieza.slug}`}
+            key={producto.slug}
+            href={`/producto/${producto.slug}`}
             aria-label={producto.nombre}
             style={
               { "--retraso": pieza.retraso, "--k": pieza.k } as CSSProperties
@@ -149,9 +143,10 @@ function BandaSobre() {
 }
 
 export default function Inicio() {
-  const destacados = PRODUCTOS.filter((producto) => producto.destacado);
-  const preventas = PRODUCTOS.filter(esPreventa).slice(0, 4);
+  const destacados = elegirDestacados(8);
+  const preventas = disponibles().filter(esPreventa).slice(0, 4);
   const recientes = novedadesVariadas(4);
+  const hayCartas = cartasSueltas().length > 0;
 
   return (
     <>
@@ -200,9 +195,9 @@ export default function Inicio() {
             aria-label="Elegí una categoría"
             className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 md:mx-0 md:flex-wrap md:overflow-visible md:px-0"
           >
-            {ATAJOS.map((atajo) => (
+            {categoriasConProducto().map((atajo) => (
               <Link
-                key={atajo.texto}
+                key={atajo.categoria}
                 href={`/catalogo?categoria=${encodeURIComponent(atajo.categoria)}`}
                 className="chip"
               >
@@ -219,7 +214,7 @@ export default function Inicio() {
             enlace="/catalogo"
             productos={destacados}
           />
-          <BandaSobre />
+          {hayCartas ? <BandaSobre /> : null}
           <SoloAqui />
           <QueBuscas />
           <Seccion

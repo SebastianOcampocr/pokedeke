@@ -1,12 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Suspense } from "react";
+import { Fragment, Suspense } from "react";
 import { AccionesProducto, Galeria } from "@/components/DetalleProducto";
 import { Cuenta } from "@/components/Cuenta";
 import { Calcomania, RejillaProductos } from "@/components/TarjetaProducto";
 import { VistosRecientes } from "@/components/VistosRecientes";
-import { buscarCajaMisteriosa } from "@/lib/cajas-misteriosas";
 import { colones, fechaCorta } from "@/lib/formato";
 import {
   buscarProducto,
@@ -17,6 +16,8 @@ import {
 import { ENVIO_GRATIS_DESDE, ENVIOS } from "@/lib/tienda";
 
 export function generateStaticParams() {
+  // GitHub Pages no acepta una lista vacía: esta ruta da "no encontrado".
+  if (PRODUCTOS.length === 0) return [{ slug: "sin-productos" }];
   return PRODUCTOS.map((producto) => ({ slug: producto.slug }));
 }
 
@@ -67,7 +68,14 @@ async function ContenidoProducto({
   if (!producto) notFound();
 
   const agotado = estaAgotado(producto);
-  const misteriosa = buscarCajaMisteriosa(producto.slug);
+  const datosDeCarta = producto.carta
+    ? [
+        { rotulo: "Colección", valor: producto.carta.coleccion },
+        { rotulo: "Número", valor: producto.carta.numero },
+        { rotulo: "Rareza", valor: producto.carta.rareza },
+        { rotulo: "Condición", valor: producto.carta.condicion },
+      ].filter(({ valor }) => valor)
+    : [];
   const relacionados = PRODUCTOS.filter(
     (otro) => otro.slug !== producto.slug && !estaAgotado(otro),
   )
@@ -95,7 +103,9 @@ async function ContenidoProducto({
             >
               {producto.categoriaCorta}
             </Link>
-            {producto.idioma === "Otro" ? null : ` · ${producto.idioma}`}
+            {!producto.idioma || producto.idioma === "Otro"
+              ? null
+              : ` · ${producto.idioma}`}
           </p>
           <h1 className="font-display text-3xl leading-[1.05] text-azul lg:text-[42px]">
             {producto.nombre}
@@ -132,36 +142,18 @@ async function ContenidoProducto({
           <div className="grid gap-8 lg:grid-cols-2 lg:gap-10">
             <section>
               <h2 className="font-display text-xl text-rojo">De qué se trata</h2>
-              <p className="mt-2 leading-relaxed">{producto.descripcion}</p>
-              {producto.carta ? (
-                <dl className="mt-3 grid grid-cols-[auto_minmax(0,1fr)] gap-x-4 gap-y-1 text-[15px]">
-                  <dt className="font-bold">Colección</dt>
-                  <dd>{producto.carta.coleccion}</dd>
-                  <dt className="font-bold">Número</dt>
-                  <dd>{producto.carta.numero}</dd>
-                  <dt className="font-bold">Rareza</dt>
-                  <dd>{producto.carta.rareza}</dd>
-                  <dt className="font-bold">Condición</dt>
-                  <dd>{producto.carta.condicion}</dd>
-                </dl>
+              {producto.descripcion ? (
+                <p className="mt-2 leading-relaxed">{producto.descripcion}</p>
               ) : null}
-              {misteriosa ? (
-                <div className="mt-3 flex flex-col gap-2 text-[15px]">
-                  <p className="font-bold">
-                    Vale mínimo {colones(misteriosa.valorMinimo)} y trae siempre:
-                  </p>
-                  <ul className="list-disc pl-5 leading-snug">
-                    {misteriosa.trae.map((cosa) => (
-                      <li key={cosa}>{cosa}</li>
-                    ))}
-                  </ul>
-                  <Link
-                    href="/cajas-misteriosas"
-                    className="min-h-11 content-center font-bold text-azul underline"
-                  >
-                    Cómo funcionan las cajas misteriosas
-                  </Link>
-                </div>
+              {datosDeCarta.length > 0 ? (
+                <dl className="mt-3 grid grid-cols-[auto_minmax(0,1fr)] gap-x-4 gap-y-1 text-[15px]">
+                  {datosDeCarta.map(({ rotulo, valor }) => (
+                    <Fragment key={rotulo}>
+                      <dt className="font-bold">{rotulo}</dt>
+                      <dd>{valor}</dd>
+                    </Fragment>
+                  ))}
+                </dl>
               ) : null}
             </section>
             <section>

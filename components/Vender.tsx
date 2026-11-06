@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { colones } from "@/lib/formato";
-import { cartasSueltas } from "@/lib/productos";
+import { cartasSueltas, type Producto } from "@/lib/productos";
 import { enlaceWhatsApp } from "@/lib/tienda";
 
 const CONDICIONES = [
@@ -18,6 +18,11 @@ const redondear = (monto: number) => Math.round(monto / 500) * 500;
 
 export function CalculadoraVenta() {
   const cartas = cartasSueltas();
+  if (cartas.length === 0) return null;
+  return <Calculadora cartas={cartas} />;
+}
+
+function Calculadora({ cartas }: { cartas: Producto[] }) {
   const [slug, setSlug] = useState(cartas[0].slug);
   const [condicion, setCondicion] = useState(CONDICIONES[0].id);
 

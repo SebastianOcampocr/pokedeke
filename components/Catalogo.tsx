@@ -3,7 +3,12 @@
 import { useSearchParams } from "next/navigation";
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { coincide, PRODUCTOS, valoresUnicos } from "@/lib/productos";
+import {
+  categoriasConProducto,
+  coincide,
+  PRODUCTOS,
+  valoresUnicos,
+} from "@/lib/productos";
 import { Revelar } from "./Revelar";
 import { TarjetaProducto } from "./TarjetaProducto";
 
@@ -24,21 +29,10 @@ const ORDENES = [
 const POR_TANDA = 24;
 const SUELTAS = "Carta suelta (single)";
 
-const CATEGORIAS_RAPIDAS = [
-  { texto: "Sobres", categoria: "Booster pack" },
-  { texto: "ETB", categoria: "ETB" },
-  { texto: "Bundles", categoria: "Booster bundle" },
-  { texto: "Cajas", categoria: "Booster box" },
-  { texto: "Cartas", categoria: SUELTAS },
-  { texto: "Gradadas", categoria: "Carta gradada" },
-  { texto: "Tins", categoria: "Tin o caja de colección" },
-  { texto: "Misteriosas", categoria: "Caja misteriosa" },
-  { texto: "Sleeves", categoria: "Sleeves y fundas" },
-  { texto: "Accesorios", categoria: "Accesorios" },
-];
+const CATEGORIAS_RAPIDAS = categoriasConProducto();
 
 const RAREZAS = [
-  ...new Set(PRODUCTOS.flatMap((producto) => producto.carta?.rareza ?? [])),
+  ...new Set(PRODUCTOS.flatMap((producto) => producto.carta?.rareza || [])),
 ].sort((a, b) => a.localeCompare(b, "es"));
 
 function Selector({
@@ -163,7 +157,7 @@ export function Catalogo({
             id="busqueda"
             type="search"
             className="campo"
-            placeholder="Charizard, ETB, Prismatic…"
+            placeholder="Buscá por nombre…"
             value={busqueda}
             onChange={(evento) => setBusqueda(evento.target.value)}
           />
@@ -214,7 +208,8 @@ export function Catalogo({
             alCambiar={setRango}
             opciones={RANGOS}
           />
-          {categoria === SUELTAS || categoria === "Carta gradada" ? (
+          {RAREZAS.length > 0 &&
+          (categoria === SUELTAS || categoria === "Carta gradada") ? (
             <Selector
               id="filtro-rareza"
               rotulo="Rareza"

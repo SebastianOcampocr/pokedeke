@@ -1,8 +1,8 @@
+import Image from "next/image";
 import Link from "next/link";
+import { RUTA_BASE } from "@/lib/tienda";
 import { Deke } from "./Deke";
-import { FotoProducto } from "./FotoProducto";
 import { Revelar } from "./Revelar";
-import { buscarProducto } from "@/lib/productos";
 
 function MiniCupos() {
   return (
@@ -43,11 +43,15 @@ function MiniCedula() {
 }
 
 function MiniCaja() {
-  const caja = buscarProducto("caja-misteriosa-mediana");
-  if (!caja) return null;
   return (
     <span className="caja-sorpresa relative block size-[72px] shrink-0">
-      <FotoProducto producto={caja} alt="" sizes="72px" />
+      <Image
+        src={`${RUTA_BASE}/productos/caja-misteriosa-mediana.webp`}
+        alt=""
+        fill
+        sizes="72px"
+        className="object-contain mix-blend-multiply"
+      />
     </span>
   );
 }
@@ -67,7 +71,7 @@ const IDEAS = [
   {
     href: "/caja-compartida",
     titulo: "Caja compartida",
-    texto: "Una caja, 36 sobres. Comprás solo el tuyo y la abrimos en vivo.",
+    texto: "Próximamente: una caja, 36 sobres, comprás el tuyo y la abrimos en vivo.",
     Arte: MiniCupos,
   },
   {
@@ -79,7 +83,7 @@ const IDEAS = [
   {
     href: "/cajas-misteriosas",
     titulo: "Cajas misteriosas",
-    texto: "No sabés qué traen, pero sí lo mínimo que valen.",
+    texto: "Próximamente: no sabés qué traen, pero sí lo mínimo que valen.",
     Arte: MiniCaja,
   },
   {

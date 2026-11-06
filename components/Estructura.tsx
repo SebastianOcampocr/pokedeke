@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { categoriasConProducto, hayPreventas } from "@/lib/productos";
 import { ENLACE_GRUPO, LEMA, LUGAR, TIENDA } from "@/lib/tienda";
 import { BotonCarrito } from "./BotonCarrito";
 import { EnlaceFavoritos } from "./BotonFavorito";
@@ -11,7 +12,9 @@ const ENLACES = [
   { href: "/catalogo", texto: "Catálogo" },
   { href: "/sobre", texto: "Sobre del día" },
   { href: "/caja-compartida", texto: "Caja compartida" },
-  { href: "/catalogo?etiqueta=Preventa", texto: "Preventas" },
+  ...(hayPreventas()
+    ? [{ href: "/catalogo?etiqueta=Preventa", texto: "Preventas" }]
+    : []),
   { href: "/guia", texto: "Guía" },
   { href: "/nosotros", texto: "El Mezzanine" },
 ];
@@ -36,7 +39,7 @@ export function Encabezado() {
   return (
     <>
       <p className="relative z-10 bg-tinta px-4 py-1.5 text-center text-xs font-medium text-white">
-        Demo: productos y precios de muestra. No se cobra nada.
+        Demo: los pedidos son de prueba. No se cobra nada.
       </p>
       <header className="encabezado bg-amarillo">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 py-2 pr-2 pl-4">
@@ -157,16 +160,11 @@ export function ZonaBlanca({ children }: { children: React.ReactNode }) {
 
 const CINTA = [
   LEMA,
-  "Sobres",
-  "ETB",
-  "Booster boxes",
-  "Cartas sueltas",
-  "Sleeves y fundas",
+  ...categoriasConProducto().map(({ texto }) => texto),
   "Retiro en Edificio Omni",
   "Correos a todo el país",
   "Envío gratis desde ₡50 000",
   "Apartá en tractos",
-  "Cajas compartidas en vivo",
   "Pagá con SINPE Móvil",
 ];
 

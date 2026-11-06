@@ -1,12 +1,16 @@
 import Link from "next/link";
 import { colones } from "@/lib/formato";
-import { cartasSueltas } from "@/lib/productos";
+import { cartasSueltas, conFoto, estaAgotado } from "@/lib/productos";
 import { Deke } from "./Deke";
 import { FotoProducto } from "./FotoProducto";
 
 /** Las cartas más caras, con foil: pasá el mouse o el dedo por encima. */
 export function Vitrina() {
-  const cartas = cartasSueltas().slice(-10).reverse();
+  const cartas = cartasSueltas()
+    .filter((carta) => conFoto(carta) && !estaAgotado(carta))
+    .slice(-10)
+    .reverse();
+  if (cartas.length === 0) return null;
 
   return (
     <section className="border-y-3 border-tinta bg-azul-oscuro text-white">

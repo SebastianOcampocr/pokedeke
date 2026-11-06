@@ -12,7 +12,7 @@ export default function PaginaPanel() {
     <>
       <CabeceraPagina
         titulo="Panel"
-        texto="En la tienda real esta página pide contraseña. Aquí los pedidos son de muestra."
+        texto="En la tienda real esta página pide contraseña. Aquí los pedidos son de prueba."
       />
       <ZonaBlanca>
         <Panel />

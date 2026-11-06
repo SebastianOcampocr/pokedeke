@@ -4,12 +4,19 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { colones } from "@/lib/formato";
-import { coincide, estaAgotado, PRODUCTOS } from "@/lib/productos";
+import { coincide, disponibles, estaAgotado, PRODUCTOS } from "@/lib/productos";
 import { Deke } from "./Deke";
 import { FotoProducto } from "./FotoProducto";
 import { IconoBuscar } from "./Iconos";
 
-const SUGERENCIAS = ["Charizard", "ETB", "Prismatic", "Sleeves", "Umbreon"];
+// Primeras palabras de lo que hay en stock, empezando por lo de mayor precio.
+const SUGERENCIAS = [
+  ...new Set(
+    disponibles()
+      .sort((a, b) => b.precio - a.precio)
+      .map((producto) => producto.nombre.split(" ")[0]),
+  ),
+].slice(0, 5);
 const MAXIMO = 6;
 
 /** Buscador rápido del encabezado. Se abre con la lupa, con / o con Ctrl+K. */

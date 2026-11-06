@@ -10,7 +10,9 @@ function porLlegada(a: Producto, b: Producto) {
 
 /** Lo próximo que aterriza, con reloj para que dé ganas de apartar. */
 export function SeViene() {
-  const preventas = PRODUCTOS.filter(esPreventa).sort(porLlegada);
+  const preventas = PRODUCTOS.filter(
+    (producto) => esPreventa(producto) && producto.llegada,
+  ).sort(porLlegada);
   const proxima = preventas[0];
   if (!proxima?.llegada) return null;
   const otras = preventas.filter((otra) => otra.slug !== proxima.slug).slice(0, 4);
