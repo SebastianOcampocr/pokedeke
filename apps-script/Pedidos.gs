@@ -17,6 +17,9 @@ const CONFIG = {
   nombreTienda: "Pokedeke",
   canal: "Página web",
   metodoPago: "SINPE Móvil",
+  sinpe: "8781-2831",
+  // Imagen pública: si la página cambia de dirección, hay que cambiarla aquí.
+  fondoCorreo: "https://sebastianocampocr.github.io/pokedeke/correo/fondo.png",
   horasApartado: 24,
   adelantoPreventa: 0.5,
   envioGratisDesde: 50000,
@@ -385,6 +388,7 @@ function crearPedido(datos) {
       cantidad,
       precio: producto.precioCobrado,
       preventa: producto.preventa,
+      quedan: producto.stock - (reservado[slug] || 0) - cantidad,
     });
   }
 
@@ -415,7 +419,8 @@ function crearPedido(datos) {
   fila[COL.descuento - 1] = descuento;
   fila[COL.costoEnvio - 1] = costoEnvio;
   fila[COL.metodoPago - 1] = CONFIG.metodoPago;
-  fila[COL.detalle - 1] = comoTexto(JSON.stringify({ lineas, subtotal, descuento }));
+  const cupon = descuento ? texto(datos.cupon, 30).toUpperCase() : "";
+  fila[COL.detalle - 1] = comoTexto(JSON.stringify({ lineas, subtotal, descuento, cupon }));
   fila[COL.clave - 1] = clave;
   hoja(HOJAS.pedidos).appendRow(fila);
   olvidarStock();
@@ -445,21 +450,28 @@ function crearPedido(datos) {
     correoConDiseno({
       etiqueta: "Pedido nuevo",
       numero,
+      fecha: fila[COL.fecha - 1],
       total,
       rotuloTotal: "Total a recibir por SINPE",
-      datos: [
-        ["Cliente", cliente],
+      cliente: [
+        ["Nombre", cliente],
         ["WhatsApp", whatsapp],
         ["Correo", correo],
-        ["Envío", envio.nombre],
+      ],
+      entrega: [
+        ["Método", envio.nombre],
         ["Dirección", envio.pideDireccion ? ubicacion + ". " + direccion : ""],
-        ["Subtotal", colones(subtotal)],
-        ["Descuento", descuento ? "−" + colones(descuento) : ""],
-        ["Costo de envío", costoEnvio ? colones(costoEnvio) : "Gratis"],
       ],
       lineas,
+      resumen: resumenDeMontos(subtotal, descuento, texto(datos.cupon, 30).toUpperCase(), costoEnvio, total),
+      pasos: [
+        "Esperá el comprobante del cliente. Te llega en otro correo.",
+        "Revisá en tu banco que entró el monto exacto, con " + numero + " en el detalle.",
+        "Cambiá el Estado a Pagado en Pedidos web. La venta pasa sola a Ventas.",
+        "Escribile por WhatsApp para coordinar la entrega.",
+      ],
       whatsapp,
-      nota: "Todavía falta confirmar el SINPE. Cuando entre, cambiá el Estado a Pagado.",
+      nombre: cliente,
     }),
   );
 
@@ -489,6 +501,7 @@ function guardarComprobante(datos) {
   const fila = hallado.fila;
   const numero = fila[COL.numero - 1];
   const cliente = fila[COL.cliente - 1];
+  const detalle = leerDetalle(fila);
   avisar(
     "Comprobante de " + numero + " · " + colones(fila[COL.total - 1]) + " · " + cliente,
     [
@@ -506,16 +519,28 @@ function guardarComprobante(datos) {
     correoConDiseno({
       etiqueta: "Comprobante recibido",
       numero,
+      fecha: fila[COL.fecha - 1],
       total: fila[COL.total - 1],
       rotuloTotal: "Monto que debió entrar",
-      datos: [
-        ["Comprobante SINPE", comprobante],
-        ["Cliente", cliente],
+      comprobante,
+      cliente: [
+        ["Nombre", cliente],
         ["WhatsApp", fila[COL.whatsapp - 1]],
+        ["Correo", fila[COL.correo - 1]],
       ],
-      lineas: leerDetalle(fila).lineas,
+      entrega: [
+        ["Método", fila[COL.envio - 1]],
+        ["Dirección", [fila[COL.ubicacion - 1], fila[COL.envio - 1] === CONFIG.envios["retiro-omni"].nombre ? "" : fila[COL.direccion - 1]].filter(Boolean).join(". ")],
+      ],
+      lineas: detalle.lineas.map(({ quedan, ...linea }) => linea),
+      resumen: resumenDeMontos(detalle.subtotal, detalle.descuento, detalle.cupon, fila[COL.costoEnvio - 1], fila[COL.total - 1]),
+      pasos: [
+        "Revisá en tu banco que entró el monto exacto, con " + numero + " en el detalle. El número de comprobante solo no prueba el pago.",
+        "Si entró, cambiá el Estado a Pagado en Pedidos web. La venta pasa sola a Ventas.",
+        "Escribile por WhatsApp para coordinar la entrega.",
+      ],
       whatsapp: fila[COL.whatsapp - 1],
-      nota: "El cliente dice que ya pagó. Revisá en tu banco el monto y el número de pedido, y si entró cambiá el Estado a Pagado.",
+      nombre: cliente,
     }),
   );
   return { ok: true };
@@ -571,38 +596,96 @@ function botonDeCorreo(texto, enlace, fondo) {
   );
 }
 
+function fechaLegible(fecha) {
+  return Utilities.formatDate(new Date(fecha), libro().getSpreadsheetTimeZone(), "dd/MM/yyyy h:mm a");
+}
+
+function resumenDeMontos(subtotal, descuento, cupon, costoEnvio, total) {
+  return [
+    ["Subtotal", colones(subtotal)],
+    ["Cupón " + (cupon || ""), descuento ? "−" + colones(descuento) : ""],
+    ["Envío", costoEnvio ? colones(costoEnvio) : "Gratis"],
+    ["Total", colones(total)],
+  ];
+}
+
+function tituloDeCorreo(titulo) {
+  return (
+    '<h2 style="margin:22px 0 6px;padding-bottom:4px;border-bottom:2px solid #141414;font-size:15px;color:#c9201c;text-transform:uppercase;letter-spacing:.5px;">' +
+    escapar(titulo) + "</h2>"
+  );
+}
+
 /** Los correos no aceptan hojas de estilo: todo va dentro de cada etiqueta. */
-function correoConDiseno({ etiqueta, numero, total, rotuloTotal, datos, lineas, whatsapp, nota }) {
+function correoConDiseno({ etiqueta, numero, fecha, total, rotuloTotal, comprobante, cliente, entrega, lineas, resumen, pasos, whatsapp, nombre }) {
   const filaDeDato = ([rotulo, valor]) =>
     valor
-      ? '<tr><td style="padding:6px 12px 6px 0;color:#555555;white-space:nowrap;vertical-align:top;">' +
-        escapar(rotulo) + '</td><td style="padding:6px 0;font-weight:bold;">' + escapar(valor) + "</td></tr>"
+      ? '<tr><td style="width:96px;padding:5px 12px 5px 0;color:#555555;white-space:nowrap;vertical-align:top;">' +
+        escapar(rotulo) + '</td><td style="padding:5px 0;font-weight:bold;">' + escapar(valor) + "</td></tr>"
       : "";
   const filaDeProducto = (linea) =>
-    '<tr><td style="padding:8px 12px 8px 0;border-top:1px solid #eeeeee;">' +
-    escapar(linea.cantidad) + " × " + escapar(linea.nombre) +
-    '</td><td style="padding:8px 0;border-top:1px solid #eeeeee;text-align:right;white-space:nowrap;font-weight:bold;">' +
+    '<tr><td style="padding:9px 12px 9px 0;border-bottom:1px solid #eeeeee;">' +
+    '<div style="font-weight:bold;">' + escapar(linea.nombre) + "</div>" +
+    '<div style="font-size:13px;color:#555555;">' + escapar(linea.cantidad) + " × " + escapar(colones(linea.precio)) +
+    (linea.preventa ? " · Adelanto de preventa" : "") +
+    (linea.quedan === undefined ? "" : " · " + (linea.quedan > 0 ? "Quedan " + escapar(linea.quedan) : "Era la última")) +
+    '</div></td><td style="padding:9px 0;border-bottom:1px solid #eeeeee;text-align:right;white-space:nowrap;font-weight:bold;vertical-align:top;">' +
     escapar(colones(linea.precio * linea.cantidad)) + "</td></tr>";
+  const filaDeResumen = ([rotulo, valor], indice, todas) => {
+    if (!valor) return "";
+    const ultima = indice === todas.length - 1;
+    const estilo = ultima ? "padding:8px 0 0;font-size:18px;font-weight:900;" : "padding:3px 0;";
+    return (
+      '<tr><td style="' + estilo + '">' + escapar(rotulo) +
+      '</td><td style="' + estilo + 'text-align:right;">' + escapar(valor) + "</td></tr>"
+    );
+  };
+  const paso = (textoPaso, indice) =>
+    '<tr><td style="padding:5px 10px 5px 0;vertical-align:top;"><span style="display:inline-block;width:24px;height:24px;line-height:24px;text-align:center;border-radius:6px;background:#1437a8;color:#ffffff;font-weight:bold;font-size:13px;">' +
+    (indice + 1) + '</span></td><td style="padding:5px 0;">' + escapar(textoPaso) + "</td></tr>";
+  const toldo = Array.from({ length: 14 }, (_, indice) =>
+    '<td style="height:16px;background:' + (indice % 2 ? "#ffffff" : "#c9201c") + ';"></td>',
+  ).join("");
+
   const digitos = soloDigitos(whatsapp);
+  const primerNombre = String(nombre).split(" ")[0];
+  const saludo = "¡Hola " + primerNombre + "! Te escribimos de " + CONFIG.nombreTienda + " por tu pedido " + numero + ".";
+  const enlaceWhatsapp = "https://wa.me/506" + digitos + "?text=" + encodeURIComponent(saludo);
   const enlaceHoja = libro().getUrl() + "#gid=" + hoja(HOJAS.pedidos).getSheetId();
+  const limite = new Date(fecha).getTime() + CONFIG.horasApartado * 3600 * 1000;
+  const fondo = "background-image:url(" + CONFIG.fondoCorreo + ");background-repeat:repeat;";
 
   return (
-    '<div style="margin:0;padding:24px 12px;background:#ffce1f;font-family:Arial,Helvetica,sans-serif;color:#141414;">' +
-    '<div style="max-width:560px;margin:0 auto;">' +
-    '<div style="padding:0 4px 14px;font-size:26px;font-weight:900;letter-spacing:1px;color:#c9201c;">POKEDEKE</div>' +
-    '<div style="background:#ffffff;border:3px solid #141414;border-radius:12px;padding:22px;">' +
-    '<div style="display:inline-block;padding:4px 10px;border-radius:6px;background:#1437a8;color:#ffffff;font-size:13px;font-weight:bold;">' +
-    escapar(etiqueta) + "</div>" +
-    '<h1 style="margin:12px 0 2px;font-size:28px;color:#1437a8;">' + escapar(numero) + "</h1>" +
+    '<div style="margin:0;padding:0 0 24px;background-color:#ffce1f;' + fondo + 'font-family:Arial,Helvetica,sans-serif;color:#141414;">' +
+    '<table role="presentation" style="width:100%;border-collapse:collapse;border-bottom:3px solid #141414;"><tr>' + toldo + "</tr></table>" +
+    '<div style="max-width:580px;margin:0 auto;padding:0 12px;">' +
+    '<div style="display:inline-block;margin:18px 0 16px;padding:6px 14px;background:#c9201c;border:3px solid #141414;border-radius:8px;color:#ffffff;font-size:22px;font-weight:900;letter-spacing:1px;">POKEDEKE</div>' +
+    '<div style="background-color:#ffffff;' + fondo + 'border:3px solid #141414;border-radius:12px;padding:22px;">' +
+    '<span style="display:inline-block;padding:4px 10px;border-radius:6px;background:#1437a8;color:#ffffff;font-size:13px;font-weight:bold;">' + escapar(etiqueta) + "</span> " +
+    '<span style="display:inline-block;padding:4px 10px;border-radius:6px;background:#fff4d6;font-size:13px;font-weight:bold;">' + escapar(PENDIENTE) + "</span>" +
+    '<h1 style="margin:12px 0 0;font-size:30px;color:#1437a8;">' + escapar(numero) + "</h1>" +
+    '<p style="margin:2px 0 14px;font-size:13px;color:#555555;">' + escapar(fechaLegible(fecha)) + "</p>" +
     '<p style="margin:0;color:#555555;">' + escapar(rotuloTotal) + "</p>" +
-    '<p style="margin:2px 0 18px;font-size:34px;font-weight:900;">' + escapar(colones(total)) + "</p>" +
-    '<table style="width:100%;border-collapse:collapse;font-size:15px;">' + datos.map(filaDeDato).join("") + "</table>" +
-    '<h2 style="margin:20px 0 6px;font-size:16px;">Productos</h2>' +
+    '<p style="margin:2px 0 12px;font-size:36px;font-weight:900;">' + escapar(colones(total)) + "</p>" +
+    '<div style="padding:12px;border-radius:8px;background:#fff4d6;font-size:14px;line-height:1.5;">' +
+    "SINPE Móvil al <strong>" + escapar(CONFIG.sinpe) + "</strong><br>" +
+    (comprobante ? "Comprobante que escribió el cliente: <strong>" + escapar(comprobante) + "</strong><br>" : "") +
+    "Apartado hasta <strong>" + escapar(fechaLegible(limite)) + "</strong></div>" +
+    tituloDeCorreo("Cliente") +
+    '<table style="width:100%;border-collapse:collapse;font-size:15px;">' + cliente.map(filaDeDato).join("") + "</table>" +
+    tituloDeCorreo("Entrega") +
+    '<table style="width:100%;border-collapse:collapse;font-size:15px;">' + entrega.map(filaDeDato).join("") + "</table>" +
+    tituloDeCorreo("Productos") +
     '<table style="width:100%;border-collapse:collapse;font-size:15px;">' + lineas.map(filaDeProducto).join("") + "</table>" +
-    '<p style="margin:18px 0 14px;padding:12px;border-radius:8px;background:#fff4d6;">' + escapar(nota) + "</p>" +
-    (digitos.length === 8 ? botonDeCorreo("Escribir por WhatsApp", "https://wa.me/506" + digitos, "#127a43") : "") +
+    '<table style="width:100%;border-collapse:collapse;font-size:15px;margin-top:8px;">' + resumen.map(filaDeResumen).join("") + "</table>" +
+    tituloDeCorreo("Qué sigue") +
+    '<table style="width:100%;border-collapse:collapse;font-size:15px;">' + pasos.map(paso).join("") + "</table>" +
+    '<div style="margin-top:16px;">' +
+    (digitos.length === 8 ? botonDeCorreo("Escribir por WhatsApp", enlaceWhatsapp, "#127a43") : "") +
     botonDeCorreo("Abrir Pedidos web", enlaceHoja, "#1437a8") +
-    "</div></div></div>"
+    "</div></div>" +
+    '<p style="margin:14px 4px 0;font-size:12px;">Aviso automático de la tienda. Los datos del cliente son solo para este pedido.</p>' +
+    "</div></div>"
   );
 }
 
