@@ -12,7 +12,7 @@
  */
 
 const CONFIG = {
-  correoAvisos: "pokedekestorecr@gmail.com",
+  correoAvisos: "pokedekestore@gmail.com",
   nombreTienda: "Pokedeke",
   canal: "Página web",
   metodoPago: "SINPE Móvil",

@@ -3,7 +3,7 @@
 export const TIENDA = {
   nombre: "Pokedeke",
   sinpe: "8781-2831",
-  correo: "pokedekestorecr@gmail.com",
+  correo: "pokedekestore@gmail.com",
   plazoPagoHoras: 24,
   adelantoPreventa: 0.5,
 };
