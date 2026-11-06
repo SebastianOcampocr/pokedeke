@@ -5,7 +5,8 @@
  * 1. Recibe los pedidos de la página y los anota en "Pedidos web".
  * 2. Avisa por correo cuando entra un pedido o un comprobante.
  * 3. Cuando el Estado de un pedido pasa a "Pagado", anota la venta en "Ventas".
- * 4. Le entrega a GitHub el catálogo y a cada cliente el estado de su pedido.
+ * 4. Le entrega a GitHub el catálogo, a la página el stock en vivo y a cada
+ *    cliente el estado de su pedido.
  *
  * Los precios y el stock siempre se leen de la hoja: lo que manda el navegador
  * nunca se usa para calcular cuánto se cobra.
@@ -44,6 +45,8 @@ const HOJAS = {
 const PRIMERA_FILA = 5;
 const PENDIENTE = "Pendiente de pago";
 const PAGADO = "Pagado";
+const CLAVE_STOCK = "stock-vivo";
+const SEGUNDOS_STOCK = 8;
 
 // Columnas de "Pedidos web", contando desde 1.
 const COL = {
@@ -86,6 +89,11 @@ function doGet(e) {
   if (parametros.accion === "catalogo") {
     return ContentService.createTextOutput(catalogoEnCsv()).setMimeType(
       ContentService.MimeType.CSV,
+    );
+  }
+  if (parametros.accion === "stock") {
+    return ContentService.createTextOutput(stockEnVivo()).setMimeType(
+      ContentService.MimeType.JSON,
     );
   }
   if (parametros.accion === "estado") {
@@ -150,6 +158,32 @@ function hayCupo() {
   if (cuenta >= CONFIG.maxLlamadasPorHora) return false;
   memoria.put(clave, String(cuenta + 1), 3700);
   return true;
+}
+
+/**
+ * Lo que de verdad se puede comprar ahora: stock menos lo apartado. Se guarda
+ * unos segundos para que muchas visitas no lean la hoja al mismo tiempo.
+ */
+function stockEnVivo() {
+  const memoria = CacheService.getScriptCache();
+  const guardado = memoria.get(CLAVE_STOCK);
+  if (guardado) return guardado;
+
+  const reservado = apartados(filasDePedidos());
+  const productos = {};
+  Object.values(productosPorSlug()).forEach((producto) => {
+    productos[producto.slug] = {
+      stock: Math.max(producto.stock - (reservado[producto.slug] || 0), 0),
+      precio: producto.precio,
+    };
+  });
+  const respuesta = JSON.stringify({ ok: true, productos });
+  memoria.put(CLAVE_STOCK, respuesta, SEGUNDOS_STOCK);
+  return respuesta;
+}
+
+function olvidarStock() {
+  CacheService.getScriptCache().remove(CLAVE_STOCK);
 }
 
 /* ---------- Limpieza de lo que escribe la gente ---------- */
@@ -384,6 +418,7 @@ function crearPedido(datos) {
   fila[COL.detalle - 1] = comoTexto(JSON.stringify({ lineas, subtotal, descuento }));
   fila[COL.clave - 1] = clave;
   hoja(HOJAS.pedidos).appendRow(fila);
+  olvidarStock();
 
   avisar(
     "Nuevo pedido " + numero + " · " + colones(total) + " · " + cliente,
@@ -407,6 +442,25 @@ function crearPedido(datos) {
       "Cuando el SINPE entre, cambiá el Estado a Pagado en la pestaña Pedidos web.",
     ],
     correo,
+    correoConDiseno({
+      etiqueta: "Pedido nuevo",
+      numero,
+      total,
+      rotuloTotal: "Total a recibir por SINPE",
+      datos: [
+        ["Cliente", cliente],
+        ["WhatsApp", whatsapp],
+        ["Correo", correo],
+        ["Envío", envio.nombre],
+        ["Dirección", envio.pideDireccion ? ubicacion + ". " + direccion : ""],
+        ["Subtotal", colones(subtotal)],
+        ["Descuento", descuento ? "−" + colones(descuento) : ""],
+        ["Costo de envío", costoEnvio ? colones(costoEnvio) : "Gratis"],
+      ],
+      lineas,
+      whatsapp,
+      nota: "Todavía falta confirmar el SINPE. Cuando entre, cambiá el Estado a Pagado.",
+    }),
   );
 
   return { ok: true, numero, clave, subtotal, descuento, costoEnvio, total, lineas };
@@ -449,6 +503,20 @@ function guardarComprobante(datos) {
       "Si entró, cambiá el Estado a Pagado en la pestaña Pedidos web.",
     ],
     "",
+    correoConDiseno({
+      etiqueta: "Comprobante recibido",
+      numero,
+      total: fila[COL.total - 1],
+      rotuloTotal: "Monto que debió entrar",
+      datos: [
+        ["Comprobante SINPE", comprobante],
+        ["Cliente", cliente],
+        ["WhatsApp", fila[COL.whatsapp - 1]],
+      ],
+      lineas: leerDetalle(fila).lineas,
+      whatsapp: fila[COL.whatsapp - 1],
+      nota: "El cliente dice que ya pagó. Revisá en tu banco el monto y el número de pedido, y si entró cambiá el Estado a Pagado.",
+    }),
   );
   return { ok: true };
 }
@@ -487,12 +555,64 @@ function consultarPedido(parametros) {
   };
 }
 
-function avisar(asunto, lineas, responderA) {
+function escapar(valor) {
+  return String(valor === null || valor === undefined ? "" : valor)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+function botonDeCorreo(texto, enlace, fondo) {
+  return (
+    '<a href="' + escapar(enlace) + '" style="display:inline-block;margin:4px 8px 4px 0;' +
+    "padding:12px 18px;border-radius:8px;background:" + fondo + ";color:#ffffff;" +
+    'font-weight:bold;text-decoration:none;">' + escapar(texto) + "</a>"
+  );
+}
+
+/** Los correos no aceptan hojas de estilo: todo va dentro de cada etiqueta. */
+function correoConDiseno({ etiqueta, numero, total, rotuloTotal, datos, lineas, whatsapp, nota }) {
+  const filaDeDato = ([rotulo, valor]) =>
+    valor
+      ? '<tr><td style="padding:6px 12px 6px 0;color:#555555;white-space:nowrap;vertical-align:top;">' +
+        escapar(rotulo) + '</td><td style="padding:6px 0;font-weight:bold;">' + escapar(valor) + "</td></tr>"
+      : "";
+  const filaDeProducto = (linea) =>
+    '<tr><td style="padding:8px 12px 8px 0;border-top:1px solid #eeeeee;">' +
+    escapar(linea.cantidad) + " × " + escapar(linea.nombre) +
+    '</td><td style="padding:8px 0;border-top:1px solid #eeeeee;text-align:right;white-space:nowrap;font-weight:bold;">' +
+    escapar(colones(linea.precio * linea.cantidad)) + "</td></tr>";
+  const digitos = soloDigitos(whatsapp);
+  const enlaceHoja = libro().getUrl() + "#gid=" + hoja(HOJAS.pedidos).getSheetId();
+
+  return (
+    '<div style="margin:0;padding:24px 12px;background:#ffce1f;font-family:Arial,Helvetica,sans-serif;color:#141414;">' +
+    '<div style="max-width:560px;margin:0 auto;">' +
+    '<div style="padding:0 4px 14px;font-size:26px;font-weight:900;letter-spacing:1px;color:#c9201c;">POKEDEKE</div>' +
+    '<div style="background:#ffffff;border:3px solid #141414;border-radius:12px;padding:22px;">' +
+    '<div style="display:inline-block;padding:4px 10px;border-radius:6px;background:#1437a8;color:#ffffff;font-size:13px;font-weight:bold;">' +
+    escapar(etiqueta) + "</div>" +
+    '<h1 style="margin:12px 0 2px;font-size:28px;color:#1437a8;">' + escapar(numero) + "</h1>" +
+    '<p style="margin:0;color:#555555;">' + escapar(rotuloTotal) + "</p>" +
+    '<p style="margin:2px 0 18px;font-size:34px;font-weight:900;">' + escapar(colones(total)) + "</p>" +
+    '<table style="width:100%;border-collapse:collapse;font-size:15px;">' + datos.map(filaDeDato).join("") + "</table>" +
+    '<h2 style="margin:20px 0 6px;font-size:16px;">Productos</h2>' +
+    '<table style="width:100%;border-collapse:collapse;font-size:15px;">' + lineas.map(filaDeProducto).join("") + "</table>" +
+    '<p style="margin:18px 0 14px;padding:12px;border-radius:8px;background:#fff4d6;">' + escapar(nota) + "</p>" +
+    (digitos.length === 8 ? botonDeCorreo("Escribir por WhatsApp", "https://wa.me/506" + digitos, "#127a43") : "") +
+    botonDeCorreo("Abrir Pedidos web", enlaceHoja, "#1437a8") +
+    "</div></div></div>"
+  );
+}
+
+function avisar(asunto, lineas, responderA, html) {
   try {
     const opciones = {
       to: CONFIG.correoAvisos,
       subject: asunto,
       body: lineas.filter((linea, i) => linea || lineas[i - 1]).join("\n"),
+      htmlBody: html,
       name: CONFIG.nombreTienda,
     };
     if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(responderA)) opciones.replyTo = responderA;
@@ -513,6 +633,7 @@ function onEdit(e) {
   if (rango.getNumRows() !== 1 || e.value !== PAGADO) return;
 
   const aviso = conCandado(() => pasarAVentas(rango.getRow(), e.oldValue));
+  olvidarStock();
   libro().toast(aviso, CONFIG.nombreTienda, 8);
 }
 

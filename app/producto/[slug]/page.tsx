@@ -2,17 +2,16 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Fragment, Suspense } from "react";
-import { AccionesProducto, Galeria } from "@/components/DetalleProducto";
+import {
+  AccionesProducto,
+  Galeria,
+  PrecioYStock,
+} from "@/components/DetalleProducto";
 import { Cuenta } from "@/components/Cuenta";
 import { Calcomania, RejillaProductos } from "@/components/TarjetaProducto";
 import { VistosRecientes } from "@/components/VistosRecientes";
 import { colones, fechaCorta } from "@/lib/formato";
-import {
-  buscarProducto,
-  esPreventa,
-  estaAgotado,
-  PRODUCTOS,
-} from "@/lib/productos";
+import { buscarProducto, estaAgotado, PRODUCTOS } from "@/lib/productos";
 import { ENVIO_GRATIS_DESDE, ENVIOS } from "@/lib/tienda";
 
 export function generateStaticParams() {
@@ -67,7 +66,6 @@ async function ContenidoProducto({
   const producto = buscarProducto(slug);
   if (!producto) notFound();
 
-  const agotado = estaAgotado(producto);
   const datosDeCarta = producto.carta
     ? [
         { rotulo: "Colección", valor: producto.carta.coleccion },
@@ -110,21 +108,7 @@ async function ContenidoProducto({
           <h1 className="font-display text-3xl leading-[1.05] text-azul lg:text-[42px]">
             {producto.nombre}
           </h1>
-          <p className="mt-1 flex flex-wrap items-baseline gap-x-3 text-4xl font-extrabold">
-            {colones(producto.precio)}
-            {producto.precioAntes ? (
-              <s className="text-lg font-medium">
-                {colones(producto.precioAntes)}
-              </s>
-            ) : null}
-          </p>
-          <p className="mb-3 text-[15px] font-bold">
-            {agotado && "Agotado por ahora"}
-            {!agotado && esPreventa(producto) && `Quedan ${producto.stock} cupos`}
-            {!agotado &&
-              !esPreventa(producto) &&
-              (producto.stock === 1 ? "Queda 1" : `Quedan ${producto.stock}`)}
-          </p>
+          <PrecioYStock producto={producto} />
           {producto.llegada ? (
             <div className="marco mb-3 flex w-fit flex-col gap-2 bg-crema p-3">
               <p className="font-bold">

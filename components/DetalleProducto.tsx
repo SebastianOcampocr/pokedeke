@@ -12,6 +12,7 @@ import {
   type Producto,
 } from "@/lib/productos";
 import { enlaceWhatsApp, TIENDA } from "@/lib/tienda";
+import { useProductoVivo } from "@/lib/vivo";
 import { volarAlCarrito } from "@/lib/volar";
 import { BotonAvisame } from "./BotonAvisame";
 import { BotonFavorito } from "./BotonFavorito";
@@ -81,7 +82,32 @@ export function Galeria({ producto }: { producto: Producto }) {
   );
 }
 
-export function AccionesProducto({ producto }: { producto: Producto }) {
+/** Precio y cuánto queda: se actualizan solos mientras la ficha esté abierta. */
+export function PrecioYStock({ producto: guardado }: { producto: Producto }) {
+  const producto = useProductoVivo(guardado);
+  const agotado = estaAgotado(producto);
+
+  return (
+    <>
+      <p className="mt-1 flex flex-wrap items-baseline gap-x-3 text-4xl font-extrabold">
+        {colones(producto.precio)}
+        {producto.precioAntes ? (
+          <s className="text-lg font-medium">{colones(producto.precioAntes)}</s>
+        ) : null}
+      </p>
+      <p aria-live="polite" className="mb-3 text-[15px] font-bold">
+        {agotado && "Agotado por ahora"}
+        {!agotado && esPreventa(producto) && `Quedan ${producto.stock} cupos`}
+        {!agotado &&
+          !esPreventa(producto) &&
+          (producto.stock === 1 ? "Queda 1" : `Quedan ${producto.stock}`)}
+      </p>
+    </>
+  );
+}
+
+export function AccionesProducto({ producto: guardado }: { producto: Producto }) {
+  const producto = useProductoVivo(guardado);
   const [cantidad, setCantidad] = useState(1);
   const [agregado, setAgregado] = useState(false);
   const agotado = estaAgotado(producto);
@@ -119,7 +145,7 @@ export function AccionesProducto({ producto }: { producto: Producto }) {
             <div className="flex items-center gap-3">
               <span className="font-bold">Cantidad</span>
               <Cantidad
-                valor={cantidad}
+                valor={Math.min(cantidad, producto.stock)}
                 maximo={producto.stock}
                 nombre={producto.nombre}
                 alCambiar={setCantidad}
@@ -130,7 +156,7 @@ export function AccionesProducto({ producto }: { producto: Producto }) {
             type="button"
             className="boton boton-rojo"
             onClick={() => {
-              agregarAlCarrito(producto, cantidad);
+              agregarAlCarrito(producto, Math.min(cantidad, producto.stock));
               setAgregado(true);
               volarAlCarrito();
             }}

@@ -191,6 +191,13 @@ export function VistaCarrito() {
                     ? `Adelanto de preventa: ${colones(precio)}`
                     : `${colones(precio)} c/u`}
                 </p>
+                {cantidad > producto.stock ? (
+                  <p role="alert" className="text-sm font-bold text-rojo">
+                    {producto.stock === 0
+                      ? "Se acaba de agotar."
+                      : `Solo queda${producto.stock === 1 ? "" : "n"} ${producto.stock}.`}
+                  </p>
+                ) : null}
               </div>
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <Cantidad

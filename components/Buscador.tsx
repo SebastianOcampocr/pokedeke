@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { colones } from "@/lib/formato";
 import { coincide, disponibles, estaAgotado, PRODUCTOS } from "@/lib/productos";
+import { conDatosVivos, useInventarioVivo } from "@/lib/vivo";
 import { Deke } from "./Deke";
 import { FotoProducto } from "./FotoProducto";
 import { IconoBuscar } from "./Iconos";
@@ -25,14 +26,18 @@ export function Buscador() {
   const [texto, setTexto] = useState("");
   const router = useRouter();
 
+  const vivo = useInventarioVivo();
+
   const resultados = useMemo(() => {
     if (!texto.trim()) return [];
-    return PRODUCTOS.filter((producto) => coincide(producto, texto)).sort(
+    return PRODUCTOS.filter((producto) => coincide(producto, texto))
+      .map((producto) => conDatosVivos(producto, vivo))
+      .sort(
       (a, b) =>
         Number(estaAgotado(a)) - Number(estaAgotado(b)) ||
         b.vendidos - a.vendidos,
     );
-  }, [texto]);
+  }, [texto, vivo]);
 
   useEffect(() => {
     function alTeclear(evento: KeyboardEvent) {

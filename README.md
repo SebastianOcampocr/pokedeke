@@ -15,7 +15,7 @@ Nada se edita en el código. Todo sale de la pestaña **Catálogo web** de la ho
 
 1. Anotá la compra en **Compras**, como siempre. Aparece sola en Catálogo web, en la misma fila.
 2. En **Catálogo web** escribí el **Precio de venta**. Si lo dejás vacío, la página usa el Precio sugerido.
-3. En unos 15 minutos la página se actualiza sola. Cambiar un precio o una venta en Ventas funciona igual.
+3. El precio y lo que queda se actualizan solos en unos segundos, porque la página se los pregunta a la hoja. Un producto nuevo, sus fotos y su texto tardan más: GitHub revisa la hoja cada 15 minutos, o menos seguido si tiene mucha carga.
 
 Las demás columnas amarillas son opcionales:
 
@@ -51,7 +51,7 @@ GitHub Pages no tiene servidor, así que el servidor vive adentro de la hoja: es
 Lo que conviene saber:
 
 - Los precios y el stock se leen de la hoja. Lo que manda el navegador no se usa para cobrar.
-- Un pedido sin pagar aparta el producto 24 horas.
+- Un pedido sin pagar aparta el producto 24 horas: los demás lo ven como reservado en unos segundos, y dos personas no pueden pedir la misma unidad.
 - Marcar Pagado dos veces no duplica la venta.
 - Si no hay stock al marcar Pagado, el Estado se devuelve y la razón queda en Notas.
 - Si cancelás un pedido que ya estaba en Ventas, borrá esas filas de Ventas a mano.
@@ -76,16 +76,16 @@ Si cambiás envíos, cupones o el envío gratis en `lib/tienda.ts`, cambialos ta
 
 ## Publicar en AWS
 
-`infra/pokedeke.yml` crea todo: los archivos privados en S3, CloudFront delante y un permiso para que GitHub publique sin claves guardadas.
+`infra/pokedeke.yml` crea los archivos privados en S3 y CloudFront delante. Va en `us-east-2`, la región del proyecto: en `us-east-1` el proyecto solo permite servicios globales.
 
-Cuando existen las variables de GitHub `AWS_BUCKET`, `AWS_DISTRIBUCION` y `AWS_ROL`, la página se publica en AWS en vez de GitHub Pages. GitHub Pages no permite tiendas en línea: sirve solo para la demo.
+Cuando existen las variables de GitHub `AWS_BUCKET` y `AWS_DISTRIBUCION`, y los secretos `AWS_CLAVE_ID` y `AWS_CLAVE_SECRETA`, la página se publica en AWS en vez de GitHub Pages. La clave debe poder tocar solo ese bucket y refrescar esa distribución. GitHub Pages no permite tiendas en línea: sirve solo para la demo.
 
 ## La demo en GitHub
 
 La demo se publica sola en GitHub Pages: cada cambio que llega a la rama `main` se arma y se publica en un par de minutos. Eso lo hace `.github/workflows/publicar-demo.yml`.
 
 - GitHub Pages no tiene servidor, así que publica la página ya armada. Por eso `next.config.ts` cambia de modo cuando existe `NEXT_PUBLIC_RUTA_BASE`.
-- GitHub revisa la hoja cada 10 minutos. Solo vuelve a publicar si el catálogo cambió, y a veces atrasa esa revisión cuando tiene mucha carga.
+- GitHub revisa la hoja cada 15 minutos. Solo vuelve a publicar si el catálogo cambió, y a veces atrasa esa revisión cuando tiene mucha carga. También se puede correr a mano en la pestaña Actions del repositorio, con **Publicar demo > Run workflow**.
 - El repositorio es público porque así lo pide el plan gratis de GitHub para usar Pages. No subás nunca llaves ni contraseñas.
 - La página no sale en Google, pero cualquiera que tenga el enlace puede entrar.
 - Cada persona ve su propio carrito y sus pedidos, guardados en su navegador. Los pedidos de muestra no le llegan a nadie.

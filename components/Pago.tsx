@@ -9,6 +9,7 @@ import { useCarrito, vaciarCarrito } from "@/lib/carrito";
 import { lanzarConfeti } from "@/lib/confeti";
 import { calcularTotales, colones } from "@/lib/formato";
 import { ganarLogro } from "@/lib/logros";
+import { refrescarInventario } from "@/lib/vivo";
 import {
   actualizarPedido,
   guardarPedido,
@@ -351,6 +352,7 @@ export function Pago() {
         setError(respuesta.error);
         return;
       }
+      void refrescarInventario();
       // Lo que manda es lo que calculó el servidor con los datos de la hoja.
       setPrecioCambio(respuesta.total !== pedido.total);
       pedido = {

@@ -3,6 +3,7 @@
 import { crearAlmacen } from "./almacen";
 import { buscarProducto, precioACobrar, type Producto } from "./productos";
 import { CUPONES, type Cupon } from "./tienda";
+import { conDatosVivos, useInventarioVivo } from "./vivo";
 
 type LineaGuardada = { slug: string; cantidad: number };
 type Carrito = { lineas: LineaGuardada[]; cupon: string | null };
@@ -18,9 +19,11 @@ const almacen = crearAlmacen<Carrito>("demo-carrito", () => VACIO, VACIO);
 
 export function useCarrito() {
   const carrito = almacen.usar();
+  const vivo = useInventarioVivo();
   const lineas: LineaCarrito[] = carrito.lineas.flatMap((linea) => {
-    const producto = buscarProducto(linea.slug);
-    if (!producto) return [];
+    const guardado = buscarProducto(linea.slug);
+    if (!guardado) return [];
+    const producto = conDatosVivos(guardado, vivo);
     return [
       {
         producto,

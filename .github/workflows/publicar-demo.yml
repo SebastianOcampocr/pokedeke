@@ -7,7 +7,8 @@ on:
     branches: [main]
   workflow_dispatch:
   schedule:
-    - cron: "*/10 * * * *"
+    # Lejos de la hora en punto, cuando GitHub tiene más carga.
+    - cron: "7,22,37,52 * * * *"
 
 permissions:
   contents: read
@@ -74,8 +75,9 @@ jobs:
       - run: npm run build
         env:
           NEXT_PUBLIC_RUTA_BASE: /${{ github.event.repository.name }}
-          # El catálogo se lee siempre; los pedidos reales solo con la tienda abierta.
-          NEXT_PUBLIC_PEDIDOS_URL: ${{ vars.TIENDA_ABIERTA == 'si' && vars.PEDIDOS_URL || '' }}
+          # El stock en vivo funciona siempre; los pedidos reales, con la tienda abierta.
+          NEXT_PUBLIC_PEDIDOS_URL: ${{ vars.PEDIDOS_URL }}
+          NEXT_PUBLIC_TIENDA_ABIERTA: ${{ vars.TIENDA_ABIERTA }}
       - uses: actions/upload-pages-artifact@v5
         with:
           path: out
@@ -89,7 +91,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      id-token: write
     steps:
       - uses: actions/checkout@v7
         with:
@@ -102,11 +103,13 @@ jobs:
       - run: npm run build
         env:
           ARCHIVOS_ARMADOS: si
-          NEXT_PUBLIC_PEDIDOS_URL: ${{ vars.TIENDA_ABIERTA == 'si' && vars.PEDIDOS_URL || '' }}
+          NEXT_PUBLIC_PEDIDOS_URL: ${{ vars.PEDIDOS_URL }}
+          NEXT_PUBLIC_TIENDA_ABIERTA: ${{ vars.TIENDA_ABIERTA }}
       - uses: aws-actions/configure-aws-credentials@v6
         with:
-          role-to-assume: ${{ vars.AWS_ROL }}
-          aws-region: us-east-1
+          aws-access-key-id: ${{ secrets.AWS_CLAVE_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_CLAVE_SECRETA }}
+          aws-region: us-east-2
       - name: Subir la página
         run: |
           aws s3 sync out/_next/static "s3://$BUCKET/_next/static" \

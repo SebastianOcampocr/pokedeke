@@ -20,7 +20,7 @@ export default function PaginaPoliticas() {
     <>
       <CabeceraPagina
         titulo="Políticas"
-        texto="Texto de muestra para la demo. No es asesoría legal."
+        texto="Lo que conviene saber antes de comprar en Pokedeke."
       />
       <ZonaBlanca>
         <div className="mx-auto max-w-2xl">
@@ -43,21 +43,36 @@ export default function PaginaPoliticas() {
               antes de confirmar el pedido. En compras desde ₡50 000, el envío
               por Correos va por nuestra cuenta.
             </p>
-            <p>Despachamos cuando el pago esté confirmado: [plazo por definir].</p>
+            <p>
+              Despachamos en 1 a 2 días hábiles después de confirmar el pago, y
+              te pasamos el número de guía por WhatsApp. El tiempo de entrega de
+              Correos depende de tu zona.
+            </p>
 
             <h2 id="cambios" className="scroll-mt-20">
               Cambios y devoluciones
             </h2>
             <p>
+              En compras por internet tenés 8 días hábiles desde que recibís el
+              pedido para arrepentirte de la compra. El producto debe volver en
+              el mismo estado en que lo recibiste, y te devolvemos el monto por
+              SINPE Móvil.
+            </p>
+            <p>
               Si tu producto llegó dañado o no es el que pediste, escribinos
-              dentro de [plazo por definir] con fotos del empaque.
+              dentro de esos 8 días hábiles con fotos del empaque y del
+              producto. Te lo cambiamos o te devolvemos la plata.
             </p>
             <ul>
               <li>El producto sellado se acepta solo con el sello intacto.</li>
-              <li>Las cartas sueltas se revisan caso por caso.</li>
               <li>
-                Los adelantos de preventa: [condiciones de devolución por
-                definir].
+                Las cartas sueltas deben volver en la misma condición en que
+                salieron.
+              </li>
+              <li>
+                Si una preventa se cancela o se atrasa más de 30 días, te
+                devolvemos todo el adelanto. Si querés cancelarla vos, avisanos
+                dentro de 8 días hábiles desde que pagaste el adelanto.
               </li>
             </ul>
 
@@ -65,22 +80,26 @@ export default function PaginaPoliticas() {
               Términos
             </h2>
             <p>
-              Los precios están en colones. El producto queda apartado por 24
-              horas desde que hacés el pedido; si no se recibe el pago en ese
-              plazo, el apartado se libera.
+              Los precios están en colones y vale el monto que ves al confirmar
+              tu pedido. El producto queda apartado por 24 horas desde que hacés
+              el pedido; si no se recibe el pago en ese plazo, el apartado se
+              libera. El pedido se confirma cuando verificamos que el SINPE
+              entró.
             </p>
 
             <h2 id="privacidad" className="scroll-mt-20">
               Privacidad
             </h2>
             <p>
-              Usamos tu nombre, contacto y dirección solo para procesar tu
-              pedido y coordinar la entrega. Podés pedir que corrijamos o
-              borremos tus datos escribiendo a {TIENDA.correo}.
+              Usamos tu nombre, WhatsApp, correo y dirección solo para procesar
+              tu pedido y coordinar la entrega. Los guardamos en nuestras
+              herramientas de trabajo y los compartimos únicamente con Correos
+              de Costa Rica cuando hace falta para el envío. No los vendemos.
             </p>
             <p>
-              Este borrador debe adaptarse a la Ley 8968 de Protección de la
-              Persona frente al Tratamiento de sus Datos Personales.
+              Según la Ley 8968 de Protección de la Persona frente al
+              Tratamiento de sus Datos Personales, podés pedir que te mostremos,
+              corrijamos o borremos tus datos escribiendo a {TIENDA.correo}.
             </p>
           </div>
         </div>

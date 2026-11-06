@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { ViewTransition } from "react";
 import { colones, fechaCorta } from "@/lib/formato";
@@ -7,13 +9,15 @@ import {
   estaAgotado,
   type Producto,
 } from "@/lib/productos";
+import { useProductoVivo } from "@/lib/vivo";
 import { AgregarRapido } from "./AgregarRapido";
 import { BotonAvisame } from "./BotonAvisame";
 import { BotonFavorito } from "./BotonFavorito";
 import { FotoProducto } from "./FotoProducto";
 import { Revelar } from "./Revelar";
 
-export function Calcomania({ producto }: { producto: Producto }) {
+export function Calcomania({ producto: guardado }: { producto: Producto }) {
+  const producto = useProductoVivo(guardado);
   if (estaAgotado(producto)) return null;
 
   if (producto.precioAntes && !esPreventa(producto)) {
@@ -101,13 +105,14 @@ function FotoTarjeta({
 }
 
 export function TarjetaProducto({
-  producto,
+  producto: guardado,
   viaja = true,
 }: {
   producto: Producto;
   /** Apagalo si el mismo producto puede salir dos veces en la página. */
   viaja?: boolean;
 }) {
+  const producto = useProductoVivo(guardado);
   const agotado = estaAgotado(producto);
   const enlace = `/producto/${producto.slug}`;
   const detalle = [

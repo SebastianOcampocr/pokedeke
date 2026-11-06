@@ -11,12 +11,12 @@ export const TIENDA = {
 /** Subcarpeta donde vive la página. En la compu va vacía. */
 export const RUTA_BASE = process.env.NEXT_PUBLIC_RUTA_BASE ?? "";
 
-/**
- * Dirección del servidor de pedidos (apps-script/Pedidos.gs). Mientras esté
- * vacía la página es solo una demo: nadie debe pagar si el pedido no se anota.
- */
+/** Dirección del servidor de la hoja (apps-script/Pedidos.gs). */
 export const PEDIDOS_URL = process.env.NEXT_PUBLIC_PEDIDOS_URL ?? "";
-export const TIENDA_ABIERTA = PEDIDOS_URL !== "";
+
+/** Sin esto la página es una demo: nadie debe pagar si el pedido no se anota. */
+export const TIENDA_ABIERTA =
+  PEDIDOS_URL !== "" && process.env.NEXT_PUBLIC_TIENDA_ABIERTA === "si";
 
 export const LEMA = "Del mezzanine a tu colección";
 

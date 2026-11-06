@@ -1,12 +1,7 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Description: >-
-  Pagina publica de Pokedeke en S3 y CloudFront, y el permiso para que GitHub
-  la publique. Los archivos quedan privados: solo CloudFront puede leerlos.
-
-Parameters:
-  RepositorioGitHub:
-    Type: String
-    Default: SebastianOcampocr/pokedeke
+  Pagina publica de Pokedeke en S3 y CloudFront. Los archivos quedan privados:
+  solo CloudFront puede leerlos. Va en us-east-2, la region del proyecto.
 
 Resources:
   Archivos:
@@ -110,46 +105,6 @@ Resources:
               StringEquals:
                 AWS:SourceArn: !Sub "arn:${AWS::Partition}:cloudfront::${AWS::AccountId}:distribution/${Distribucion}"
 
-  # GitHub entra con una identidad temporal: no hay claves guardadas en ningún lado.
-  ProveedorGitHub:
-    Type: AWS::IAM::OIDCProvider
-    Properties:
-      Url: https://token.actions.githubusercontent.com
-      ClientIdList:
-        - sts.amazonaws.com
-
-  RolDePublicacion:
-    Type: AWS::IAM::Role
-    Properties:
-      Description: GitHub publica la pagina de Pokedeke y no puede hacer nada mas
-      AssumeRolePolicyDocument:
-        Version: "2012-10-17"
-        Statement:
-          - Effect: Allow
-            Principal:
-              Federated: !Ref ProveedorGitHub
-            Action: sts:AssumeRoleWithWebIdentity
-            Condition:
-              StringEquals:
-                token.actions.githubusercontent.com:aud: sts.amazonaws.com
-                token.actions.githubusercontent.com:sub: !Sub "repo:${RepositorioGitHub}:ref:refs/heads/main"
-      Policies:
-        - PolicyName: publicar-pagina
-          PolicyDocument:
-            Version: "2012-10-17"
-            Statement:
-              - Effect: Allow
-                Action: s3:ListBucket
-                Resource: !GetAtt Archivos.Arn
-              - Effect: Allow
-                Action:
-                  - s3:PutObject
-                  - s3:DeleteObject
-                Resource: !Sub "${Archivos.Arn}/*"
-              - Effect: Allow
-                Action: cloudfront:CreateInvalidation
-                Resource: !Sub "arn:${AWS::Partition}:cloudfront::${AWS::AccountId}:distribution/${Distribucion}"
-
 Outputs:
   Bucket:
     Value: !Ref Archivos
@@ -157,5 +112,3 @@ Outputs:
     Value: !Ref Distribucion
   Direccion:
     Value: !Sub "https://${Distribucion.DomainName}"
-  Rol:
-    Value: !GetAtt RolDePublicacion.Arn
