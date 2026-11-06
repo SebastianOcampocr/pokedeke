@@ -18,8 +18,8 @@ const CONFIG = {
   canal: "Página web",
   metodoPago: "SINPE Móvil",
   sinpe: "8781-2831",
-  // Imagen pública: si la página cambia de dirección, hay que cambiarla aquí.
-  fondoCorreo: "https://sebastianocampocr.github.io/pokedeke/correo/fondo.png",
+  // Imágenes públicas: si la página cambia de dirección, hay que cambiarla aquí.
+  imagenesCorreo: "https://sebastianocampocr.github.io/pokedeke/correo/",
   horasApartado: 24,
   adelantoPreventa: 0.5,
   envioGratisDesde: 50000,
@@ -620,16 +620,16 @@ function tituloDeCorreo(titulo) {
 function correoConDiseno({ etiqueta, numero, fecha, total, rotuloTotal, comprobante, cliente, entrega, lineas, resumen, pasos, whatsapp, nombre }) {
   const filaDeDato = ([rotulo, valor]) =>
     valor
-      ? '<tr><td style="width:96px;padding:5px 12px 5px 0;color:#555555;white-space:nowrap;vertical-align:top;">' +
+      ? '<tr><td style="width:96px;padding:5px 12px 5px 0;color:#444444;white-space:nowrap;vertical-align:top;">' +
         escapar(rotulo) + '</td><td style="padding:5px 0;font-weight:bold;">' + escapar(valor) + "</td></tr>"
       : "";
   const filaDeProducto = (linea) =>
-    '<tr><td style="padding:9px 12px 9px 0;border-bottom:1px solid #eeeeee;">' +
+    '<tr><td style="padding:9px 12px 9px 0;border-bottom:1px solid #e3d6ad;">' +
     '<div style="font-weight:bold;">' + escapar(linea.nombre) + "</div>" +
-    '<div style="font-size:13px;color:#555555;">' + escapar(linea.cantidad) + " × " + escapar(colones(linea.precio)) +
+    '<div style="font-size:13px;color:#444444;">' + escapar(linea.cantidad) + " × " + escapar(colones(linea.precio)) +
     (linea.preventa ? " · Adelanto de preventa" : "") +
     (linea.quedan === undefined ? "" : " · " + (linea.quedan > 0 ? "Quedan " + escapar(linea.quedan) : "Era la última")) +
-    '</div></td><td style="padding:9px 0;border-bottom:1px solid #eeeeee;text-align:right;white-space:nowrap;font-weight:bold;vertical-align:top;">' +
+    '</div></td><td style="padding:9px 0;border-bottom:1px solid #e3d6ad;text-align:right;white-space:nowrap;font-weight:bold;vertical-align:top;">' +
     escapar(colones(linea.precio * linea.cantidad)) + "</td></tr>";
   const filaDeResumen = ([rotulo, valor], indice, todas) => {
     if (!valor) return "";
@@ -653,21 +653,24 @@ function correoConDiseno({ etiqueta, numero, fecha, total, rotuloTotal, comproba
   const enlaceWhatsapp = "https://wa.me/506" + digitos + "?text=" + encodeURIComponent(saludo);
   const enlaceHoja = libro().getUrl() + "#gid=" + hoja(HOJAS.pedidos).getSheetId();
   const limite = new Date(fecha).getTime() + CONFIG.horasApartado * 3600 * 1000;
-  const fondo = "background-image:url(" + CONFIG.fondoCorreo + ");background-repeat:repeat;";
+  const fondo = "background-image:url(" + CONFIG.imagenesCorreo + "fondo.png);background-repeat:repeat;";
 
   return (
-    '<div style="margin:0;padding:0 0 24px;background-color:#ffce1f;' + fondo + 'font-family:Arial,Helvetica,sans-serif;color:#141414;">' +
+    '<div style="margin:0;padding:0;background-color:#ffce1f;font-family:Arial,Helvetica,sans-serif;color:#141414;">' +
     '<table role="presentation" style="width:100%;border-collapse:collapse;border-bottom:3px solid #141414;"><tr>' + toldo + "</tr></table>" +
-    '<div style="max-width:580px;margin:0 auto;padding:0 12px;">' +
-    '<div style="display:inline-block;margin:18px 0 16px;padding:6px 14px;background:#c9201c;border:3px solid #141414;border-radius:8px;color:#ffffff;font-size:22px;font-weight:900;letter-spacing:1px;">POKEDEKE</div>' +
-    '<div style="background-color:#ffffff;' + fondo + 'border:3px solid #141414;border-radius:12px;padding:22px;">' +
+    '<div style="max-width:580px;margin:0 auto;padding:6px 12px 4px;">' +
+    '<img src="' + CONFIG.imagenesCorreo + 'nombre.png" alt="POKEDEKE" width="556" style="display:block;width:100%;max-width:556px;height:auto;margin:0 auto;font-size:34px;font-weight:900;color:#c9201c;text-align:center;">' +
+    "</div>" +
+    '<div style="padding:0 0 24px;background-color:#ffce1f;' + fondo + '">' +
+    '<div style="max-width:580px;margin:0 auto;padding:12px 12px 0;">' +
+    '<div style="background-color:#fff4d6;' + fondo + 'border:3px solid #141414;border-radius:12px;padding:22px;">' +
     '<span style="display:inline-block;padding:4px 10px;border-radius:6px;background:#1437a8;color:#ffffff;font-size:13px;font-weight:bold;">' + escapar(etiqueta) + "</span> " +
-    '<span style="display:inline-block;padding:4px 10px;border-radius:6px;background:#fff4d6;font-size:13px;font-weight:bold;">' + escapar(PENDIENTE) + "</span>" +
+    '<span style="display:inline-block;padding:4px 10px;border-radius:6px;background:#ffce1f;font-size:13px;font-weight:bold;">' + escapar(PENDIENTE) + "</span>" +
     '<h1 style="margin:12px 0 0;font-size:30px;color:#1437a8;">' + escapar(numero) + "</h1>" +
-    '<p style="margin:2px 0 14px;font-size:13px;color:#555555;">' + escapar(fechaLegible(fecha)) + "</p>" +
-    '<p style="margin:0;color:#555555;">' + escapar(rotuloTotal) + "</p>" +
+    '<p style="margin:2px 0 14px;font-size:13px;color:#444444;">' + escapar(fechaLegible(fecha)) + "</p>" +
+    '<p style="margin:0;color:#444444;">' + escapar(rotuloTotal) + "</p>" +
     '<p style="margin:2px 0 12px;font-size:36px;font-weight:900;">' + escapar(colones(total)) + "</p>" +
-    '<div style="padding:12px;border-radius:8px;background:#fff4d6;font-size:14px;line-height:1.5;">' +
+    '<div style="padding:12px;border:2px solid #141414;border-radius:8px;background:#ffffff;font-size:14px;line-height:1.5;">' +
     "SINPE Móvil al <strong>" + escapar(CONFIG.sinpe) + "</strong><br>" +
     (comprobante ? "Comprobante que escribió el cliente: <strong>" + escapar(comprobante) + "</strong><br>" : "") +
     "Apartado hasta <strong>" + escapar(fechaLegible(limite)) + "</strong></div>" +
@@ -685,7 +688,7 @@ function correoConDiseno({ etiqueta, numero, fecha, total, rotuloTotal, comproba
     botonDeCorreo("Abrir Pedidos web", enlaceHoja, "#1437a8") +
     "</div></div>" +
     '<p style="margin:14px 4px 0;font-size:12px;">Aviso automático de la tienda. Los datos del cliente son solo para este pedido.</p>' +
-    "</div></div>"
+    "</div></div></div>"
   );
 }
 
