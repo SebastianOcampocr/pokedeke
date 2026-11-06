@@ -12,7 +12,7 @@ import { Calcomania, RejillaProductos } from "@/components/TarjetaProducto";
 import { VistosRecientes } from "@/components/VistosRecientes";
 import { colones, fechaCorta } from "@/lib/formato";
 import { buscarProducto, estaAgotado, PRODUCTOS } from "@/lib/productos";
-import { ENVIO_GRATIS_DESDE, ENVIOS } from "@/lib/tienda";
+import { ENVIO_GRATIS_DESDE, ENVIOS, TARIFA_CORREOS } from "@/lib/tienda";
 
 export function generateStaticParams() {
   // GitHub Pages no acepta una lista vacía: esta ruta da "no encontrado".
@@ -153,7 +153,9 @@ async function ContenidoProducto({
                 >
                   <span>{envio.nombre}</span>
                   <span className="font-bold whitespace-nowrap">
-                    {envio.costo === 0 ? "Gratis" : colones(envio.costo)}
+                    {envio.pideDireccion
+                      ? `Desde ${colones(TARIFA_CORREOS.gam.primerKilo)}`
+                      : "Gratis"}
                   </span>
                 </div>
               ))}

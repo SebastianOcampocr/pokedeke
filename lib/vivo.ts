@@ -4,7 +4,10 @@ import { useMemo, useSyncExternalStore } from "react";
 import type { Producto } from "./productos";
 import { PEDIDOS_URL } from "./tienda";
 
-type Inventario = Record<string, { stock: number; precio: number }>;
+type Inventario = Record<
+  string,
+  { stock: number; precio: number; peso?: number }
+>;
 
 /** Cada cuánto se pregunta mientras la pestaña esté a la vista. */
 const CADA_MILISEGUNDOS = 15_000;
@@ -59,7 +62,12 @@ export function conDatosVivos(producto: Producto, vivo: Inventario | null) {
   if (!vivo) return producto;
   const dato = vivo[producto.slug];
   if (!dato) return { ...producto, stock: 0 };
-  return { ...producto, stock: dato.stock, precio: dato.precio };
+  return {
+    ...producto,
+    stock: dato.stock,
+    precio: dato.precio,
+    peso: dato.peso,
+  };
 }
 
 export function useProductoVivo(producto: Producto) {

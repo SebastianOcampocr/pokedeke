@@ -22,6 +22,8 @@ import {
   ENVIO_GRATIS_DESDE,
   ENVIOS,
   LUGAR,
+  TARIFA_CORREOS,
+  tarifaCorreos,
   TIENDA,
   TIENDA_ABIERTA,
 } from "@/lib/tienda";
@@ -195,6 +197,9 @@ function Confirmacion({
           <p className="leading-snug">
             Gracias, {pedido.cliente.split(" ")[0]}. Tu producto queda apartado{" "}
             {TIENDA.plazoPagoHoras} horas mientras hacés el pago.
+            {TIENDA_ABIERTA
+              ? ` Te mandamos la confirmación a ${pedido.correo}.`
+              : null}
           </p>
         </div>
       </div>
@@ -290,11 +295,26 @@ export function Pago() {
 
   const envio = ENVIOS.find((opcion) => opcion.id === envioId) ?? ENVIOS[0];
   const { subtotal } = calcularTotales(lineas, cupon, 0);
+  const gramos = lineas.reduce(
+    (suma, { producto, cantidad }) => suma + (producto.peso ?? 0) * cantidad,
+    0,
+  );
+  const costoCorreos = canton ? tarifaCorreos(provincia, canton, gramos) : null;
+  const costoElegido = envio.pideDireccion ? costoCorreos : 0;
   const totales = calcularTotales(
     lineas,
     cupon,
-    costoDeEnvio(envio.costo, subtotal),
+    costoDeEnvio(costoElegido ?? 0, subtotal),
   );
+  const faltaCanton = costoElegido === null && subtotal < ENVIO_GRATIS_DESDE;
+
+  function precioDeOpcion(pideDireccion: boolean) {
+    if (!pideDireccion || subtotal >= ENVIO_GRATIS_DESDE) return "Gratis";
+    return costoCorreos === null
+      ? `Desde ${colones(TARIFA_CORREOS.gam.primerKilo)}`
+      : colones(costoCorreos);
+  }
+
   const datosProvincia = ubicaciones.find((p) => p.nombre === provincia);
   const datosCanton = datosProvincia?.cantones.find((c) => c.nombre === canton);
 
@@ -392,10 +412,9 @@ export function Pago() {
           />
           <Campo
             id="correo"
-            rotulo="Correo (opcional)"
+            rotulo="Correo, para mandarte la confirmación"
             tipo="email"
             autoCompletar="email"
-            requerido={false}
           />
           {/* Trampa para robots: la gente nunca ve este campo. */}
           <input
@@ -416,11 +435,7 @@ export function Pago() {
               activa={opcion.id === envio.id}
               titulo={opcion.nombre}
               detalle={opcion.detalle}
-              extra={
-                costoDeEnvio(opcion.costo, subtotal) === 0
-                  ? "Gratis"
-                  : colones(opcion.costo)
-              }
+              extra={precioDeOpcion(opcion.pideDireccion)}
               alElegir={() => setEnvioId(opcion.id)}
             />
           ))}
@@ -504,7 +519,13 @@ export function Pago() {
           ) : null}
           <Linea
             rotulo="Envío"
-            monto={totales.envio === 0 ? "Gratis" : colones(totales.envio)}
+            monto={
+              faltaCanton
+                ? "Falta tu cantón"
+                : totales.envio === 0
+                  ? "Gratis"
+                  : colones(totales.envio)
+            }
           />
           <Linea rotulo="Total" monto={colones(totales.total)} fuerte />
         </div>

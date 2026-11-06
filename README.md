@@ -28,6 +28,7 @@ Las demás columnas amarillas son opcionales:
 | Destacado | Con `sí`, sale en Destacados |
 | Etiqueta | Nuevo, Preventa u Oferta |
 | Llega (preventas) | Fecha dd/mm/yyyy para el reloj de la preventa |
+| Peso (g) | Gramos del producto, para calcular el envío. Vacío usa un estimado por categoría |
 
 Reglas que conviene saber:
 
@@ -44,9 +45,10 @@ El proceso lo hace `scripts/traer-catalogo.mjs`, que lee la pestaña desde el se
 
 GitHub Pages no tiene servidor, así que el servidor vive adentro de la hoja: es el archivo `apps-script/Pedidos.gs`, pegado en **Extensiones > Apps Script**.
 
-1. El cliente paga por SINPE y escribe el comprobante. El pedido cae en la pestaña **Pedidos web** y llega un correo a pokedekestore@gmail.com.
-2. Revisá que el SINPE haya entrado y cambiá el **Estado** a **Pagado**.
-3. La venta pasa sola a **Ventas**, con el cliente, y en Notas el pedido, el envío, el comprobante y el WhatsApp. El stock baja solo.
+1. El cliente hace el pedido. Cae en la pestaña **Pedidos web**, llega un aviso a pokedekestore@gmail.com y el cliente recibe la confirmación en el correo que escribió.
+2. El cliente paga por SINPE y escribe el comprobante. Te llega otro aviso.
+3. Revisá que el SINPE haya entrado y cambiá el **Estado** a **Pagado**.
+4. La venta pasa sola a **Ventas**, con el cliente, y en Notas el pedido, el envío, el comprobante y el WhatsApp. El stock baja solo.
 
 Lo que conviene saber:
 
@@ -57,8 +59,23 @@ Lo que conviene saber:
 - Si cancelás un pedido que ya estaba en Ventas, borrá esas filas de Ventas a mano.
 - Las ventas de WhatsApp o en persona se siguen anotando en Ventas.
 - El costo de envío no se anota en Ventas, como dice "Cómo usarlo".
+- Los correos salen de la cuenta que hizo la implementación del script, y esa dirección la ve el cliente. Antes de abrir la tienda debe ser la cuenta de la tienda. Las respuestas del cliente van a pokedekestore@gmail.com.
 
-Si cambiás envíos, cupones o el envío gratis en `lib/tienda.ts`, cambialos también en `CONFIG`, al inicio de `apps-script/Pedidos.gs`. Después de editar ese archivo hay que pegarlo otra vez en Apps Script y crear una versión nueva en **Implementar > Administrar implementaciones**.
+Si cambiás tarifas, cupones o el envío gratis en `lib/tienda.ts`, cambialos también en `CONFIG`, al inicio de `apps-script/Pedidos.gs`. Después de editar ese archivo hay que pegarlo otra vez en Apps Script y crear una versión nueva en **Implementar > Administrar implementaciones**.
+
+## Cómo se calcula el envío por Correos
+
+La página y la hoja usan la tarifa EMS Nacional Paquetes de [Correos](https://correos.go.cr/servicio-ems/), saliendo de la GAM, con IVA:
+
+| Destino | Primer kilo | Cada kilo más |
+|---|---|---|
+| GAM | ₡2 450 | ₡1 400 |
+| Resto del país | ₡3 350 | ₡1 550 |
+
+- El destino sale de la provincia y el cantón. La GAM son 31 cantones. Correos no publica su lista, así que puede tratar distinto algún cantón.
+- El peso es la suma de los productos más 100 g de empaque. Cada producto usa la columna **Peso (g)** o, si está vacía, el estimado por categoría en `CONFIG.pesos`.
+- La hoja vuelve a calcular el envío al recibir el pedido. Lo que cuenta es ese monto.
+- Con el registro en Pymexpress la tarifa baja un poco. Si se aprueba, hay que cambiar los montos en `lib/tienda.ts` y en `CONFIG`.
 
 ## Cómo abrirla en tu compu
 

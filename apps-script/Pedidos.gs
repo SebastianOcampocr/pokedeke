@@ -3,7 +3,8 @@
  * en Extensiones > Apps Script. Hace cuatro cosas:
  *
  * 1. Recibe los pedidos de la página y los anota en "Pedidos web".
- * 2. Avisa por correo cuando entra un pedido o un comprobante.
+ * 2. Avisa por correo cuando entra un pedido o un comprobante, y le confirma el
+ *    pedido al cliente en el correo que escribió.
  * 3. Cuando el Estado de un pedido pasa a "Pagado", anota la venta en "Ventas".
  * 4. Le entrega a GitHub el catálogo, a la página el stock en vivo y a cada
  *    cliente el estado de su pedido.
@@ -18,17 +19,46 @@ const CONFIG = {
   canal: "Página web",
   metodoPago: "SINPE Móvil",
   sinpe: "8781-2831",
-  // Imágenes públicas: si la página cambia de dirección, hay que cambiarla aquí.
-  imagenesCorreo: "https://sebastianocampocr.github.io/pokedeke/correo/",
+  // Dirección de la página: si cambia, hay que cambiarla aquí. Los correos sacan
+  // de aquí las imágenes y el enlace para ver el pedido.
+  sitio: "https://sebastianocampocr.github.io/pokedeke/",
   horasApartado: 24,
   adelantoPreventa: 0.5,
   envioGratisDesde: 50000,
   maxLlamadasPorHora: 60,
   // Estos valores deben coincidir con lib/tienda.ts.
   envios: {
-    correos: { nombre: "Correos de Costa Rica", costo: 2500, pideDireccion: true },
-    "retiro-omni": { nombre: "Retiro en Edificio Omni", costo: 0, pideDireccion: false },
+    correos: { nombre: "Correos de Costa Rica", pideDireccion: true },
+    "retiro-omni": { nombre: "Retiro en Edificio Omni", pideDireccion: false },
   },
+  // EMS Nacional Paquetes saliendo de la GAM, con IVA. correos.go.cr/servicio-ems
+  tarifaCorreos: {
+    gam: { primerKilo: 2450, kiloAdicional: 1400 },
+    resto: { primerKilo: 3350, kiloAdicional: 1550 },
+  },
+  pesoEmpaque: 100,
+  cantonesGam: {
+    "San José": ["Central", "Escazú", "Desamparados", "Aserrí", "Mora", "Goicoechea", "Santa Ana", "Alajuelita", "Vázquez De Coronado", "Tibás", "Moravia", "Montes De Oca", "Curridabat"],
+    Alajuela: ["Central", "Atenas", "Poás"],
+    Cartago: ["Central", "Paraíso", "La Unión", "Alvarado", "Oreamuno", "El Guarco"],
+    Heredia: ["Central", "Barva", "Santo Domingo", "Santa Barbara", "San Rafael", "San Isidro", "Belén", "Flores", "San Pablo"],
+  },
+  // Gramos estimados: se usan solo si la columna Peso (g) de Catálogo web está vacía.
+  pesos: {
+    "Carta suelta (single)": 30,
+    "Carta gradada": 150,
+    "Booster pack": 30,
+    "Blister / sleeved booster": 80,
+    "Booster bundle": 200,
+    "Tin o caja de colección": 400,
+    ETB: 800,
+    "Booster box": 800,
+    "Colección premium / UPC": 2500,
+    Mazos: 200,
+    "Sleeves y fundas": 150,
+    Accesorios: 200,
+  },
+  pesoSinCategoria: 300,
   cupones: {
     TICO10: { tipo: "porcentaje", valor: 10 },
     BIENVENIDA: { tipo: "monto", valor: 2000 },
@@ -178,6 +208,7 @@ function stockEnVivo() {
     productos[producto.slug] = {
       stock: Math.max(producto.stock - (reservado[producto.slug] || 0), 0),
       precio: producto.precio,
+      peso: producto.peso,
     };
   });
   const respuesta = JSON.stringify({ ok: true, productos });
@@ -240,7 +271,7 @@ function colones(monto) {
 function filasDeCatalogo() {
   const pestana = hoja(HOJAS.catalogo);
   const ultima = pestana.getLastRow();
-  const crudo = pestana.getRange(4, 1, Math.max(ultima - 3, 1), 16).getValues();
+  const crudo = pestana.getRange(4, 1, Math.max(ultima - 3, 1), 17).getValues();
   const titulos = crudo[0].map((titulo) => String(titulo).trim());
   return crudo
     .slice(1)
@@ -286,6 +317,10 @@ function productosPorSlug() {
     grupo.preventa = preventa;
     grupo.precio = precio;
     grupo.precioCobrado = preventa ? Math.round(precio * CONFIG.adelantoPreventa) : precio;
+    grupo.peso =
+      Number(ultimo("Peso (g)")) ||
+      CONFIG.pesos[ultimo("Categoría")] ||
+      CONFIG.pesoSinCategoria;
   });
   return grupos;
 }
@@ -345,14 +380,29 @@ function calcularDescuento(codigo, subtotal) {
     : Math.min(cupon.valor, subtotal);
 }
 
+/** La ubicación llega como "Provincia, Cantón, Distrito". */
+function costoDeCorreos(ubicacion, gramos) {
+  const [provincia, canton] = ubicacion.split(", ");
+  const enGam = (CONFIG.cantonesGam[provincia] || []).includes(canton);
+  const tarifa = enGam ? CONFIG.tarifaCorreos.gam : CONFIG.tarifaCorreos.resto;
+  const kilos = Math.max(Math.ceil((gramos + CONFIG.pesoEmpaque) / 1000), 1);
+  return tarifa.primerKilo + (kilos - 1) * tarifa.kiloAdicional;
+}
+
+function esCorreo(valor) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(valor);
+}
+
 function crearPedido(datos) {
   const cliente = texto(datos.cliente, 80);
   const whatsapp = normalizarWhatsapp(datos.whatsapp);
+  const correo = texto(datos.correo, 120);
   const envio = CONFIG.envios[datos.envio];
   const pedidas = Array.isArray(datos.lineas) ? datos.lineas.slice(0, 30) : [];
 
   if (cliente.length < 3) return { ok: false, error: "Escribí tu nombre completo." };
   if (!whatsapp) return { ok: false, error: "Revisá tu WhatsApp: deben ser 8 números." };
+  if (!esCorreo(correo)) return { ok: false, error: "Revisá tu correo: ahí te llega la confirmación." };
   if (!envio) return { ok: false, error: "Elegí cómo te llega el pedido." };
   if (pedidas.length === 0) return { ok: false, error: "Tu carrito está vacío." };
 
@@ -368,6 +418,7 @@ function crearPedido(datos) {
   const productos = productosPorSlug();
   const reservado = apartados(filas);
   const lineas = [];
+  let gramos = 0;
 
   for (const pedida of pedidas) {
     const slug = texto(pedida.slug, 200);
@@ -382,6 +433,7 @@ function crearPedido(datos) {
     if (cantidad > producto.stock - (reservado[slug] || 0)) {
       return { ok: false, agotado: slug, error: "Se acaba de agotar: " + producto.nombre + "." };
     }
+    gramos += producto.peso * cantidad;
     lineas.push({
       slug,
       nombre: producto.nombre,
@@ -394,11 +446,11 @@ function crearPedido(datos) {
 
   const subtotal = lineas.reduce((suma, linea) => suma + linea.precio * linea.cantidad, 0);
   const descuento = calcularDescuento(datos.cupon, subtotal);
-  const costoEnvio = subtotal >= CONFIG.envioGratisDesde ? 0 : envio.costo;
+  const tarifa = envio.pideDireccion ? costoDeCorreos(ubicacion, gramos) : 0;
+  const costoEnvio = subtotal >= CONFIG.envioGratisDesde ? 0 : tarifa;
   const total = subtotal - descuento + costoEnvio;
   const numero = siguienteNumero(filas);
   const clave = Utilities.getUuid();
-  const correo = texto(datos.correo, 120);
   const resumen = lineas
     .map((linea) => linea.cantidad + " × " + linea.nombre + " (" + colones(linea.precio) + ")")
     .join("\n");
@@ -424,6 +476,12 @@ function crearPedido(datos) {
   fila[COL.clave - 1] = clave;
   hoja(HOJAS.pedidos).appendRow(fila);
   olvidarStock();
+
+  const montos = resumenDeMontos(subtotal, descuento, cupon, costoEnvio, total);
+  const entrega = [
+    ["Método", envio.nombre],
+    ["Dirección", envio.pideDireccion ? ubicacion + ". " + direccion : ""],
+  ];
 
   avisar(
     "Nuevo pedido " + numero + " · " + colones(total) + " · " + cliente,
@@ -458,22 +516,33 @@ function crearPedido(datos) {
         ["WhatsApp", whatsapp],
         ["Correo", correo],
       ],
-      entrega: [
-        ["Método", envio.nombre],
-        ["Dirección", envio.pideDireccion ? ubicacion + ". " + direccion : ""],
-      ],
+      entrega: envio.pideDireccion
+        ? entrega.concat([["Peso", "Unos " + (gramos + CONFIG.pesoEmpaque) + " g con empaque"]])
+        : entrega,
       lineas,
-      resumen: resumenDeMontos(subtotal, descuento, texto(datos.cupon, 30).toUpperCase(), costoEnvio, total),
+      resumen: montos,
       pasos: [
         "Esperá el comprobante del cliente. Te llega en otro correo.",
         "Revisá en tu banco que entró el monto exacto, con " + numero + " en el detalle.",
         "Cambiá el Estado a Pagado en Pedidos web. La venta pasa sola a Ventas.",
         "Escribile por WhatsApp para coordinar la entrega.",
       ],
-      whatsapp,
-      nombre: cliente,
+      botones: botonesDelDueno(numero, whatsapp, cliente),
     }),
   );
+
+  confirmarAlCliente({
+    correo,
+    numero,
+    fecha: fila[COL.fecha - 1],
+    total,
+    cliente,
+    whatsapp,
+    entrega,
+    lineas: lineas.map(({ quedan, ...linea }) => linea),
+    resumen,
+    montos,
+  });
 
   return { ok: true, numero, clave, subtotal, descuento, costoEnvio, total, lineas };
 }
@@ -539,8 +608,7 @@ function guardarComprobante(datos) {
         "Si entró, cambiá el Estado a Pagado en Pedidos web. La venta pasa sola a Ventas.",
         "Escribile por WhatsApp para coordinar la entrega.",
       ],
-      whatsapp: fila[COL.whatsapp - 1],
-      nombre: cliente,
+      botones: botonesDelDueno(numero, fila[COL.whatsapp - 1], cliente),
     }),
   );
   return { ok: true };
@@ -617,7 +685,7 @@ function tituloDeCorreo(titulo) {
 }
 
 /** Los correos no aceptan hojas de estilo: todo va dentro de cada etiqueta. */
-function correoConDiseno({ etiqueta, numero, fecha, total, rotuloTotal, comprobante, cliente, entrega, lineas, resumen, pasos, whatsapp, nombre }) {
+function correoConDiseno({ etiqueta, saludo, numero, fecha, total, rotuloTotal, comprobante, tituloCliente, cliente, entrega, lineas, resumen, pasos, botones, pie }) {
   const filaDeDato = ([rotulo, valor]) =>
     valor
       ? '<tr><td style="width:96px;padding:5px 12px 5px 0;color:#444444;white-space:nowrap;vertical-align:top;">' +
@@ -647,19 +715,15 @@ function correoConDiseno({ etiqueta, numero, fecha, total, rotuloTotal, comproba
     '<td style="height:16px;background:' + (indice % 2 ? "#ffffff" : "#c9201c") + ';"></td>',
   ).join("");
 
-  const digitos = soloDigitos(whatsapp);
-  const primerNombre = String(nombre).split(" ")[0];
-  const saludo = "¡Hola " + primerNombre + "! Te escribimos de " + CONFIG.nombreTienda + " por tu pedido " + numero + ".";
-  const enlaceWhatsapp = "https://wa.me/506" + digitos + "?text=" + encodeURIComponent(saludo);
-  const enlaceHoja = libro().getUrl() + "#gid=" + hoja(HOJAS.pedidos).getSheetId();
+  const imagenes = CONFIG.sitio + "correo/";
   const limite = new Date(fecha).getTime() + CONFIG.horasApartado * 3600 * 1000;
-  const fondo = "background-image:url(" + CONFIG.imagenesCorreo + "fondo.png);background-repeat:repeat;";
+  const fondo = "background-image:url(" + imagenes + "fondo.png);background-repeat:repeat;";
 
   return (
     '<div style="margin:0;padding:0;background-color:#ffce1f;font-family:Arial,Helvetica,sans-serif;color:#141414;">' +
     '<table role="presentation" style="width:100%;border-collapse:collapse;border-bottom:3px solid #141414;"><tr>' + toldo + "</tr></table>" +
     '<div style="max-width:580px;margin:0 auto;padding:6px 12px 4px;">' +
-    '<img src="' + CONFIG.imagenesCorreo + 'nombre.png" alt="POKEDEKE" width="556" style="display:block;width:100%;max-width:556px;height:auto;margin:0 auto;font-size:34px;font-weight:900;color:#c9201c;text-align:center;">' +
+    '<img src="' + imagenes + 'nombre.png" alt="POKEDEKE" width="556" style="display:block;width:100%;max-width:556px;height:auto;margin:0 auto;font-size:34px;font-weight:900;color:#c9201c;text-align:center;">' +
     "</div>" +
     '<div style="padding:0 0 24px;background-color:#ffce1f;' + fondo + '">' +
     '<div style="max-width:580px;margin:0 auto;padding:12px 12px 0;">' +
@@ -668,13 +732,15 @@ function correoConDiseno({ etiqueta, numero, fecha, total, rotuloTotal, comproba
     '<span style="display:inline-block;padding:4px 10px;border-radius:6px;background:#ffce1f;font-size:13px;font-weight:bold;">' + escapar(PENDIENTE) + "</span>" +
     '<h1 style="margin:12px 0 0;font-size:30px;color:#1437a8;">' + escapar(numero) + "</h1>" +
     '<p style="margin:2px 0 14px;font-size:13px;color:#444444;">' + escapar(fechaLegible(fecha)) + "</p>" +
+    (saludo ? '<p style="margin:0 0 14px;font-size:16px;line-height:1.45;">' + escapar(saludo) + "</p>" : "") +
     '<p style="margin:0;color:#444444;">' + escapar(rotuloTotal) + "</p>" +
     '<p style="margin:2px 0 12px;font-size:36px;font-weight:900;">' + escapar(colones(total)) + "</p>" +
     '<div style="padding:12px;border:2px solid #141414;border-radius:8px;background:#ffffff;font-size:14px;line-height:1.5;">' +
     "SINPE Móvil al <strong>" + escapar(CONFIG.sinpe) + "</strong><br>" +
+    "En el detalle: <strong>" + escapar(numero) + "</strong><br>" +
     (comprobante ? "Comprobante que escribió el cliente: <strong>" + escapar(comprobante) + "</strong><br>" : "") +
     "Apartado hasta <strong>" + escapar(fechaLegible(limite)) + "</strong></div>" +
-    tituloDeCorreo("Cliente") +
+    tituloDeCorreo(tituloCliente || "Cliente") +
     '<table style="width:100%;border-collapse:collapse;font-size:15px;">' + cliente.map(filaDeDato).join("") + "</table>" +
     tituloDeCorreo("Entrega") +
     '<table style="width:100%;border-collapse:collapse;font-size:15px;">' + entrega.map(filaDeDato).join("") + "</table>" +
@@ -683,30 +749,91 @@ function correoConDiseno({ etiqueta, numero, fecha, total, rotuloTotal, comproba
     '<table style="width:100%;border-collapse:collapse;font-size:15px;margin-top:8px;">' + resumen.map(filaDeResumen).join("") + "</table>" +
     tituloDeCorreo("Qué sigue") +
     '<table style="width:100%;border-collapse:collapse;font-size:15px;">' + pasos.map(paso).join("") + "</table>" +
-    '<div style="margin-top:16px;">' +
-    (digitos.length === 8 ? botonDeCorreo("Escribir por WhatsApp", enlaceWhatsapp, "#127a43") : "") +
-    botonDeCorreo("Abrir Pedidos web", enlaceHoja, "#1437a8") +
-    "</div></div>" +
-    '<p style="margin:14px 4px 0;font-size:12px;">Aviso automático de la tienda. Los datos del cliente son solo para este pedido.</p>' +
+    '<div style="margin-top:16px;">' + botones.join("") + "</div></div>" +
+    '<p style="margin:14px 4px 0;font-size:12px;">' + escapar(pie || "Aviso automático de la tienda. Los datos del cliente son solo para este pedido.") + "</p>" +
     "</div></div></div>"
   );
 }
 
-function avisar(asunto, lineas, responderA, html) {
+function botonesDelDueno(numero, whatsapp, cliente) {
+  const digitos = soloDigitos(whatsapp);
+  const primerNombre = String(cliente).split(" ")[0];
+  const saludo = "¡Hola " + primerNombre + "! Te escribimos de " + CONFIG.nombreTienda + " por tu pedido " + numero + ".";
+  const enlaceWhatsapp = "https://wa.me/506" + digitos + "?text=" + encodeURIComponent(saludo);
+  const enlaceHoja = libro().getUrl() + "#gid=" + hoja(HOJAS.pedidos).getSheetId();
+  return [
+    digitos.length === 8 ? botonDeCorreo("Escribir por WhatsApp", enlaceWhatsapp, "#127a43") : "",
+    botonDeCorreo("Abrir Pedidos web", enlaceHoja, "#1437a8"),
+  ];
+}
+
+function mandarCorreo(opciones) {
   try {
-    const opciones = {
-      to: CONFIG.correoAvisos,
-      subject: asunto,
-      body: lineas.filter((linea, i) => linea || lineas[i - 1]).join("\n"),
-      htmlBody: html,
-      name: CONFIG.nombreTienda,
-    };
-    if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(responderA)) opciones.replyTo = responderA;
-    MailApp.sendEmail(opciones);
+    MailApp.sendEmail({ name: CONFIG.nombreTienda, ...opciones });
   } catch (error) {
     // Un correo que falla no debe perder el pedido: ya quedó en la hoja.
     console.error(error);
   }
+}
+
+function avisar(asunto, lineas, responderA, html) {
+  const opciones = {
+    to: CONFIG.correoAvisos,
+    subject: asunto,
+    body: lineas.filter((linea, i) => linea || lineas[i - 1]).join("\n"),
+    htmlBody: html,
+  };
+  if (esCorreo(responderA)) opciones.replyTo = responderA;
+  mandarCorreo(opciones);
+}
+
+/** Las respuestas del cliente llegan al correo de la tienda. */
+function confirmarAlCliente({ correo, numero, fecha, total, cliente, whatsapp, entrega, lineas, resumen, montos }) {
+  const primerNombre = String(cliente).split(" ")[0];
+  const pasos = [
+    "Hacé el SINPE Móvil por el monto exacto, con " + numero + " en el detalle.",
+    "Escribí el número de comprobante en la página. Si ya la cerraste, respondé este correo con ese número.",
+    "Cuando confirmemos el pago te escribimos por WhatsApp para coordinar la entrega.",
+  ];
+  mandarCorreo({
+    to: correo,
+    replyTo: CONFIG.correoAvisos,
+    subject: "Recibimos tu pedido " + numero + " · " + CONFIG.nombreTienda,
+    body: [
+      "¡Gracias, " + primerNombre + "! Recibimos tu pedido " + numero + ".",
+      "",
+      resumen,
+      "",
+      "Total a pagar: " + colones(total),
+      "SINPE Móvil al " + CONFIG.sinpe + ", con " + numero + " en el detalle.",
+      "Tus productos quedan apartados " + CONFIG.horasApartado + " horas.",
+      "",
+      "Qué sigue:",
+      ...pasos,
+    ].join("\n"),
+    htmlBody: correoConDiseno({
+      etiqueta: "Pedido recibido",
+      saludo:
+        "¡Gracias, " + primerNombre + "! Recibimos tu pedido y tus productos quedan apartados " +
+        CONFIG.horasApartado + " horas mientras hacés el pago.",
+      numero,
+      fecha,
+      total,
+      rotuloTotal: "Total a pagar",
+      tituloCliente: "Tus datos",
+      cliente: [
+        ["Nombre", cliente],
+        ["WhatsApp", whatsapp],
+        ["Correo", correo],
+      ],
+      entrega,
+      lineas,
+      resumen: montos,
+      pasos,
+      botones: [botonDeCorreo("Ver mi pedido", CONFIG.sitio + "pedido?numero=" + numero, "#1437a8")],
+      pie: "Si algún dato está mal, respondé este correo. Tus datos son solo para este pedido.",
+    }),
+  });
 }
 
 /* ---------- Pasar a Ventas ---------- */

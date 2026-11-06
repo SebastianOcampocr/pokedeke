@@ -12,6 +12,8 @@ export type Producto = {
   precio: number;
   precioAntes?: number;
   stock: number;
+  /** Gramos, según la hoja. Llega con el stock en vivo. */
+  peso?: number;
   etiqueta?: "Nuevo" | "Preventa" | "Oferta";
   destacado?: boolean;
   parado?: boolean;

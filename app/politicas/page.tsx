@@ -39,8 +39,9 @@ export default function PaginaPoliticas() {
             <p>
               Enviamos por Correos de Costa Rica a todo el país, o podés retirar
               gratis en el Edificio Omni, en San José, cuadrando día y hora por
-              WhatsApp. El costo del envío lo paga quien compra y se muestra
-              antes de confirmar el pedido. En compras desde ₡50 000, el envío
+              WhatsApp. El costo del envío lo paga quien compra. Sale de la
+              tarifa de Correos, depende de tu cantón y del peso del pedido, y
+              se muestra antes de confirmar. En compras desde ₡50 000, el envío
               por Correos va por nuestra cuenta.
             </p>
             <p>

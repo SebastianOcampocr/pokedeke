@@ -30,18 +30,76 @@ export const ENVIOS = [
   {
     id: "correos",
     nombre: "Correos de Costa Rica",
-    detalle: "A cualquier parte del país",
-    costo: 2500,
+    detalle: "A todo el país, con rastreo. Depende de tu cantón y del peso",
     pideDireccion: true,
   },
   {
     id: "retiro-omni",
     nombre: "Retiro en Edificio Omni",
     detalle: "Gratis, cuadramos día y hora por WhatsApp",
-    costo: 0,
     pideDireccion: false,
   },
 ];
+
+/**
+ * Tarifa EMS Nacional Paquetes saliendo de la GAM, con el 13% de IVA incluido.
+ * Fuente: correos.go.cr/servicio-ems, revisada el 6/11/2026.
+ * Debe coincidir con CONFIG en apps-script/Pedidos.gs.
+ */
+export const TARIFA_CORREOS = {
+  gam: { primerKilo: 2450, kiloAdicional: 1400 },
+  resto: { primerKilo: 3350, kiloAdicional: 1550 },
+};
+
+/** Gramos que se le suman al pedido por la caja y el relleno. */
+export const PESO_EMPAQUE = 100;
+
+/** Los 31 cantones de la GAM, escritos como en datos/ubicaciones-cr.json. */
+export const CANTONES_GAM: Record<string, string[]> = {
+  "San José": [
+    "Central",
+    "Escazú",
+    "Desamparados",
+    "Aserrí",
+    "Mora",
+    "Goicoechea",
+    "Santa Ana",
+    "Alajuelita",
+    "Vázquez De Coronado",
+    "Tibás",
+    "Moravia",
+    "Montes De Oca",
+    "Curridabat",
+  ],
+  Alajuela: ["Central", "Atenas", "Poás"],
+  Cartago: [
+    "Central",
+    "Paraíso",
+    "La Unión",
+    "Alvarado",
+    "Oreamuno",
+    "El Guarco",
+  ],
+  Heredia: [
+    "Central",
+    "Barva",
+    "Santo Domingo",
+    "Santa Barbara",
+    "San Rafael",
+    "San Isidro",
+    "Belén",
+    "Flores",
+    "San Pablo",
+  ],
+};
+
+/** Correos cobra por kilo empezado, y el primer kilo cubre desde el primer gramo. */
+export function tarifaCorreos(provincia: string, canton: string, gramos: number) {
+  const zona = CANTONES_GAM[provincia]?.includes(canton) ? "gam" : "resto";
+  const tarifa = TARIFA_CORREOS[zona];
+  const kilos = Math.max(Math.ceil((gramos + PESO_EMPAQUE) / 1000), 1);
+  return tarifa.primerKilo + (kilos - 1) * tarifa.kiloAdicional;
+}
 
 export type Cupon = {
   codigo: string;
