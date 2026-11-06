@@ -2,7 +2,10 @@
 
 Demo visual de la tienda en línea de Pokedeke, con el estilo Rótulo. Por ahora solo Pokémon; los demás TCG salen como "Próximamente". Sirve para mostrar cómo se vería y cómo se usaría la página.
 
-**Sigue siendo una demo:** los productos, el precio y el stock son reales y salen de la hoja de Google, pero no cobra, no manda correos y los pedidos no llegan a la hoja. El carrito y los pedidos se guardan únicamente en el navegador de quien la esté usando.
+Los productos, el precio y el stock son reales y salen de la hoja de Google. La página funciona en dos modos:
+
+- **Demo:** sin `PEDIDOS_URL`. Sale el aviso negro y los pedidos se guardan solo en el navegador. Nadie debe pagar.
+- **Tienda abierta:** con `PEDIDOS_URL`. Los pedidos caen en la hoja y llegan por correo. Es plata de verdad.
 
 ## Cómo se actualiza el inventario
 
@@ -33,7 +36,27 @@ Reglas que conviene saber:
 - No ordenés ni borrés filas: cada fila de Catálogo web corresponde a la misma fila de Compras.
 - Si la pestaña se daña o Google no responde, la página se queda con el último catálogo que estuvo bien.
 
-El proceso lo hace `scripts/traer-catalogo.mjs`, que lee el CSV publicado de la pestaña (variable de GitHub `CATALOGO_CSV_URL`) y genera `datos/catalogo.json`.
+El proceso lo hace `scripts/traer-catalogo.mjs`, que lee la pestaña desde el servidor de la hoja (variable de GitHub `PEDIDOS_URL`) y genera `datos/catalogo.json`.
+
+## Cómo funcionan los pedidos
+
+GitHub Pages no tiene servidor, así que el servidor vive adentro de la hoja: es el archivo `apps-script/Pedidos.gs`, pegado en **Extensiones > Apps Script**.
+
+1. El cliente paga por SINPE y escribe el comprobante. El pedido cae en la pestaña **Pedidos web** y llega un correo a pokedekestorecr@gmail.com.
+2. Revisá que el SINPE haya entrado y cambiá el **Estado** a **Pagado**.
+3. La venta pasa sola a **Ventas**, con el cliente, y en Notas el pedido, el envío, el comprobante y el WhatsApp. El stock baja solo.
+
+Lo que conviene saber:
+
+- Los precios y el stock se leen de la hoja. Lo que manda el navegador no se usa para cobrar.
+- Un pedido sin pagar aparta el producto 24 horas.
+- Marcar Pagado dos veces no duplica la venta.
+- Si no hay stock al marcar Pagado, el Estado se devuelve y la razón queda en Notas.
+- Si cancelás un pedido que ya estaba en Ventas, borrá esas filas de Ventas a mano.
+- Las ventas de WhatsApp o en persona se siguen anotando en Ventas.
+- El costo de envío no se anota en Ventas, como dice "Cómo usarlo".
+
+Si cambiás envíos, cupones o el envío gratis en `lib/tienda.ts`, cambialos también en `CONFIG`, al inicio de `apps-script/Pedidos.gs`. Después de editar ese archivo hay que pegarlo otra vez en Apps Script y crear una versión nueva en **Implementar > Administrar implementaciones**.
 
 ## Cómo abrirla en tu compu
 
@@ -59,7 +82,7 @@ La demo se publica sola en GitHub Pages: cada cambio que llega a la rama `main` 
 - La página no sale en Google, pero cualquiera que tenga el enlace puede entrar.
 - Cada persona ve su propio carrito y sus pedidos, guardados en su navegador. Los pedidos de muestra no le llegan a nadie.
 
-Esto sirve solo para la demo. La tienda real necesita servidor, así que no puede vivir en GitHub Pages.
+La página armada vive en GitHub Pages y el servidor de pedidos en la hoja de Google.
 
 ## Recorrido para mostrarla
 
@@ -93,18 +116,6 @@ Esto sirve solo para la demo. La tienda real necesita servidor, así que no pued
 | Tractos: plazos y monto mínimo | `components/Tractos.tsx` |
 | Lo que dice Deke | `components/DekeCompa.tsx` |
 | Monto del envío gratis | `lib/tienda.ts` |
-
-## Escribir pedidos en la hoja (pendiente, tienda real)
-
-Leer el catálogo no ocupa llave, pero escribir pedidos sí. Para la tienda real hace falta una llave de Google que solo el dueño de la hoja puede crear:
-
-1. Entrá a <https://console.cloud.google.com> con la cuenta dueña de la hoja y creá un proyecto llamado `Pokedeke`.
-2. En **APIs y servicios > Biblioteca**, buscá **Google Sheets API** y activala.
-3. En **IAM y administración > Cuentas de servicio**, creá una cuenta llamada `pokedeke-tienda`. No ocupa roles.
-4. Entrá a esa cuenta y andá a **Claves > Agregar clave > Crear clave nueva > JSON**. Se descarga un archivo.
-5. Mové ese archivo a la carpeta del proyecto y ponele de nombre `.env.google.json`. Ese nombre queda fuera de git.
-
-Ese archivo es una contraseña: no lo pegués en un chat ni lo subás a ningún lado. Con eso se crea una copia de prueba de la hoja, se comparte con la cuenta y se conecta primero ahí, nunca directo a la hoja real.
 
 ## Lo que hace única a la tienda
 

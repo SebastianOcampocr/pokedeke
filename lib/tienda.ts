@@ -2,15 +2,21 @@
 
 export const TIENDA = {
   nombre: "Pokedeke",
-  sinpe: "8888-8888",
-  sinpeTitular: "Titular de muestra",
-  cuentaIban: "CR00 0000 0000 0000 0000 00",
+  sinpe: "8781-2831",
+  correo: "pokedekestorecr@gmail.com",
   plazoPagoHoras: 24,
   adelantoPreventa: 0.5,
 };
 
 /** Subcarpeta donde vive la página. En la compu va vacía. */
 export const RUTA_BASE = process.env.NEXT_PUBLIC_RUTA_BASE ?? "";
+
+/**
+ * Dirección del servidor de pedidos (apps-script/Pedidos.gs). Mientras esté
+ * vacía la página es solo una demo: nadie debe pagar si el pedido no se anota.
+ */
+export const PEDIDOS_URL = process.env.NEXT_PUBLIC_PEDIDOS_URL ?? "";
+export const TIENDA_ABIERTA = PEDIDOS_URL !== "";
 
 export const LEMA = "Del mezzanine a tu colección";
 

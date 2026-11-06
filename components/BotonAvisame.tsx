@@ -1,6 +1,8 @@
 "use client";
 
 import { useId, useLayoutEffect, useRef, useState } from "react";
+import { anotarInteresado } from "@/lib/api-pedidos";
+import { TIENDA_ABIERTA } from "@/lib/tienda";
 
 export function BotonAvisame({
   nombreProducto,
@@ -12,6 +14,8 @@ export function BotonAvisame({
   const dialogo = useRef<HTMLDialogElement>(null);
   const id = useId();
   const [listo, setListo] = useState(false);
+  const [enviando, setEnviando] = useState(false);
+  const [error, setError] = useState("");
 
   useLayoutEffect(() => {
     const nodo = dialogo.current;
@@ -38,8 +42,7 @@ export function BotonAvisame({
           <div className="flex flex-col gap-4">
             <p className="font-display text-2xl text-azul">¡Listo!</p>
             <p>
-              Cuando llegue {nombreProducto} te avisamos. En la tienda real tus
-              datos quedarían en la lista de interesados.
+              Cuando llegue {nombreProducto} te avisamos.
             </p>
             <button
               type="button"
@@ -52,8 +55,23 @@ export function BotonAvisame({
         ) : (
           <form
             className="flex flex-col gap-4"
-            onSubmit={(evento) => {
+            onSubmit={async (evento) => {
               evento.preventDefault();
+              const datos = new FormData(evento.currentTarget);
+              if (TIENDA_ABIERTA) {
+                setEnviando(true);
+                setError("");
+                const respuesta = await anotarInteresado(
+                  String(datos.get("nombre") ?? ""),
+                  String(datos.get("contacto") ?? ""),
+                  nombreProducto,
+                );
+                setEnviando(false);
+                if (!respuesta.ok) {
+                  setError(respuesta.error);
+                  return;
+                }
+              }
               setListo(true);
             }}
           >
@@ -67,16 +85,30 @@ export function BotonAvisame({
               <label className="rotulo-campo" htmlFor={`${id}-nombre`}>
                 Nombre
               </label>
-              <input id={`${id}-nombre`} className="campo" required />
+              <input id={`${id}-nombre`} name="nombre" className="campo" required />
             </div>
             <div>
               <label className="rotulo-campo" htmlFor={`${id}-contacto`}>
                 WhatsApp o correo
               </label>
-              <input id={`${id}-contacto`} className="campo" required />
+              <input
+                id={`${id}-contacto`}
+                name="contacto"
+                className="campo"
+                required
+              />
             </div>
+            {error ? (
+              <p role="alert" className="font-bold text-rojo">
+                {error}
+              </p>
+            ) : null}
             <div className="flex flex-col gap-3">
-              <button type="submit" className="boton boton-rojo">
+              <button
+                type="submit"
+                className="boton boton-rojo"
+                disabled={enviando}
+              >
                 Avisarme
               </button>
               <button

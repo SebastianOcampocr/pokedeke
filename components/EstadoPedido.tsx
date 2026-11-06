@@ -1,9 +1,11 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { consultarPedido, type PedidoPublico } from "@/lib/api-pedidos";
 import { colones } from "@/lib/formato";
-import { usePedidos, type Estado, type Pedido } from "@/lib/pedidos";
+import { usePedidos, type Estado } from "@/lib/pedidos";
+import { TIENDA_ABIERTA } from "@/lib/tienda";
 import { Deke } from "./Deke";
 import { IconoCheque } from "./Iconos";
 
@@ -14,7 +16,7 @@ const PASOS: { estado: Estado; texto: string }[] = [
   { estado: "Entregado", texto: "Ya lo tenés en tus manos" },
 ];
 
-function Seguimiento({ pedido }: { pedido: Pedido }) {
+function Seguimiento({ pedido }: { pedido: PedidoPublico }) {
   const actual = PASOS.findIndex((paso) => paso.estado === pedido.estado);
 
   return (
@@ -81,7 +83,7 @@ function Seguimiento({ pedido }: { pedido: Pedido }) {
         <p className="font-bold">{pedido.envio}</p>
         <ul className="mt-1">
           {pedido.lineas.map((linea) => (
-            <li key={linea.id}>
+            <li key={linea.nombre}>
               {linea.cantidad} × {linea.nombre}
             </li>
           ))}
@@ -94,10 +96,40 @@ function Seguimiento({ pedido }: { pedido: Pedido }) {
 export function EstadoPedido({ numeroInicial = "" }: { numeroInicial?: string }) {
   const pedidos = usePedidos();
   const [numero, setNumero] = useState(numeroInicial);
-  const [buscado, setBuscado] = useState(numeroInicial);
+  const [whatsapp, setWhatsapp] = useState("");
+  const [hallado, setHallado] = useState<PedidoPublico | null>(null);
+  const [error, setError] = useState("");
+  const [buscando, setBuscando] = useState(false);
 
-  const limpio = buscado.trim().toUpperCase();
-  const pedido = pedidos.find((opcion) => opcion.numero === limpio);
+  async function buscar(numeroBuscado: string, numeroWhatsapp: string) {
+    const limpio = numeroBuscado.trim().toUpperCase();
+    setError("");
+    setHallado(null);
+
+    if (!TIENDA_ABIERTA) {
+      const local = pedidos.find((opcion) => opcion.numero === limpio);
+      if (local) setHallado(local);
+      else setError("No hallamos ese pedido. Revisá el número e intentá otra vez.");
+      return;
+    }
+
+    setBuscando(true);
+    const respuesta = await consultarPedido(limpio, numeroWhatsapp);
+    setBuscando(false);
+    if (respuesta.ok) setHallado(respuesta.pedido);
+    else setError(respuesta.error);
+  }
+
+  // Quien llega desde su confirmación ya tiene el pedido en este navegador.
+  const propio = pedidos.find((opcion) => opcion.numero === numeroInicial);
+  const whatsappPropio = propio?.telefono;
+  useEffect(() => {
+    if (!numeroInicial || !whatsappPropio) return;
+    setWhatsapp(whatsappPropio);
+    void buscar(numeroInicial, whatsappPropio);
+    // Solo al llegar: después manda el botón.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [numeroInicial, whatsappPropio]);
 
   return (
     <div className="mx-auto flex max-w-xl flex-col gap-6">
@@ -105,7 +137,7 @@ export function EstadoPedido({ numeroInicial = "" }: { numeroInicial?: string })
         className="flex flex-col gap-3"
         onSubmit={(evento) => {
           evento.preventDefault();
-          setBuscado(numero);
+          void buscar(numero, whatsapp);
         }}
       >
         <div>
@@ -122,28 +154,27 @@ export function EstadoPedido({ numeroInicial = "" }: { numeroInicial?: string })
           />
         </div>
         <div>
-          <label htmlFor="correo-pedido" className="rotulo-campo">
-            Correo
+          <label htmlFor="whatsapp-pedido" className="rotulo-campo">
+            WhatsApp
           </label>
           <input
-            id="correo-pedido"
-            type="email"
+            id="whatsapp-pedido"
+            type="tel"
             className="campo"
-            placeholder="En la demo no hace falta"
+            required={TIENDA_ABIERTA}
+            value={whatsapp}
+            onChange={(evento) => setWhatsapp(evento.target.value)}
           />
         </div>
-        <button type="submit" className="boton boton-rojo">
-          Ver mi pedido
+        <button type="submit" className="boton boton-rojo" disabled={buscando}>
+          {buscando ? "Buscando…" : "Ver mi pedido"}
         </button>
-        <p className="text-sm text-gris">
-          Para probar, usá TCG-0001, TCG-0002, TCG-0003 o TCG-0004.
-        </p>
       </form>
 
-      {limpio && pedido ? <Seguimiento pedido={pedido} /> : null}
-      {limpio && !pedido && pedidos.length > 0 ? (
+      {hallado ? <Seguimiento pedido={hallado} /> : null}
+      {error ? (
         <p role="alert" className="marco bg-crema p-4 font-bold">
-          No hallamos ese pedido. Revisá el número e intentá otra vez.
+          {error}
         </p>
       ) : null}
     </div>

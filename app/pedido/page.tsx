@@ -13,7 +13,7 @@ export default function PaginaPedido() {
     <>
       <CabeceraPagina
         titulo="¿En qué va mi pedido?"
-        texto="Poné tu número de pedido y tu correo."
+        texto="Poné tu número de pedido y tu WhatsApp."
       />
       <ZonaBlanca>
         <Suspense fallback={<EstadoPedido />}>

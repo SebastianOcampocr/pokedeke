@@ -2,8 +2,8 @@
 /**
  * Convierte la pestaña "Catálogo web" de la hoja en datos/catalogo.json.
  *
- * Lee el CSV publicado de esa pestaña (variable CATALOGO_CSV_URL) o un archivo
- * local con `--archivo ruta.csv`. Si Google no responde, deja el catálogo como
+ * Lee esa pestaña desde el servidor de la hoja (variable PEDIDOS_URL) o desde un
+ * archivo local con `--archivo ruta.csv`. Si Google no responde, deja el catálogo como
  * está. Si la pestaña cambió de forma, falla y tampoco lo toca.
  */
 import { appendFile, readdir, readFile, writeFile } from "node:fs/promises";
@@ -308,10 +308,10 @@ function opcion(nombre) {
 async function principal() {
   const archivo = opcion("archivo");
   const salida = opcion("salida") ?? path.join(RAIZ, "datos/catalogo.json");
-  const url = process.env.CATALOGO_CSV_URL;
+  const url = process.env.PEDIDOS_URL && `${process.env.PEDIDOS_URL}?accion=catalogo`;
 
   if (!archivo && !url) {
-    console.log("Falta CATALOGO_CSV_URL: el catálogo se queda como está.");
+    console.log("Falta PEDIDOS_URL: el catálogo se queda como está.");
     return;
   }
 

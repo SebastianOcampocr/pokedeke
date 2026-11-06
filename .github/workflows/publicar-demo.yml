@@ -31,7 +31,7 @@ jobs:
       - name: Traer el catálogo de la hoja
         run: node scripts/traer-catalogo.mjs
         env:
-          CATALOGO_CSV_URL: ${{ vars.CATALOGO_CSV_URL }}
+          PEDIDOS_URL: ${{ vars.PEDIDOS_URL }}
       - name: Guardar el catálogo si cambió
         id: cambios
         run: |
@@ -74,6 +74,7 @@ jobs:
       - run: npm run build
         env:
           NEXT_PUBLIC_RUTA_BASE: /${{ github.event.repository.name }}
+          NEXT_PUBLIC_PEDIDOS_URL: ${{ vars.PEDIDOS_URL }}
       - uses: actions/upload-pages-artifact@v5
         with:
           path: out

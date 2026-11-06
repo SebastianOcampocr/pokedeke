@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useLayoutEffect, useState } from "react";
 import ubicaciones from "@/datos/ubicaciones-cr.json";
 import { useHidratado } from "@/lib/almacen";
+import { crearPedido, mandarComprobante } from "@/lib/api-pedidos";
 import { useCarrito, vaciarCarrito } from "@/lib/carrito";
 import { lanzarConfeti } from "@/lib/confeti";
 import { calcularTotales, colones } from "@/lib/formato";
@@ -17,28 +18,30 @@ import {
 } from "@/lib/pedidos";
 import {
   costoDeEnvio,
-  enlaceWhatsApp,
   ENVIO_GRATIS_DESDE,
   ENVIOS,
   LUGAR,
   TIENDA,
+  TIENDA_ABIERTA,
 } from "@/lib/tienda";
 import { Deke } from "./Deke";
-import { IconoChat, IconoCheque } from "./Iconos";
+import { IconoCheque } from "./Iconos";
 import { CarritoVacio, Linea } from "./VistaCarrito";
 
-const METODOS = ["SINPE Móvil", "Transferencia bancaria"];
+const METODO_PAGO = "SINPE Móvil";
 
 function Campo({
   id,
   rotulo,
   tipo = "text",
   autoCompletar,
+  requerido = true,
 }: {
   id: string;
   rotulo: string;
   tipo?: string;
   autoCompletar?: string;
+  requerido?: boolean;
 }) {
   return (
     <div>
@@ -51,7 +54,7 @@ function Campo({
         type={tipo}
         autoComplete={autoCompletar}
         className="campo"
-        required
+        required={requerido}
       />
     </div>
   );
@@ -146,33 +149,39 @@ function Bloque({
   );
 }
 
-function SubirFoto() {
-  const [archivo, setArchivo] = useState("");
-
-  return (
-    <div>
-      <span className="rotulo-campo">O subí la foto (opcional)</span>
-      <label className="boton boton-amarillo boton-chico w-full focus-within:outline-3 focus-within:outline-azul">
-        <input
-          type="file"
-          accept="image/*"
-          className="sr-only"
-          onChange={(evento) =>
-            setArchivo(evento.target.files?.[0]?.name ?? "")
-          }
-        />
-        <span className="truncate">{archivo || "Elegir foto"}</span>
-      </label>
-    </div>
-  );
-}
-
-function Confirmacion({ pedido }: { pedido: Pedido }) {
+function Confirmacion({
+  pedido,
+  precioCambio,
+}: {
+  pedido: Pedido;
+  precioCambio: boolean;
+}) {
   const [referencia, setReferencia] = useState("");
   const [enviado, setEnviado] = useState(false);
-  const esSinpe = pedido.metodoPago === "SINPE Móvil";
+  const [enviando, setEnviando] = useState(false);
+  const [error, setError] = useState("");
 
   useEffect(() => lanzarConfeti(), []);
+
+  async function avisarPago(evento: React.FormEvent<HTMLFormElement>) {
+    evento.preventDefault();
+    if (TIENDA_ABIERTA) {
+      setEnviando(true);
+      setError("");
+      const respuesta = await mandarComprobante(
+        pedido.numero,
+        pedido.clave ?? "",
+        referencia,
+      );
+      setEnviando(false);
+      if (!respuesta.ok) {
+        setError(respuesta.error);
+        return;
+      }
+    }
+    actualizarPedido(pedido.numero, { referencia });
+    setEnviado(true);
+  }
 
   return (
     <div className="mx-auto flex max-w-xl flex-col gap-5">
@@ -190,28 +199,24 @@ function Confirmacion({ pedido }: { pedido: Pedido }) {
       </div>
 
       <div className="marco flex flex-col gap-2 p-5">
-        <p className="font-bold">
-          {esSinpe ? "Hacé el SINPE Móvil por:" : "Hacé la transferencia por:"}
-        </p>
+        <p className="font-bold">Hacé el SINPE Móvil por:</p>
         <p className="text-4xl font-extrabold text-azul">
           {colones(pedido.total)}
         </p>
+        {precioCambio ? (
+          <p role="status" className="font-bold text-rojo">
+            Los precios se actualizaron: este es el monto correcto.
+          </p>
+        ) : null}
         <p className="mt-1">
-          {esSinpe ? (
-            <>
-              Al número <strong>{TIENDA.sinpe}</strong>, a nombre de{" "}
-              {TIENDA.sinpeTitular}.
-            </>
-          ) : (
-            <>
-              A la cuenta <strong>{TIENDA.cuentaIban}</strong>, a nombre de{" "}
-              {TIENDA.sinpeTitular}.
-            </>
-          )}
+          Al número <strong>{TIENDA.sinpe}</strong>. En el detalle poné{" "}
+          <strong>{pedido.numero}</strong>.
         </p>
-        <p className="text-sm text-gris">
-          Son datos de muestra: en esta demo no pagués nada.
-        </p>
+        {TIENDA_ABIERTA ? null : (
+          <p className="text-sm text-gris">
+            Esta página todavía es una demo: no pagués nada.
+          </p>
+        )}
       </div>
 
       {enviado ? (
@@ -220,44 +225,32 @@ function Confirmacion({ pedido }: { pedido: Pedido }) {
           className="marco flex items-center gap-3 bg-white p-4 font-bold text-verde-oscuro"
         >
           <IconoCheque />
-          Recibimos tu comprobante. Apenas lo revisemos te avisamos.
+          Recibimos tu comprobante. Apenas confirmemos el SINPE te escribimos
+          por WhatsApp.
         </p>
       ) : (
-        <form
-          className="marco flex flex-col gap-3 p-5"
-          onSubmit={(evento) => {
-            evento.preventDefault();
-            actualizarPedido(pedido.numero, { referencia });
-            setEnviado(true);
-          }}
-        >
+        <form className="marco flex flex-col gap-3 p-5" onSubmit={avisarPago}>
           <div>
             <label htmlFor="referencia" className="rotulo-campo">
-              Número de comprobante
+              Número de comprobante del SINPE
             </label>
             <input
               id="referencia"
               className="campo"
+              inputMode="numeric"
               required
               value={referencia}
               onChange={(evento) => setReferencia(evento.target.value)}
             />
           </div>
-          <SubirFoto />
-          <button type="submit" className="boton boton-rojo">
-            Ya pagué
+          {error ? (
+            <p role="alert" className="font-bold text-rojo">
+              {error}
+            </p>
+          ) : null}
+          <button type="submit" className="boton boton-rojo" disabled={enviando}>
+            {enviando ? "Enviando…" : "Ya pagué"}
           </button>
-          <a
-            href={enlaceWhatsApp(
-              `¡Hola! Ya pagué el pedido ${pedido.numero} por ${colones(pedido.total)}. Aquí va el comprobante.`,
-            )}
-            target="_blank"
-            rel="noreferrer"
-            className="boton boton-blanco boton-chico"
-          >
-            <IconoChat tamano={18} />
-            Mandar el comprobante por WhatsApp
-          </a>
         </form>
       )}
 
@@ -276,17 +269,21 @@ export function Pago() {
   const { lineas, cupon } = useCarrito();
   const pedidos = usePedidos();
   const [envioId, setEnvioId] = useState(ENVIOS[0].id);
-  const [metodo, setMetodo] = useState(METODOS[0]);
   const [provincia, setProvincia] = useState("");
   const [canton, setCanton] = useState("");
   const [distrito, setDistrito] = useState("");
   const [confirmado, setConfirmado] = useState<Pedido | null>(null);
+  const [precioCambio, setPrecioCambio] = useState(false);
+  const [enviando, setEnviando] = useState(false);
+  const [error, setError] = useState("");
 
   // Next deja viva esta página al navegar: sin esto, la siguiente compra
   // mostraría la confirmación del pedido anterior en vez del formulario.
   useLayoutEffect(() => () => setConfirmado(null), []);
 
-  if (confirmado) return <Confirmacion pedido={confirmado} />;
+  if (confirmado) {
+    return <Confirmacion pedido={confirmado} precioCambio={precioCambio} />;
+  }
   if (!hidratado) return <p>Cargando…</p>;
   if (lineas.length === 0) return <CarritoVacio />;
 
@@ -300,11 +297,12 @@ export function Pago() {
   const datosProvincia = ubicaciones.find((p) => p.nombre === provincia);
   const datosCanton = datosProvincia?.cantones.find((c) => c.nombre === canton);
 
-  function hacerPedido(evento: React.FormEvent<HTMLFormElement>) {
+  async function hacerPedido(evento: React.FormEvent<HTMLFormElement>) {
     evento.preventDefault();
+    if (enviando) return;
     const datos = new FormData(evento.currentTarget);
     const texto = (campo: string) => String(datos.get(campo) ?? "").trim();
-    const pedido: Pedido = {
+    let pedido: Pedido = {
       numero: siguienteNumero(pedidos),
       fecha: new Date().toISOString(),
       cliente: texto("nombre"),
@@ -325,11 +323,47 @@ export function Pago() {
       descuento: totales.descuento,
       costoEnvio: totales.envio,
       total: totales.total,
-      metodoPago: metodo,
+      metodoPago: METODO_PAGO,
       referencia: "",
       estado: "Pendiente de pago",
       guia: "",
     };
+
+    if (TIENDA_ABIERTA) {
+      setEnviando(true);
+      setError("");
+      const respuesta = await crearPedido({
+        cliente: pedido.cliente,
+        whatsapp: pedido.telefono,
+        correo: pedido.correo,
+        envio: envio.id,
+        ubicacion: pedido.ubicacion,
+        direccion: pedido.direccion,
+        cupon: cupon?.codigo ?? null,
+        lineas: lineas.map(({ producto, cantidad }) => ({
+          slug: producto.slug,
+          cantidad,
+        })),
+        sitio: texto("sitio"),
+      });
+      setEnviando(false);
+      if (!respuesta.ok) {
+        setError(respuesta.error);
+        return;
+      }
+      // Lo que manda es lo que calculó el servidor con los datos de la hoja.
+      setPrecioCambio(respuesta.total !== pedido.total);
+      pedido = {
+        ...pedido,
+        numero: respuesta.numero,
+        clave: respuesta.clave,
+        subtotal: respuesta.subtotal,
+        descuento: respuesta.descuento,
+        costoEnvio: respuesta.costoEnvio,
+        total: respuesta.total,
+      };
+    }
+
     guardarPedido(pedido);
     vaciarCarrito();
     ganarLogro("pedido");
@@ -350,11 +384,26 @@ export function Pago() {
           <Campo id="nombre" rotulo="Nombre completo" autoCompletar="name" />
           <Campo
             id="telefono"
-            rotulo="Teléfono o WhatsApp"
+            rotulo="WhatsApp, para coordinar la entrega"
             tipo="tel"
             autoCompletar="tel"
           />
-          <Campo id="correo" rotulo="Correo" tipo="email" autoCompletar="email" />
+          <Campo
+            id="correo"
+            rotulo="Correo (opcional)"
+            tipo="email"
+            autoCompletar="email"
+            requerido={false}
+          />
+          {/* Trampa para robots: la gente nunca ve este campo. */}
+          <input
+            type="text"
+            name="sitio"
+            tabIndex={-1}
+            autoComplete="off"
+            aria-hidden="true"
+            className="hidden"
+          />
         </Bloque>
 
         <Bloque titulo="Cómo te llega">
@@ -416,15 +465,12 @@ export function Pago() {
         </Bloque>
 
         <Bloque titulo="Cómo pagás">
-          {METODOS.map((opcion) => (
-            <Opcion
-              key={opcion}
-              grupo="pago"
-              activa={opcion === metodo}
-              titulo={opcion}
-              alElegir={() => setMetodo(opcion)}
-            />
-          ))}
+          <Opcion
+            grupo="pago"
+            activa
+            titulo={METODO_PAGO}
+            alElegir={() => undefined}
+          />
           <div className="flex min-h-14 items-center justify-between gap-3 rounded-md border-2 border-dashed border-gris p-3 text-gris">
             <span className="font-bold">Tarjeta</span>
             <span className="text-sm">Muy pronto</span>
@@ -460,8 +506,13 @@ export function Pago() {
           />
           <Linea rotulo="Total" monto={colones(totales.total)} fuerte />
         </div>
-        <button type="submit" className="boton boton-rojo">
-          Hacer el pedido
+        {error ? (
+          <p role="alert" className="font-bold text-rojo">
+            {error}
+          </p>
+        ) : null}
+        <button type="submit" className="boton boton-rojo" disabled={enviando}>
+          {enviando ? "Enviando tu pedido…" : "Hacer el pedido"}
         </button>
         <p className="text-sm leading-snug text-gris">
           Tu producto queda apartado {TIENDA.plazoPagoHoras} horas. Al seguir

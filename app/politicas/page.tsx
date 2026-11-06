@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { TIENDA } from "@/lib/tienda";
 import Link from "next/link";
 import { CabeceraPagina, ZonaBlanca } from "@/components/Estructura";
 
@@ -75,7 +76,7 @@ export default function PaginaPoliticas() {
             <p>
               Usamos tu nombre, contacto y dirección solo para procesar tu
               pedido y coordinar la entrega. Podés pedir que corrijamos o
-              borremos tus datos escribiendo a [correo por definir].
+              borremos tus datos escribiendo a {TIENDA.correo}.
             </p>
             <p>
               Este borrador debe adaptarse a la Ley 8968 de Protección de la

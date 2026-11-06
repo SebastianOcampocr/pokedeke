@@ -11,7 +11,7 @@ import {
   type Pedido,
 } from "@/lib/pedidos";
 import { esPreventa, estaAgotado, PRODUCTOS } from "@/lib/productos";
-import { RUTA_BASE } from "@/lib/tienda";
+import { RUTA_BASE, TIENDA_ABIERTA } from "@/lib/tienda";
 import { IconoCheque } from "./Iconos";
 
 const AVISOS: Partial<Record<Estado, string>> = {
@@ -307,6 +307,18 @@ export function Panel() {
     useState<(typeof PESTANAS)[number]["id"]>("pedidos");
 
   if (!hidratado) return <p>Cargando el panel…</p>;
+
+  if (TIENDA_ABIERTA) {
+    return (
+      <div className="flex flex-col gap-6">
+        <p className="marco max-w-2xl bg-crema p-4 font-medium">
+          Los pedidos se manejan en la pestaña Pedidos web de la hoja. Aquí
+          queda el texto para los grupos.
+        </p>
+        <TextoWhatsApp />
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-6">

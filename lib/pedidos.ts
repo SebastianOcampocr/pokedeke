@@ -30,6 +30,8 @@ export type Pedido = {
   referencia: string;
   estado: Estado;
   guia: string;
+  /** Solo la conoce quien hizo el pedido: permite mandar el comprobante. */
+  clave?: string;
 };
 
 const almacen = crearAlmacen<Pedido[]>("demo-pedidos-v3", () => [], []);
