@@ -13,13 +13,6 @@ type Dicho = { texto: string; enlace?: { href: string; texto: string } };
 
 const POR_PAGINA: { ruta: string; dicho: Dicho }[] = [
   {
-    ruta: "/catalogo",
-    dicho: {
-      texto: "¿Muchas opciones? Yo te ayudo a escoger.",
-      enlace: { href: "/guia", texto: "Ayudame, Deke" },
-    },
-  },
-  {
     ruta: "/producto",
     dicho: { texto: "Yo mismo lo cuido en el mezzanine. Palabra de carta." },
   },
@@ -77,9 +70,20 @@ const OCURRENCIAS = [
 
 // Rutas donde Deke solo estorbaría: pagar, abrir el sobre y el panel.
 const SIN_DEKE = ["/pago", "/sobre", "/panel"];
+// El globo flota encima de la página y en el celular tapa lo que esté abajo.
+// Por eso ahí Deke solo habla por su cuenta en Inicio y en páginas para leer.
+const GLOBO_EN_CELULAR = ["/nosotros", "/caja-compartida", "/cajas-misteriosas"];
 const TOQUES_PARA_SHINY = 7;
 
 const shiny = crearAlmacen<boolean>("demo-deke-shiny", () => false, false);
+
+function puedeHablarSolo(ruta: string) {
+  return (
+    ruta === "/" ||
+    GLOBO_EN_CELULAR.some((opcion) => ruta.startsWith(opcion)) ||
+    window.matchMedia("(min-width: 1024px)").matches
+  );
+}
 
 export function DekeCompa() {
   const ruta = usePathname();
@@ -108,7 +112,7 @@ export function DekeCompa() {
       ruta === "/"
         ? INICIO
         : POR_PAGINA.find((opcion) => ruta.startsWith(opcion.ruta))?.dicho;
-    if (!propio) return;
+    if (!propio || !puedeHablarSolo(ruta)) return;
     const espera = window.setTimeout(() => {
       setDicho(propio);
       window.clearTimeout(reloj.current);
@@ -120,6 +124,22 @@ export function DekeCompa() {
       setDicho(null);
     };
   }, [ruta, fuera, cerrado]);
+
+  // Apenas la persona usa la página, Deke se calla para no taparle nada.
+  useEffect(() => {
+    if (!dicho) return;
+    function callar(evento: Event) {
+      const tocado = evento.target;
+      if (tocado instanceof Element && tocado.closest(".compa")) return;
+      setDicho(null);
+    }
+    window.addEventListener("scroll", callar, { passive: true });
+    window.addEventListener("pointerdown", callar);
+    return () => {
+      window.removeEventListener("scroll", callar);
+      window.removeEventListener("pointerdown", callar);
+    };
+  }, [dicho]);
 
   if (fuera || cerrado) return null;
 

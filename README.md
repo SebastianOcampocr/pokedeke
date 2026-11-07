@@ -147,7 +147,7 @@ La página armada vive en GitHub Pages y el servidor de pedidos en la hoja de Go
 | Diseño de la Cédula de Coleccionista | `lib/cedula.ts` |
 | Porcentajes de "Vendenos tus cartas" | `components/Vender.tsx` |
 | Tractos: plazos y monto mínimo | `components/Tractos.tsx` |
-| Lo que dice Deke | `components/DekeCompa.tsx` |
+| Lo que dice Deke y en qué páginas del celular habla solo | `components/DekeCompa.tsx` |
 | Monto del envío gratis | `lib/tienda.ts` |
 
 ## Lo que hace única a la tienda
@@ -162,6 +162,6 @@ La página armada vive en GitHub Pages y el servidor de pedidos en la hoja de Go
 | Vendenos tus cartas, con calculadora de oferta | `/vender` |
 | Guía de Deke: 3 preguntas y te recomienda qué comprar | `/guia` |
 | Lista de deseos que se manda por WhatsApp | `/favoritos` |
-| Secreto: tocá a Deke 7 veces | Abajo a la derecha |
+| Secreto: tocá a Deke 7 veces | Abajo a la derecha; en el celular, cuando saluda en Inicio |
 
 Los montos, porcentajes y plazos de estas funciones son propuestas de muestra.
