@@ -66,6 +66,20 @@ const CONFIG = {
   pesoSinCategoria: 300,
   // Apagados hasta decidir las promociones. Deben coincidir con lib/tienda.ts.
   cupones: {},
+  // Precio especial por llevar varias unidades de un grupo. Entran los productos
+  // cuyo enlace calza con `slug`. Solo baja precios: lo que ya cuesta menos o está
+  // en preventa queda por fuera. La página muestra la oferta solo cuando este
+  // script la anuncia, así que no hay que copiarla en lib/tienda.ts.
+  ofertasPorCantidad: [
+    {
+      nombre: "Pikachus de 30th Celebration",
+      slug: /^pikachu-\d+-30th-celebration$/,
+      // Lo que la página escribe en el buscador para mostrarlos.
+      buscar: "Pikachu",
+      desde: 6,
+      precio: 750,
+    },
+  ],
 };
 
 const HOJAS = {
@@ -208,19 +222,21 @@ function stockEnVivo(versionDeLaPagina) {
   if (guardado) return respuestaDeStock(guardado, guardada, versionDeLaPagina);
 
   const reservado = apartados(filasDePedidos());
+  const todos = productosPorSlug();
   const productos = {};
-  Object.values(productosPorSlug()).forEach((producto) => {
+  Object.values(todos).forEach((producto) => {
     productos[producto.slug] = {
       stock: Math.max(producto.stock - (reservado[producto.slug] || 0), 0),
       precio: producto.precio,
       peso: producto.peso,
     };
   });
-  const contenido = JSON.stringify(productos);
+  const ofertas = ofertasVigentes(todos);
+  const contenido = JSON.stringify({ productos, ofertas });
   const version = Utilities.base64EncodeWebSafe(
     Utilities.computeDigest(Utilities.DigestAlgorithm.MD5, contenido),
   );
-  const respuesta = JSON.stringify({ ok: true, version, productos });
+  const respuesta = JSON.stringify({ ok: true, version, productos, ofertas });
   try {
     memoria.put(CLAVE_STOCK, respuesta, SEGUNDOS_STOCK);
     memoria.put(CLAVE_VERSION, version, SEGUNDOS_STOCK);
@@ -399,6 +415,44 @@ function calcularDescuento(codigo, subtotal) {
     : Math.min(cupon.valor, subtotal);
 }
 
+/** Cada oferta con los productos que entran hoy. Las que no tienen ninguno no salen. */
+function ofertasVigentes(productos) {
+  return CONFIG.ofertasPorCantidad
+    .map((oferta) => ({
+      nombre: oferta.nombre,
+      buscar: oferta.buscar || "",
+      desde: oferta.desde,
+      precio: oferta.precio,
+      slugs: Object.values(productos)
+        .filter(
+          (producto) =>
+            oferta.slug.test(producto.slug) &&
+            !producto.preventa &&
+            producto.precioCobrado > oferta.precio,
+        )
+        .map((producto) => producto.slug),
+    }))
+    .filter((oferta) => oferta.slugs.length > 0);
+}
+
+/**
+ * Si el pedido junta las unidades que pide una oferta, cada una baja al precio de
+ * la oferta. Debe calcular igual que aplicarOfertas en lib/carrito.ts.
+ */
+function aplicarOfertas(lineas, ofertas) {
+  ofertas.forEach((oferta) => {
+    const delGrupo = lineas.filter((linea) => oferta.slugs.includes(linea.slug));
+    const unidades = delGrupo.reduce((suma, linea) => suma + linea.cantidad, 0);
+    if (unidades < oferta.desde) return;
+    delGrupo.forEach((linea) => {
+      if (linea.precio <= oferta.precio) return;
+      linea.precioNormal = linea.precioNormal || linea.precio;
+      linea.precio = oferta.precio;
+      linea.oferta = oferta.nombre;
+    });
+  });
+}
+
 /** La ubicación llega como "Provincia, Cantón, Distrito". */
 function costoDeCorreos(ubicacion, gramos) {
   const [provincia, canton] = ubicacion.split(", ");
@@ -465,6 +519,7 @@ function crearPedido(datos) {
       quedan: producto.stock - (reservado[slug] || 0) - cantidad,
     });
   }
+  aplicarOfertas(lineas, ofertasVigentes(productos));
 
   const subtotal = lineas.reduce((suma, linea) => suma + linea.precio * linea.cantidad, 0);
   const descuento = calcularDescuento(datos.cupon, subtotal);
@@ -474,7 +529,11 @@ function crearPedido(datos) {
   const numero = siguienteNumero(filas);
   const clave = Utilities.getUuid();
   const resumen = lineas
-    .map((linea) => linea.cantidad + " × " + linea.nombre + " (" + colones(linea.precio) + ")")
+    .map(
+      (linea) =>
+        linea.cantidad + " × " + linea.nombre + " (" + colones(linea.precio) +
+        (linea.oferta ? ", oferta " + linea.oferta : "") + ")",
+    )
     .join("\n");
 
   const fila = new Array(TOTAL_COLUMNAS).fill("");
@@ -746,6 +805,7 @@ function correoConDiseno({ etiqueta, estado, colorEstado, saludo, numero, fecha,
     '<div style="font-weight:bold;">' + escapar(linea.nombre) + "</div>" +
     '<div style="font-size:13px;color:#444444;">' + escapar(linea.cantidad) + " × " + escapar(colones(linea.precio)) +
     (linea.preventa ? " · Adelanto de preventa" : "") +
+    (linea.oferta ? " · Oferta " + escapar(linea.oferta) + ", antes " + escapar(colones(linea.precioNormal)) : "") +
     (linea.quedan === undefined ? "" : " · " + (linea.quedan > 0 ? "Quedan " + escapar(linea.quedan) : "Era la última")) +
     '</div></td><td style="padding:9px 0;border-bottom:1px solid #e3d6ad;text-align:right;white-space:nowrap;font-weight:bold;vertical-align:top;">' +
     escapar(colones(linea.precio * linea.cantidad)) + "</td></tr>";
@@ -1078,6 +1138,9 @@ function pasarAVentas(numeroFila, estadoAnterior) {
     "SINPE " + (fila[COL.comprobante - 1] || "sin número"),
     "WhatsApp " + fila[COL.whatsapp - 1],
     detalle.lineas.some((linea) => linea.preventa) ? "Adelanto de preventa" : "",
+    ...[...new Set(detalle.lineas.map((linea) => linea.oferta).filter(Boolean))].map(
+      (oferta) => "Oferta " + oferta,
+    ),
   ]
     .filter(Boolean)
     .join(" · ");

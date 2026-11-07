@@ -12,7 +12,7 @@ import {
   type Producto,
 } from "@/lib/productos";
 import { enlaceCompartir, enlaceWhatsApp, TIENDA } from "@/lib/tienda";
-import { useProductoVivo } from "@/lib/vivo";
+import { useOfertaDe, useProductoVivo } from "@/lib/vivo";
 import { volarAlCarrito } from "@/lib/volar";
 import { BotonAvisame } from "./BotonAvisame";
 import { BotonFavorito } from "./BotonFavorito";
@@ -85,6 +85,7 @@ export function Galeria({ producto }: { producto: Producto }) {
 /** Precio y cuánto queda: se actualizan solos mientras la ficha esté abierta. */
 export function PrecioYStock({ producto: guardado }: { producto: Producto }) {
   const producto = useProductoVivo(guardado);
+  const oferta = useOfertaDe(producto.slug);
   const agotado = estaAgotado(producto);
 
   return (
@@ -102,6 +103,13 @@ export function PrecioYStock({ producto: guardado }: { producto: Producto }) {
           !esPreventa(producto) &&
           (producto.stock === 1 ? "Queda 1" : `Quedan ${producto.stock}`)}
       </p>
+      {oferta && !agotado ? (
+        <p className="mb-3 rounded-md bg-crema p-3 text-[15px] leading-snug font-medium">
+          <strong>Oferta:</strong> llevando {oferta.desde} o más{" "}
+          {oferta.nombre}, cada uno te queda en{" "}
+          <strong>{colones(oferta.precio)}</strong>. Podés combinarlos.
+        </p>
+      ) : null}
     </>
   );
 }

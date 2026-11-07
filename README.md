@@ -64,6 +64,15 @@ Lo que conviene saber:
 - Los correos salen de la cuenta que hizo la implementación del script, y siempre debe ser pokedekestore@gmail.com. Si el script corre con otra cuenta, el cliente no recibe correos.
 - Pasar a Ventas y el correo de pago confirmado dependen de un activador. Se instala una sola vez: con la cuenta de la tienda, en Apps Script, elegí la función `instalarAvisos` y tocá **Ejecutar**. Sin eso, marcar Pagado no hace nada.
 
+### Ofertas por cantidad
+
+Hoy hay una: llevando 6 o más Pikachus comunes de 30th Celebration, cada uno queda en ₡750. Se pueden combinar números distintos.
+
+- Las ofertas viven en `ofertasPorCantidad`, al inicio de `apps-script/Pedidos.gs`. La hoja es la que cobra el precio de oferta y la anuncia a la página.
+- La página la muestra solo cuando la hoja la anuncia y hay stock suficiente para llegar a la cantidad. Así nunca promete un precio que no se cobra.
+- Solo bajan precios: lo que ya cuesta menos o está en preventa queda por fuera.
+- En Ventas cada unidad queda al precio de oferta y en Notas sale el nombre de la oferta.
+
 Si cambiás el WhatsApp, las tarifas, los cupones o el envío gratis en `lib/tienda.ts`, cambialos también en `CONFIG`, al inicio de `apps-script/Pedidos.gs`. Después de editar ese archivo hay que pegarlo otra vez en Apps Script y crear una versión nueva en **Implementar > Administrar implementaciones**.
 
 ## Cómo se calcula el envío por Correos
@@ -149,6 +158,7 @@ La página armada vive en GitHub Pages y el servidor de pedidos en la hoja de Go
 | Tractos: plazos y monto mínimo | `components/Tractos.tsx` |
 | Lo que dice Deke y en qué páginas del celular habla solo | `components/DekeCompa.tsx` |
 | Monto del envío gratis | `lib/tienda.ts` |
+| Ofertas por cantidad, como la de los Pikachus | `ofertasPorCantidad` en `apps-script/Pedidos.gs` |
 
 ## Lo que hace única a la tienda
 

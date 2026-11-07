@@ -8,10 +8,12 @@ import {
   cambiarCantidad,
   quitarCupon,
   useCarrito,
+  type LineaCarrito,
 } from "@/lib/carrito";
 import { calcularTotales, colones } from "@/lib/formato";
 import { disponibles, esPreventa } from "@/lib/productos";
 import { CUPONES } from "@/lib/tienda";
+import { useInventarioVivo, useOfertasVivas } from "@/lib/vivo";
 import { AgregarRapido } from "./AgregarRapido";
 import { BarraEnvio } from "./BarraEnvio";
 import { Cantidad } from "./Cantidad";
@@ -150,6 +152,44 @@ function Complementos({ enCarrito }: { enCarrito: string[] }) {
   );
 }
 
+/** Si ya lleva algo de una oferta, le dice cuánto le falta para que aplique. */
+function FaltaParaOferta({ lineas }: { lineas: LineaCarrito[] }) {
+  const vivo = useInventarioVivo();
+  const ofertas = useOfertasVivas();
+  if (!vivo) return null;
+  const avisos = ofertas.flatMap((oferta) => {
+    const delGrupo = lineas.filter((linea) =>
+      oferta.slugs.includes(linea.producto.slug),
+    );
+    const lleva = delGrupo.reduce((suma, linea) => suma + linea.cantidad, 0);
+    const hay = oferta.slugs.reduce(
+      (suma, slug) => suma + (vivo[slug]?.stock ?? 0),
+      0,
+    );
+    if (lleva === 0 || lleva >= oferta.desde || hay < oferta.desde) return [];
+    const faltan = oferta.desde - lleva;
+    return [
+      <p
+        key={oferta.nombre}
+        className="rounded-md bg-crema p-3 text-[15px] leading-snug font-medium"
+      >
+        Llevá {faltan === 1 ? "1 más" : `${faltan} más`} de los{" "}
+        {oferta.nombre} y cada uno te queda en{" "}
+        <strong>{colones(oferta.precio)}</strong>.{" "}
+        {oferta.buscar ? (
+          <Link
+            href={`/catalogo?q=${encodeURIComponent(oferta.buscar)}`}
+            className="font-bold underline"
+          >
+            Ver cuáles hay
+          </Link>
+        ) : null}
+      </p>,
+    ];
+  });
+  return avisos.length > 0 ? <>{avisos}</> : null;
+}
+
 export function VistaCarrito() {
   const hidratado = useHidratado();
   const { lineas, cupon } = useCarrito();
@@ -163,8 +203,9 @@ export function VistaCarrito() {
     <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-start">
       <div className="flex min-w-0 flex-col gap-4">
       <BarraEnvio subtotal={totales.subtotal} />
+      <FaltaParaOferta lineas={lineas} />
       <ul className="flex flex-col gap-4">
-        {lineas.map(({ producto, cantidad, precio }) => (
+        {lineas.map(({ producto, cantidad, precio, precioNormal }) => (
           <li key={producto.slug} className="marco flex gap-3 p-3">
             <Link
               href={producto.enlace ?? `/producto/${producto.slug}`}
@@ -188,9 +229,19 @@ export function VistaCarrito() {
                   {producto.nombre}
                 </Link>
                 <p className="text-sm text-gris">
-                  {esPreventa(producto)
-                    ? `Adelanto de preventa: ${colones(precio)}`
-                    : `${colones(precio)} c/u`}
+                  {esPreventa(producto) ? (
+                    `Adelanto de preventa: ${colones(precio)}`
+                  ) : precioNormal ? (
+                    <>
+                      <s>{colones(precioNormal)}</s>{" "}
+                      <strong className="text-verde-oscuro">
+                        {colones(precio)} c/u
+                      </strong>{" "}
+                      por la oferta
+                    </>
+                  ) : (
+                    `${colones(precio)} c/u`
+                  )}
                 </p>
                 {cantidad > producto.stock ? (
                   <p role="alert" className="text-sm font-bold text-rojo">

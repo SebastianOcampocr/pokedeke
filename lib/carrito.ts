@@ -3,7 +3,12 @@
 import { crearAlmacen } from "./almacen";
 import { buscarProducto, precioACobrar, type Producto } from "./productos";
 import { CUPONES, type Cupon } from "./tienda";
-import { conDatosVivos, useInventarioVivo } from "./vivo";
+import {
+  conDatosVivos,
+  useInventarioVivo,
+  useOfertasVivas,
+  type Oferta,
+} from "./vivo";
 
 type LineaGuardada = { slug: string; cantidad: number };
 type Carrito = { lineas: LineaGuardada[]; cupon: string | null };
@@ -12,15 +17,41 @@ export type LineaCarrito = {
   producto: Producto;
   cantidad: number;
   precio: number;
+  /** Con oferta: el precio de antes y el nombre de la oferta. */
+  precioNormal?: number;
+  oferta?: Oferta;
 };
 
 const VACIO: Carrito = { lineas: [], cupon: null };
 const almacen = crearAlmacen<Carrito>("demo-carrito", () => VACIO, VACIO);
 
+/** Debe calcular igual que aplicarOfertas en apps-script/Pedidos.gs. */
+export function aplicarOfertas(lineas: LineaCarrito[], ofertas: Oferta[]) {
+  return ofertas.reduce((actuales, oferta) => {
+    const entra = (linea: LineaCarrito) =>
+      oferta.slugs.includes(linea.producto.slug);
+    const unidades = actuales
+      .filter(entra)
+      .reduce((suma, linea) => suma + linea.cantidad, 0);
+    if (unidades < oferta.desde) return actuales;
+    return actuales.map((linea) =>
+      entra(linea) && linea.precio > oferta.precio
+        ? {
+            ...linea,
+            precioNormal: linea.precioNormal ?? linea.precio,
+            precio: oferta.precio,
+            oferta,
+          }
+        : linea,
+    );
+  }, lineas);
+}
+
 export function useCarrito() {
   const carrito = almacen.usar();
   const vivo = useInventarioVivo();
-  const lineas: LineaCarrito[] = carrito.lineas.flatMap((linea) => {
+  const ofertas = useOfertasVivas();
+  const base: LineaCarrito[] = carrito.lineas.flatMap((linea) => {
     const guardado = buscarProducto(linea.slug);
     if (!guardado) return [];
     const producto = conDatosVivos(guardado, vivo);
@@ -32,6 +63,7 @@ export function useCarrito() {
       },
     ];
   });
+  const lineas = aplicarOfertas(base, ofertas);
   const cupon: Cupon | null =
     CUPONES.find((opcion) => opcion.codigo === carrito.cupon) ?? null;
   const unidades = lineas.reduce((suma, linea) => suma + linea.cantidad, 0);
