@@ -485,5 +485,4628 @@
       "/productos/toploader-3x4.webp"
     ],
     "descripcion": "Protector rígido de 3 x 4 pulgadas para cartas de tamaño estándar. El precio es por unidad; la foto muestra un paquete de referencia."
+  },
+  {
+    "id": "C026",
+    "slug": "tropius-005-30th-celebration",
+    "nombre": "Tropius #005 (30th Celebration)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 26,
+    "fotos": [
+      "/productos/tropius-005-30th-celebration.webp"
+    ],
+    "descripcion": "Tropius de 120 HP, tipo Planta, con arte de Minahamu y sello de 30 años. Número 005/128 de 30th Celebration, común, en inglés. Trae los ataques Rally Back y Cutting Wind.",
+    "carta": {
+      "coleccion": "30th Celebration",
+      "numero": "005",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C027",
+    "slug": "cherubi-006-30th-celebration",
+    "nombre": "Cherubi #006 (30th Celebration)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 2,
+    "vendidos": 0,
+    "orden": 27,
+    "fotos": [
+      "/productos/cherubi-006-30th-celebration.webp"
+    ],
+    "descripcion": "Cherubi de 40 HP, tipo Planta, con arte de Kurata So y sello de 30 años. Número 006/128 de 30th Celebration, común, en inglés. Trae los ataques Hide y Flop.",
+    "carta": {
+      "coleccion": "30th Celebration",
+      "numero": "006",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C028",
+    "slug": "cherrim-007-30th-celebration",
+    "nombre": "Cherrim #007 (30th Celebration)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 2,
+    "vendidos": 0,
+    "orden": 28,
+    "fotos": [
+      "/productos/cherrim-007-30th-celebration.webp"
+    ],
+    "descripcion": "Cherrim de 80 HP, tipo Planta, con arte de takashi shiraishi y sello de 30 años. Número 007/128 de 30th Celebration, común, en inglés. Trae los ataques Energy Gift y Leafage.",
+    "carta": {
+      "coleccion": "30th Celebration",
+      "numero": "007",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C029",
+    "slug": "vivillon-008-30th-celebration",
+    "nombre": "Vivillon #008 (30th Celebration)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 29,
+    "fotos": [
+      "/productos/vivillon-008-30th-celebration.webp"
+    ],
+    "descripcion": "Vivillon de 120 HP, tipo Planta, con arte de Jerky y sello de 30 años. Número 008/128 de 30th Celebration, común, en inglés. Trae la habilidad Guiding Dance y el ataque Poison Powder.",
+    "carta": {
+      "coleccion": "30th Celebration",
+      "numero": "008",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C030",
+    "slug": "moltres-011-30th-celebration",
+    "nombre": "Moltres #011 (30th Celebration)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 2,
+    "vendidos": 0,
+    "orden": 30,
+    "fotos": [
+      "/productos/moltres-011-30th-celebration.webp"
+    ],
+    "descripcion": "Moltres de 120 HP, tipo Fuego, con arte de HYOGONOSUKE y sello de 30 años. Número 011/128 de 30th Celebration, común, en inglés. Trae la habilidad Fiery Flapping y el ataque Fire Spin.",
+    "carta": {
+      "coleccion": "30th Celebration",
+      "numero": "011",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C031",
+    "slug": "ho-oh-012-30th-celebration",
+    "nombre": "Ho-Oh #012 (30th Celebration)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 31,
+    "fotos": [
+      "/productos/ho-oh-012-30th-celebration.webp"
+    ],
+    "descripcion": "Ho-Oh de 130 HP, tipo Fuego, con arte de Anesaki Dynamic y sello de 30 años. Número 012/128 de 30th Celebration, rara, en inglés. Trae los ataques Sacred Breath y Fire Wing.",
+    "carta": {
+      "coleccion": "30th Celebration",
+      "numero": "012",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C032",
+    "slug": "victini-013-30th-celebration",
+    "nombre": "Victini #013 (30th Celebration)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 32,
+    "fotos": [
+      "/productos/victini-013-30th-celebration.webp"
+    ],
+    "descripcion": "Victini de 80 HP, tipo Fuego, con arte de Jiro Sasumo y sello de 30 años. Número 013/128 de 30th Celebration, común, en inglés. Trae los ataques Call for Family y V-Flame.",
+    "carta": {
+      "coleccion": "30th Celebration",
+      "numero": "013",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C033",
+    "slug": "reshiram-014-30th-celebration",
+    "nombre": "Reshiram #014 (30th Celebration)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 33,
+    "fotos": [
+      "/productos/reshiram-014-30th-celebration.webp"
+    ],
+    "descripcion": "Reshiram de 130 HP, tipo Fuego, con arte de Uta y sello de 30 años. Número 014/128 de 30th Celebration, rara, en inglés. Trae los ataques Slash y Laser Flame.",
+    "carta": {
+      "coleccion": "30th Celebration",
+      "numero": "014",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C034",
+    "slug": "slowpoke-016-30th-celebration",
+    "nombre": "Slowpoke #016 (30th Celebration)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 34,
+    "fotos": [
+      "/productos/slowpoke-016-30th-celebration.webp"
+    ],
+    "descripcion": "Slowpoke de 80 HP, tipo Agua, con arte de Uninori y sello de 30 años. Número 016/128 de 30th Celebration, común, en inglés. Trae los ataques Well-Hidden y Water Gun.",
+    "carta": {
+      "coleccion": "30th Celebration",
+      "numero": "016",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C035",
+    "slug": "lapras-017-30th-celebration",
+    "nombre": "Lapras #017 (30th Celebration)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 35,
+    "fotos": [
+      "/productos/lapras-017-30th-celebration.webp"
+    ],
+    "descripcion": "Lapras de 130 HP, tipo Agua, con arte de Masa y sello de 30 años. Número 017/128 de 30th Celebration, común, en inglés. Trae los ataques Ferry Across y Ice Beam.",
+    "carta": {
+      "coleccion": "30th Celebration",
+      "numero": "017",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C036",
+    "slug": "articuno-018-30th-celebration",
+    "nombre": "Articuno #018 (30th Celebration)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 2,
+    "vendidos": 0,
+    "orden": 36,
+    "fotos": [
+      "/productos/articuno-018-30th-celebration.webp"
+    ],
+    "descripcion": "Articuno de 120 HP, tipo Agua, con arte de HYOGONOSUKE y sello de 30 años. Número 018/128 de 30th Celebration, común, en inglés. Trae la habilidad Frosty Flapping y el ataque Hail.",
+    "carta": {
+      "coleccion": "30th Celebration",
+      "numero": "018",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C037",
+    "slug": "palkia-020-30th-celebration",
+    "nombre": "Palkia #020 (30th Celebration)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 37,
+    "fotos": [
+      "/productos/palkia-020-30th-celebration.webp"
+    ],
+    "descripcion": "Palkia de 130 HP, tipo Agua, con arte de kawayoo y sello de 30 años. Número 020/128 de 30th Celebration, rara, en inglés. Trae el ataque Wormhole.",
+    "carta": {
+      "coleccion": "30th Celebration",
+      "numero": "020",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C038",
+    "slug": "wishiwashi-022-30th-celebration",
+    "nombre": "Wishiwashi #022 (30th Celebration)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 38,
+    "fotos": [
+      "/productos/wishiwashi-022-30th-celebration.webp"
+    ],
+    "descripcion": "Wishiwashi de 30 HP, tipo Agua, con arte de Narano y sello de 30 años. Número 022/128 de 30th Celebration, común, en inglés. Trae la habilidad Counterattack Grouping y el ataque Surprise Attack.",
+    "carta": {
+      "coleccion": "30th Celebration",
+      "numero": "022",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C039",
+    "slug": "pikachu-024-30th-celebration",
+    "nombre": "Pikachu #024 (30th Celebration)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 250,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 39,
+    "fotos": [
+      "/productos/pikachu-024-30th-celebration.webp"
+    ],
+    "descripcion": "Pikachu de 70 HP, tipo Rayo, con arte de danciao y sello de 30 años. Número 024/128 de 30th Celebration, Pikachu Rare, en inglés. Trae el ataque Volt Tackle.",
+    "carta": {
+      "coleccion": "30th Celebration",
+      "numero": "024",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C040",
+    "slug": "pikachu-037-30th-celebration",
+    "nombre": "Pikachu #037 (30th Celebration)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 200,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 40,
+    "fotos": [
+      "/productos/pikachu-037-30th-celebration.webp"
+    ],
+    "descripcion": "Pikachu de 70 HP, tipo Rayo, con arte de Yuu Nishida y sello de 30 años. Número 037/128 de 30th Celebration, Pikachu Rare, en inglés. Trae los ataques Energized Tail y Pika Punch.",
+    "carta": {
+      "coleccion": "30th Celebration",
+      "numero": "037",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C041",
+    "slug": "pikachu-039-30th-celebration",
+    "nombre": "Pikachu #039 (30th Celebration)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 250,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 41,
+    "fotos": [
+      "/productos/pikachu-039-30th-celebration.webp"
+    ],
+    "descripcion": "Pikachu de 70 HP, tipo Rayo, con arte de Teeziro y sello de 30 años. Número 039/128 de 30th Celebration, Pikachu Rare, en inglés. Trae el ataque Iron Tail.",
+    "carta": {
+      "coleccion": "30th Celebration",
+      "numero": "039",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C042",
+    "slug": "pikachu-049-30th-celebration",
+    "nombre": "Pikachu #049 (30th Celebration)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 250,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 42,
+    "fotos": [
+      "/productos/pikachu-049-30th-celebration.webp"
+    ],
+    "descripcion": "Pikachu de 80 HP, tipo Rayo, con arte de Nurikabe y sello de 30 años. Número 049/128 de 30th Celebration, Pikachu Rare, en inglés. Trae el ataque Fighting Lightning.",
+    "carta": {
+      "coleccion": "30th Celebration",
+      "numero": "049",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C043",
+    "slug": "zapdos-055-30th-celebration",
+    "nombre": "Zapdos #055 (30th Celebration)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 43,
+    "fotos": [
+      "/productos/zapdos-055-30th-celebration.webp"
+    ],
+    "descripcion": "Zapdos de 120 HP, tipo Rayo, con arte de HYOGONOSUKE y sello de 30 años. Número 055/128 de 30th Celebration, común, en inglés. Trae la habilidad Flash-Pop Flapping y el ataque Thundering Lightning.",
+    "carta": {
+      "coleccion": "30th Celebration",
+      "numero": "055",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C044",
+    "slug": "zekrom-056-30th-celebration",
+    "nombre": "Zekrom #056 (30th Celebration)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 44,
+    "fotos": [
+      "/productos/zekrom-056-30th-celebration.webp"
+    ],
+    "descripcion": "Zekrom de 130 HP, tipo Rayo, con arte de akagi y sello de 30 años. Número 056/128 de 30th Celebration, rara, en inglés. Trae los ataques Slash y Nitro Thunder.",
+    "carta": {
+      "coleccion": "30th Celebration",
+      "numero": "056",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C045",
+    "slug": "zeraora-057-30th-celebration",
+    "nombre": "Zeraora #057 (30th Celebration)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 2,
+    "vendidos": 0,
+    "orden": 45,
+    "fotos": [
+      "/productos/zeraora-057-30th-celebration.webp"
+    ],
+    "descripcion": "Zeraora de 110 HP, tipo Rayo, con arte de Bun Toujo y sello de 30 años. Número 057/128 de 30th Celebration, común, en inglés. Trae los ataques Rapid Draw y Electrobullet.",
+    "carta": {
+      "coleccion": "30th Celebration",
+      "numero": "057",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C046",
+    "slug": "toxel-058-30th-celebration",
+    "nombre": "Toxel #058 (30th Celebration)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 3,
+    "vendidos": 0,
+    "orden": 46,
+    "fotos": [
+      "/productos/toxel-058-30th-celebration.webp"
+    ],
+    "descripcion": "Toxel de 70 HP, tipo Rayo, con arte de Shimaris Yukichi y sello de 30 años. Número 058/128 de 30th Celebration, común, en inglés. Trae el ataque Ram.",
+    "carta": {
+      "coleccion": "30th Celebration",
+      "numero": "058",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C047",
+    "slug": "toxtricity-059-30th-celebration",
+    "nombre": "Toxtricity #059 (30th Celebration)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 47,
+    "fotos": [
+      "/productos/toxtricity-059-30th-celebration.webp"
+    ],
+    "descripcion": "Toxtricity de 130 HP, tipo Rayo, con arte de Haru Akasaka y sello de 30 años. Número 059/128 de 30th Celebration, común, en inglés. Trae el ataque Mach Bolt.",
+    "carta": {
+      "coleccion": "30th Celebration",
+      "numero": "059",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C048",
+    "slug": "miraidon-062-30th-celebration",
+    "nombre": "Miraidon #062 (30th Celebration)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 48,
+    "fotos": [
+      "/productos/miraidon-062-30th-celebration.webp"
+    ],
+    "descripcion": "Miraidon de 120 HP, tipo Rayo, con arte de Kazumasa Yasukuni y sello de 30 años. Número 062/128 de 30th Celebration, rara, en inglés. Trae los ataques Mach Bolt y Electro Drift.",
+    "carta": {
+      "coleccion": "30th Celebration",
+      "numero": "062",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C049",
+    "slug": "mewtwo-063-30th-celebration",
+    "nombre": "Mewtwo #063 (30th Celebration)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 150,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 49,
+    "fotos": [
+      "/productos/mewtwo-063-30th-celebration.webp"
+    ],
+    "descripcion": "Mewtwo de 130 HP, tipo Psíquico, con arte de nagimiso y sello de 30 años. Número 063/128 de 30th Celebration, rara, en inglés. Trae los ataques Empower y Psydrive.",
+    "carta": {
+      "coleccion": "30th Celebration",
+      "numero": "063",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C050",
+    "slug": "mew-065-30th-celebration",
+    "nombre": "Mew #065 (30th Celebration)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 150,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 50,
+    "fotos": [
+      "/productos/mew-065-30th-celebration.webp"
+    ],
+    "descripcion": "Mew de 60 HP, tipo Psíquico, con arte de danciao y sello de 30 años. Número 065/128 de 30th Celebration, rara, en inglés. Trae el ataque Psychic.",
+    "carta": {
+      "coleccion": "30th Celebration",
+      "numero": "065",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C051",
+    "slug": "marill-067-30th-celebration",
+    "nombre": "Marill #067 (30th Celebration)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 51,
+    "fotos": [
+      "/productos/marill-067-30th-celebration.webp"
+    ],
+    "descripcion": "Marill de 70 HP, tipo Psíquico, con arte de Saya Tsuruta y sello de 30 años. Número 067/128 de 30th Celebration, común, en inglés. Trae el ataque Tackle.",
+    "carta": {
+      "coleccion": "30th Celebration",
+      "numero": "067",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C052",
+    "slug": "azumarill-068-30th-celebration",
+    "nombre": "Azumarill #068 (30th Celebration)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 2,
+    "vendidos": 0,
+    "orden": 52,
+    "fotos": [
+      "/productos/azumarill-068-30th-celebration.webp"
+    ],
+    "descripcion": "Azumarill de 130 HP, tipo Psíquico, con arte de Kagemaru Himeno y sello de 30 años. Número 068/128 de 30th Celebration, común, en inglés. Trae el ataque Body Slam.",
+    "carta": {
+      "coleccion": "30th Celebration",
+      "numero": "068",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C053",
+    "slug": "espeon-069-30th-celebration",
+    "nombre": "Espeon #069 (30th Celebration)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 53,
+    "fotos": [
+      "/productos/espeon-069-30th-celebration.webp"
+    ],
+    "descripcion": "Espeon de 110 HP, tipo Psíquico, con arte de aspara y sello de 30 años. Número 069/128 de 30th Celebration, común, en inglés. Trae los ataques Miraculous Shine y Super Psy Bolt.",
+    "carta": {
+      "coleccion": "30th Celebration",
+      "numero": "069",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C054",
+    "slug": "sylveon-ex-071-30th-celebration",
+    "nombre": "Sylveon ex #071 (30th Celebration)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 400,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 54,
+    "fotos": [
+      "/productos/sylveon-ex-071-30th-celebration.webp"
+    ],
+    "descripcion": "Sylveon ex de 270 HP, tipo Psíquico, con arte de 5ban Graphics y sello de 30 años. Número 071/128 de 30th Celebration, doble rara, en inglés. Trae el ataque Colorful Harmony.",
+    "carta": {
+      "coleccion": "30th Celebration",
+      "numero": "071",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C055",
+    "slug": "unown-072-30th-celebration",
+    "nombre": "Unown #072 (30th Celebration)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 2,
+    "vendidos": 0,
+    "orden": 55,
+    "fotos": [
+      "/productos/unown-072-30th-celebration.webp"
+    ],
+    "descripcion": "Unown de 80 HP, tipo Psíquico, con arte de mingo y sello de 30 años. Número 072/128 de 30th Celebration, común, en inglés. Trae el ataque Mysterious Signal.",
+    "carta": {
+      "coleccion": "30th Celebration",
+      "numero": "072",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C056",
+    "slug": "drifloon-073-30th-celebration",
+    "nombre": "Drifloon #073 (30th Celebration)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 2,
+    "vendidos": 0,
+    "orden": 56,
+    "fotos": [
+      "/productos/drifloon-073-30th-celebration.webp"
+    ],
+    "descripcion": "Drifloon de 70 HP, tipo Psíquico, con arte de Shinya Komatsu y sello de 30 años. Número 073/128 de 30th Celebration, común, en inglés. Trae el ataque Float Up.",
+    "carta": {
+      "coleccion": "30th Celebration",
+      "numero": "073",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C057",
+    "slug": "cresselia-074-30th-celebration",
+    "nombre": "Cresselia #074 (30th Celebration)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 2,
+    "vendidos": 0,
+    "orden": 57,
+    "fotos": [
+      "/productos/cresselia-074-30th-celebration.webp"
+    ],
+    "descripcion": "Cresselia de 120 HP, tipo Psíquico, con arte de KEIICHIRO ITO y sello de 30 años. Número 074/128 de 30th Celebration, común, en inglés. Trae los ataques Aurora Gain y Lunar Blast.",
+    "carta": {
+      "coleccion": "30th Celebration",
+      "numero": "074",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C058",
+    "slug": "chandelure-075-30th-celebration",
+    "nombre": "Chandelure #075 (30th Celebration)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 2,
+    "vendidos": 0,
+    "orden": 58,
+    "fotos": [
+      "/productos/chandelure-075-30th-celebration.webp"
+    ],
+    "descripcion": "Chandelure de 140 HP, tipo Psíquico, con arte de Yoshioka y sello de 30 años. Número 075/128 de 30th Celebration, común, en inglés. Trae el ataque Eerie Glow.",
+    "carta": {
+      "coleccion": "30th Celebration",
+      "numero": "075",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C059",
+    "slug": "xerneas-076-30th-celebration",
+    "nombre": "Xerneas #076 (30th Celebration)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 59,
+    "fotos": [
+      "/productos/xerneas-076-30th-celebration.webp"
+    ],
+    "descripcion": "Xerneas de 120 HP, tipo Psíquico, con arte de kodama y sello de 30 años. Número 076/128 de 30th Celebration, rara, en inglés. Trae los ataques Geonavigation y Aurora Horns.",
+    "carta": {
+      "coleccion": "30th Celebration",
+      "numero": "076",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C060",
+    "slug": "comfey-077-30th-celebration",
+    "nombre": "Comfey #077 (30th Celebration)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 3,
+    "vendidos": 0,
+    "orden": 60,
+    "fotos": [
+      "/productos/comfey-077-30th-celebration.webp"
+    ],
+    "descripcion": "Comfey de 70 HP, tipo Psíquico, con arte de sui y sello de 30 años. Número 077/128 de 30th Celebration, común, en inglés. Trae los ataques Comforting Aroma y Magical Shot.",
+    "carta": {
+      "coleccion": "30th Celebration",
+      "numero": "077",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C061",
+    "slug": "cosmog-078-30th-celebration",
+    "nombre": "Cosmog #078 (30th Celebration)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 3,
+    "vendidos": 0,
+    "orden": 61,
+    "fotos": [
+      "/productos/cosmog-078-30th-celebration.webp"
+    ],
+    "descripcion": "Cosmog de 60 HP, tipo Psíquico, con arte de Mina Nakai y sello de 30 años. Número 078/128 de 30th Celebration, común, en inglés. Trae el ataque Splash.",
+    "carta": {
+      "coleccion": "30th Celebration",
+      "numero": "078",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C062",
+    "slug": "cosmoem-079-30th-celebration",
+    "nombre": "Cosmoem #079 (30th Celebration)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 62,
+    "fotos": [
+      "/productos/cosmoem-079-30th-celebration.webp"
+    ],
+    "descripcion": "Cosmoem de 100 HP, tipo Psíquico, con arte de Masako Tomii y sello de 30 años. Número 079/128 de 30th Celebration, común, en inglés. Trae el ataque Stiffen.",
+    "carta": {
+      "coleccion": "30th Celebration",
+      "numero": "079",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C063",
+    "slug": "lunala-080-30th-celebration",
+    "nombre": "Lunala #080 (30th Celebration)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 2,
+    "vendidos": 0,
+    "orden": 63,
+    "fotos": [
+      "/productos/lunala-080-30th-celebration.webp"
+    ],
+    "descripcion": "Lunala de 160 HP, tipo Psíquico, con arte de Bun Toujo y sello de 30 años. Número 080/128 de 30th Celebration, rara, en inglés. Trae los ataques Midnight Ray y Lunar Blast.",
+    "carta": {
+      "coleccion": "30th Celebration",
+      "numero": "080",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C064",
+    "slug": "gimmighoul-081-30th-celebration",
+    "nombre": "Gimmighoul #081 (30th Celebration)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 2,
+    "vendidos": 0,
+    "orden": 64,
+    "fotos": [
+      "/productos/gimmighoul-081-30th-celebration.webp"
+    ],
+    "descripcion": "Gimmighoul de 60 HP, tipo Psíquico, con arte de Fujimoto Gold y sello de 30 años. Número 081/128 de 30th Celebration, común, en inglés. Trae el ataque Strolls So Much.",
+    "carta": {
+      "coleccion": "30th Celebration",
+      "numero": "081",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C065",
+    "slug": "groudon-082-30th-celebration",
+    "nombre": "Groudon #082 (30th Celebration)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 2,
+    "vendidos": 0,
+    "orden": 65,
+    "fotos": [
+      "/productos/groudon-082-30th-celebration.webp"
+    ],
+    "descripcion": "Groudon de 140 HP, tipo Lucha, con arte de Takumi Wada y sello de 30 años. Número 082/128 de 30th Celebration, rara, en inglés. Trae el ataque Break Ground.",
+    "carta": {
+      "coleccion": "30th Celebration",
+      "numero": "082",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C066",
+    "slug": "nidoran-087-30th-celebration",
+    "nombre": "Nidoran♀ #087 (30th Celebration)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 66,
+    "fotos": [
+      "/productos/nidoran-087-30th-celebration.webp"
+    ],
+    "descripcion": "Nidoran♀ de 60 HP, tipo Oscuro, con arte de Taira Akitsu y sello de 30 años. Número 087/128 de 30th Celebration, común, en inglés. Trae los ataques Growl y Headbutt.",
+    "carta": {
+      "coleccion": "30th Celebration",
+      "numero": "087",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C067",
+    "slug": "nidorina-088-30th-celebration",
+    "nombre": "Nidorina #088 (30th Celebration)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 67,
+    "fotos": [
+      "/productos/nidorina-088-30th-celebration.webp"
+    ],
+    "descripcion": "Nidorina de 90 HP, tipo Oscuro, con arte de Miki Tanaka y sello de 30 años. Número 088/128 de 30th Celebration, común, en inglés. Trae la habilidad Share Happiness y el ataque Bite.",
+    "carta": {
+      "coleccion": "30th Celebration",
+      "numero": "088",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C068",
+    "slug": "alolan-meowth-089-30th-celebration",
+    "nombre": "Alolan Meowth #089 (30th Celebration)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 68,
+    "fotos": [
+      "/productos/alolan-meowth-089-30th-celebration.webp"
+    ],
+    "descripcion": "Alolan Meowth de 60 HP, tipo Oscuro, con arte de Natsumi Yoshida y sello de 30 años. Número 089/128 de 30th Celebration, común, en inglés. Trae el ataque Pay Day.",
+    "carta": {
+      "coleccion": "30th Celebration",
+      "numero": "089",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C069",
+    "slug": "umbreon-091-30th-celebration",
+    "nombre": "Umbreon #091 (30th Celebration)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 150,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 69,
+    "fotos": [
+      "/productos/umbreon-091-30th-celebration.webp"
+    ],
+    "descripcion": "Umbreon de 110 HP, tipo Oscuro, con arte de Iori Suzuki y sello de 30 años. Número 091/128 de 30th Celebration, común, en inglés. Trae los ataques Retaliate y Darkness Fang.",
+    "carta": {
+      "coleccion": "30th Celebration",
+      "numero": "091",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C070",
+    "slug": "murkrow-093-30th-celebration",
+    "nombre": "Murkrow #093 (30th Celebration)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 70,
+    "fotos": [
+      "/productos/murkrow-093-30th-celebration.webp"
+    ],
+    "descripcion": "Murkrow de 80 HP, tipo Oscuro, con arte de Kouki Saitou y sello de 30 años. Número 093/128 de 30th Celebration, común, en inglés. Trae el ataque Clumsily Clutch.",
+    "carta": {
+      "coleccion": "30th Celebration",
+      "numero": "093",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C071",
+    "slug": "scraggy-094-30th-celebration",
+    "nombre": "Scraggy #094 (30th Celebration)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 2,
+    "vendidos": 0,
+    "orden": 71,
+    "fotos": [
+      "/productos/scraggy-094-30th-celebration.webp"
+    ],
+    "descripcion": "Scraggy de 80 HP, tipo Oscuro, con arte de Souichirou Gunjima y sello de 30 años. Número 094/128 de 30th Celebration, común, en inglés. Trae los ataques Nitpick y Corkscrew Punch.",
+    "carta": {
+      "coleccion": "30th Celebration",
+      "numero": "094",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C072",
+    "slug": "zorua-095-30th-celebration",
+    "nombre": "Zorua #095 (30th Celebration)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 72,
+    "fotos": [
+      "/productos/zorua-095-30th-celebration.webp"
+    ],
+    "descripcion": "Zorua de 70 HP, tipo Oscuro, con arte de Atsuya Uki y sello de 30 años. Número 095/128 de 30th Celebration, común, en inglés. Trae el ataque Darkness Fang.",
+    "carta": {
+      "coleccion": "30th Celebration",
+      "numero": "095",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C073",
+    "slug": "zoroark-096-30th-celebration",
+    "nombre": "Zoroark #096 (30th Celebration)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 73,
+    "fotos": [
+      "/productos/zoroark-096-30th-celebration.webp"
+    ],
+    "descripcion": "Zoroark de 120 HP, tipo Oscuro, con arte de Shiburingaru y sello de 30 años. Número 096/128 de 30th Celebration, común, en inglés. Trae la habilidad Nighttime Byway y el ataque Slashing Claw.",
+    "carta": {
+      "coleccion": "30th Celebration",
+      "numero": "096",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C074",
+    "slug": "deino-097-30th-celebration",
+    "nombre": "Deino #097 (30th Celebration)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 74,
+    "fotos": [
+      "/productos/deino-097-30th-celebration.webp"
+    ],
+    "descripcion": "Deino de 70 HP, tipo Oscuro, con arte de Gapao y sello de 30 años. Número 097/128 de 30th Celebration, común, en inglés. Trae los ataques Gnaw y Headbutt.",
+    "carta": {
+      "coleccion": "30th Celebration",
+      "numero": "097",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C075",
+    "slug": "hydreigon-099-30th-celebration",
+    "nombre": "Hydreigon #099 (30th Celebration)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 75,
+    "fotos": [
+      "/productos/hydreigon-099-30th-celebration.webp"
+    ],
+    "descripcion": "Hydreigon de 170 HP, tipo Oscuro, con arte de Ryuta Fuse y sello de 30 años. Número 099/128 de 30th Celebration, común, en inglés. Trae los ataques Three-Headed Bite y Pitch-Black Fangs.",
+    "carta": {
+      "coleccion": "30th Celebration",
+      "numero": "099",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C076",
+    "slug": "galarian-meowth-101-30th-celebration",
+    "nombre": "Galarian Meowth #101 (30th Celebration)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 76,
+    "fotos": [
+      "/productos/galarian-meowth-101-30th-celebration.webp"
+    ],
+    "descripcion": "Galarian Meowth de 70 HP, tipo Metálico, con arte de Mékayu y sello de 30 años. Número 101/128 de 30th Celebration, común, en inglés. Trae los ataques Pay Day y Treasure Rush.",
+    "carta": {
+      "coleccion": "30th Celebration",
+      "numero": "101",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C077",
+    "slug": "solgaleo-105-30th-celebration",
+    "nombre": "Solgaleo #105 (30th Celebration)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 2,
+    "vendidos": 0,
+    "orden": 77,
+    "fotos": [
+      "/productos/solgaleo-105-30th-celebration.webp"
+    ],
+    "descripcion": "Solgaleo de 170 HP, tipo Metálico, con arte de Nurikabe y sello de 30 años. Número 105/128 de 30th Celebration, rara, en inglés. Trae la habilidad Sunrise y el ataque Sunsteel Strike.",
+    "carta": {
+      "coleccion": "30th Celebration",
+      "numero": "105",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C078",
+    "slug": "gholdengo-108-30th-celebration",
+    "nombre": "Gholdengo #108 (30th Celebration)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 78,
+    "fotos": [
+      "/productos/gholdengo-108-30th-celebration.webp"
+    ],
+    "descripcion": "Gholdengo de 130 HP, tipo Metálico, con arte de Sanosuke Sakuma y sello de 30 años. Número 108/128 de 30th Celebration, común, en inglés. Trae los ataques Celebration y Triple Smash.",
+    "carta": {
+      "coleccion": "30th Celebration",
+      "numero": "108",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C079",
+    "slug": "salamence-ex-109-30th-celebration",
+    "nombre": "Salamence ex #109 (30th Celebration)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 250,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 79,
+    "fotos": [
+      "/productos/salamence-ex-109-30th-celebration.webp"
+    ],
+    "descripcion": "Salamence ex de 330 HP, tipo Dragón, con arte de 5ban Graphics y sello de 30 años. Número 109/128 de 30th Celebration, doble rara, en inglés. Trae los ataques Booming Call y Dragon Pulse.",
+    "carta": {
+      "coleccion": "30th Celebration",
+      "numero": "109",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C080",
+    "slug": "jangmo-o-110-30th-celebration",
+    "nombre": "Jangmo-o #110 (30th Celebration)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 80,
+    "fotos": [
+      "/productos/jangmo-o-110-30th-celebration.webp"
+    ],
+    "descripcion": "Jangmo-o de 70 HP, tipo Dragón, con arte de miki kudo y sello de 30 años. Número 110/128 de 30th Celebration, común, en inglés. Trae los ataques Screech y Dragon Claw.",
+    "carta": {
+      "coleccion": "30th Celebration",
+      "numero": "110",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C081",
+    "slug": "hakamo-o-111-30th-celebration",
+    "nombre": "Hakamo-o #111 (30th Celebration)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 81,
+    "fotos": [
+      "/productos/hakamo-o-111-30th-celebration.webp"
+    ],
+    "descripcion": "Hakamo-o de 90 HP, tipo Dragón, con arte de Jiro Sasumo y sello de 30 años. Número 111/128 de 30th Celebration, común, en inglés. Trae los ataques Sharp Fang y Dragon Claw.",
+    "carta": {
+      "coleccion": "30th Celebration",
+      "numero": "111",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C082",
+    "slug": "meowth-113-30th-celebration",
+    "nombre": "Meowth #113 (30th Celebration)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 82,
+    "fotos": [
+      "/productos/meowth-113-30th-celebration.webp"
+    ],
+    "descripcion": "Meowth de 60 HP, tipo Incoloro, con arte de MINAMINAMI Take y sello de 30 años. Número 113/128 de 30th Celebration, común, en inglés. Trae el ataque Pay Day.",
+    "carta": {
+      "coleccion": "30th Celebration",
+      "numero": "113",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C083",
+    "slug": "eevee-117-30th-celebration",
+    "nombre": "Eevee #117 (30th Celebration)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 83,
+    "fotos": [
+      "/productos/eevee-117-30th-celebration.webp"
+    ],
+    "descripcion": "Eevee de 70 HP, tipo Incoloro, con arte de En Morikura y sello de 30 años. Número 117/128 de 30th Celebration, común, en inglés. Trae el ataque Quick Attack.",
+    "carta": {
+      "coleccion": "30th Celebration",
+      "numero": "117",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C084",
+    "slug": "eevee-118-30th-celebration",
+    "nombre": "Eevee #118 (30th Celebration)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 2,
+    "vendidos": 0,
+    "orden": 84,
+    "fotos": [
+      "/productos/eevee-118-30th-celebration.webp"
+    ],
+    "descripcion": "Eevee de 70 HP, tipo Incoloro, con arte de Hitoshi Ariga y sello de 30 años. Número 118/128 de 30th Celebration, común, en inglés. Trae el ataque Quick Attack.",
+    "carta": {
+      "coleccion": "30th Celebration",
+      "numero": "118",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C085",
+    "slug": "snorlax-119-30th-celebration",
+    "nombre": "Snorlax #119 (30th Celebration)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 2,
+    "vendidos": 0,
+    "orden": 85,
+    "fotos": [
+      "/productos/snorlax-119-30th-celebration.webp"
+    ],
+    "descripcion": "Snorlax de 160 HP, tipo Incoloro, con arte de Aya Kusube y sello de 30 años. Número 119/128 de 30th Celebration, común, en inglés. Trae la habilidad Good Sleep y el ataque Collapse.",
+    "carta": {
+      "coleccion": "30th Celebration",
+      "numero": "119",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C086",
+    "slug": "igglybuff-120-30th-celebration",
+    "nombre": "Igglybuff #120 (30th Celebration)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 86,
+    "fotos": [
+      "/productos/igglybuff-120-30th-celebration.webp"
+    ],
+    "descripcion": "Igglybuff de 30 HP, tipo Incoloro, con arte de Kanami Ogata y sello de 30 años. Número 120/128 de 30th Celebration, común, en inglés. Trae el ataque Bouncy Circle.",
+    "carta": {
+      "coleccion": "30th Celebration",
+      "numero": "120",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C087",
+    "slug": "lugia-121-30th-celebration",
+    "nombre": "Lugia #121 (30th Celebration)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 150,
+    "stock": 3,
+    "vendidos": 0,
+    "orden": 87,
+    "fotos": [
+      "/productos/lugia-121-30th-celebration.webp"
+    ],
+    "descripcion": "Lugia de 120 HP, tipo Incoloro, con arte de Kazuki Minami y sello de 30 años. Número 121/128 de 30th Celebration, rara, en inglés. Trae el ataque Elemental Blast.",
+    "carta": {
+      "coleccion": "30th Celebration",
+      "numero": "121",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C088",
+    "slug": "hisuian-zorua-122-30th-celebration",
+    "nombre": "Hisuian Zorua #122 (30th Celebration)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 88,
+    "fotos": [
+      "/productos/hisuian-zorua-122-30th-celebration.webp"
+    ],
+    "descripcion": "Hisuian Zorua de 60 HP, tipo Incoloro, con arte de Megumi Mizutani y sello de 30 años. Número 122/128 de 30th Celebration, común, en inglés. Trae el ataque Scratch.",
+    "carta": {
+      "coleccion": "30th Celebration",
+      "numero": "122",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C089",
+    "slug": "minior-124-30th-celebration",
+    "nombre": "Minior #124 (30th Celebration)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 89,
+    "fotos": [
+      "/productos/minior-124-30th-celebration.webp"
+    ],
+    "descripcion": "Minior de 90 HP, tipo Incoloro, con arte de ryoma uratsuka y sello de 30 años. Número 124/128 de 30th Celebration, común, en inglés. Trae el ataque Shoot Meteors.",
+    "carta": {
+      "coleccion": "30th Celebration",
+      "numero": "124",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C090",
+    "slug": "maushold-125-30th-celebration",
+    "nombre": "Maushold #125 (30th Celebration)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 2,
+    "vendidos": 0,
+    "orden": 90,
+    "fotos": [
+      "/productos/maushold-125-30th-celebration.webp"
+    ],
+    "descripcion": "Maushold de 80 HP, tipo Incoloro, con arte de Kariya y sello de 30 años. Número 125/128 de 30th Celebration, común, en inglés. Trae los ataques Gnaw Together y Pound.",
+    "carta": {
+      "coleccion": "30th Celebration",
+      "numero": "125",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C091",
+    "slug": "ultra-ball-128-30th-celebration",
+    "nombre": "Ultra Ball #128 (30th Celebration)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 2,
+    "vendidos": 0,
+    "orden": 91,
+    "fotos": [
+      "/productos/ultra-ball-128-30th-celebration.webp"
+    ],
+    "descripcion": "Carta de Entrenador tipo Objeto, con sello de 30 años, número 128/128 de 30th Celebration, común, en inglés. Descartás 2 cartas de tu mano y buscás cualquier Pokémon en tu mazo.",
+    "carta": {
+      "coleccion": "30th Celebration",
+      "numero": "128",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C092",
+    "slug": "surskit-002-delta-reign",
+    "nombre": "Surskit #002 (Delta Reign)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 92,
+    "fotos": [
+      "/productos/surskit-002-delta-reign.webp"
+    ],
+    "descripcion": "Surskit de 50 HP, tipo Planta. Número 002/103 de Delta Reign, común, en inglés. Trae los ataques Multiply y Bug Bite.",
+    "carta": {
+      "coleccion": "Delta Reign",
+      "numero": "002",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C093",
+    "slug": "masquerain-003-delta-reign",
+    "nombre": "Masquerain #003 (Delta Reign)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 93,
+    "fotos": [
+      "/productos/masquerain-003-delta-reign.webp"
+    ],
+    "descripcion": "Masquerain de 110 HP, tipo Planta. Número 003/103 de Delta Reign, común, en inglés. Trae los ataques Frightening Pattern y Bug Out.",
+    "carta": {
+      "coleccion": "Delta Reign",
+      "numero": "003",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C094",
+    "slug": "combee-006-delta-reign",
+    "nombre": "Combee #006 (Delta Reign)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 94,
+    "fotos": [
+      "/productos/combee-006-delta-reign.webp"
+    ],
+    "descripcion": "Combee de 50 HP, tipo Planta. Número 006/103 de Delta Reign, común, en inglés. Trae los ataques Fade Out y Bug Out.",
+    "carta": {
+      "coleccion": "Delta Reign",
+      "numero": "006",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C095",
+    "slug": "vespiquen-007-delta-reign",
+    "nombre": "Vespiquen #007 (Delta Reign)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 95,
+    "fotos": [
+      "/productos/vespiquen-007-delta-reign.webp"
+    ],
+    "descripcion": "Vespiquen de 120 HP, tipo Planta. Número 007/103 de Delta Reign, común, en inglés. Trae los ataques Pierce y Clean Hit.",
+    "carta": {
+      "coleccion": "Delta Reign",
+      "numero": "007",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C096",
+    "slug": "shaymin-008-delta-reign",
+    "nombre": "Shaymin #008 (Delta Reign)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 2,
+    "vendidos": 0,
+    "orden": 96,
+    "fotos": [
+      "/productos/shaymin-008-delta-reign.webp"
+    ],
+    "descripcion": "Shaymin de 80 HP, tipo Planta. Número 008/103 de Delta Reign, poco común, en inglés. Trae el ataque Overrun.",
+    "carta": {
+      "coleccion": "Delta Reign",
+      "numero": "008",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C097",
+    "slug": "virizion-009-delta-reign",
+    "nombre": "Virizion #009 (Delta Reign)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 97,
+    "fotos": [
+      "/productos/virizion-009-delta-reign.webp"
+    ],
+    "descripcion": "Virizion de 120 HP, tipo Planta. Número 009/103 de Delta Reign, poco común, en inglés. Trae los ataques Double Draw y Solar Beam.",
+    "carta": {
+      "coleccion": "Delta Reign",
+      "numero": "009",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C098",
+    "slug": "wimpod-010-delta-reign",
+    "nombre": "Wimpod #010 (Delta Reign)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 98,
+    "fotos": [
+      "/productos/wimpod-010-delta-reign.webp"
+    ],
+    "descripcion": "Wimpod de 70 HP, tipo Planta. Número 010/103 de Delta Reign, común, en inglés. Trae la habilidad Punk Out y el ataque Ram.",
+    "carta": {
+      "coleccion": "Delta Reign",
+      "numero": "010",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C099",
+    "slug": "sprigatito-012-delta-reign",
+    "nombre": "Sprigatito #012 (Delta Reign)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 99,
+    "fotos": [
+      "/productos/sprigatito-012-delta-reign.webp"
+    ],
+    "descripcion": "Sprigatito de 70 HP, tipo Planta. Número 012/103 de Delta Reign, común, en inglés. Trae el ataque Play Rough.",
+    "carta": {
+      "coleccion": "Delta Reign",
+      "numero": "012",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C100",
+    "slug": "smoliv-015-delta-reign",
+    "nombre": "Smoliv #015 (Delta Reign)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 100,
+    "fotos": [
+      "/productos/smoliv-015-delta-reign.webp"
+    ],
+    "descripcion": "Smoliv de 60 HP, tipo Planta. Número 015/103 de Delta Reign, común, en inglés. Trae el ataque Spray Fluid.",
+    "carta": {
+      "coleccion": "Delta Reign",
+      "numero": "015",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C101",
+    "slug": "arboliva-017-delta-reign",
+    "nombre": "Arboliva #017 (Delta Reign)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 101,
+    "fotos": [
+      "/productos/arboliva-017-delta-reign.webp"
+    ],
+    "descripcion": "Arboliva de 150 HP, tipo Planta. Número 017/103 de Delta Reign, poco común, en inglés. Trae la habilidad Slippery Oil y el ataque Mega Drain.",
+    "carta": {
+      "coleccion": "Delta Reign",
+      "numero": "017",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C102",
+    "slug": "growlithe-018-delta-reign",
+    "nombre": "Growlithe #018 (Delta Reign)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 102,
+    "fotos": [
+      "/productos/growlithe-018-delta-reign.webp"
+    ],
+    "descripcion": "Growlithe de 80 HP, tipo Fuego. Número 018/103 de Delta Reign, común, en inglés. Trae los ataques Roar y Rear Kick.",
+    "carta": {
+      "coleccion": "Delta Reign",
+      "numero": "018",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C103",
+    "slug": "magmar-020-delta-reign",
+    "nombre": "Magmar #020 (Delta Reign)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 103,
+    "fotos": [
+      "/productos/magmar-020-delta-reign.webp"
+    ],
+    "descripcion": "Magmar de 90 HP, tipo Fuego. Número 020/103 de Delta Reign, poco común, en inglés. Trae los ataques Gather Strength y Combustion.",
+    "carta": {
+      "coleccion": "Delta Reign",
+      "numero": "020",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C104",
+    "slug": "torkoal-022-delta-reign",
+    "nombre": "Torkoal #022 (Delta Reign)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 104,
+    "fotos": [
+      "/productos/torkoal-022-delta-reign.webp"
+    ],
+    "descripcion": "Torkoal de 130 HP, tipo Fuego. Número 022/103 de Delta Reign, común, en inglés. Trae los ataques Searing Flame y Combustion Blast.",
+    "carta": {
+      "coleccion": "Delta Reign",
+      "numero": "022",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C105",
+    "slug": "heatmor-024-delta-reign",
+    "nombre": "Heatmor #024 (Delta Reign)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 105,
+    "fotos": [
+      "/productos/heatmor-024-delta-reign.webp"
+    ],
+    "descripcion": "Heatmor de 110 HP, tipo Fuego. Número 024/103 de Delta Reign, común, en inglés. Trae el ataque Destructive Flame.",
+    "carta": {
+      "coleccion": "Delta Reign",
+      "numero": "024",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C106",
+    "slug": "jellicent-028-delta-reign",
+    "nombre": "Jellicent #028 (Delta Reign)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 106,
+    "fotos": [
+      "/productos/jellicent-028-delta-reign.webp"
+    ],
+    "descripcion": "Jellicent de 120 HP, tipo Agua. Número 028/103 de Delta Reign, poco común, en inglés. Trae la habilidad Deep Sea Draw y el ataque Gentle Slap.",
+    "carta": {
+      "coleccion": "Delta Reign",
+      "numero": "028",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C107",
+    "slug": "electivire-031-delta-reign",
+    "nombre": "Electivire #031 (Delta Reign)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 107,
+    "fotos": [
+      "/productos/electivire-031-delta-reign.webp"
+    ],
+    "descripcion": "Electivire de 140 HP, tipo Rayo. Número 031/103 de Delta Reign, poco común, en inglés. Trae los ataques Body Slam y Voltaic Hammer.",
+    "carta": {
+      "coleccion": "Delta Reign",
+      "numero": "031",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C108",
+    "slug": "jolteon-032-delta-reign",
+    "nombre": "Jolteon #032 (Delta Reign)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 108,
+    "fotos": [
+      "/productos/jolteon-032-delta-reign.webp"
+    ],
+    "descripcion": "Jolteon de 110 HP, tipo Rayo. Número 032/103 de Delta Reign, poco común, en inglés. Trae los ataques Tackle y Thunderbolt.",
+    "carta": {
+      "coleccion": "Delta Reign",
+      "numero": "032",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C109",
+    "slug": "rotom-034-delta-reign",
+    "nombre": "Rotom #034 (Delta Reign)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 109,
+    "fotos": [
+      "/productos/rotom-034-delta-reign.webp"
+    ],
+    "descripcion": "Rotom de 80 HP, tipo Rayo. Número 034/103 de Delta Reign, común, en inglés. Trae el ataque Thunder Shock.",
+    "carta": {
+      "coleccion": "Delta Reign",
+      "numero": "034",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C110",
+    "slug": "thundurus-035-delta-reign",
+    "nombre": "Thundurus #035 (Delta Reign)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 110,
+    "fotos": [
+      "/productos/thundurus-035-delta-reign.webp"
+    ],
+    "descripcion": "Thundurus de 120 HP, tipo Rayo. Número 035/103 de Delta Reign, poco común, en inglés. Trae la habilidad Incarnate Solidarity y el ataque Thunderous Edge.",
+    "carta": {
+      "coleccion": "Delta Reign",
+      "numero": "035",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C111",
+    "slug": "pawmi-037-delta-reign",
+    "nombre": "Pawmi #037 (Delta Reign)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 111,
+    "fotos": [
+      "/productos/pawmi-037-delta-reign.webp"
+    ],
+    "descripcion": "Pawmi de 60 HP, tipo Rayo. Número 037/103 de Delta Reign, común, en inglés. Trae el ataque Quick Attack.",
+    "carta": {
+      "coleccion": "Delta Reign",
+      "numero": "037",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C112",
+    "slug": "pawmo-038-delta-reign",
+    "nombre": "Pawmo #038 (Delta Reign)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 112,
+    "fotos": [
+      "/productos/pawmo-038-delta-reign.webp"
+    ],
+    "descripcion": "Pawmo de 90 HP, tipo Rayo. Número 038/103 de Delta Reign, común, en inglés. Trae el ataque Electro Ball.",
+    "carta": {
+      "coleccion": "Delta Reign",
+      "numero": "038",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C113",
+    "slug": "pawmot-039-delta-reign",
+    "nombre": "Pawmot #039 (Delta Reign)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 113,
+    "fotos": [
+      "/productos/pawmot-039-delta-reign.webp"
+    ],
+    "descripcion": "Pawmot de 150 HP, tipo Rayo. Número 039/103 de Delta Reign, poco común, en inglés. Trae la habilidad Generator's Touch y el ataque Electric Punch.",
+    "carta": {
+      "coleccion": "Delta Reign",
+      "numero": "039",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C114",
+    "slug": "wattrel-040-delta-reign",
+    "nombre": "Wattrel #040 (Delta Reign)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 114,
+    "fotos": [
+      "/productos/wattrel-040-delta-reign.webp"
+    ],
+    "descripcion": "Wattrel de 60 HP, tipo Rayo. Número 040/103 de Delta Reign, común, en inglés. Trae el ataque Agility.",
+    "carta": {
+      "coleccion": "Delta Reign",
+      "numero": "040",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C115",
+    "slug": "miraidon-042-delta-reign",
+    "nombre": "Miraidon #042 (Delta Reign)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 115,
+    "fotos": [
+      "/productos/miraidon-042-delta-reign.webp"
+    ],
+    "descripcion": "Miraidon de 120 HP, tipo Rayo. Número 042/103 de Delta Reign, poco común, en inglés. Trae los ataques Claw Slash y Flashing Bolt.",
+    "carta": {
+      "coleccion": "Delta Reign",
+      "numero": "042",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C116",
+    "slug": "drowzee-043-delta-reign",
+    "nombre": "Drowzee #043 (Delta Reign)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 116,
+    "fotos": [
+      "/productos/drowzee-043-delta-reign.webp"
+    ],
+    "descripcion": "Drowzee de 80 HP, tipo Psíquico. Número 043/103 de Delta Reign, común, en inglés. Trae el ataque Pound.",
+    "carta": {
+      "coleccion": "Delta Reign",
+      "numero": "043",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C117",
+    "slug": "hypno-044-delta-reign",
+    "nombre": "Hypno #044 (Delta Reign)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 2,
+    "vendidos": 0,
+    "orden": 117,
+    "fotos": [
+      "/productos/hypno-044-delta-reign.webp"
+    ],
+    "descripcion": "Hypno de 120 HP, tipo Psíquico. Número 044/103 de Delta Reign, común, en inglés. Trae los ataques Mind Ruler y Hypnoblast.",
+    "carta": {
+      "coleccion": "Delta Reign",
+      "numero": "044",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C118",
+    "slug": "enamorus-048-delta-reign",
+    "nombre": "Enamorus #048 (Delta Reign)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 118,
+    "fotos": [
+      "/productos/enamorus-048-delta-reign.webp"
+    ],
+    "descripcion": "Enamorus de 120 HP, tipo Psíquico. Número 048/103 de Delta Reign, poco común, en inglés. Trae la habilidad Incarnate Solidarity y el ataque Rising Heart.",
+    "carta": {
+      "coleccion": "Delta Reign",
+      "numero": "048",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C119",
+    "slug": "sandshrew-049-delta-reign",
+    "nombre": "Sandshrew #049 (Delta Reign)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 119,
+    "fotos": [
+      "/productos/sandshrew-049-delta-reign.webp"
+    ],
+    "descripcion": "Sandshrew de 60 HP, tipo Lucha. Número 049/103 de Delta Reign, común, en inglés. Trae el ataque Ascension.",
+    "carta": {
+      "coleccion": "Delta Reign",
+      "numero": "049",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C120",
+    "slug": "sandslash-050-delta-reign",
+    "nombre": "Sandslash #050 (Delta Reign)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 120,
+    "fotos": [
+      "/productos/sandslash-050-delta-reign.webp"
+    ],
+    "descripcion": "Sandslash de 110 HP, tipo Lucha. Número 050/103 de Delta Reign, común, en inglés. Trae la habilidad Counterattack Quills y el ataque Digging Claw.",
+    "carta": {
+      "coleccion": "Delta Reign",
+      "numero": "050",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C121",
+    "slug": "landorus-054-delta-reign",
+    "nombre": "Landorus #054 (Delta Reign)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 2,
+    "vendidos": 0,
+    "orden": 121,
+    "fotos": [
+      "/productos/landorus-054-delta-reign.webp"
+    ],
+    "descripcion": "Landorus de 130 HP, tipo Lucha. Número 054/103 de Delta Reign, poco común, en inglés. Trae la habilidad Incarnate Solidarity y el ataque Gaia Crush.",
+    "carta": {
+      "coleccion": "Delta Reign",
+      "numero": "054",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C122",
+    "slug": "ariados-059-delta-reign",
+    "nombre": "Ariados #059 (Delta Reign)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 2,
+    "vendidos": 0,
+    "orden": 122,
+    "fotos": [
+      "/productos/ariados-059-delta-reign.webp"
+    ],
+    "descripcion": "Ariados de 100 HP, tipo Oscuro. Número 059/103 de Delta Reign, común, en inglés. Trae los ataques Tormenting Poison y Stealthy Sting.",
+    "carta": {
+      "coleccion": "Delta Reign",
+      "numero": "059",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C123",
+    "slug": "purrloin-064-delta-reign",
+    "nombre": "Purrloin #064 (Delta Reign)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 123,
+    "fotos": [
+      "/productos/purrloin-064-delta-reign.webp"
+    ],
+    "descripcion": "Purrloin de 60 HP, tipo Oscuro. Número 064/103 de Delta Reign, común, en inglés. Trae el ataque Dig Claws.",
+    "carta": {
+      "coleccion": "Delta Reign",
+      "numero": "064",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C124",
+    "slug": "zorua-066-delta-reign",
+    "nombre": "Zorua #066 (Delta Reign)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 3,
+    "vendidos": 0,
+    "orden": 124,
+    "fotos": [
+      "/productos/zorua-066-delta-reign.webp"
+    ],
+    "descripcion": "Zorua de 70 HP, tipo Oscuro. Número 066/103 de Delta Reign, común, en inglés. Trae los ataques Stampede y Scratch.",
+    "carta": {
+      "coleccion": "Delta Reign",
+      "numero": "066",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C125",
+    "slug": "inkay-068-delta-reign",
+    "nombre": "Inkay #068 (Delta Reign)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 125,
+    "fotos": [
+      "/productos/inkay-068-delta-reign.webp"
+    ],
+    "descripcion": "Inkay de 60 HP, tipo Oscuro. Número 068/103 de Delta Reign, común, en inglés. Trae el ataque Knock Off.",
+    "carta": {
+      "coleccion": "Delta Reign",
+      "numero": "068",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C126",
+    "slug": "druddigon-072-delta-reign",
+    "nombre": "Druddigon #072 (Delta Reign)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 126,
+    "fotos": [
+      "/productos/druddigon-072-delta-reign.webp"
+    ],
+    "descripcion": "Druddigon de 120 HP, tipo Dragón. Número 072/103 de Delta Reign, poco común, en inglés. Trae los ataques Drag Off y Claw Slash.",
+    "carta": {
+      "coleccion": "Delta Reign",
+      "numero": "072",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C127",
+    "slug": "hakamo-o-074-delta-reign",
+    "nombre": "Hakamo-o #074 (Delta Reign)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 127,
+    "fotos": [
+      "/productos/hakamo-o-074-delta-reign.webp"
+    ],
+    "descripcion": "Hakamo-o de 100 HP, tipo Dragón. Número 074/103 de Delta Reign, común, en inglés. Trae el ataque Double Smash.",
+    "carta": {
+      "coleccion": "Delta Reign",
+      "numero": "074",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C128",
+    "slug": "tauros-077-delta-reign",
+    "nombre": "Tauros #077 (Delta Reign)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 3,
+    "vendidos": 0,
+    "orden": 128,
+    "fotos": [
+      "/productos/tauros-077-delta-reign.webp"
+    ],
+    "descripcion": "Tauros de 130 HP, tipo Incoloro. Número 077/103 de Delta Reign, común, en inglés. Trae el ataque Raging Horns.",
+    "carta": {
+      "coleccion": "Delta Reign",
+      "numero": "077",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C129",
+    "slug": "eevee-078-delta-reign",
+    "nombre": "Eevee #078 (Delta Reign)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 129,
+    "fotos": [
+      "/productos/eevee-078-delta-reign.webp"
+    ],
+    "descripcion": "Eevee de 70 HP, tipo Incoloro. Número 078/103 de Delta Reign, común, en inglés. Trae los ataques Nap y Headbutt.",
+    "carta": {
+      "coleccion": "Delta Reign",
+      "numero": "078",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C130",
+    "slug": "delibird-079-delta-reign",
+    "nombre": "Delibird #079 (Delta Reign)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 2,
+    "vendidos": 0,
+    "orden": 130,
+    "fotos": [
+      "/productos/delibird-079-delta-reign.webp"
+    ],
+    "descripcion": "Delibird de 90 HP, tipo Incoloro. Número 079/103 de Delta Reign, poco común, en inglés. Trae la habilidad Energizing Present y el ataque Beat.",
+    "carta": {
+      "coleccion": "Delta Reign",
+      "numero": "079",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C131",
+    "slug": "fletchinder-087-delta-reign",
+    "nombre": "Fletchinder #087 (Delta Reign)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 2,
+    "vendidos": 0,
+    "orden": 131,
+    "fotos": [
+      "/productos/fletchinder-087-delta-reign.webp"
+    ],
+    "descripcion": "Fletchinder de 80 HP, tipo Incoloro. Número 087/103 de Delta Reign, común, en inglés. Trae el ataque Clutch.",
+    "carta": {
+      "coleccion": "Delta Reign",
+      "numero": "087",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C132",
+    "slug": "aarune-089-delta-reign",
+    "nombre": "Aarune #089 (Delta Reign)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 132,
+    "fotos": [
+      "/productos/aarune-089-delta-reign.webp"
+    ],
+    "descripcion": "Carta de Entrenador tipo Partidario, número 089/103 de Delta Reign, poco común, en inglés. Buscá en tu mazo hasta 3 cartas, entre Partidarios y Estadios, y pasalas a tu mano.",
+    "carta": {
+      "coleccion": "Delta Reign",
+      "numero": "089",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C133",
+    "slug": "adventure-lantern-090-delta-reign",
+    "nombre": "Adventure Lantern #090 (Delta Reign)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 133,
+    "fotos": [
+      "/productos/adventure-lantern-090-delta-reign.webp"
+    ],
+    "descripcion": "Carta de Entrenador tipo Objeto, número 090/103 de Delta Reign, poco común, en inglés. Buscá en tu mazo una Energía básica de Fuego y una de Rayo.",
+    "carta": {
+      "coleccion": "Delta Reign",
+      "numero": "090",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C134",
+    "slug": "custom-vest-091-delta-reign",
+    "nombre": "Custom Vest #091 (Delta Reign)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 134,
+    "fotos": [
+      "/productos/custom-vest-091-delta-reign.webp"
+    ],
+    "descripcion": "Carta de Entrenador tipo Herramienta, número 091/103 de Delta Reign, poco común, en inglés. Si el Pokémon que la lleva no es un Mega Pokémon ex, recibe 60 de daño menos de los Mega Pokémon ex rivales.",
+    "carta": {
+      "coleccion": "Delta Reign",
+      "numero": "091",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C135",
+    "slug": "emcee-s-hype-092-delta-reign",
+    "nombre": "Emcee's Hype #092 (Delta Reign)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 2,
+    "vendidos": 0,
+    "orden": 135,
+    "fotos": [
+      "/productos/emcee-s-hype-092-delta-reign.webp"
+    ],
+    "descripcion": "Carta de Entrenador tipo Partidario, número 092/103 de Delta Reign, común, en inglés. Robá 2 cartas, y 2 más si al rival le quedan 3 Premios o menos.",
+    "carta": {
+      "coleccion": "Delta Reign",
+      "numero": "092",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C136",
+    "slug": "grisham-093-delta-reign",
+    "nombre": "Grisham #093 (Delta Reign)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 2,
+    "vendidos": 0,
+    "orden": 136,
+    "fotos": [
+      "/productos/grisham-093-delta-reign.webp"
+    ],
+    "descripcion": "Carta de Entrenador tipo Partidario, número 093/103 de Delta Reign, poco común, en inglés. Cura 50 de daño a cada Pokémon en juego, tuyos y del rival.",
+    "carta": {
+      "coleccion": "Delta Reign",
+      "numero": "093",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C137",
+    "slug": "mega-rayquaza-cap-100-delta-reign",
+    "nombre": "Mega Rayquaza Cap #100 (Delta Reign)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 137,
+    "fotos": [
+      "/productos/mega-rayquaza-cap-100-delta-reign.webp"
+    ],
+    "descripcion": "Carta de Entrenador tipo Herramienta, número 100/103 de Delta Reign, poco común, en inglés. Le da el ataque Delta Gift al Pokémon que la lleva: por cada Pokémon tuyo con esta gorra, buscás una Energía básica y se la unís.",
+    "carta": {
+      "coleccion": "Delta Reign",
+      "numero": "100",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C138",
+    "slug": "tropius-001-pitch-black",
+    "nombre": "Tropius #001 (Pitch Black)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 138,
+    "fotos": [
+      "/productos/tropius-001-pitch-black.webp"
+    ],
+    "descripcion": "Tropius de 110 HP, tipo Planta, con arte de Akino Fukuji. Número 001/084 de Pitch Black, común, en inglés. Trae los ataques Fruity Aroma y Solar Beam.",
+    "carta": {
+      "coleccion": "Pitch Black",
+      "numero": "001",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C139",
+    "slug": "sizzlipede-009-pitch-black",
+    "nombre": "Sizzlipede #009 (Pitch Black)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 139,
+    "fotos": [
+      "/productos/sizzlipede-009-pitch-black.webp"
+    ],
+    "descripcion": "Sizzlipede de 80 HP, tipo Fuego, con arte de Yuya Oka. Número 009/084 de Pitch Black, común, en inglés. Trae los ataques Controlled Burn y Bug Out.",
+    "carta": {
+      "coleccion": "Pitch Black",
+      "numero": "009",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C140",
+    "slug": "goldeen-013-pitch-black",
+    "nombre": "Goldeen #013 (Pitch Black)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 140,
+    "fotos": [
+      "/productos/goldeen-013-pitch-black.webp"
+    ],
+    "descripcion": "Goldeen de 70 HP, tipo Agua, con arte de Shibuzoh. Número 013/084 de Pitch Black, común, en inglés. Trae el ataque Pierce.",
+    "carta": {
+      "coleccion": "Pitch Black",
+      "numero": "013",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C141",
+    "slug": "finizen-021-pitch-black",
+    "nombre": "Finizen #021 (Pitch Black)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 141,
+    "fotos": [
+      "/productos/finizen-021-pitch-black.webp"
+    ],
+    "descripcion": "Finizen de 80 HP, tipo Agua, con arte de Yukiko Baba. Número 021/084 de Pitch Black, común, en inglés. Trae el ataque Draining Fin.",
+    "carta": {
+      "coleccion": "Pitch Black",
+      "numero": "021",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C142",
+    "slug": "palafin-022-pitch-black",
+    "nombre": "Palafin #022 (Pitch Black)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 142,
+    "fotos": [
+      "/productos/palafin-022-pitch-black.webp"
+    ],
+    "descripcion": "Palafin de 150 HP, tipo Agua, con arte de satoma. Número 022/084 de Pitch Black, poco común, en inglés. Trae el ataque Knuckle Justice.",
+    "carta": {
+      "coleccion": "Pitch Black",
+      "numero": "022",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C143",
+    "slug": "miraidon-028-pitch-black",
+    "nombre": "Miraidon #028 (Pitch Black)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 143,
+    "fotos": [
+      "/productos/miraidon-028-pitch-black.webp"
+    ],
+    "descripcion": "Miraidon de 120 HP, tipo Rayo, con arte de mashu. Número 028/084 de Pitch Black, rara, en inglés. Trae la habilidad Photon Cord y el ataque Thunder.",
+    "carta": {
+      "coleccion": "Pitch Black",
+      "numero": "028",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C144",
+    "slug": "slowpoke-029-pitch-black",
+    "nombre": "Slowpoke #029 (Pitch Black)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 144,
+    "fotos": [
+      "/productos/slowpoke-029-pitch-black.webp"
+    ],
+    "descripcion": "Slowpoke de 70 HP, tipo Psíquico, con arte de Nelnal. Número 029/084 de Pitch Black, común, en inglés. Trae los ataques All-You-Can-Yeet y Headbutt.",
+    "carta": {
+      "coleccion": "Pitch Black",
+      "numero": "029",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C145",
+    "slug": "slowbro-030-pitch-black",
+    "nombre": "Slowbro #030 (Pitch Black)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 145,
+    "fotos": [
+      "/productos/slowbro-030-pitch-black.webp"
+    ],
+    "descripcion": "Slowbro de 130 HP, tipo Psíquico, con arte de CHORISO. Número 030/084 de Pitch Black, poco común, en inglés. Trae los ataques All Out y Zen Headbutt.",
+    "carta": {
+      "coleccion": "Pitch Black",
+      "numero": "030",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C146",
+    "slug": "shuppet-033-pitch-black",
+    "nombre": "Shuppet #033 (Pitch Black)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 146,
+    "fotos": [
+      "/productos/shuppet-033-pitch-black.webp"
+    ],
+    "descripcion": "Shuppet de 50 HP, tipo Psíquico, con arte de Bun Toujo. Número 033/084 de Pitch Black, común, en inglés. Trae la habilidad Hide 'n' Sneak y el ataque Hang Down.",
+    "carta": {
+      "coleccion": "Pitch Black",
+      "numero": "033",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C147",
+    "slug": "litwick-036-pitch-black",
+    "nombre": "Litwick #036 (Pitch Black)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 147,
+    "fotos": [
+      "/productos/litwick-036-pitch-black.webp"
+    ],
+    "descripcion": "Litwick de 70 HP, tipo Psíquico, con arte de HYOGONOSUKE. Número 036/084 de Pitch Black, común, en inglés. Trae el ataque Will-O-Wisp.",
+    "carta": {
+      "coleccion": "Pitch Black",
+      "numero": "036",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C148",
+    "slug": "lampent-037-pitch-black",
+    "nombre": "Lampent #037 (Pitch Black)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 148,
+    "fotos": [
+      "/productos/lampent-037-pitch-black.webp"
+    ],
+    "descripcion": "Lampent de 90 HP, tipo Psíquico, con arte de sowsow. Número 037/084 de Pitch Black, poco común, en inglés. Trae el ataque Spreading Light.",
+    "carta": {
+      "coleccion": "Pitch Black",
+      "numero": "037",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C149",
+    "slug": "dhelmise-039-pitch-black",
+    "nombre": "Dhelmise #039 (Pitch Black)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 149,
+    "fotos": [
+      "/productos/dhelmise-039-pitch-black.webp"
+    ],
+    "descripcion": "Dhelmise de 140 HP, tipo Psíquico, con arte de Oku. Número 039/084 de Pitch Black, poco común, en inglés. Trae el ataque Vengeful Anchor.",
+    "carta": {
+      "coleccion": "Pitch Black",
+      "numero": "039",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C150",
+    "slug": "marshadow-040-pitch-black",
+    "nombre": "Marshadow #040 (Pitch Black)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 150,
+    "fotos": [
+      "/productos/marshadow-040-pitch-black.webp"
+    ],
+    "descripcion": "Marshadow de 90 HP, tipo Psíquico, con arte de Nakamura Ippan. Número 040/084 de Pitch Black, poco común, en inglés. Trae el ataque Shadowy Knot.",
+    "carta": {
+      "coleccion": "Pitch Black",
+      "numero": "040",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C151",
+    "slug": "annihilape-041-pitch-black",
+    "nombre": "Annihilape #041 (Pitch Black)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 151,
+    "fotos": [
+      "/productos/annihilape-041-pitch-black.webp"
+    ],
+    "descripcion": "Annihilape de 150 HP, tipo Psíquico, con arte de Haru Akasaka. Número 041/084 de Pitch Black, poco común, en inglés. Trae la habilidad Durable Body y el ataque Ghostly Blow.",
+    "carta": {
+      "coleccion": "Pitch Black",
+      "numero": "041",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C152",
+    "slug": "mankey-042-pitch-black",
+    "nombre": "Mankey #042 (Pitch Black)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 152,
+    "fotos": [
+      "/productos/mankey-042-pitch-black.webp"
+    ],
+    "descripcion": "Mankey de 50 HP, tipo Lucha, con arte de Yuka Morii. Número 042/084 de Pitch Black, común, en inglés. Trae el ataque Low Kick.",
+    "carta": {
+      "coleccion": "Pitch Black",
+      "numero": "042",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C153",
+    "slug": "cranidos-044-pitch-black",
+    "nombre": "Cranidos #044 (Pitch Black)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 153,
+    "fotos": [
+      "/productos/cranidos-044-pitch-black.webp"
+    ],
+    "descripcion": "Cranidos de 100 HP, tipo Lucha, con arte de Hideki Ishikawa. Número 044/084 de Pitch Black, común, en inglés. Trae el ataque Push Down.",
+    "carta": {
+      "coleccion": "Pitch Black",
+      "numero": "044",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C154",
+    "slug": "vullaby-049-pitch-black",
+    "nombre": "Vullaby #049 (Pitch Black)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 154,
+    "fotos": [
+      "/productos/vullaby-049-pitch-black.webp"
+    ],
+    "descripcion": "Vullaby de 70 HP, tipo Oscuro, con arte de Shiburingaru. Número 049/084 de Pitch Black, común, en inglés. Trae los ataques Flap y Gust.",
+    "carta": {
+      "coleccion": "Pitch Black",
+      "numero": "049",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C155",
+    "slug": "malamar-052-pitch-black",
+    "nombre": "Malamar #052 (Pitch Black)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 155,
+    "fotos": [
+      "/productos/malamar-052-pitch-black.webp"
+    ],
+    "descripcion": "Malamar de 120 HP, tipo Oscuro, con arte de Naoki Saito. Número 052/084 de Pitch Black, poco común, en inglés. Trae los ataques Perplex y Brain Crush.",
+    "carta": {
+      "coleccion": "Pitch Black",
+      "numero": "052",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C156",
+    "slug": "thievul-054-pitch-black",
+    "nombre": "Thievul #054 (Pitch Black)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 2,
+    "vendidos": 0,
+    "orden": 156,
+    "fotos": [
+      "/productos/thievul-054-pitch-black.webp"
+    ],
+    "descripcion": "Thievul de 100 HP, tipo Oscuro, con arte de GOTO minori. Número 054/084 de Pitch Black, poco común, en inglés. Trae los ataques Skill Thief y Sharp Fang.",
+    "carta": {
+      "coleccion": "Pitch Black",
+      "numero": "054",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C157",
+    "slug": "mabosstiff-058-pitch-black",
+    "nombre": "Mabosstiff #058 (Pitch Black)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 157,
+    "fotos": [
+      "/productos/mabosstiff-058-pitch-black.webp"
+    ],
+    "descripcion": "Mabosstiff de 140 HP, tipo Oscuro, con arte de kawayoo. Número 058/084 de Pitch Black, común, en inglés. Trae los ataques Bite y Plunging Headbutt.",
+    "carta": {
+      "coleccion": "Pitch Black",
+      "numero": "058",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C158",
+    "slug": "chi-yu-059-pitch-black",
+    "nombre": "Chi-Yu #059 (Pitch Black)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 158,
+    "fotos": [
+      "/productos/chi-yu-059-pitch-black.webp"
+    ],
+    "descripcion": "Chi-Yu de 90 HP, tipo Oscuro, con arte de IKEDA Saki. Número 059/084 de Pitch Black, rara, en inglés. Trae el ataque Whirling Envy.",
+    "carta": {
+      "coleccion": "Pitch Black",
+      "numero": "059",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C159",
+    "slug": "pikipek-066-pitch-black",
+    "nombre": "Pikipek #066 (Pitch Black)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 159,
+    "fotos": [
+      "/productos/pikipek-066-pitch-black.webp"
+    ],
+    "descripcion": "Pikipek de 70 HP, tipo Incoloro, con arte de Koji Nakata. Número 066/084 de Pitch Black, común, en inglés. Trae el ataque Double Stab.",
+    "carta": {
+      "coleccion": "Pitch Black",
+      "numero": "066",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C160",
+    "slug": "toucannon-068-pitch-black",
+    "nombre": "Toucannon #068 (Pitch Black)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 160,
+    "fotos": [
+      "/productos/toucannon-068-pitch-black.webp"
+    ],
+    "descripcion": "Toucannon de 150 HP, tipo Incoloro, con arte de Masako Tomii. Número 068/084 de Pitch Black, poco común, en inglés. Trae la habilidad Aerial Draw y el ataque Feather Rondo.",
+    "carta": {
+      "coleccion": "Pitch Black",
+      "numero": "068",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C161",
+    "slug": "type-null-069-pitch-black",
+    "nombre": "Type: Null #069 (Pitch Black)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 161,
+    "fotos": [
+      "/productos/type-null-069-pitch-black.webp"
+    ],
+    "descripcion": "Type: Null de 110 HP, tipo Incoloro, con arte de Ligton. Número 069/084 de Pitch Black, común, en inglés. Trae el ataque Power Edge.",
+    "carta": {
+      "coleccion": "Pitch Black",
+      "numero": "069",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C162",
+    "slug": "gladion-s-final-battle-077-pitch-black",
+    "nombre": "Gladion's Final Battle #077 (Pitch Black)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 2,
+    "vendidos": 0,
+    "orden": 162,
+    "fotos": [
+      "/productos/gladion-s-final-battle-077-pitch-black.webp"
+    ],
+    "descripcion": "Carta de Entrenador tipo Partidario, número 077/084 de Pitch Black, poco común, en inglés. Solo se usa si es la última carta de tu mano. Ese turno, tus Pokémon que no sean ex ni V hacen 80 de daño más al Activo rival.",
+    "carta": {
+      "coleccion": "Pitch Black",
+      "numero": "077",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C163",
+    "slug": "misty-s-vitality-080-pitch-black",
+    "nombre": "Misty's Vitality #080 (Pitch Black)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 163,
+    "fotos": [
+      "/productos/misty-s-vitality-080-pitch-black.webp"
+    ],
+    "descripcion": "Carta de Entrenador tipo Partidario, número 080/084 de Pitch Black, poco común, en inglés. Buscá hasta 4 Energías básicas de Agua y unilas a uno de tus Pokémon. Después termina tu turno.",
+    "carta": {
+      "coleccion": "Pitch Black",
+      "numero": "080",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C164",
+    "slug": "tremendous-bomb-082-pitch-black",
+    "nombre": "Tremendous Bomb #082 (Pitch Black)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 164,
+    "fotos": [
+      "/productos/tremendous-bomb-082-pitch-black.webp"
+    ],
+    "descripcion": "Carta de Entrenador tipo Herramienta, número 082/084 de Pitch Black, poco común, en inglés. Si el Pokémon activo que la lleva no es Mega ex y recibe 240 de daño o más de un Mega Pokémon ex rival, el atacante recibe 12 contadores de daño.",
+    "carta": {
+      "coleccion": "Pitch Black",
+      "numero": "082",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C165",
+    "slug": "fennekin-011-chaos-rising",
+    "nombre": "Fennekin #011 (Chaos Rising)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 165,
+    "fotos": [
+      "/productos/fennekin-011-chaos-rising.webp"
+    ],
+    "descripcion": "Fennekin de 70 HP, tipo Fuego, con arte de saino misaki. Número 011/086 de Chaos Rising, común, en inglés. Trae los ataques Call for Family y Steady Firebreathing.",
+    "carta": {
+      "coleccion": "Chaos Rising",
+      "numero": "011",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C166",
+    "slug": "remoraid-016-chaos-rising",
+    "nombre": "Remoraid #016 (Chaos Rising)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 166,
+    "fotos": [
+      "/productos/remoraid-016-chaos-rising.webp"
+    ],
+    "descripcion": "Remoraid de 70 HP, tipo Agua, con arte de Mori Yuu. Número 016/086 de Chaos Rising, común, en inglés. Trae el ataque Sharp Fin.",
+    "carta": {
+      "coleccion": "Chaos Rising",
+      "numero": "016",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C167",
+    "slug": "delibird-018-chaos-rising",
+    "nombre": "Delibird #018 (Chaos Rising)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 3,
+    "vendidos": 0,
+    "orden": 167,
+    "fotos": [
+      "/productos/delibird-018-chaos-rising.webp"
+    ],
+    "descripcion": "Delibird de 90 HP, tipo Agua, con arte de Saboteri. Número 018/086 de Chaos Rising, poco común, en inglés. Trae los ataques Pleasing Present y Flap.",
+    "carta": {
+      "coleccion": "Chaos Rising",
+      "numero": "018",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C168",
+    "slug": "frogadier-021-chaos-rising",
+    "nombre": "Frogadier #021 (Chaos Rising)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 2,
+    "vendidos": 0,
+    "orden": 168,
+    "fotos": [
+      "/productos/frogadier-021-chaos-rising.webp"
+    ],
+    "descripcion": "Frogadier de 100 HP, tipo Agua, con arte de Nelnal. Número 021/086 de Chaos Rising, común, en inglés. Trae los ataques Summoning Jutsu y Aqua Edge.",
+    "carta": {
+      "coleccion": "Chaos Rising",
+      "numero": "021",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C169",
+    "slug": "avalugg-024-chaos-rising",
+    "nombre": "Avalugg #024 (Chaos Rising)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 169,
+    "fotos": [
+      "/productos/avalugg-024-chaos-rising.webp"
+    ],
+    "descripcion": "Avalugg de 160 HP, tipo Agua, con arte de Tomomi Kaneko. Número 024/086 de Chaos Rising, poco común, en inglés. Trae los ataques Iceberg Breaker y Frost Stamp.",
+    "carta": {
+      "coleccion": "Chaos Rising",
+      "numero": "024",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C170",
+    "slug": "deoxys-031-chaos-rising",
+    "nombre": "Deoxys #031 (Chaos Rising)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 2,
+    "vendidos": 0,
+    "orden": 170,
+    "fotos": [
+      "/productos/deoxys-031-chaos-rising.webp"
+    ],
+    "descripcion": "Deoxys de 110 HP, tipo Psíquico, con arte de Shiburingaru. Número 031/086 de Chaos Rising, poco común, en inglés. Trae los ataques Genome Charge y Psychic.",
+    "carta": {
+      "coleccion": "Chaos Rising",
+      "numero": "031",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C171",
+    "slug": "deoxys-034-chaos-rising",
+    "nombre": "Deoxys #034 (Chaos Rising)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 171,
+    "fotos": [
+      "/productos/deoxys-034-chaos-rising.webp"
+    ],
+    "descripcion": "Deoxys de 100 HP, tipo Psíquico, con arte de hncl. Número 034/086 de Chaos Rising, poco común, en inglés. Trae el ataque Psyspeed.",
+    "carta": {
+      "coleccion": "Chaos Rising",
+      "numero": "034",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C172",
+    "slug": "meowstic-037-chaos-rising",
+    "nombre": "Meowstic #037 (Chaos Rising)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 172,
+    "fotos": [
+      "/productos/meowstic-037-chaos-rising.webp"
+    ],
+    "descripcion": "Meowstic de 100 HP, tipo Psíquico, con arte de mingo. Número 037/086 de Chaos Rising, poco común, en inglés. Trae el ataque Tricky Steps.",
+    "carta": {
+      "coleccion": "Chaos Rising",
+      "numero": "037",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C173",
+    "slug": "phantump-038-chaos-rising",
+    "nombre": "Phantump #038 (Chaos Rising)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 173,
+    "fotos": [
+      "/productos/phantump-038-chaos-rising.webp"
+    ],
+    "descripcion": "Phantump de 70 HP, tipo Psíquico, con arte de Taiga Kasai. Número 038/086 de Chaos Rising, común, en inglés. Trae la habilidad Spiteful Evolution y el ataque Mumble.",
+    "carta": {
+      "coleccion": "Chaos Rising",
+      "numero": "038",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C174",
+    "slug": "pumpkaboo-040-chaos-rising",
+    "nombre": "Pumpkaboo #040 (Chaos Rising)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 174,
+    "fotos": [
+      "/productos/pumpkaboo-040-chaos-rising.webp"
+    ],
+    "descripcion": "Pumpkaboo de 60 HP, tipo Psíquico, con arte de Jerky. Número 040/086 de Chaos Rising, común, en inglés. Trae el ataque Stampede.",
+    "carta": {
+      "coleccion": "Chaos Rising",
+      "numero": "040",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C175",
+    "slug": "sudowoodo-043-chaos-rising",
+    "nombre": "Sudowoodo #043 (Chaos Rising)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 5,
+    "vendidos": 0,
+    "orden": 175,
+    "fotos": [
+      "/productos/sudowoodo-043-chaos-rising.webp"
+    ],
+    "descripcion": "Sudowoodo de 110 HP, tipo Lucha, con arte de GOTO minori. Número 043/086 de Chaos Rising, poco común, en inglés. Trae los ataques Trials and Trip-ulations y Rock Hurl.",
+    "carta": {
+      "coleccion": "Chaos Rising",
+      "numero": "043",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C176",
+    "slug": "claydol-047-chaos-rising",
+    "nombre": "Claydol #047 (Chaos Rising)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 176,
+    "fotos": [
+      "/productos/claydol-047-chaos-rising.webp"
+    ],
+    "descripcion": "Claydol de 120 HP, tipo Lucha, con arte de Oswaldo KATO. Número 047/086 de Chaos Rising, poco común, en inglés. Trae el ataque Devolution Ray.",
+    "carta": {
+      "coleccion": "Chaos Rising",
+      "numero": "047",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C177",
+    "slug": "stunky-053-chaos-rising",
+    "nombre": "Stunky #053 (Chaos Rising)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 2,
+    "vendidos": 0,
+    "orden": 177,
+    "fotos": [
+      "/productos/stunky-053-chaos-rising.webp"
+    ],
+    "descripcion": "Stunky de 70 HP, tipo Oscuro, con arte de Nobuhiro Imagawa. Número 053/086 de Chaos Rising, común, en inglés. Trae el ataque Scratch.",
+    "carta": {
+      "coleccion": "Chaos Rising",
+      "numero": "053",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C178",
+    "slug": "trubbish-056-chaos-rising",
+    "nombre": "Trubbish #056 (Chaos Rising)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 178,
+    "fotos": [
+      "/productos/trubbish-056-chaos-rising.webp"
+    ],
+    "descripcion": "Trubbish de 70 HP, tipo Oscuro, con arte de Souichirou Gunjima. Número 056/086 de Chaos Rising, común, en inglés. Trae el ataque Acid Spray.",
+    "carta": {
+      "coleccion": "Chaos Rising",
+      "numero": "056",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C179",
+    "slug": "garbodor-057-chaos-rising",
+    "nombre": "Garbodor #057 (Chaos Rising)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 179,
+    "fotos": [
+      "/productos/garbodor-057-chaos-rising.webp"
+    ],
+    "descripcion": "Garbodor de 140 HP, tipo Oscuro, con arte de HYOGONOSUKE. Número 057/086 de Chaos Rising, poco común, en inglés. Trae la habilidad Gloomy Garbage y el ataque Sludge Bomb.",
+    "carta": {
+      "coleccion": "Chaos Rising",
+      "numero": "057",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C180",
+    "slug": "beldum-059-chaos-rising",
+    "nombre": "Beldum #059 (Chaos Rising)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 180,
+    "fotos": [
+      "/productos/beldum-059-chaos-rising.webp"
+    ],
+    "descripcion": "Beldum de 70 HP, tipo Metálico, con arte de toi8. Número 059/086 de Chaos Rising, común, en inglés. Trae los ataques Headbutt y Beam.",
+    "carta": {
+      "coleccion": "Chaos Rising",
+      "numero": "059",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C181",
+    "slug": "goomy-066-chaos-rising",
+    "nombre": "Goomy #066 (Chaos Rising)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 2,
+    "vendidos": 0,
+    "orden": 181,
+    "fotos": [
+      "/productos/goomy-066-chaos-rising.webp"
+    ],
+    "descripcion": "Goomy de 60 HP, tipo Dragón, con arte de Anesaki Dynamic. Número 066/086 de Chaos Rising, común, en inglés. Trae el ataque Absorb.",
+    "carta": {
+      "coleccion": "Chaos Rising",
+      "numero": "066",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C182",
+    "slug": "goodra-068-chaos-rising",
+    "nombre": "Goodra #068 (Chaos Rising)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 182,
+    "fotos": [
+      "/productos/goodra-068-chaos-rising.webp"
+    ],
+    "descripcion": "Goodra de 160 HP, tipo Dragón, con arte de Tonji Matsuno. Número 068/086 de Chaos Rising, rara, en inglés. Trae la habilidad Slimy Sliding y el ataque Dragon Pulse.",
+    "carta": {
+      "coleccion": "Chaos Rising",
+      "numero": "068",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C183",
+    "slug": "ange-floette-075-chaos-rising",
+    "nombre": "Ange Floette #075 (Chaos Rising)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 183,
+    "fotos": [
+      "/productos/ange-floette-075-chaos-rising.webp"
+    ],
+    "descripcion": "Carta de Entrenador tipo Estadio, número 075/086 de Chaos Rising, poco común, en inglés. Solo entra en juego descartando una Prism Tower. Cada Mega Floette ex en juego, de ambos jugadores, gana 150 HP.",
+    "carta": {
+      "coleccion": "Chaos Rising",
+      "numero": "075",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C184",
+    "slug": "great-haul-net-078-chaos-rising",
+    "nombre": "Great Haul Net #078 (Chaos Rising)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 184,
+    "fotos": [
+      "/productos/great-haul-net-078-chaos-rising.webp"
+    ],
+    "descripcion": "Carta de Entrenador tipo Objeto, número 078/086 de Chaos Rising, poco común, en inglés. Devolvé a tu mazo, desde la pila de descarte, hasta 3 Pokémon de Agua, hasta 3 Energías básicas de Agua, o ambas cosas.",
+    "carta": {
+      "coleccion": "Chaos Rising",
+      "numero": "078",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C185",
+    "slug": "prism-tower-080-chaos-rising",
+    "nombre": "Prism Tower #080 (Chaos Rising)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 185,
+    "fotos": [
+      "/productos/prism-tower-080-chaos-rising.webp"
+    ],
+    "descripcion": "Carta de Entrenador tipo Estadio, número 080/086 de Chaos Rising, poco común, en inglés. Una vez en su turno, cada jugador puede descartar 2 cartas de su mano para robar 1.",
+    "carta": {
+      "coleccion": "Chaos Rising",
+      "numero": "080",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C186",
+    "slug": "special-red-card-082-chaos-rising",
+    "nombre": "Special Red Card #082 (Chaos Rising)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 186,
+    "fotos": [
+      "/productos/special-red-card-082-chaos-rising.webp"
+    ],
+    "descripcion": "Carta de Entrenador tipo Objeto, número 082/086 de Chaos Rising, poco común, en inglés. Solo se usa si al rival le quedan 3 Premios o menos. El rival pone su mano al fondo del mazo y roba 3 cartas.",
+    "carta": {
+      "coleccion": "Chaos Rising",
+      "numero": "082",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C187",
+    "slug": "ariados-002-perfect-order",
+    "nombre": "Ariados #002 (Perfect Order)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 187,
+    "fotos": [
+      "/productos/ariados-002-perfect-order.webp"
+    ],
+    "descripcion": "Ariados de 110 HP, tipo Planta, con arte de svlt. Número 002/088 de Perfect Order, común, en inglés. Trae el ataque Poison Ring.",
+    "carta": {
+      "coleccion": "Perfect Order",
+      "numero": "002",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C188",
+    "slug": "shaymin-003-perfect-order",
+    "nombre": "Shaymin #003 (Perfect Order)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 188,
+    "fotos": [
+      "/productos/shaymin-003-perfect-order.webp"
+    ],
+    "descripcion": "Shaymin de 70 HP, tipo Planta, con arte de saino misaki. Número 003/088 de Perfect Order, poco común, en inglés. Trae los ataques Send Flowers y Leaf Step.",
+    "carta": {
+      "coleccion": "Perfect Order",
+      "numero": "003",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C189",
+    "slug": "probopass-038-perfect-order",
+    "nombre": "Probopass #038 (Perfect Order)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 189,
+    "fotos": [
+      "/productos/probopass-038-perfect-order.webp"
+    ],
+    "descripcion": "Probopass de 140 HP, tipo Lucha, con arte de Nurikabe. Número 038/088 de Perfect Order, común, en inglés. Trae los ataques Rolling Rocks y Obliterating Nose.",
+    "carta": {
+      "coleccion": "Perfect Order",
+      "numero": "038",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C190",
+    "slug": "energy-search-072-perfect-order",
+    "nombre": "Energy Search #072 (Perfect Order)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 190,
+    "fotos": [
+      "/productos/energy-search-072-perfect-order.webp"
+    ],
+    "descripcion": "Carta de Entrenador tipo Objeto, número 072/088 de Perfect Order, común, en inglés. Buscá una Energía básica en tu mazo y pasala a tu mano.",
+    "carta": {
+      "coleccion": "Perfect Order",
+      "numero": "072",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C191",
+    "slug": "potion-083-perfect-order",
+    "nombre": "Potion #083 (Perfect Order)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 191,
+    "fotos": [
+      "/productos/potion-083-perfect-order.webp"
+    ],
+    "descripcion": "Carta de Entrenador tipo Objeto, número 083/088 de Perfect Order, común, en inglés. Cura 30 de daño a uno de tus Pokémon.",
+    "carta": {
+      "coleccion": "Perfect Order",
+      "numero": "083",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C192",
+    "slug": "erika-s-bellsprout-004-ascended-heroes",
+    "nombre": "Erika's Bellsprout #004 (Ascended Heroes)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 192,
+    "fotos": [
+      "/productos/erika-s-bellsprout-004-ascended-heroes.webp"
+    ],
+    "descripcion": "Erika's Bellsprout de 60 HP, tipo Planta, con arte de sui. Número 004/217 de Ascended Heroes, común, en inglés. Trae el ataque Vine Slap.",
+    "carta": {
+      "coleccion": "Ascended Heroes",
+      "numero": "004",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C193",
+    "slug": "rotom-092-ascended-heroes",
+    "nombre": "Rotom #092 (Ascended Heroes)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 193,
+    "fotos": [
+      "/productos/rotom-092-ascended-heroes.webp"
+    ],
+    "descripcion": "Rotom de 60 HP, tipo Psíquico, con arte de mingo. Número 092/217 de Ascended Heroes, común, en inglés. Trae los ataques Roto Call y Gadget Show.",
+    "carta": {
+      "coleccion": "Ascended Heroes",
+      "numero": "092",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C194",
+    "slug": "team-rocket-s-honchkrow-127-ascended-heroes",
+    "nombre": "Team Rocket's Honchkrow #127 (Ascended Heroes)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 194,
+    "fotos": [
+      "/productos/team-rocket-s-honchkrow-127-ascended-heroes.webp"
+    ],
+    "descripcion": "Team Rocket's Honchkrow de 130 HP, tipo Oscuro, con arte de hncl. Número 127/217 de Ascended Heroes, rara, en inglés. Trae los ataques Rocket Feathers y Hammer In.",
+    "carta": {
+      "coleccion": "Ascended Heroes",
+      "numero": "127",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C195",
+    "slug": "team-rocket-s-hypnotizer-206-ascended-heroes",
+    "nombre": "Team Rocket's Hypnotizer #206 (Ascended Heroes)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 195,
+    "fotos": [
+      "/productos/team-rocket-s-hypnotizer-206-ascended-heroes.webp"
+    ],
+    "descripcion": "Carta de Entrenador tipo Herramienta, número 206/217 de Ascended Heroes, poco común, en inglés. Si el Pokémon de Team Rocket activo que la lleva recibe daño de un ataque rival, el atacante queda Dormido.",
+    "carta": {
+      "coleccion": "Ascended Heroes",
+      "numero": "206",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C196",
+    "slug": "exeggutor-002-prismatic-evolutions",
+    "nombre": "Exeggutor #002 (Prismatic Evolutions)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 196,
+    "fotos": [
+      "/productos/exeggutor-002-prismatic-evolutions.webp"
+    ],
+    "descripcion": "Exeggutor de 140 HP, tipo Planta, con arte de Dsuke. Número 002/131 de Prismatic Evolutions, poco común, en inglés. Trae los ataques Mega Drain y Solar Beam.",
+    "carta": {
+      "coleccion": "Prismatic Evolutions",
+      "numero": "002",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C197",
+    "slug": "dipplin-010-prismatic-evolutions",
+    "nombre": "Dipplin #010 (Prismatic Evolutions)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 197,
+    "fotos": [
+      "/productos/dipplin-010-prismatic-evolutions.webp"
+    ],
+    "descripcion": "Dipplin de 80 HP, tipo Planta, con arte de Saboteri. Número 010/131 de Prismatic Evolutions, poco común, en inglés. Trae la habilidad Festival Lead y el ataque Do the Wave.",
+    "carta": {
+      "coleccion": "Prismatic Evolutions",
+      "numero": "010",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C198",
+    "slug": "litleo-015-prismatic-evolutions",
+    "nombre": "Litleo #015 (Prismatic Evolutions)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 198,
+    "fotos": [
+      "/productos/litleo-015-prismatic-evolutions.webp"
+    ],
+    "descripcion": "Litleo de 70 HP, tipo Fuego, con arte de Whisker. Número 015/131 de Prismatic Evolutions, común, en inglés. Trae los ataques Combustion y Headbutt.",
+    "carta": {
+      "coleccion": "Prismatic Evolutions",
+      "numero": "015",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C199",
+    "slug": "slowpoke-018-prismatic-evolutions",
+    "nombre": "Slowpoke #018 (Prismatic Evolutions)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 199,
+    "fotos": [
+      "/productos/slowpoke-018-prismatic-evolutions.webp"
+    ],
+    "descripcion": "Slowpoke de 70 HP, tipo Agua, con arte de Natsumi Yoshida. Número 018/131 de Prismatic Evolutions, común, en inglés. Trae los ataques Water Gun y Tail Whap.",
+    "carta": {
+      "coleccion": "Prismatic Evolutions",
+      "numero": "018",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C200",
+    "slug": "duskull-035-prismatic-evolutions",
+    "nombre": "Duskull #035 (Prismatic Evolutions)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 200,
+    "fotos": [
+      "/productos/duskull-035-prismatic-evolutions.webp"
+    ],
+    "descripcion": "Duskull de 60 HP, tipo Psíquico, con arte de IKEDA Saki. Número 035/131 de Prismatic Evolutions, común, en inglés. Trae los ataques Come and Get You y Mumble.",
+    "carta": {
+      "coleccion": "Prismatic Evolutions",
+      "numero": "035",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C201",
+    "slug": "dusclops-036-prismatic-evolutions",
+    "nombre": "Dusclops #036 (Prismatic Evolutions)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 3,
+    "vendidos": 0,
+    "orden": 201,
+    "fotos": [
+      "/productos/dusclops-036-prismatic-evolutions.webp"
+    ],
+    "descripcion": "Dusclops de 90 HP, tipo Psíquico, con arte de Aya Kusube. Número 036/131 de Prismatic Evolutions, común, en inglés. Trae la habilidad Cursed Blast y el ataque Will-O-Wisp.",
+    "carta": {
+      "coleccion": "Prismatic Evolutions",
+      "numero": "036",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C202",
+    "slug": "larvitar-047-prismatic-evolutions",
+    "nombre": "Larvitar #047 (Prismatic Evolutions)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 2,
+    "vendidos": 0,
+    "orden": 202,
+    "fotos": [
+      "/productos/larvitar-047-prismatic-evolutions.webp"
+    ],
+    "descripcion": "Larvitar de 70 HP, tipo Lucha, con arte de Shimaris Yukichi. Número 047/131 de Prismatic Evolutions, común, en inglés. Trae el ataque Headbutt.",
+    "carta": {
+      "coleccion": "Prismatic Evolutions",
+      "numero": "047",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C203",
+    "slug": "riolu-050-prismatic-evolutions",
+    "nombre": "Riolu #050 (Prismatic Evolutions)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 2,
+    "vendidos": 0,
+    "orden": 203,
+    "fotos": [
+      "/productos/riolu-050-prismatic-evolutions.webp"
+    ],
+    "descripcion": "Riolu de 70 HP, tipo Lucha, con arte de Tika Matsuno. Número 050/131 de Prismatic Evolutions, común, en inglés. Trae el ataque Quick Attack.",
+    "carta": {
+      "coleccion": "Prismatic Evolutions",
+      "numero": "050",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C204",
+    "slug": "hippowdon-053-prismatic-evolutions",
+    "nombre": "Hippowdon #053 (Prismatic Evolutions)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 204,
+    "fotos": [
+      "/productos/hippowdon-053-prismatic-evolutions.webp"
+    ],
+    "descripcion": "Hippowdon de 150 HP, tipo Lucha, con arte de Kurata So. Número 053/131 de Prismatic Evolutions, común, en inglés. Trae los ataques Sand Spray y Land Crush.",
+    "carta": {
+      "coleccion": "Prismatic Evolutions",
+      "numero": "053",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C205",
+    "slug": "great-tusk-055-prismatic-evolutions",
+    "nombre": "Great Tusk #055 (Prismatic Evolutions)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 2,
+    "vendidos": 0,
+    "orden": 205,
+    "fotos": [
+      "/productos/great-tusk-055-prismatic-evolutions.webp"
+    ],
+    "descripcion": "Great Tusk de 140 HP, tipo Lucha, con arte de GIDORA. Número 055/131 de Prismatic Evolutions, poco común, en inglés. Trae los ataques Land Collapse y Giant Tusk.",
+    "carta": {
+      "coleccion": "Prismatic Evolutions",
+      "numero": "055",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C206",
+    "slug": "bronzor-066-prismatic-evolutions",
+    "nombre": "Bronzor #066 (Prismatic Evolutions)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 206,
+    "fotos": [
+      "/productos/bronzor-066-prismatic-evolutions.webp"
+    ],
+    "descripcion": "Bronzor de 70 HP, tipo Metálico, con arte de Souichirou Gunjima. Número 066/131 de Prismatic Evolutions, común, en inglés. Trae el ataque Hammer In.",
+    "carta": {
+      "coleccion": "Prismatic Evolutions",
+      "numero": "066",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C207",
+    "slug": "bronzong-067-prismatic-evolutions",
+    "nombre": "Bronzong #067 (Prismatic Evolutions)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 207,
+    "fotos": [
+      "/productos/bronzong-067-prismatic-evolutions.webp"
+    ],
+    "descripcion": "Bronzong de 130 HP, tipo Metálico, con arte de Scav. Número 067/131 de Prismatic Evolutions, poco común, en inglés. Trae la habilidad Protective Bell y el ataque Heavy Impact.",
+    "carta": {
+      "coleccion": "Prismatic Evolutions",
+      "numero": "067",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C208",
+    "slug": "heatran-068-prismatic-evolutions",
+    "nombre": "Heatran #068 (Prismatic Evolutions)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 208,
+    "fotos": [
+      "/productos/heatran-068-prismatic-evolutions.webp"
+    ],
+    "descripcion": "Heatran de 130 HP, tipo Metálico, con arte de Tonji Matsuno. Número 068/131 de Prismatic Evolutions, poco común, en inglés. Trae los ataques Wrack Down y Iron Buster.",
+    "carta": {
+      "coleccion": "Prismatic Evolutions",
+      "numero": "068",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C209",
+    "slug": "duraludon-069-prismatic-evolutions",
+    "nombre": "Duraludon #069 (Prismatic Evolutions)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 209,
+    "fotos": [
+      "/productos/duraludon-069-prismatic-evolutions.webp"
+    ],
+    "descripcion": "Duraludon de 130 HP, tipo Metálico, con arte de Takeshi Nakamura. Número 069/131 de Prismatic Evolutions, común, en inglés. Trae los ataques Hammer In y Raging Hammer.",
+    "carta": {
+      "coleccion": "Prismatic Evolutions",
+      "numero": "069",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C210",
+    "slug": "dreepy-071-prismatic-evolutions",
+    "nombre": "Dreepy #071 (Prismatic Evolutions)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 210,
+    "fotos": [
+      "/productos/dreepy-071-prismatic-evolutions.webp"
+    ],
+    "descripcion": "Dreepy de 70 HP, tipo Dragón, con arte de Scav. Número 071/131 de Prismatic Evolutions, común, en inglés. Trae los ataques Petty Grudge y Bite.",
+    "carta": {
+      "coleccion": "Prismatic Evolutions",
+      "numero": "071",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C211",
+    "slug": "drakloak-072-prismatic-evolutions",
+    "nombre": "Drakloak #072 (Prismatic Evolutions)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 211,
+    "fotos": [
+      "/productos/drakloak-072-prismatic-evolutions.webp"
+    ],
+    "descripcion": "Drakloak de 90 HP, tipo Dragón, con arte de cochi8i. Número 072/131 de Prismatic Evolutions, común, en inglés. Trae la habilidad Recon Directive y el ataque Dragon Headbutt.",
+    "carta": {
+      "coleccion": "Prismatic Evolutions",
+      "numero": "072",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C212",
+    "slug": "shaymin-087-prismatic-evolutions",
+    "nombre": "Shaymin #087 (Prismatic Evolutions)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 212,
+    "fotos": [
+      "/productos/shaymin-087-prismatic-evolutions.webp"
+    ],
+    "descripcion": "Shaymin de 70 HP, tipo Incoloro, con arte de Amelicart. Número 087/131 de Prismatic Evolutions, poco común, en inglés. Trae el ataque Reflect Energy.",
+    "carta": {
+      "coleccion": "Prismatic Evolutions",
+      "numero": "087",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C213",
+    "slug": "black-belt-s-training-097-prismatic-evolutions",
+    "nombre": "Black Belt's Training #097 (Prismatic Evolutions)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 213,
+    "fotos": [
+      "/productos/black-belt-s-training-097-prismatic-evolutions.webp"
+    ],
+    "descripcion": "Carta de Entrenador tipo Partidario, número 097/131 de Prismatic Evolutions, común, en inglés. Ese turno, tus ataques hacen 40 de daño más al Pokémon ex activo del rival.",
+    "carta": {
+      "coleccion": "Prismatic Evolutions",
+      "numero": "097",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C214",
+    "slug": "ciphermaniac-s-codebreaking-104-prismatic-evolutions",
+    "nombre": "Ciphermaniac's Codebreaking #104 (Prismatic Evolutions)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 214,
+    "fotos": [
+      "/productos/ciphermaniac-s-codebreaking-104-prismatic-evolutions.webp"
+    ],
+    "descripcion": "Carta de Entrenador tipo Partidario, número 104/131 de Prismatic Evolutions, poco común, en inglés. Buscá 2 cartas en tu mazo, barajá y ponelas encima en el orden que querás.",
+    "carta": {
+      "coleccion": "Prismatic Evolutions",
+      "numero": "104",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C215",
+    "slug": "haban-berry-111-prismatic-evolutions",
+    "nombre": "Haban Berry #111 (Prismatic Evolutions)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 215,
+    "fotos": [
+      "/productos/haban-berry-111-prismatic-evolutions.webp"
+    ],
+    "descripcion": "Carta de Entrenador tipo Herramienta, número 111/131 de Prismatic Evolutions, común, en inglés. Si el Pokémon que la lleva recibe un ataque de un Pokémon Dragón rival, recibe 60 de daño menos y esta carta se descarta.",
+    "carta": {
+      "coleccion": "Prismatic Evolutions",
+      "numero": "111",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C216",
+    "slug": "professor-sada-s-vitality-120-prismatic-evolutions",
+    "nombre": "Professor Sada's Vitality #120 (Prismatic Evolutions)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 216,
+    "fotos": [
+      "/productos/professor-sada-s-vitality-120-prismatic-evolutions.webp"
+    ],
+    "descripcion": "Carta de Entrenador tipo Partidario, número 120/131 de Prismatic Evolutions, poco común, en inglés. Uní una Energía básica de tu pila de descarte a hasta 2 Pokémon Ancient. Si lo hacés, robá 3 cartas.",
+    "carta": {
+      "coleccion": "Prismatic Evolutions",
+      "numero": "120",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C217",
+    "slug": "professor-s-research-123-prismatic-evolutions",
+    "nombre": "Professor's Research #123 (Prismatic Evolutions)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 217,
+    "fotos": [
+      "/productos/professor-s-research-123-prismatic-evolutions.webp"
+    ],
+    "descripcion": "Carta de Entrenador tipo Partidario, número 123/131 de Prismatic Evolutions, común, en inglés. Descartá tu mano y robá 7 cartas.",
+    "carta": {
+      "coleccion": "Prismatic Evolutions",
+      "numero": "123",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C218",
+    "slug": "rescue-board-126-prismatic-evolutions",
+    "nombre": "Rescue Board #126 (Prismatic Evolutions)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 218,
+    "fotos": [
+      "/productos/rescue-board-126-prismatic-evolutions.webp"
+    ],
+    "descripcion": "Carta de Entrenador tipo Herramienta, número 126/131 de Prismatic Evolutions, poco común, en inglés. Baja en 1 Energía el costo de retirada. Si al Pokémon le quedan 30 HP o menos, retirarse no cuesta nada.",
+    "carta": {
+      "coleccion": "Prismatic Evolutions",
+      "numero": "126",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C219",
+    "slug": "techno-radar-130-prismatic-evolutions",
+    "nombre": "Techno Radar #130 (Prismatic Evolutions)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 219,
+    "fotos": [
+      "/productos/techno-radar-130-prismatic-evolutions.webp"
+    ],
+    "descripcion": "Carta de Entrenador tipo Objeto, número 130/131 de Prismatic Evolutions, poco común, en inglés. Descartá 1 carta de tu mano y buscá hasta 2 Pokémon Future en tu mazo.",
+    "carta": {
+      "coleccion": "Prismatic Evolutions",
+      "numero": "130",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C220",
+    "slug": "slowpoke-010-chinese-30th-celebration",
+    "nombre": "Slowpoke #010 (Chinese 30th Celebration)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Chino",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 220,
+    "fotos": [
+      "/productos/slowpoke-010-chinese-30th-celebration.webp"
+    ],
+    "descripcion": "Slowpoke de 80 HP, tipo Agua, con sello de 30 años. Número 010/103 de 30th Celebration en chino simplificado. Carta en chino.",
+    "carta": {
+      "coleccion": "Chinese 30th Celebration",
+      "numero": "010",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C221",
+    "slug": "articuno-012-chinese-30th-celebration",
+    "nombre": "Articuno #012 (Chinese 30th Celebration)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Chino",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 221,
+    "fotos": [
+      "/productos/articuno-012-chinese-30th-celebration.webp"
+    ],
+    "descripcion": "Articuno de 120 HP, tipo Agua, con sello de 30 años. Número 012/103 de 30th Celebration en chino simplificado. Carta en chino.",
+    "carta": {
+      "coleccion": "Chinese 30th Celebration",
+      "numero": "012",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C222",
+    "slug": "wishiwashi-016-chinese-30th-celebration",
+    "nombre": "Wishiwashi #016 (Chinese 30th Celebration)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Chino",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 222,
+    "fotos": [
+      "/productos/wishiwashi-016-chinese-30th-celebration.webp"
+    ],
+    "descripcion": "Wishiwashi de 30 HP, tipo Agua, con sello de 30 años. Número 016/103 de 30th Celebration en chino simplificado. Carta en chino.",
+    "carta": {
+      "coleccion": "Chinese 30th Celebration",
+      "numero": "016",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C223",
+    "slug": "chandelure-062-chinese-30th-celebration",
+    "nombre": "Chandelure #062 (Chinese 30th Celebration)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Chino",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 223,
+    "fotos": [
+      "/productos/chandelure-062-chinese-30th-celebration.webp"
+    ],
+    "descripcion": "Chandelure de 140 HP, tipo Psíquico, con sello de 30 años. Número 062/103 de 30th Celebration en chino simplificado. Carta en chino.",
+    "carta": {
+      "coleccion": "Chinese 30th Celebration",
+      "numero": "062",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C224",
+    "slug": "lucario-069-chinese-30th-celebration",
+    "nombre": "Lucario #069 (Chinese 30th Celebration)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Chino",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 224,
+    "fotos": [
+      "/productos/lucario-069-chinese-30th-celebration.webp"
+    ],
+    "descripcion": "Lucario de 120 HP, tipo Lucha, con sello de 30 años. Número 069/103 de 30th Celebration en chino simplificado. Carta en chino.",
+    "carta": {
+      "coleccion": "Chinese 30th Celebration",
+      "numero": "069",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C225",
+    "slug": "lycanroc-071-chinese-30th-celebration",
+    "nombre": "Lycanroc #071 (Chinese 30th Celebration)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Chino",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 225,
+    "fotos": [
+      "/productos/lycanroc-071-chinese-30th-celebration.webp"
+    ],
+    "descripcion": "Lycanroc de 130 HP, tipo Lucha, con sello de 30 años. Número 071/103 de 30th Celebration en chino simplificado. Carta en chino.",
+    "carta": {
+      "coleccion": "Chinese 30th Celebration",
+      "numero": "071",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C228",
+    "slug": "snorlax-095-chinese-30th-celebration",
+    "nombre": "Snorlax #095 (Chinese 30th Celebration)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Chino",
+    "precio": 100,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 228,
+    "fotos": [
+      "/productos/snorlax-095-chinese-30th-celebration.webp"
+    ],
+    "descripcion": "Snorlax de 160 HP, tipo Incoloro, con sello de 30 años. Número 095/103 de 30th Celebration en chino simplificado. Carta en chino.",
+    "carta": {
+      "coleccion": "Chinese 30th Celebration",
+      "numero": "095",
+      "rareza": "",
+      "condicion": ""
+    }
   }
 ]
