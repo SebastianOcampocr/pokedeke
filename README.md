@@ -48,7 +48,7 @@ GitHub Pages no tiene servidor, así que el servidor vive adentro de la hoja: es
 1. El cliente hace el pedido. Cae en la pestaña **Pedidos web**, llega un aviso a pokedekestore@gmail.com y el cliente recibe la confirmación en el correo que escribió.
 2. El cliente paga por SINPE y escribe el comprobante. Te llega otro aviso.
 3. Revisá que el SINPE haya entrado y cambiá el **Estado** a **Pagado**.
-4. La venta pasa sola a **Ventas**, con el cliente, y en Notas el pedido, el envío, el comprobante y el WhatsApp. El stock baja solo.
+4. La venta pasa sola a **Ventas**, con el cliente, y en Notas el pedido, el envío, el comprobante y el WhatsApp. El stock baja solo y el cliente recibe el correo de pago confirmado.
 
 Lo que conviene saber:
 
@@ -59,7 +59,8 @@ Lo que conviene saber:
 - Si cancelás un pedido que ya estaba en Ventas, borrá esas filas de Ventas a mano.
 - Las ventas de WhatsApp o en persona se siguen anotando en Ventas.
 - El costo de envío no se anota en Ventas, como dice "Cómo usarlo".
-- Los correos salen de la cuenta que hizo la implementación del script, y esa dirección la ve el cliente. Antes de abrir la tienda debe ser la cuenta de la tienda. Las respuestas del cliente van a pokedekestore@gmail.com.
+- Los correos salen de la cuenta que hizo la implementación del script, y siempre debe ser pokedekestore@gmail.com. Si el script corre con otra cuenta, el cliente no recibe correos.
+- Pasar a Ventas y el correo de pago confirmado dependen de un activador. Se instala una sola vez: con la cuenta de la tienda, en Apps Script, elegí la función `instalarAvisos` y tocá **Ejecutar**. Sin eso, marcar Pagado no hace nada.
 
 Si cambiás tarifas, cupones o el envío gratis en `lib/tienda.ts`, cambialos también en `CONFIG`, al inicio de `apps-script/Pedidos.gs`. Después de editar ese archivo hay que pegarlo otra vez en Apps Script y crear una versión nueva en **Implementar > Administrar implementaciones**.
 

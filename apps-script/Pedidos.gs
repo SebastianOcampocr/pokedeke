@@ -3,14 +3,17 @@
  * en Extensiones > Apps Script. Hace cuatro cosas:
  *
  * 1. Recibe los pedidos de la página y los anota en "Pedidos web".
- * 2. Avisa por correo cuando entra un pedido o un comprobante, y le confirma el
- *    pedido al cliente en el correo que escribió.
+ * 2. Avisa por correo cuando entra un pedido o un comprobante, y le escribe al
+ *    cliente al hacer el pedido y al confirmarse el pago.
  * 3. Cuando el Estado de un pedido pasa a "Pagado", anota la venta en "Ventas".
  * 4. Le entrega a GitHub el catálogo, a la página el stock en vivo y a cada
  *    cliente el estado de su pedido.
  *
  * Los precios y el stock siempre se leen de la hoja: lo que manda el navegador
  * nunca se usa para calcular cuánto se cobra.
+ *
+ * Todo corre con la cuenta de la tienda: la implementación se crea desde esa
+ * cuenta y ahí mismo se corre instalarAvisos() una vez.
  */
 
 const CONFIG = {
@@ -511,6 +514,7 @@ function crearPedido(datos) {
       fecha: fila[COL.fecha - 1],
       total,
       rotuloTotal: "Total a recibir por SINPE",
+      caja: datosDePago(numero, fila[COL.fecha - 1]),
       cliente: [
         ["Nombre", cliente],
         ["WhatsApp", whatsapp],
@@ -545,6 +549,17 @@ function crearPedido(datos) {
   });
 
   return { ok: true, numero, clave, subtotal, descuento, costoEnvio, total, lineas };
+}
+
+function esRetiro(fila) {
+  return fila[COL.envio - 1] === CONFIG.envios["retiro-omni"].nombre;
+}
+
+function entregaDeFila(fila) {
+  return [
+    ["Método", fila[COL.envio - 1]],
+    ["Dirección", esRetiro(fila) ? "" : fila[COL.ubicacion - 1] + ". " + fila[COL.direccion - 1]],
+  ];
 }
 
 function buscarFilaDePedido(numero) {
@@ -591,16 +606,13 @@ function guardarComprobante(datos) {
       fecha: fila[COL.fecha - 1],
       total: fila[COL.total - 1],
       rotuloTotal: "Monto que debió entrar",
-      comprobante,
+      caja: datosDePago(numero, fila[COL.fecha - 1], comprobante),
       cliente: [
         ["Nombre", cliente],
         ["WhatsApp", fila[COL.whatsapp - 1]],
         ["Correo", fila[COL.correo - 1]],
       ],
-      entrega: [
-        ["Método", fila[COL.envio - 1]],
-        ["Dirección", [fila[COL.ubicacion - 1], fila[COL.envio - 1] === CONFIG.envios["retiro-omni"].nombre ? "" : fila[COL.direccion - 1]].filter(Boolean).join(". ")],
-      ],
+      entrega: entregaDeFila(fila),
       lineas: detalle.lineas.map(({ quedan, ...linea }) => linea),
       resumen: resumenDeMontos(detalle.subtotal, detalle.descuento, detalle.cupon, fila[COL.costoEnvio - 1], fila[COL.total - 1]),
       pasos: [
@@ -664,6 +676,20 @@ function botonDeCorreo(texto, enlace, fondo) {
   );
 }
 
+/** Hasta cuándo sigue apartado un pedido sin pagar. */
+function finDelApartado(fecha) {
+  return fechaLegible(new Date(fecha).getTime() + CONFIG.horasApartado * 3600 * 1000);
+}
+
+function datosDePago(numero, fecha, comprobante) {
+  return [
+    ["SINPE Móvil", CONFIG.sinpe],
+    ["En el detalle", numero],
+    ["Comprobante que escribió el cliente", comprobante],
+    ["Apartado hasta", finDelApartado(fecha)],
+  ];
+}
+
 function fechaLegible(fecha) {
   return Utilities.formatDate(new Date(fecha), libro().getSpreadsheetTimeZone(), "dd/MM/yyyy h:mm a");
 }
@@ -685,7 +711,7 @@ function tituloDeCorreo(titulo) {
 }
 
 /** Los correos no aceptan hojas de estilo: todo va dentro de cada etiqueta. */
-function correoConDiseno({ etiqueta, saludo, numero, fecha, total, rotuloTotal, comprobante, tituloCliente, cliente, entrega, lineas, resumen, pasos, botones, pie }) {
+function correoConDiseno({ etiqueta, estado, colorEstado, saludo, numero, fecha, total, rotuloTotal, caja, tituloCliente, cliente, entrega, lineas, resumen, pasos, botones, pie }) {
   const filaDeDato = ([rotulo, valor]) =>
     valor
       ? '<tr><td style="width:96px;padding:5px 12px 5px 0;color:#444444;white-space:nowrap;vertical-align:top;">' +
@@ -716,7 +742,8 @@ function correoConDiseno({ etiqueta, saludo, numero, fecha, total, rotuloTotal, 
   ).join("");
 
   const imagenes = CONFIG.sitio + "correo/";
-  const limite = new Date(fecha).getTime() + CONFIG.horasApartado * 3600 * 1000;
+  const filaDeCaja = ([rotulo, valor]) =>
+    valor ? escapar(rotulo) + ": <strong>" + escapar(valor) + "</strong>" : "";
   const fondo = "background-image:url(" + imagenes + "fondo.png);background-repeat:repeat;";
 
   return (
@@ -729,19 +756,18 @@ function correoConDiseno({ etiqueta, saludo, numero, fecha, total, rotuloTotal, 
     '<div style="max-width:580px;margin:0 auto;padding:12px 12px 0;">' +
     '<div style="background-color:#fff4d6;' + fondo + 'border:3px solid #141414;border-radius:12px;padding:22px;">' +
     '<span style="display:inline-block;padding:4px 10px;border-radius:6px;background:#1437a8;color:#ffffff;font-size:13px;font-weight:bold;">' + escapar(etiqueta) + "</span> " +
-    '<span style="display:inline-block;padding:4px 10px;border-radius:6px;background:#ffce1f;font-size:13px;font-weight:bold;">' + escapar(PENDIENTE) + "</span>" +
+    '<span style="display:inline-block;padding:4px 10px;border-radius:6px;background:' + (colorEstado || "#ffce1f") + ';font-size:13px;font-weight:bold;">' + escapar(estado || PENDIENTE) + "</span>" +
     '<h1 style="margin:12px 0 0;font-size:30px;color:#1437a8;">' + escapar(numero) + "</h1>" +
     '<p style="margin:2px 0 14px;font-size:13px;color:#444444;">' + escapar(fechaLegible(fecha)) + "</p>" +
     (saludo ? '<p style="margin:0 0 14px;font-size:16px;line-height:1.45;">' + escapar(saludo) + "</p>" : "") +
     '<p style="margin:0;color:#444444;">' + escapar(rotuloTotal) + "</p>" +
     '<p style="margin:2px 0 12px;font-size:36px;font-weight:900;">' + escapar(colones(total)) + "</p>" +
     '<div style="padding:12px;border:2px solid #141414;border-radius:8px;background:#ffffff;font-size:14px;line-height:1.5;">' +
-    "SINPE Móvil al <strong>" + escapar(CONFIG.sinpe) + "</strong><br>" +
-    "En el detalle: <strong>" + escapar(numero) + "</strong><br>" +
-    (comprobante ? "Comprobante que escribió el cliente: <strong>" + escapar(comprobante) + "</strong><br>" : "") +
-    "Apartado hasta <strong>" + escapar(fechaLegible(limite)) + "</strong></div>" +
-    tituloDeCorreo(tituloCliente || "Cliente") +
-    '<table style="width:100%;border-collapse:collapse;font-size:15px;">' + cliente.map(filaDeDato).join("") + "</table>" +
+    caja.map(filaDeCaja).filter(Boolean).join("<br>") + "</div>" +
+    (cliente
+      ? tituloDeCorreo(tituloCliente || "Cliente") +
+        '<table style="width:100%;border-collapse:collapse;font-size:15px;">' + cliente.map(filaDeDato).join("") + "</table>"
+      : "") +
     tituloDeCorreo("Entrega") +
     '<table style="width:100%;border-collapse:collapse;font-size:15px;">' + entrega.map(filaDeDato).join("") + "</table>" +
     tituloDeCorreo("Productos") +
@@ -776,6 +802,19 @@ function mandarCorreo(opciones) {
   }
 }
 
+/**
+ * Al cliente solo se le escribe desde la cuenta de la tienda: el correo personal
+ * de quien administra la hoja nunca debe quedar a la vista.
+ */
+function mandarAlCliente(opciones) {
+  const cuenta = Session.getEffectiveUser().getEmail().toLowerCase();
+  if (cuenta !== CONFIG.correoAvisos) {
+    console.error("No se le escribió al cliente: el script corre con otra cuenta.");
+    return;
+  }
+  mandarCorreo({ replyTo: CONFIG.correoAvisos, ...opciones });
+}
+
 function avisar(asunto, lineas, responderA, html) {
   const opciones = {
     to: CONFIG.correoAvisos,
@@ -793,11 +832,10 @@ function confirmarAlCliente({ correo, numero, fecha, total, cliente, whatsapp, e
   const pasos = [
     "Hacé el SINPE Móvil por el monto exacto, con " + numero + " en el detalle.",
     "Escribí el número de comprobante en la página. Si ya la cerraste, respondé este correo con ese número.",
-    "Cuando confirmemos el pago te escribimos por WhatsApp para coordinar la entrega.",
+    "Cuando confirmemos el pago te llega otro correo y te escribimos por WhatsApp.",
   ];
-  mandarCorreo({
+  mandarAlCliente({
     to: correo,
-    replyTo: CONFIG.correoAvisos,
     subject: "Recibimos tu pedido " + numero + " · " + CONFIG.nombreTienda,
     body: [
       "¡Gracias, " + primerNombre + "! Recibimos tu pedido " + numero + ".",
@@ -820,6 +858,7 @@ function confirmarAlCliente({ correo, numero, fecha, total, cliente, whatsapp, e
       fecha,
       total,
       rotuloTotal: "Total a pagar",
+      caja: datosDePago(numero, fecha).filter(([rotulo]) => !rotulo.startsWith("Comprobante")),
       tituloCliente: "Tus datos",
       cliente: [
         ["Nombre", cliente],
@@ -836,18 +875,86 @@ function confirmarAlCliente({ correo, numero, fecha, total, cliente, whatsapp, e
   });
 }
 
+function pasosTrasElPago(fila, lineas) {
+  const pasos = esRetiro(fila)
+    ? ["Te escribimos por WhatsApp para cuadrar el día y la hora del retiro."]
+    : [
+        "Te escribimos por WhatsApp para confirmar la entrega.",
+        "Despachamos en 1 a 2 días hábiles y te pasamos el número de guía.",
+      ];
+  if (lineas.some((linea) => linea.preventa)) {
+    pasos.unshift("Recibimos tu adelanto. Te avisamos cuando llegue la preventa para cobrar el resto.");
+  }
+  return pasos;
+}
+
+function confirmarPago(fila) {
+  const correo = String(fila[COL.correo - 1]);
+  if (!esCorreo(correo)) return;
+
+  const numero = fila[COL.numero - 1];
+  const primerNombre = String(fila[COL.cliente - 1]).split(" ")[0];
+  const total = fila[COL.total - 1];
+  const detalle = leerDetalle(fila);
+  const pasos = pasosTrasElPago(fila, detalle.lineas);
+  mandarAlCliente({
+    to: correo,
+    subject: "Pago confirmado de tu pedido " + numero + " · " + CONFIG.nombreTienda,
+    body: [
+      "¡Listo, " + primerNombre + "! Confirmamos tu pago del pedido " + numero + ".",
+      "",
+      "Total pagado: " + colones(total),
+      "",
+      "Qué sigue:",
+      ...pasos,
+    ].join("\n"),
+    htmlBody: correoConDiseno({
+      etiqueta: "Pago confirmado",
+      estado: PAGADO,
+      colorEstado: "#8fe0a8",
+      saludo: "¡Listo, " + primerNombre + "! Confirmamos tu pago. Gracias por comprar en " + CONFIG.nombreTienda + ".",
+      numero,
+      fecha: fila[COL.fecha - 1],
+      total,
+      rotuloTotal: "Total pagado",
+      caja: [
+        ["Pagaste por", fila[COL.metodoPago - 1]],
+        ["Comprobante", fila[COL.comprobante - 1]],
+      ],
+      entrega: entregaDeFila(fila),
+      lineas: detalle.lineas.map(({ quedan, ...linea }) => linea),
+      resumen: resumenDeMontos(detalle.subtotal, detalle.descuento, detalle.cupon, fila[COL.costoEnvio - 1], total),
+      pasos,
+      botones: [botonDeCorreo("Ver mi pedido", CONFIG.sitio + "pedido?numero=" + numero, "#1437a8")],
+      pie: "Si tenés alguna duda, respondé este correo. Tus datos son solo para este pedido.",
+    }),
+  });
+}
+
 /* ---------- Pasar a Ventas ---------- */
 
-/** Google lo corre solo cada vez que se edita la hoja. */
-function onEdit(e) {
+/**
+ * Correr una sola vez desde el editor, con la cuenta de la tienda. Google no
+ * deja mandar correos desde un onEdit común: ocupa este activador instalado.
+ */
+function instalarAvisos() {
+  ScriptApp.getProjectTriggers()
+    .filter((activador) => activador.getHandlerFunction() === "alEditarHoja")
+    .forEach((activador) => ScriptApp.deleteTrigger(activador));
+  ScriptApp.newTrigger("alEditarHoja").forSpreadsheet(libro()).onEdit().create();
+}
+
+/** Corre con cada edición de la hoja, gracias a instalarAvisos(). */
+function alEditarHoja(e) {
   const rango = e.range;
   if (rango.getSheet().getName() !== HOJAS.pedidos) return;
   if (rango.getColumn() !== COL.estado || rango.getRow() < PRIMERA_FILA) return;
   if (rango.getNumRows() !== 1 || e.value !== PAGADO) return;
 
-  const aviso = conCandado(() => pasarAVentas(rango.getRow(), e.oldValue));
+  const resultado = conCandado(() => pasarAVentas(rango.getRow(), e.oldValue));
   olvidarStock();
-  libro().toast(aviso, CONFIG.nombreTienda, 8);
+  libro().toast(resultado.aviso, CONFIG.nombreTienda, 8);
+  if (resultado.fila) confirmarPago(resultado.fila);
 }
 
 /** De la compra más vieja a la más nueva, solo donde todavía haya stock. */
@@ -902,13 +1009,13 @@ function pasarAVentas(numeroFila, estadoAnterior) {
   const numero = fila[COL.numero - 1];
 
   // Un pedido entra a Ventas una sola vez, aunque el Estado se cambie varias.
-  if (fila[COL.enVentas - 1]) return numero + " ya estaba en Ventas.";
+  if (fila[COL.enVentas - 1]) return { aviso: numero + " ya estaba en Ventas." };
 
   const detalle = leerDetalle(fila);
   const volver = (motivo) => {
     pestana.getRange(numeroFila, COL.estado).setValue(estadoAnterior || PENDIENTE);
     pestana.getRange(numeroFila, COL.notas).setValue(motivo);
-    return numero + " no pasó a Ventas. " + motivo;
+    return { aviso: numero + " no pasó a Ventas. " + motivo };
   };
   if (detalle.lineas.length === 0) return volver("Falta el detalle del pedido.");
 
@@ -963,5 +1070,5 @@ function pasarAVentas(numeroFila, estadoAnterior) {
   pestana
     .getRange(numeroFila, COL.enVentas)
     .setValue("Fila " + libres.join(", "));
-  return numero + " pasó a Ventas.";
+  return { aviso: numero + " pasó a Ventas.", fila };
 }

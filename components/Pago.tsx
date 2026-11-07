@@ -231,8 +231,8 @@ function Confirmacion({
           className="marco flex items-center gap-3 bg-white p-4 font-bold text-verde-oscuro"
         >
           <IconoCheque />
-          Recibimos tu comprobante. Apenas confirmemos el SINPE te escribimos
-          por WhatsApp.
+          Recibimos tu comprobante. Apenas confirmemos el SINPE te avisamos por
+          correo y por WhatsApp.
         </p>
       ) : (
         <form className="marco flex flex-col gap-3 p-5" onSubmit={avisarPago}>
