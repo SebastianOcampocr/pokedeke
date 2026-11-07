@@ -290,9 +290,9 @@
     "categoriaCorta": "Sobre",
     "idioma": "Inglés",
     "precio": 4000,
-    "stock": 28,
+    "stock": 25,
     "destacado": true,
-    "vendidos": 0,
+    "vendidos": 3,
     "orden": 13,
     "fotos": [
       "/productos/sobre-delta-reign.webp"
