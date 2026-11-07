@@ -14,7 +14,7 @@
     "fotos": [
       "/productos/rotom-197-destined-rivals.webp"
     ],
-    "descripcion": "Carta de la colección Destined Rivals, número 197.",
+    "descripcion": "Rotom de 60 HP con arte de Taiga Kayama, número 197/182 de Destined Rivals. Trae los ataques Astonish y Gadget Show.",
     "carta": {
       "coleccion": "Destined Rivals",
       "numero": "197",
@@ -30,14 +30,14 @@
     "categoria": "Carta suelta (single)",
     "categoriaCorta": "Suelta",
     "idioma": "",
-    "precio": 8000,
+    "precio": 7500,
     "stock": 1,
     "vendidos": 0,
     "orden": 2,
     "fotos": [
       "/productos/eevee-ex-174-promo.webp"
     ],
-    "descripcion": "Carta de la colección Promo, número 174.",
+    "descripcion": "Eevee ex Tera de 200 HP, promo 174 de Scarlet & Violet. Con Rainbow DNA puede evolucionar a cualquier Pokémon ex que venga de Eevee.",
     "carta": {
       "coleccion": "Promo",
       "numero": "174",
@@ -60,7 +60,7 @@
     "fotos": [
       "/productos/nidorina-101-promo.webp"
     ],
-    "descripcion": "Carta de la colección Promo, número 101.",
+    "descripcion": "Nidorina de 90 HP con arte de Taiga Kasai y sello de 30 años, promo MEP 101. Con Share Happiness cura 30 de daño una vez por turno.",
     "carta": {
       "coleccion": "Promo",
       "numero": "101",
@@ -83,7 +83,7 @@
     "fotos": [
       "/productos/sylveon-ex-100-promo.webp"
     ],
-    "descripcion": "Carta de la colección Promo, número 100.",
+    "descripcion": "Sylveon ex de 270 HP con sello de 30 años, promo MEP 100. Colorful Harmony hace 50 de daño por cada tipo de Energía básica en tus Pokémon.",
     "carta": {
       "coleccion": "Promo",
       "numero": "100",
@@ -106,7 +106,7 @@
     "fotos": [
       "/productos/mew-ex-066-30th-celebration.webp"
     ],
-    "descripcion": "Carta de la colección 30th Celebration, número 066.",
+    "descripcion": "Mew ex de 160 HP con sello de 30 años, número 066/128 de 30th Celebration. Con Memory Helix usa los ataques de tus Pokémon en la banca.",
     "carta": {
       "coleccion": "30th Celebration",
       "numero": "066",
@@ -122,14 +122,14 @@
     "categoria": "Carta suelta (single)",
     "categoriaCorta": "Suelta",
     "idioma": "",
-    "precio": 3500,
+    "precio": 3000,
     "stock": 1,
     "vendidos": 0,
     "orden": 6,
     "fotos": [
       "/productos/umbreon-ex-60-prismatic-evolutions.webp"
     ],
-    "descripcion": "Carta de la colección Prismatic Evolutions, número 60.",
+    "descripcion": "Umbreon ex Tera de 280 HP, número 060/131 de Prismatic Evolutions. Moon Mirage hace 160 de daño y deja Confundido al rival.",
     "carta": {
       "coleccion": "Prismatic Evolutions",
       "numero": "60",
@@ -152,7 +152,7 @@
     "fotos": [
       "/productos/solgaleo-gx-158-chinese-30th-celebration.webp"
     ],
-    "descripcion": "Carta de la colección Chinese 30th Celebration, número 158.",
+    "descripcion": "Solgaleo GX de 250 HP con sello de 30 años, número 158. Trae la habilidad Ultra Road y el ataque GX Sol Burst.",
     "carta": {
       "coleccion": "Chinese 30th Celebration",
       "numero": "158",
@@ -175,7 +175,7 @@
     "fotos": [
       "/productos/greninja-break-41-30th-celebration.webp"
     ],
-    "descripcion": "Carta de la colección 30th Celebration, número 41.",
+    "descripcion": "Greninja BREAK de 170 HP con sello de 30 años, número 41/122. Carta horizontal con la habilidad Giant Water Shuriken.",
     "carta": {
       "coleccion": "30th Celebration",
       "numero": "41",
@@ -198,7 +198,7 @@
     "fotos": [
       "/productos/rayquaza-ex-85-30th-celebration.webp"
     ],
-    "descripcion": "Carta de la colección 30th Celebration, número 85.",
+    "descripcion": "Rayquaza EX de 170 HP con sello de 30 años, número 85/124. Dragon Burst hace 60 de daño por cada Energía que descarta.",
     "carta": {
       "coleccion": "30th Celebration",
       "numero": "85",
@@ -221,7 +221,7 @@
     "fotos": [
       "/productos/pikachu-ex-150-30th-celebration.webp"
     ],
-    "descripcion": "Carta de la colección 30th Celebration, número 150.",
+    "descripcion": "Pikachu ex de 190 HP con arte de kantaro: una fiesta de Pokémon con fuegos artificiales. Número 150/128 de 30th Celebration, con sello de 30 años.",
     "carta": {
       "coleccion": "30th Celebration",
       "numero": "150",
@@ -244,7 +244,7 @@
     "fotos": [
       "/productos/espeon-v-513-chinese-gem-pack-2.webp"
     ],
-    "descripcion": "Carta de la colección Chinese Gem Pack 2, número 513.",
+    "descripcion": "Espeon V de 200 HP, carta en chino, número 0513/14. Una versión distinta para completar tu colección de Eevee.",
     "carta": {
       "coleccion": "Chinese Gem Pack 2",
       "numero": "513",
@@ -267,7 +267,7 @@
     "fotos": [
       "/productos/altaria-gx-96-chinese-csm1cc.webp"
     ],
-    "descripcion": "Carta de la colección Chinese CSM1cC, número 96.",
+    "descripcion": "Altaria GX de 200 HP, carta en chino, número 096/151.",
     "carta": {
       "coleccion": "Chinese CSM1cC",
       "numero": "96",
@@ -291,7 +291,7 @@
     "fotos": [
       "/productos/sobre-delta-reign.webp"
     ],
-    "descripcion": "Un sobre para probar suerte."
+    "descripcion": "Sobre de 10 cartas de Mega Evolution: Delta Reign, en inglés."
   },
   {
     "id": "C014",
