@@ -62,7 +62,7 @@ const POR_PAGINA: { ruta: string; dicho: Dicho }[] = [
 ];
 
 const INICIO: Dicho = {
-  texto: "¡Upe! Abrí el sobre del día, capaz te sale un cupón.",
+  texto: "¡Upe! Abrí el sobre del día, capaz te sale una joya.",
   enlace: { href: "/sobre", texto: "Abrir sobre" },
 };
 

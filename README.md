@@ -1,11 +1,11 @@
-# Demo de Pokedeke
+# Pokedeke
 
-Demo visual de la tienda en línea de Pokedeke, con el estilo Rótulo. Por ahora solo Pokémon; los demás TCG salen como "Próximamente". Sirve para mostrar cómo se vería y cómo se usaría la página.
+Tienda en línea de Pokedeke, en beta, con el estilo Rótulo. Por ahora solo Pokémon; los demás TCG salen como "Próximamente".
 
 Los productos, el precio y el stock son reales y salen de la hoja de Google. La página funciona en dos modos:
 
 - **Demo:** sale el aviso negro y los pedidos se guardan solo en el navegador. Nadie debe pagar.
-- **Tienda abierta:** con la variable de GitHub `TIENDA_ABIERTA` en `si`. Los pedidos caen en la hoja y llegan por correo. Es plata de verdad.
+- **Tienda abierta:** con la variable de GitHub `TIENDA_ABIERTA` en `si`. Sale el aviso de beta y el sello junto al logo. Los pedidos caen en la hoja y llegan por correo. Es plata de verdad.
 
 Hoy está abierta en GitHub Pages de forma temporal, mientras AWS verifica la cuenta. Las reglas de GitHub Pages no permiten tiendas en línea y pueden bajar la página. Para volver a la demo, borrá `TIENDA_ABIERTA` y corré **Publicar demo**.
 
@@ -120,6 +120,12 @@ La página armada vive en GitHub Pages y el servidor de pedidos en la hoja de Go
 4. Escribí `/panel` en la dirección del navegador (no tiene link en la página), marcá el pedido como **Pagado** y volvé a **Mi pedido**: el estado cambió.
 5. En el panel, abrí **Texto para WhatsApp** para ver el mensaje listo para los grupos.
 
+## Cómo aguanta muchos productos
+
+- **Fotos:** `npm run build` crea cuatro tamaños de cada foto en `public/miniaturas/`, que no va a git. El navegador baja el que le sirve. Los anchos están en `scripts/hacer-miniaturas.mjs` y en `next.config.ts`.
+- **Stock en vivo:** la página le manda a la hoja la versión que tiene. Si nada cambió, la hoja responde solo "igual". Los pedidos y las ediciones de la hoja actualizan el dato de una vez.
+- **Límites:** Compras y Catálogo web llegan a unas 990 filas. Cada pedido acepta hasta 100 productos distintos. Gmail deja mandar unos 100 correos al día, y cada pedido gasta hasta 4.
+
 ## Dónde se cambia cada cosa
 
 | Qué querés cambiar | Dónde |
@@ -133,10 +139,10 @@ La página armada vive en GitHub Pages y el servidor de pedidos en la hoja de Go
 | Edificio Omni, lema y envíos | `lib/tienda.ts` |
 | Fotos de los productos | `public/productos/` |
 | Colores, botones y animaciones | `app/globals.css` |
-| Aviso negro de "Demo" | `components/Estructura.tsx` |
+| Aviso de beta y sello junto al logo | `components/Estructura.tsx` |
 | Texto de la caja compartida (próximamente) | `app/caja-compartida/page.tsx` |
 | Texto de las cajas misteriosas (próximamente) | `app/cajas-misteriosas/page.tsx` |
-| Reglas del sobre del día | `lib/sobre.ts` |
+| Reglas del sobre del día | `lib/sobre.ts` y `lib/album.ts` |
 | Stickers y rangos | `lib/logros.ts` |
 | Diseño de la Cédula de Coleccionista | `lib/cedula.ts` |
 | Porcentajes de "Vendenos tus cartas" | `components/Vender.tsx` |
@@ -148,7 +154,7 @@ La página armada vive en GitHub Pages y el servidor de pedidos en la hoja de Go
 
 | Función | Dónde verla |
 |---|---|
-| Sobre del día: rasgalo, voltea las cartas y llená el álbum | `/sobre` |
+| Sobre del día: uno cada 24 horas por navegador; rasgalo, voltea las cartas y llená el álbum | `/sobre` |
 | Caja compartida (próximamente): 36 sobres de una caja, cada persona compra los suyos | `/caja-compartida` |
 | Cédula de Coleccionista con stickers, descargable como imagen | `/cedula` |
 | Cajas misteriosas (próximamente) con valor mínimo y lista adentro | `/cajas-misteriosas` |

@@ -1,4 +1,4 @@
-// Datos generales de la demo. Todo lo que cambia de tienda en tienda está aquí.
+// Datos generales de la tienda.
 
 export const TIENDA = {
   nombre: "Pokedeke",

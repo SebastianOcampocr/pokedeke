@@ -3,8 +3,8 @@
 import { useSyncExternalStore } from "react";
 
 /**
- * Guardado en el navegador para la demo. Sirve para que el carrito y los
- * pedidos de muestra sobrevivan a una recarga, sin servidor ni base de datos.
+ * Guardado en el navegador de cada persona. Sirve para que el carrito, la lista
+ * y el álbum sobrevivan a una recarga, sin servidor ni base de datos.
  */
 export function crearAlmacen<T>(
   clave: string,
@@ -58,7 +58,7 @@ export function crearAlmacen<T>(
       try {
         window.localStorage.setItem(clave, JSON.stringify(actual));
       } catch {
-        // Sin espacio o en modo privado: la demo sigue funcionando en memoria.
+        // Sin espacio o en modo privado: la página sigue funcionando en memoria.
       }
       avisar();
     },

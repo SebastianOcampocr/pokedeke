@@ -13,7 +13,7 @@ export default function PaginaSobre() {
     <>
       <CabeceraPagina
         titulo="Sobre del día"
-        texto="Rasgalo, voltea las cartas y llená tu álbum."
+        texto="Un sobre cada 24 horas: rasgalo, voltea las cartas y llená tu álbum."
       />
       <ZonaBlanca>
         <SobreDelDia />

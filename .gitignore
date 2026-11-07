@@ -19,6 +19,7 @@
 
 # production
 /build
+/public/miniaturas/
 
 # misc
 .DS_Store

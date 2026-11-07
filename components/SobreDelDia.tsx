@@ -1,8 +1,20 @@
 "use client";
 
 import Link from "next/link";
-import { useLayoutEffect, useRef, useState, type CSSProperties } from "react";
-import { guardarSobre, useAlbum, vaciarAlbum } from "@/lib/album";
+import {
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+  type CSSProperties,
+} from "react";
+import {
+  guardarSobre,
+  proximoSobre,
+  useAlbum,
+  vaciarAlbum,
+} from "@/lib/album";
 import { useHidratado } from "@/lib/almacen";
 import { aplicarCupon, useCarrito } from "@/lib/carrito";
 import { lanzarConfeti } from "@/lib/confeti";
@@ -109,6 +121,9 @@ function BotonSonido() {
   );
 }
 
+/** Dibujar todo el álbum junto trabaría los celulares cuando hay cientos de cartas. */
+const CARTAS_POR_TANDA = 40;
+
 function PremioDelSobre({ premio }: { premio: boolean }) {
   const { cupon } = useCarrito();
   const aplicado = cupon?.codigo === CUPON_SOBRE;
@@ -151,10 +166,21 @@ function PremioDelSobre({ premio }: { premio: boolean }) {
 function Album() {
   const hidratado = useHidratado();
   const { cartas, sobres } = useAlbum();
-  const todas = cartasDelSobre();
-  const conseguidas = hidratado
-    ? todas.filter((carta) => cartas.includes(carta.slug)).length
-    : 0;
+  const [cantidad, setCantidad] = useState(CARTAS_POR_TANDA);
+  const pegadas = useMemo(
+    () => new Set(hidratado ? cartas : []),
+    [hidratado, cartas],
+  );
+  // Primero las que ya salieron, para que el álbum muestre lo conseguido.
+  const todas = useMemo(() => {
+    const cartasDisponibles = cartasDelSobre();
+    return [
+      ...cartasDisponibles.filter((carta) => pegadas.has(carta.slug)),
+      ...cartasDisponibles.filter((carta) => !pegadas.has(carta.slug)),
+    ];
+  }, [pegadas]);
+  const conseguidas = todas.filter((carta) => pegadas.has(carta.slug)).length;
+  const restantes = todas.length - cantidad;
   const avance =
     todas.length > 0 ? Math.round((conseguidas / todas.length) * 100) : 0;
 
@@ -183,8 +209,8 @@ function Album() {
         tienda.
       </p>
       <ul className="grid grid-cols-4 gap-2 sm:grid-cols-6 lg:grid-cols-10">
-        {todas.map((carta) => {
-          const tiene = hidratado && cartas.includes(carta.slug);
+        {todas.slice(0, cantidad).map((carta) => {
+          const tiene = pegadas.has(carta.slug);
           return (
             <li key={carta.slug} className="relative aspect-[5/7]">
               {tiene ? (
@@ -208,6 +234,15 @@ function Album() {
           );
         })}
       </ul>
+      {restantes > 0 ? (
+        <button
+          type="button"
+          className="boton boton-amarillo boton-chico w-fit"
+          onClick={() => setCantidad((valor) => valor + CARTAS_POR_TANDA)}
+        >
+          Ver {Math.min(restantes, CARTAS_POR_TANDA)} cartas más
+        </button>
+      ) : null}
       {hidratado && sobres > 0 ? (
         <button
           type="button"
@@ -235,8 +270,30 @@ export function SobreDelDia() {
   return <JuegoDelSobre />;
 }
 
+/** Cuánto falta y cuándo sale, con la hora del teléfono de quien lo ve. */
+function ProximoSobre({ hasta, ahora }: { hasta: number; ahora: number }) {
+  const minutos = Math.max(Math.ceil((hasta - ahora) / 60_000), 1);
+  const horas = Math.floor(minutos / 60);
+  const espera =
+    horas > 0 ? `${horas} h ${minutos % 60} min` : `${minutos} min`;
+  const momento = new Intl.DateTimeFormat("es-CR", {
+    weekday: "long",
+    hour: "numeric",
+    minute: "2-digit",
+  }).format(hasta);
+
+  return (
+    <p role="status" className="font-medium">
+      Tu próximo sobre sale en <strong>{espera}</strong> ({momento}).
+    </p>
+  );
+}
+
 function JuegoDelSobre() {
-  const { cartas: enAlbum, sobres } = useAlbum();
+  const hidratado = useHidratado();
+  const { cartas: enAlbum, sobres, ultimoSobre } = useAlbum();
+  const siguiente = proximoSobre(ultimoSobre);
+  const [ahora, setAhora] = useState(0);
   const [fase, setFase] = useState<Fase>("cerrado");
   const [resultado, setResultado] = useState<ResultadoSobre | null>(null);
   const [nuevas, setNuevas] = useState<string[]>([]);
@@ -246,6 +303,16 @@ function JuegoDelSobre() {
   const arrastre = useRef<number | null>(null);
   const reloj = useRef<number | undefined>(undefined);
   const zonaCartas = useRef<HTMLDivElement>(null);
+
+  const bloqueado = hidratado && ahora > 0 && ahora < siguiente;
+
+  // El sobre se libera solo cuando se cumple el tiempo, sin recargar.
+  useLayoutEffect(() => setAhora(Date.now()), [siguiente]);
+  useEffect(() => {
+    if (!bloqueado) return;
+    const tic = window.setInterval(() => setAhora(Date.now()), 10_000);
+    return () => window.clearInterval(tic);
+  }, [bloqueado]);
 
   // Next deja viva esta página: al volver, el sobre debe estar cerrado otra vez.
   useLayoutEffect(
@@ -261,7 +328,7 @@ function JuegoDelSobre() {
   );
 
   function abrir() {
-    if (fase !== "cerrado") return;
+    if (fase !== "cerrado" || Date.now() < siguiente) return;
     const sobre = abrirSobre(sobres);
     const slugs = sobre.cartas.map((carta) => carta.slug);
     arrastre.current = null;
@@ -325,7 +392,18 @@ function JuegoDelSobre() {
         aria-label="Abrir el sobre del día"
         className="marco shadow-dura flex min-h-[440px] flex-col items-center justify-center gap-5 overflow-hidden bg-crema p-5 md:p-8"
       >
-        {fase !== "cartas" ? (
+        {bloqueado && fase === "cerrado" ? (
+          <div className="flex flex-col items-center gap-3 text-center">
+            <Deke animo="guino" className="deke h-28" />
+            <p className="font-display text-2xl leading-tight text-azul">
+              Ya abriste tu sobre de hoy
+            </p>
+            <ProximoSobre hasta={siguiente} ahora={ahora} />
+            <Link href="/catalogo" className="boton boton-amarillo boton-chico">
+              Ver el catálogo
+            </Link>
+          </div>
+        ) : fase !== "cartas" ? (
           <>
             <div className="flex items-end gap-3">
               <div
@@ -381,8 +459,8 @@ function JuegoDelSobre() {
                 Abrir sobre
               </button>
               <p className="text-sm text-gris">
-                En la tienda real sería un sobre por día. En la demo, abrí los
-                que querás.
+                Un sobre cada 24 horas. Las cartas son virtuales y van a tu
+                álbum.
               </p>
               <BotonSonido />
             </div>
@@ -415,13 +493,17 @@ function JuegoDelSobre() {
                     </p>
                   ) : null}
                   <PremioDelSobre premio={resultado.premio} />
-                  <button
-                    type="button"
-                    className="boton boton-amarillo boton-chico"
-                    onClick={otroSobre}
-                  >
-                    Abrir otro sobre
-                  </button>
+                  {bloqueado ? (
+                    <ProximoSobre hasta={siguiente} ahora={ahora} />
+                  ) : (
+                    <button
+                      type="button"
+                      className="boton boton-amarillo boton-chico"
+                      onClick={otroSobre}
+                    >
+                      Abrir otro sobre
+                    </button>
+                  )}
                 </div>
               </div>
             ) : (

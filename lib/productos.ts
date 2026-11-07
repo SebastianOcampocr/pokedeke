@@ -23,7 +23,7 @@ export type Producto = {
   descripcion: string;
   /** Si existe, el carrito lleva aquí en vez de a la página del producto. */
   enlace?: string;
-  /** Solo preventas: fecha de muestra en que llega al mezzanine. */
+  /** Solo preventas: fecha en que llega al mezzanine. */
   llegada?: string;
   /** Solo cartas sueltas y gradadas. */
   carta?: {

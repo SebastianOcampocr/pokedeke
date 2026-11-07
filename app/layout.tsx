@@ -26,8 +26,8 @@ export const metadata: Metadata = {
     template: `%s · ${TIENDA.nombre}`,
   },
   description:
-    "Demo de tienda en línea: sobres, cajas y cartas de Pokémon, en colones y con envío a todo Costa Rica.",
-  // Es una demo con fotos de muestra: que no salga en los buscadores.
+    "Sobres, cajas y cartas de Pokémon, en colones y con envío a todo Costa Rica.",
+  // Mientras esté en beta, que no salga en los buscadores.
   robots: { index: false, follow: false },
 };
 

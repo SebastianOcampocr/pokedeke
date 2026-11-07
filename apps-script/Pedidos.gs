@@ -30,6 +30,7 @@ const CONFIG = {
   adelantoPreventa: 0.5,
   envioGratisDesde: 50000,
   maxLlamadasPorHora: 60,
+  maxLineasPorPedido: 100,
   // Estos valores deben coincidir con lib/tienda.ts.
   envios: {
     correos: { nombre: "Correos de Costa Rica", pideDireccion: true },
@@ -79,7 +80,9 @@ const PRIMERA_FILA = 5;
 const PENDIENTE = "Pendiente de pago";
 const PAGADO = "Pagado";
 const CLAVE_STOCK = "stock-vivo";
-const SEGUNDOS_STOCK = 8;
+const CLAVE_VERSION = "stock-version";
+// Todo pedido y toda edición de la hoja borran esta memoria, así que no atrasa nada.
+const SEGUNDOS_STOCK = 60;
 
 // Columnas de "Pedidos web", contando desde 1.
 const COL = {
@@ -125,7 +128,7 @@ function doGet(e) {
     );
   }
   if (parametros.accion === "stock") {
-    return ContentService.createTextOutput(stockEnVivo()).setMimeType(
+    return ContentService.createTextOutput(stockEnVivo(parametros.version)).setMimeType(
       ContentService.MimeType.JSON,
     );
   }
@@ -194,13 +197,15 @@ function hayCupo() {
 }
 
 /**
- * Lo que de verdad se puede comprar ahora: stock menos lo apartado. Se guarda
- * unos segundos para que muchas visitas no lean la hoja al mismo tiempo.
+ * Lo que de verdad se puede comprar ahora: stock menos lo apartado. Se guarda un
+ * rato para que muchas visitas no lean la hoja al mismo tiempo. Si la página ya
+ * tiene esta versión, responde "igual" y evita repetir todo el inventario.
  */
-function stockEnVivo() {
+function stockEnVivo(versionDeLaPagina) {
   const memoria = CacheService.getScriptCache();
-  const guardado = memoria.get(CLAVE_STOCK);
-  if (guardado) return guardado;
+  const guardada = memoria.get(CLAVE_VERSION);
+  const guardado = guardada ? memoria.get(CLAVE_STOCK) : null;
+  if (guardado) return respuestaDeStock(guardado, guardada, versionDeLaPagina);
 
   const reservado = apartados(filasDePedidos());
   const productos = {};
@@ -211,13 +216,27 @@ function stockEnVivo() {
       peso: producto.peso,
     };
   });
-  const respuesta = JSON.stringify({ ok: true, productos });
-  memoria.put(CLAVE_STOCK, respuesta, SEGUNDOS_STOCK);
-  return respuesta;
+  const contenido = JSON.stringify(productos);
+  const version = Utilities.base64EncodeWebSafe(
+    Utilities.computeDigest(Utilities.DigestAlgorithm.MD5, contenido),
+  );
+  const respuesta = JSON.stringify({ ok: true, version, productos });
+  try {
+    memoria.put(CLAVE_STOCK, respuesta, SEGUNDOS_STOCK);
+    memoria.put(CLAVE_VERSION, version, SEGUNDOS_STOCK);
+  } catch (error) {
+    // Google guarda hasta 100 KB. Sin memoria funciona igual, solo que más lento.
+    console.error(error);
+  }
+  return respuestaDeStock(respuesta, version, versionDeLaPagina);
+}
+
+function respuestaDeStock(respuesta, version, versionDeLaPagina) {
+  return version === versionDeLaPagina ? '{"ok":true,"igual":true}' : respuesta;
 }
 
 function olvidarStock() {
-  CacheService.getScriptCache().remove(CLAVE_STOCK);
+  CacheService.getScriptCache().removeAll([CLAVE_STOCK, CLAVE_VERSION]);
 }
 
 /* ---------- Limpieza de lo que escribe la gente ---------- */
@@ -398,13 +417,16 @@ function crearPedido(datos) {
   const whatsapp = normalizarWhatsapp(datos.whatsapp);
   const correo = texto(datos.correo, 120);
   const envio = CONFIG.envios[datos.envio];
-  const pedidas = Array.isArray(datos.lineas) ? datos.lineas.slice(0, 30) : [];
+  const pedidas = Array.isArray(datos.lineas) ? datos.lineas : [];
 
   if (cliente.length < 3) return { ok: false, error: "Escribí tu nombre completo." };
   if (!whatsapp) return { ok: false, error: "Revisá tu WhatsApp: deben ser 8 números." };
   if (!esCorreo(correo)) return { ok: false, error: "Revisá tu correo: ahí te llega la confirmación." };
   if (!envio) return { ok: false, error: "Elegí cómo te llega el pedido." };
   if (pedidas.length === 0) return { ok: false, error: "Tu carrito está vacío." };
+  if (pedidas.length > CONFIG.maxLineasPorPedido) {
+    return { ok: false, error: "Tu carrito tiene demasiados productos distintos. Dividilo en dos pedidos." };
+  }
 
   const ubicacion = envio.pideDireccion ? texto(datos.ubicacion, 150) : "";
   const direccion = envio.pideDireccion
@@ -954,7 +976,11 @@ function instalarAvisos() {
 /** Corre con cada edición de la hoja, gracias a instalarAvisos(). */
 function alEditarHoja(e) {
   const rango = e.range;
-  if (rango.getSheet().getName() !== HOJAS.pedidos) return;
+  const pestana = rango.getSheet().getName();
+  if ([HOJAS.compras, HOJAS.ventas, HOJAS.catalogo, HOJAS.pedidos].includes(pestana)) {
+    olvidarStock();
+  }
+  if (pestana !== HOJAS.pedidos) return;
   if (rango.getColumn() !== COL.estado || rango.getRow() < PRIMERA_FILA) return;
   if (rango.getNumRows() !== 1 || e.value !== PAGADO) return;
 

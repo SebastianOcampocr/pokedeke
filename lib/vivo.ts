@@ -13,6 +13,8 @@ type Inventario = Record<
 const CADA_MILISEGUNDOS = 15_000;
 
 let inventario: Inventario | null = null;
+/** Con esto la hoja responde "igual" y no repite todo el inventario. */
+let version = "";
 let reloj: number | undefined;
 const oyentes = new Set<() => void>();
 
@@ -20,10 +22,12 @@ const oyentes = new Set<() => void>();
 export async function refrescarInventario() {
   if (!PEDIDOS_URL) return;
   try {
-    const respuesta = await fetch(`${PEDIDOS_URL}?accion=stock`);
+    const consulta = new URLSearchParams({ accion: "stock", version });
+    const respuesta = await fetch(`${PEDIDOS_URL}?${consulta}`);
     const datos = await respuesta.json();
-    if (!datos.ok || !datos.productos) return;
+    if (!datos.ok || datos.igual || !datos.productos) return;
     inventario = datos.productos as Inventario;
+    version = datos.version ?? "";
     oyentes.forEach((oyente) => oyente());
   } catch {
     // Sin conexión se queda lo último que hubo. Al pedir, la hoja revisa igual.
