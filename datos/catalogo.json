@@ -149,7 +149,9 @@
     "stock": 0,
     "vendidos": 1,
     "orden": 7,
-    "fotos": [],
+    "fotos": [
+      "/productos/solgaleo-gx-158-chinese-30th-celebration.webp"
+    ],
     "descripcion": "Carta de la colección Chinese 30th Celebration, número 158.",
     "carta": {
       "coleccion": "Chinese 30th Celebration",
@@ -193,7 +195,9 @@
     "stock": 0,
     "vendidos": 1,
     "orden": 9,
-    "fotos": [],
+    "fotos": [
+      "/productos/rayquaza-ex-85-30th-celebration.webp"
+    ],
     "descripcion": "Carta de la colección 30th Celebration, número 85.",
     "carta": {
       "coleccion": "30th Celebration",
@@ -260,7 +264,9 @@
     "stock": 0,
     "vendidos": 1,
     "orden": 12,
-    "fotos": [],
+    "fotos": [
+      "/productos/altaria-gx-96-chinese-csm1cc.webp"
+    ],
     "descripcion": "Carta de la colección Chinese CSM1cC, número 96.",
     "carta": {
       "coleccion": "Chinese CSM1cC",
@@ -286,5 +292,41 @@
       "/productos/sobre-delta-reign.webp"
     ],
     "descripcion": "Un sobre para probar suerte."
+  },
+  {
+    "id": "C014",
+    "slug": "dados-y-moneda-30th-celebration",
+    "nombre": "Dados y moneda 30th Celebration (dorados)",
+    "juego": "Pokémon",
+    "categoria": "Accesorios",
+    "categoriaCorta": "Accesorio",
+    "idioma": "",
+    "precio": 1500,
+    "stock": 2,
+    "destacado": true,
+    "vendidos": 0,
+    "orden": 14,
+    "fotos": [
+      "/productos/dados-y-moneda-30th-celebration.webp"
+    ],
+    "descripcion": "Seis dados de daño, un dado de juego y una moneda."
+  },
+  {
+    "id": "C015",
+    "slug": "dados-y-moneda-pitch-black",
+    "nombre": "Dados y moneda Pitch Black (negros)",
+    "juego": "Pokémon",
+    "categoria": "Accesorios",
+    "categoriaCorta": "Accesorio",
+    "idioma": "",
+    "precio": 1500,
+    "stock": 1,
+    "destacado": true,
+    "vendidos": 0,
+    "orden": 15,
+    "fotos": [
+      "/productos/dados-y-moneda-pitch-black.webp"
+    ],
+    "descripcion": "Seis dados de daño, un dado de juego y una moneda."
   }
 ]
