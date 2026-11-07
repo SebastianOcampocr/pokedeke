@@ -55,7 +55,7 @@
     "categoriaCorta": "Suelta",
     "idioma": "",
     "precio": 1500,
-    "stock": 1,
+    "stock": 2,
     "destacado": true,
     "vendidos": 0,
     "orden": 3,
@@ -125,7 +125,7 @@
     "categoria": "Carta suelta (single)",
     "categoriaCorta": "Suelta",
     "idioma": "",
-    "precio": 3000,
+    "precio": 3500,
     "stock": 1,
     "vendidos": 0,
     "orden": 6,
@@ -5105,6 +5105,27 @@
     "carta": {
       "coleccion": "Chinese 30th Celebration",
       "numero": "095",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C230",
+    "slug": "kecleon-117",
+    "nombre": "Kecleon #117",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 13500,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 230,
+    "fotos": [],
+    "descripcion": "",
+    "carta": {
+      "coleccion": "",
+      "numero": "117",
       "rareza": "",
       "condicion": ""
     }
