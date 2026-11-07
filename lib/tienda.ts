@@ -3,6 +3,7 @@
 export const TIENDA = {
   nombre: "Pokedeke",
   sinpe: "8781-2831",
+  whatsapp: "50687812831",
   correo: "pokedekestore@gmail.com",
   plazoPagoHoras: 24,
   adelantoPreventa: 0.5,
@@ -121,7 +122,13 @@ export function costoDeEnvio(costo: number, subtotal: number) {
   return subtotal >= ENVIO_GRATIS_DESDE ? 0 : costo;
 }
 
+/** Abre el chat con la tienda, con el mensaje ya escrito. */
 export function enlaceWhatsApp(texto: string) {
+  return `https://wa.me/${TIENDA.whatsapp}?text=${encodeURIComponent(texto)}`;
+}
+
+/** Deja elegir a quién mandarle el mensaje. */
+export function enlaceCompartir(texto: string) {
   return `https://wa.me/?text=${encodeURIComponent(texto)}`;
 }
 

@@ -62,7 +62,7 @@ Lo que conviene saber:
 - Los correos salen de la cuenta que hizo la implementación del script, y siempre debe ser pokedekestore@gmail.com. Si el script corre con otra cuenta, el cliente no recibe correos.
 - Pasar a Ventas y el correo de pago confirmado dependen de un activador. Se instala una sola vez: con la cuenta de la tienda, en Apps Script, elegí la función `instalarAvisos` y tocá **Ejecutar**. Sin eso, marcar Pagado no hace nada.
 
-Si cambiás tarifas, cupones o el envío gratis en `lib/tienda.ts`, cambialos también en `CONFIG`, al inicio de `apps-script/Pedidos.gs`. Después de editar ese archivo hay que pegarlo otra vez en Apps Script y crear una versión nueva en **Implementar > Administrar implementaciones**.
+Si cambiás el WhatsApp, las tarifas, los cupones o el envío gratis en `lib/tienda.ts`, cambialos también en `CONFIG`, al inicio de `apps-script/Pedidos.gs`. Después de editar ese archivo hay que pegarlo otra vez en Apps Script y crear una versión nueva en **Implementar > Administrar implementaciones**.
 
 ## Cómo se calcula el envío por Correos
 
@@ -124,7 +124,7 @@ La página armada vive en GitHub Pages y el servidor de pedidos en la hoja de Go
 | Qué querés cambiar | Dónde |
 |---|---|
 | Productos, precios y stock | Hoja de Google, pestaña Catálogo web |
-| Nombre de la tienda, SINPE, envíos y cupones | `lib/tienda.ts` |
+| Nombre de la tienda, SINPE, WhatsApp, envíos y cupones | `lib/tienda.ts` |
 | Nombre que sale al instalar la página | `app/manifest.webmanifest` |
 | Nombres de las categorías en la página | `lib/productos.ts` |
 | Juegos de "Próximamente" | `components/Proximamente.tsx` |

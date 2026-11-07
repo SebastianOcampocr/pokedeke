@@ -9,6 +9,7 @@ import {
   PRODUCTOS,
   valoresUnicos,
 } from "@/lib/productos";
+import { enlaceWhatsApp } from "@/lib/tienda";
 import { Revelar } from "./Revelar";
 import { TarjetaProducto } from "./TarjetaProducto";
 
@@ -309,8 +310,16 @@ export function Catalogo({
           <div className="marco bg-crema p-6">
             <p className="font-display text-xl text-azul">No hallamos nada</p>
             <p className="mt-2">
-              Probá con otra palabra o escribinos por WhatsApp: tal vez lo
-              tenemos en camino.
+              Probá con otra palabra o{" "}
+              <a
+                href={enlaceWhatsApp("¡Hola! Estoy buscando un producto.")}
+                target="_blank"
+                rel="noreferrer"
+                className="font-bold underline underline-offset-2"
+              >
+                escribinos por WhatsApp
+              </a>
+              : tal vez lo tenemos en camino.
             </p>
           </div>
         )}

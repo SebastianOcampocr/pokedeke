@@ -11,7 +11,7 @@ import {
   precioACobrar,
   type Producto,
 } from "@/lib/productos";
-import { enlaceWhatsApp, TIENDA } from "@/lib/tienda";
+import { enlaceCompartir, enlaceWhatsApp, TIENDA } from "@/lib/tienda";
 import { useProductoVivo } from "@/lib/vivo";
 import { volarAlCarrito } from "@/lib/volar";
 import { BotonAvisame } from "./BotonAvisame";
@@ -190,7 +190,7 @@ export function AccionesProducto({ producto: guardado }: { producto: Producto })
 
       <div className="flex items-center justify-between gap-3">
         <a
-          href={enlaceWhatsApp(
+          href={enlaceCompartir(
             `Mirá esto en ${TIENDA.nombre}: ${producto.nombre}, ${colones(producto.precio)}.`,
           )}
           target="_blank"

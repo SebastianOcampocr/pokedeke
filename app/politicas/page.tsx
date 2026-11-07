@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { TIENDA } from "@/lib/tienda";
+import { enlaceWhatsApp, TIENDA } from "@/lib/tienda";
 import Link from "next/link";
 import { CabeceraPagina, ZonaBlanca } from "@/components/Estructura";
 
@@ -60,7 +60,15 @@ export default function PaginaPoliticas() {
               SINPE Móvil.
             </p>
             <p>
-              Si tu producto llegó dañado o no es el que pediste, escribinos
+              Si tu producto llegó dañado o no es el que pediste,{" "}
+              <a
+                href={enlaceWhatsApp("¡Hola! Tengo un problema con mi pedido.")}
+                target="_blank"
+                rel="noreferrer"
+                className="underline"
+              >
+                escribinos por WhatsApp
+              </a>{" "}
               dentro de esos 8 días hábiles con fotos del empaque y del
               producto. Te lo cambiamos o te devolvemos la plata.
             </p>

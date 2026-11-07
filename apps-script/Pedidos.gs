@@ -22,6 +22,7 @@ const CONFIG = {
   canal: "Página web",
   metodoPago: "SINPE Móvil",
   sinpe: "8781-2831",
+  whatsapp: "50687812831",
   // Dirección de la página: si cambia, hay que cambiarla aquí. Los correos sacan
   // de aquí las imágenes y el enlace para ver el pedido.
   sitio: "https://sebastianocampocr.github.io/pokedeke/",
@@ -795,6 +796,14 @@ function botonesDelDueno(numero, whatsapp, cliente) {
   ];
 }
 
+function botonesDelCliente(numero) {
+  const mensaje = "¡Hola! Les escribo por mi pedido " + numero + ".";
+  return [
+    botonDeCorreo("Ver mi pedido", CONFIG.sitio + "pedido?numero=" + numero, "#1437a8"),
+    botonDeCorreo("Escribinos por WhatsApp", "https://wa.me/" + CONFIG.whatsapp + "?text=" + encodeURIComponent(mensaje), "#127a43"),
+  ];
+}
+
 function mandarCorreo(opciones) {
   try {
     MailApp.sendEmail({ name: CONFIG.nombreTienda, ...opciones });
@@ -871,8 +880,8 @@ function confirmarAlCliente({ correo, numero, fecha, total, cliente, whatsapp, e
       lineas,
       resumen: montos,
       pasos,
-      botones: [botonDeCorreo("Ver mi pedido", CONFIG.sitio + "pedido?numero=" + numero, "#1437a8")],
-      pie: "Si algún dato está mal, respondé este correo. Tus datos son solo para este pedido.",
+      botones: botonesDelCliente(numero),
+      pie: "Si algún dato está mal, respondé este correo o escribinos. Tus datos son solo para este pedido.",
     }),
   });
 }
@@ -927,8 +936,8 @@ function confirmarPago(fila) {
       lineas: detalle.lineas.map(({ quedan, ...linea }) => linea),
       resumen: resumenDeMontos(detalle.subtotal, detalle.descuento, detalle.cupon, fila[COL.costoEnvio - 1], total),
       pasos,
-      botones: [botonDeCorreo("Ver mi pedido", CONFIG.sitio + "pedido?numero=" + numero, "#1437a8")],
-      pie: "Si tenés alguna duda, respondé este correo. Tus datos son solo para este pedido.",
+      botones: botonesDelCliente(numero),
+      pie: "Si tenés alguna duda, respondé este correo o escribinos. Tus datos son solo para este pedido.",
     }),
   });
 }

@@ -6,7 +6,7 @@ import { agregarAlCarrito } from "@/lib/carrito";
 import { useFavoritos } from "@/lib/favoritos";
 import { colones } from "@/lib/formato";
 import { estaAgotado } from "@/lib/productos";
-import { enlaceWhatsApp, TIENDA } from "@/lib/tienda";
+import { enlaceCompartir, TIENDA } from "@/lib/tienda";
 import { Deke } from "./Deke";
 import { IconoChat } from "./Iconos";
 import { TarjetaProducto } from "./TarjetaProducto";
@@ -57,7 +57,7 @@ export function VistaFavoritos() {
         </p>
         <div className="flex flex-col gap-3 md:flex-row">
           <a
-            href={enlaceWhatsApp(mensaje)}
+            href={enlaceCompartir(mensaje)}
             target="_blank"
             rel="noreferrer"
             className="boton boton-verde boton-chico"

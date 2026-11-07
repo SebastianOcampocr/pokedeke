@@ -19,6 +19,7 @@ import {
 } from "@/lib/pedidos";
 import {
   costoDeEnvio,
+  enlaceWhatsApp,
   ENVIO_GRATIS_DESDE,
   ENVIOS,
   LUGAR,
@@ -266,6 +267,14 @@ function Confirmacion({
       >
         Ver el estado de mi pedido
       </Link>
+      <a
+        href={enlaceWhatsApp(`¡Hola! Les escribo por mi pedido ${pedido.numero}.`)}
+        target="_blank"
+        rel="noreferrer"
+        className="boton boton-verde"
+      >
+        Escribinos por WhatsApp
+      </a>
     </div>
   );
 }
