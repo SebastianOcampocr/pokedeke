@@ -8,6 +8,7 @@ import {
   PRODUCTOS,
   type Producto,
 } from "@/lib/productos";
+import { useAgotadosAlFinal } from "@/lib/vivo";
 import { Deke } from "./Deke";
 import { TarjetaProducto } from "./TarjetaProducto";
 
@@ -95,10 +96,11 @@ export function Escoger() {
   const terminado = paso === -1;
   const pregunta = PREGUNTAS[paso];
 
-  const resultados = useMemo(
+  const recomendados = useMemo(
     () => (terminado ? recomendar(respuestas) : []),
     [terminado, respuestas],
   );
+  const resultados = useAgotadosAlFinal(recomendados);
 
   useEffect(() => {
     if (terminado) ganarLogro("guia");

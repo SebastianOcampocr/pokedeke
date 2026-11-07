@@ -70,6 +70,19 @@ export function conDatosVivos(producto: Producto, vivo: Inventario | null) {
   };
 }
 
+/** Lo agotado siempre va de último, con el stock de este momento. */
+export function useAgotadosAlFinal(productos: Producto[]) {
+  const vivo = useInventarioVivo();
+  return useMemo(() => {
+    const quedan = (producto: Producto) =>
+      conDatosVivos(producto, vivo).stock > 0;
+    return [
+      ...productos.filter(quedan),
+      ...productos.filter((producto) => !quedan(producto)),
+    ];
+  }, [productos, vivo]);
+}
+
 export function useProductoVivo(producto: Producto) {
   const vivo = useInventarioVivo();
   return useMemo(() => conDatosVivos(producto, vivo), [producto, vivo]);

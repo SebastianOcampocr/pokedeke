@@ -2,10 +2,11 @@
 
 import { useEffect } from "react";
 import { anotarVisto, useVistos } from "@/lib/vistos";
+import { useAgotadosAlFinal } from "@/lib/vivo";
 import { TarjetaProducto } from "./TarjetaProducto";
 
 export function VistosRecientes({ slug }: { slug: string }) {
-  const vistos = useVistos(slug).slice(0, 4);
+  const vistos = useAgotadosAlFinal(useVistos(slug).slice(0, 4));
 
   useEffect(() => anotarVisto(slug), [slug]);
 

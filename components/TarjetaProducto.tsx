@@ -9,7 +9,7 @@ import {
   estaAgotado,
   type Producto,
 } from "@/lib/productos";
-import { useProductoVivo } from "@/lib/vivo";
+import { useAgotadosAlFinal, useProductoVivo } from "@/lib/vivo";
 import { AgregarRapido } from "./AgregarRapido";
 import { BotonAvisame } from "./BotonAvisame";
 import { BotonFavorito } from "./BotonFavorito";
@@ -176,9 +176,11 @@ export function TarjetaProducto({
 }
 
 export function RejillaProductos({ productos }: { productos: Producto[] }) {
+  const ordenados = useAgotadosAlFinal(productos);
+
   return (
     <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-4">
-      {productos.map((producto, indice) => (
+      {ordenados.map((producto, indice) => (
         <Revelar key={producto.slug} indice={indice}>
           <TarjetaProducto producto={producto} />
         </Revelar>

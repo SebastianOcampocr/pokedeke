@@ -7,6 +7,7 @@ import { useFavoritos } from "@/lib/favoritos";
 import { colones } from "@/lib/formato";
 import { estaAgotado } from "@/lib/productos";
 import { enlaceCompartir, TIENDA } from "@/lib/tienda";
+import { useAgotadosAlFinal } from "@/lib/vivo";
 import { Deke } from "./Deke";
 import { IconoChat } from "./Iconos";
 import { TarjetaProducto } from "./TarjetaProducto";
@@ -14,6 +15,7 @@ import { TarjetaProducto } from "./TarjetaProducto";
 export function VistaFavoritos() {
   const hidratado = useHidratado();
   const { productos } = useFavoritos();
+  const ordenados = useAgotadosAlFinal(productos);
 
   if (!hidratado) return <p>Cargando tu lista…</p>;
 
@@ -81,7 +83,7 @@ export function VistaFavoritos() {
         </div>
       </div>
       <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-4">
-        {productos.map((producto) => (
+        {ordenados.map((producto) => (
           <TarjetaProducto key={producto.slug} producto={producto} />
         ))}
       </div>

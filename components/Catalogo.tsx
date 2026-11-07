@@ -10,6 +10,7 @@ import {
   valoresUnicos,
 } from "@/lib/productos";
 import { enlaceWhatsApp } from "@/lib/tienda";
+import { useAgotadosAlFinal } from "@/lib/vivo";
 import { Revelar } from "./Revelar";
 import { TarjetaProducto } from "./TarjetaProducto";
 
@@ -97,7 +98,7 @@ export function Catalogo({
   const [filtrosAbiertos, setFiltrosAbiertos] = useState(false);
   const [tanda, setTanda] = useState({ clave: "", cantidad: POR_TANDA });
 
-  const resultados = useMemo(() => {
+  const encontrados = useMemo(() => {
     const limites = RANGOS.find((opcion) => opcion.id === rango) ?? RANGOS[0];
     const filtrados = PRODUCTOS.filter(
       (producto) =>
@@ -111,15 +112,13 @@ export function Catalogo({
         coincide(producto, busqueda),
     );
     return filtrados.sort((a, b) => {
-      // Lo agotado siempre va al final, sin importar el orden elegido.
-      const agotados = Number(a.stock <= 0) - Number(b.stock <= 0);
-      if (agotados !== 0) return agotados;
       if (orden === "menor") return a.precio - b.precio;
       if (orden === "mayor") return b.precio - a.precio;
       if (orden === "vendidos") return b.vendidos - a.vendidos;
       return b.orden - a.orden;
     });
   }, [busqueda, juego, categoria, idioma, rango, rareza, orden, soloPreventas]);
+  const resultados = useAgotadosAlFinal(encontrados);
 
   const hayFiltros = Boolean(
     busqueda ||
