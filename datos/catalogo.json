@@ -146,8 +146,8 @@
     "categoriaCorta": "Suelta",
     "idioma": "Chino",
     "precio": 1500,
-    "stock": 0,
-    "vendidos": 1,
+    "stock": 1,
+    "vendidos": 0,
     "orden": 7,
     "fotos": [
       "/productos/solgaleo-gx-158-chinese-30th-celebration.webp"
@@ -169,8 +169,8 @@
     "categoriaCorta": "Suelta",
     "idioma": "",
     "precio": 5500,
-    "stock": 0,
-    "vendidos": 1,
+    "stock": 1,
+    "vendidos": 0,
     "orden": 8,
     "fotos": [
       "/productos/greninja-break-41-30th-celebration.webp"
@@ -191,9 +191,9 @@
     "categoria": "Carta suelta (single)",
     "categoriaCorta": "Suelta",
     "idioma": "",
-    "precio": 11000,
-    "stock": 0,
-    "vendidos": 1,
+    "precio": 12000,
+    "stock": 1,
+    "vendidos": 0,
     "orden": 9,
     "fotos": [
       "/productos/rayquaza-ex-85-30th-celebration.webp"
