@@ -76,7 +76,7 @@ const CONFIG = {
       slug: /^pikachu-\d+-30th-celebration$/,
       // Lo que la página escribe en el buscador para mostrarlos.
       buscar: "Pikachu",
-      desde: 6,
+      desde: 5,
       precio: 750,
     },
   ],

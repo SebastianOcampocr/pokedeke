@@ -66,7 +66,7 @@ Lo que conviene saber:
 
 ### Ofertas por cantidad
 
-Hoy hay una: llevando 6 o más Pikachus comunes de 30th Celebration, cada uno queda en ₡750. Se pueden combinar números distintos.
+Hoy hay una: llevando 5 o más Pikachus comunes de 30th Celebration, cada uno queda en ₡750. Se pueden combinar números distintos.
 
 - Las ofertas viven en `ofertasPorCantidad`, al inicio de `apps-script/Pedidos.gs`. La hoja es la que cobra el precio de oferta y la anuncia a la página.
 - La página la muestra solo cuando la hoja la anuncia y hay stock suficiente para llegar a la cantidad. Así nunca promete un precio que no se cobra.
