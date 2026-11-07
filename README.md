@@ -109,6 +109,21 @@ La página y la hoja usan la tarifa EMS Nacional Paquetes de [Correos](https://c
 
 Cuando existen las variables de GitHub `AWS_BUCKET` y `AWS_DISTRIBUCION`, y los secretos `AWS_CLAVE_ID` y `AWS_CLAVE_SECRETA`, la página se publica en AWS en vez de GitHub Pages. La clave debe poder tocar solo ese bucket y refrescar esa distribución.
 
+Al 7 de noviembre de 2026, AWS todavía no dejaba crear CloudFront ("Your account must be verified"), así que la tienda se publica en Cloudflare Pages.
+
+## Publicar en Cloudflare Pages
+
+La tienda vive en el proyecto `pokedeke` de Cloudflare Pages (https://pokedeke.pages.dev), en la cuenta de pokedekestore@gmail.com. Es un proyecto de Pages clásico, no un Worker.
+
+GitHub la publica sola cuando existen la variable `CLOUDFLARE_CUENTA` (el Account ID) y el secreto `CLOUDFLARE_TOKEN` (un token con permiso **Cloudflare Pages: Edit**). Mientras tanto, GitHub Pages sigue publicando igual.
+
+Para publicar a mano desde la compu:
+
+1. `ARCHIVOS_ARMADOS=si NEXT_PUBLIC_PEDIDOS_URL=... NEXT_PUBLIC_TIENDA_ABIERTA=si npm run build`
+2. `cd out && npx wrangler pages deploy . --project-name=pokedeke --branch=main`
+
+Wrangler se corre dentro de `out`. En la raíz del proyecto detecta Next.js y trata de convertirlo en un Worker, lo que cambia `package.json` y `next.config.ts`.
+
 ## La demo en GitHub
 
 La demo se publica sola en GitHub Pages: cada cambio que llega a la rama `main` se arma y se publica en un par de minutos. Eso lo hace `.github/workflows/publicar-demo.yml`.

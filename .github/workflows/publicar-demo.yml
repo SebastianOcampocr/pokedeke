@@ -146,8 +146,11 @@ jobs:
           ARCHIVOS_ARMADOS: si
           NEXT_PUBLIC_PEDIDOS_URL: ${{ vars.PEDIDOS_URL }}
           NEXT_PUBLIC_TIENDA_ABIERTA: ${{ vars.TIENDA_ABIERTA }}
+      # Se corre dentro de out: en la raíz, wrangler detecta Next.js e intenta
+      # convertir el proyecto en un Worker. El proyecto ya existe como Pages clásico.
       - name: Subir la página a Cloudflare
-        run: npx --yes wrangler@4.152.0 pages deploy out --project-name=pokedeke --branch=main --commit-dirty=true
+        working-directory: out
+        run: npx --yes wrangler@4.152.0 pages deploy . --project-name=pokedeke --branch=main --commit-dirty=true
         env:
           CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_CUENTA }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_TOKEN }}
