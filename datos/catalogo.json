@@ -334,6 +334,142 @@
     "descripcion": "Seis dados de daño, un dado de juego y una moneda."
   },
   {
+    "id": "C017",
+    "slug": "energia-planta",
+    "nombre": "Energía Planta",
+    "juego": "Pokémon",
+    "categoria": "Accesorios",
+    "categoriaCorta": "Accesorio",
+    "idioma": "",
+    "precio": 100,
+    "stock": 22,
+    "vendidos": 0,
+    "orden": 17,
+    "fotos": [
+      "/productos/energia-planta.webp"
+    ],
+    "descripcion": "Energía básica de tipo Planta para armar tu mazo."
+  },
+  {
+    "id": "C018",
+    "slug": "energia-fuego",
+    "nombre": "Energía Fuego",
+    "juego": "Pokémon",
+    "categoria": "Accesorios",
+    "categoriaCorta": "Accesorio",
+    "idioma": "",
+    "precio": 100,
+    "stock": 21,
+    "vendidos": 0,
+    "orden": 18,
+    "fotos": [
+      "/productos/energia-fuego.webp"
+    ],
+    "descripcion": "Energía básica de tipo Fuego para armar tu mazo."
+  },
+  {
+    "id": "C019",
+    "slug": "energia-agua",
+    "nombre": "Energía Agua",
+    "juego": "Pokémon",
+    "categoria": "Accesorios",
+    "categoriaCorta": "Accesorio",
+    "idioma": "",
+    "precio": 100,
+    "stock": 21,
+    "vendidos": 0,
+    "orden": 19,
+    "fotos": [
+      "/productos/energia-agua.webp"
+    ],
+    "descripcion": "Energía básica de tipo Agua para armar tu mazo."
+  },
+  {
+    "id": "C020",
+    "slug": "energia-rayo",
+    "nombre": "Energía Rayo",
+    "juego": "Pokémon",
+    "categoria": "Accesorios",
+    "categoriaCorta": "Accesorio",
+    "idioma": "",
+    "precio": 100,
+    "stock": 18,
+    "vendidos": 0,
+    "orden": 20,
+    "fotos": [
+      "/productos/energia-rayo.webp"
+    ],
+    "descripcion": "Energía básica de tipo Rayo para armar tu mazo."
+  },
+  {
+    "id": "C021",
+    "slug": "energia-psiquica",
+    "nombre": "Energía Psíquica",
+    "juego": "Pokémon",
+    "categoria": "Accesorios",
+    "categoriaCorta": "Accesorio",
+    "idioma": "",
+    "precio": 100,
+    "stock": 22,
+    "vendidos": 0,
+    "orden": 21,
+    "fotos": [
+      "/productos/energia-psiquica.webp"
+    ],
+    "descripcion": "Energía básica de tipo Psíquico para armar tu mazo."
+  },
+  {
+    "id": "C022",
+    "slug": "energia-lucha",
+    "nombre": "Energía Lucha",
+    "juego": "Pokémon",
+    "categoria": "Accesorios",
+    "categoriaCorta": "Accesorio",
+    "idioma": "",
+    "precio": 100,
+    "stock": 13,
+    "vendidos": 0,
+    "orden": 22,
+    "fotos": [
+      "/productos/energia-lucha.webp"
+    ],
+    "descripcion": "Energía básica de tipo Lucha para armar tu mazo."
+  },
+  {
+    "id": "C023",
+    "slug": "energia-oscura",
+    "nombre": "Energía Oscura",
+    "juego": "Pokémon",
+    "categoria": "Accesorios",
+    "categoriaCorta": "Accesorio",
+    "idioma": "",
+    "precio": 100,
+    "stock": 18,
+    "vendidos": 0,
+    "orden": 23,
+    "fotos": [
+      "/productos/energia-oscura.webp"
+    ],
+    "descripcion": "Energía básica de tipo Oscuro para armar tu mazo."
+  },
+  {
+    "id": "C024",
+    "slug": "energia-metalica",
+    "nombre": "Energía Metálica",
+    "juego": "Pokémon",
+    "categoria": "Accesorios",
+    "categoriaCorta": "Accesorio",
+    "idioma": "",
+    "precio": 100,
+    "stock": 13,
+    "vendidos": 0,
+    "orden": 24,
+    "fotos": [
+      "/productos/energia-metalica.webp"
+    ],
+    "descripcion": "Energía básica de tipo Metálico para armar tu mazo."
+  },
+  {
     "id": "C025",
     "slug": "toploader-3x4",
     "nombre": "Toploader 3x4",
