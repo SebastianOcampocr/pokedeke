@@ -262,5 +262,23 @@
       "rareza": "",
       "condicion": ""
     }
+  },
+  {
+    "id": "C013",
+    "slug": "sobre-delta-reign",
+    "nombre": "Sobre Delta Reign",
+    "juego": "Pokémon",
+    "categoria": "Booster pack",
+    "categoriaCorta": "Sobre",
+    "idioma": "Inglés",
+    "precio": 4000,
+    "stock": 28,
+    "destacado": true,
+    "vendidos": 0,
+    "orden": 13,
+    "fotos": [
+      "/productos/preventa-sleeved-delta-reign.webp"
+    ],
+    "descripcion": "Un sobre para probar suerte."
   }
 ]
