@@ -25,7 +25,7 @@ const CONFIG = {
   whatsapp: "50687812831",
   // Dirección de la página: si cambia, hay que cambiarla aquí. Los correos sacan
   // de aquí las imágenes y el enlace para ver el pedido.
-  sitio: "https://sebastianocampocr.github.io/pokedeke/",
+  sitio: "https://pokedeke.store/",
   horasApartado: 24,
   adelantoPreventa: 0.5,
   envioGratisDesde: 50000,

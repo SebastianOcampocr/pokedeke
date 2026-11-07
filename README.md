@@ -7,7 +7,7 @@ Los productos, el precio y el stock son reales y salen de la hoja de Google. La 
 - **Demo:** sale el aviso negro y los pedidos se guardan solo en el navegador. Nadie debe pagar.
 - **Tienda abierta:** con la variable de GitHub `TIENDA_ABIERTA` en `si`. Sale el aviso de beta y el sello junto al logo. Los pedidos caen en la hoja y llegan por correo. Es plata de verdad.
 
-Hoy está abierta en GitHub Pages de forma temporal, mientras AWS verifica la cuenta. Las reglas de GitHub Pages no permiten tiendas en línea y pueden bajar la página. Para volver a la demo, borrá `TIENDA_ABIERTA` y corré **Publicar demo**.
+Desde el 7 de noviembre de 2026, la tienda abierta vive en **https://pokedeke.store**, en Cloudflare Pages (ver más abajo). El dominio se compró en GoDaddy y sus nameservers apuntan a Cloudflare. GitHub Pages todavía publica la misma tienda en la dirección vieja. Sus reglas no permiten tiendas en línea, así que esa dirección debe pasar a mandar a pokedeke.store. Para volver a la demo, borrá `TIENDA_ABIERTA` y corré **Publicar demo**.
 
 En ambos modos el inventario se lee de la hoja por medio de la variable `PEDIDOS_URL`.
 
