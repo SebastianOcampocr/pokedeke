@@ -710,7 +710,12 @@ function tituloDeCorreo(titulo) {
   );
 }
 
-/** Los correos no aceptan hojas de estilo: todo va dentro de cada etiqueta. */
+/**
+ * Los correos no aceptan hojas de estilo: todo va dentro de cada etiqueta.
+ * Gmail en modo oscuro cambia los colores pero no las imágenes. Por eso el toldo
+ * y los patrones son imágenes, las etiquetas llevan letra blanca sobre color
+ * fuerte y ningún texto va directo sobre el amarillo.
+ */
 function correoConDiseno({ etiqueta, estado, colorEstado, saludo, numero, fecha, total, rotuloTotal, caja, tituloCliente, cliente, entrega, lineas, resumen, pasos, botones, pie }) {
   const filaDeDato = ([rotulo, valor]) =>
     valor
@@ -737,26 +742,23 @@ function correoConDiseno({ etiqueta, estado, colorEstado, saludo, numero, fecha,
   const paso = (textoPaso, indice) =>
     '<tr><td style="padding:5px 10px 5px 0;vertical-align:top;"><span style="display:inline-block;width:24px;height:24px;line-height:24px;text-align:center;border-radius:6px;background:#1437a8;color:#ffffff;font-weight:bold;font-size:13px;">' +
     (indice + 1) + '</span></td><td style="padding:5px 0;">' + escapar(textoPaso) + "</td></tr>";
-  const toldo = Array.from({ length: 14 }, (_, indice) =>
-    '<td style="height:16px;background:' + (indice % 2 ? "#ffffff" : "#c9201c") + ';"></td>',
-  ).join("");
 
   const imagenes = CONFIG.sitio + "correo/";
   const filaDeCaja = ([rotulo, valor]) =>
     valor ? escapar(rotulo) + ": <strong>" + escapar(valor) + "</strong>" : "";
-  const fondo = "background-image:url(" + imagenes + "fondo.png);background-repeat:repeat;";
+  const patron = (archivo) => "background-image:url(" + imagenes + archivo + ");background-repeat:repeat;";
 
   return (
     '<div style="margin:0;padding:0;background-color:#ffce1f;font-family:Arial,Helvetica,sans-serif;color:#141414;">' +
-    '<table role="presentation" style="width:100%;border-collapse:collapse;border-bottom:3px solid #141414;"><tr>' + toldo + "</tr></table>" +
+    '<div style="height:16px;border-bottom:3px solid #141414;background-color:#c9201c;' + patron("toldo.png") + '"></div>' +
     '<div style="max-width:580px;margin:0 auto;padding:6px 12px 4px;">' +
     '<img src="' + imagenes + 'nombre.png" alt="POKEDEKE" width="556" style="display:block;width:100%;max-width:556px;height:auto;margin:0 auto;font-size:34px;font-weight:900;color:#c9201c;text-align:center;">' +
     "</div>" +
-    '<div style="padding:0 0 24px;background-color:#ffce1f;' + fondo + '">' +
+    '<div style="padding:0 0 24px;background-color:#ffce1f;' + patron("fondo.png") + '">' +
     '<div style="max-width:580px;margin:0 auto;padding:12px 12px 0;">' +
-    '<div style="background-color:#fff4d6;' + fondo + 'border:3px solid #141414;border-radius:12px;padding:22px;">' +
+    '<div style="background-color:#fff4d6;' + patron("fondo-tarjeta.png") + 'border:3px solid #141414;border-radius:12px;padding:22px;">' +
     '<span style="display:inline-block;padding:4px 10px;border-radius:6px;background:#1437a8;color:#ffffff;font-size:13px;font-weight:bold;">' + escapar(etiqueta) + "</span> " +
-    '<span style="display:inline-block;padding:4px 10px;border-radius:6px;background:' + (colorEstado || "#ffce1f") + ';font-size:13px;font-weight:bold;">' + escapar(estado || PENDIENTE) + "</span>" +
+    '<span style="display:inline-block;padding:4px 10px;border-radius:6px;background:' + (colorEstado || "#c9201c") + ';color:#ffffff;font-size:13px;font-weight:bold;">' + escapar(estado || PENDIENTE) + "</span>" +
     '<h1 style="margin:12px 0 0;font-size:30px;color:#1437a8;">' + escapar(numero) + "</h1>" +
     '<p style="margin:2px 0 14px;font-size:13px;color:#444444;">' + escapar(fechaLegible(fecha)) + "</p>" +
     (saludo ? '<p style="margin:0 0 14px;font-size:16px;line-height:1.45;">' + escapar(saludo) + "</p>" : "") +
@@ -775,9 +777,9 @@ function correoConDiseno({ etiqueta, estado, colorEstado, saludo, numero, fecha,
     '<table style="width:100%;border-collapse:collapse;font-size:15px;margin-top:8px;">' + resumen.map(filaDeResumen).join("") + "</table>" +
     tituloDeCorreo("Qué sigue") +
     '<table style="width:100%;border-collapse:collapse;font-size:15px;">' + pasos.map(paso).join("") + "</table>" +
-    '<div style="margin-top:16px;">' + botones.join("") + "</div></div>" +
-    '<p style="margin:14px 4px 0;font-size:12px;">' + escapar(pie || "Aviso automático de la tienda. Los datos del cliente son solo para este pedido.") + "</p>" +
-    "</div></div></div>"
+    '<div style="margin-top:16px;">' + botones.join("") + "</div>" +
+    '<p style="margin:16px 0 0;font-size:12px;color:#444444;">' + escapar(pie || "Aviso automático de la tienda. Los datos del cliente son solo para este pedido.") + "</p>" +
+    "</div></div></div></div>"
   );
 }
 
@@ -911,7 +913,7 @@ function confirmarPago(fila) {
     htmlBody: correoConDiseno({
       etiqueta: "Pago confirmado",
       estado: PAGADO,
-      colorEstado: "#8fe0a8",
+      colorEstado: "#127a43",
       saludo: "¡Listo, " + primerNombre + "! Confirmamos tu pago. Gracias por comprar en " + CONFIG.nombreTienda + ".",
       numero,
       fecha: fila[COL.fecha - 1],
