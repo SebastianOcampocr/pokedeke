@@ -32,6 +32,7 @@
     "idioma": "",
     "precio": 7500,
     "stock": 1,
+    "destacado": true,
     "vendidos": 0,
     "orden": 2,
     "fotos": [
@@ -55,6 +56,7 @@
     "idioma": "",
     "precio": 1500,
     "stock": 1,
+    "destacado": true,
     "vendidos": 0,
     "orden": 3,
     "fotos": [
@@ -101,6 +103,7 @@
     "idioma": "",
     "precio": 1500,
     "stock": 1,
+    "destacado": true,
     "vendidos": 0,
     "orden": 5,
     "fotos": [
@@ -170,6 +173,7 @@
     "idioma": "",
     "precio": 5500,
     "stock": 1,
+    "destacado": true,
     "vendidos": 0,
     "orden": 8,
     "fotos": [
@@ -193,6 +197,7 @@
     "idioma": "",
     "precio": 12000,
     "stock": 1,
+    "destacado": true,
     "vendidos": 0,
     "orden": 9,
     "fotos": [
@@ -216,6 +221,7 @@
     "idioma": "",
     "precio": 26000,
     "stock": 1,
+    "destacado": true,
     "vendidos": 0,
     "orden": 10,
     "fotos": [
@@ -303,7 +309,6 @@
     "idioma": "",
     "precio": 1500,
     "stock": 2,
-    "destacado": true,
     "vendidos": 0,
     "orden": 14,
     "fotos": [
@@ -321,7 +326,6 @@
     "idioma": "",
     "precio": 1500,
     "stock": 1,
-    "destacado": true,
     "vendidos": 0,
     "orden": 15,
     "fotos": [
