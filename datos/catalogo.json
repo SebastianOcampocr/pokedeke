@@ -57,7 +57,9 @@
     "stock": 1,
     "vendidos": 0,
     "orden": 3,
-    "fotos": [],
+    "fotos": [
+      "/productos/nidorina-101-promo.webp"
+    ],
     "descripcion": "Carta de la colección Promo, número 101.",
     "carta": {
       "coleccion": "Promo",
@@ -78,7 +80,9 @@
     "stock": 1,
     "vendidos": 0,
     "orden": 4,
-    "fotos": [],
+    "fotos": [
+      "/productos/sylveon-ex-100-promo.webp"
+    ],
     "descripcion": "Carta de la colección Promo, número 100.",
     "carta": {
       "coleccion": "Promo",
@@ -233,7 +237,9 @@
     "stock": 1,
     "vendidos": 0,
     "orden": 11,
-    "fotos": [],
+    "fotos": [
+      "/productos/espeon-v-513-chinese-gem-pack-2.webp"
+    ],
     "descripcion": "Carta de la colección Chinese Gem Pack 2, número 513.",
     "carta": {
       "coleccion": "Chinese Gem Pack 2",
@@ -277,7 +283,7 @@
     "vendidos": 0,
     "orden": 13,
     "fotos": [
-      "/productos/preventa-sleeved-delta-reign.webp"
+      "/productos/sobre-delta-reign.webp"
     ],
     "descripcion": "Un sobre para probar suerte."
   }
