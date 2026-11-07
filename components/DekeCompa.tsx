@@ -25,7 +25,7 @@ const POR_PAGINA: { ruta: string; dicho: Dicho }[] = [
   },
   {
     ruta: "/carrito",
-    dicho: { texto: "Psst… probá el cupón TICO10, a ver qué pasa." },
+    dicho: { texto: "Revisá bien, que no se te quede nada por fuera." },
   },
   {
     ruta: "/favoritos",
@@ -130,10 +130,7 @@ export function DekeCompa() {
       shiny.guardar(() => true);
       ganarLogro("shiny");
       lanzarConfeti();
-      decir({
-        texto: "¡Me volví shiny! Tomá, cupón secreto: DEKESHINY, 15% menos.",
-        enlace: { href: "/carrito", texto: "Ir al carrito" },
-      });
+      decir({ texto: "¡Me volví shiny! Que quede entre nosotros." });
       return;
     }
     decir({

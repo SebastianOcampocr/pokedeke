@@ -16,6 +16,7 @@ import {
   type ResultadoSobre,
 } from "@/lib/sobre";
 import { cambiarSonido, sonar, useSonido } from "@/lib/sonido";
+import { CUPONES } from "@/lib/tienda";
 import { Deke, DorsoCarta, type AnimoDeke } from "./Deke";
 import { FotoProducto } from "./FotoProducto";
 import { SobreDibujo } from "./SobreDibujo";
@@ -111,6 +112,8 @@ function BotonSonido() {
 function PremioDelSobre({ premio }: { premio: boolean }) {
   const { cupon } = useCarrito();
   const aplicado = cupon?.codigo === CUPON_SOBRE;
+
+  if (!CUPONES.some((opcion) => opcion.codigo === CUPON_SOBRE)) return null;
 
   if (!premio) {
     return (

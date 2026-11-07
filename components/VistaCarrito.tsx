@@ -11,6 +11,7 @@ import {
 } from "@/lib/carrito";
 import { calcularTotales, colones } from "@/lib/formato";
 import { disponibles, esPreventa } from "@/lib/productos";
+import { CUPONES } from "@/lib/tienda";
 import { AgregarRapido } from "./AgregarRapido";
 import { BarraEnvio } from "./BarraEnvio";
 import { Cantidad } from "./Cantidad";
@@ -83,7 +84,7 @@ function FormularioCupon({ activo }: { activo: string | null }) {
       }}
     >
       <label htmlFor="cupon" className="rotulo-campo">
-        ¿Tenés un cupón? (probá con TICO10)
+        ¿Tenés un cupón?
       </label>
       <div className="flex gap-2">
         <input
@@ -225,7 +226,9 @@ export function VistaCarrito() {
       </div>
 
       <aside className="marco shadow-dura flex flex-col gap-3 p-4">
-        <FormularioCupon activo={cupon?.codigo ?? null} />
+        {CUPONES.length > 0 ? (
+          <FormularioCupon activo={cupon?.codigo ?? null} />
+        ) : null}
         <div className="flex flex-col gap-1.5 border-t-2 border-tinta pt-3">
           <Linea rotulo="Subtotal" monto={colones(totales.subtotal)} />
           {totales.descuento > 0 ? (

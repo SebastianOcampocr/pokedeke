@@ -7,6 +7,8 @@ Los productos, el precio y el stock son reales y salen de la hoja de Google. La 
 - **Demo:** sale el aviso negro y los pedidos se guardan solo en el navegador. Nadie debe pagar.
 - **Tienda abierta:** con la variable de GitHub `TIENDA_ABIERTA` en `si`. Los pedidos caen en la hoja y llegan por correo. Es plata de verdad.
 
+Hoy está abierta en GitHub Pages de forma temporal, mientras AWS verifica la cuenta. Las reglas de GitHub Pages no permiten tiendas en línea y pueden bajar la página. Para volver a la demo, borrá `TIENDA_ABIERTA` y corré **Publicar demo**.
+
 En ambos modos el inventario se lee de la hoja por medio de la variable `PEDIDOS_URL`.
 
 ## Cómo se actualiza el inventario
@@ -96,7 +98,7 @@ La página y la hoja usan la tarifa EMS Nacional Paquetes de [Correos](https://c
 
 `infra/pokedeke.yml` crea los archivos privados en S3 y CloudFront delante. Va en `us-east-2`, la región del proyecto: en `us-east-1` el proyecto solo permite servicios globales.
 
-Cuando existen las variables de GitHub `AWS_BUCKET` y `AWS_DISTRIBUCION`, y los secretos `AWS_CLAVE_ID` y `AWS_CLAVE_SECRETA`, la página se publica en AWS en vez de GitHub Pages. La clave debe poder tocar solo ese bucket y refrescar esa distribución. GitHub Pages no permite tiendas en línea: sirve solo para la demo.
+Cuando existen las variables de GitHub `AWS_BUCKET` y `AWS_DISTRIBUCION`, y los secretos `AWS_CLAVE_ID` y `AWS_CLAVE_SECRETA`, la página se publica en AWS en vez de GitHub Pages. La clave debe poder tocar solo ese bucket y refrescar esa distribución.
 
 ## La demo en GitHub
 
@@ -113,11 +115,10 @@ La página armada vive en GitHub Pages y el servidor de pedidos en la hoja de Go
 ## Recorrido para mostrarla
 
 1. Entrá a un producto y agregalo al carrito.
-2. En el carrito, probá el cupón `TICO10`.
-3. Terminá la compra con datos inventados.
-4. Con el número de pedido, entrá a **Mi pedido** para ver en qué va.
-5. Escribí `/panel` en la dirección del navegador (no tiene link en la página), marcá el pedido como **Pagado** y volvé a **Mi pedido**: el estado cambió.
-6. En el panel, abrí **Texto para WhatsApp** para ver el mensaje listo para los grupos.
+2. Terminá la compra con datos inventados.
+3. Con el número de pedido, entrá a **Mi pedido** para ver en qué va.
+4. Escribí `/panel` en la dirección del navegador (no tiene link en la página), marcá el pedido como **Pagado** y volvé a **Mi pedido**: el estado cambió.
+5. En el panel, abrí **Texto para WhatsApp** para ver el mensaje listo para los grupos.
 
 ## Dónde se cambia cada cosa
 
@@ -147,7 +148,7 @@ La página armada vive en GitHub Pages y el servidor de pedidos en la hoja de Go
 
 | Función | Dónde verla |
 |---|---|
-| Sobre del día: rasgalo, voltea las cartas, llená el álbum y probá suerte con un cupón | `/sobre` |
+| Sobre del día: rasgalo, voltea las cartas y llená el álbum | `/sobre` |
 | Caja compartida (próximamente): 36 sobres de una caja, cada persona compra los suyos | `/caja-compartida` |
 | Cédula de Coleccionista con stickers, descargable como imagen | `/cedula` |
 | Cajas misteriosas (próximamente) con valor mínimo y lista adentro | `/cajas-misteriosas` |

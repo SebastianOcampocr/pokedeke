@@ -63,12 +63,8 @@ const CONFIG = {
     Accesorios: 200,
   },
   pesoSinCategoria: 300,
-  cupones: {
-    TICO10: { tipo: "porcentaje", valor: 10 },
-    BIENVENIDA: { tipo: "monto", valor: 2000 },
-    SOBRE5: { tipo: "porcentaje", valor: 5 },
-    DEKESHINY: { tipo: "porcentaje", valor: 15 },
-  },
+  // Apagados hasta decidir las promociones. Deben coincidir con lib/tienda.ts.
+  cupones: {},
 };
 
 const HOJAS = {

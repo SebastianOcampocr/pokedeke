@@ -108,12 +108,12 @@ export type Cupon = {
   valor: number;
 };
 
-export const CUPONES: Cupon[] = [
-  { codigo: "TICO10", tipo: "porcentaje", valor: 10 },
-  { codigo: "BIENVENIDA", tipo: "monto", valor: 2000 },
-  { codigo: "SOBRE5", tipo: "porcentaje", valor: 5 },
-  { codigo: "DEKESHINY", tipo: "porcentaje", valor: 15 },
-];
+/**
+ * Apagados hasta decidir las promociones. Para activar uno, agregalo aquí y en
+ * CONFIG de apps-script/Pedidos.gs. CUPON_SOBRE (lib/sobre.ts) enciende el premio
+ * del sobre del día.
+ */
+export const CUPONES: Cupon[] = [];
 
 /** Desde este subtotal, Correos va por cuenta de la tienda. Es una propuesta. */
 export const ENVIO_GRATIS_DESDE = 50000;

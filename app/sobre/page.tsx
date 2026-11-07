@@ -5,7 +5,7 @@ import { SobreDelDia } from "@/components/SobreDelDia";
 export const metadata: Metadata = {
   title: "Sobre del día",
   description:
-    "Abrí un sobre virtual, pegá las cartas en tu álbum y probá suerte con un cupón.",
+    "Abrí un sobre virtual y pegá las cartas en tu álbum.",
 };
 
 export default function PaginaSobre() {
@@ -13,7 +13,7 @@ export default function PaginaSobre() {
     <>
       <CabeceraPagina
         titulo="Sobre del día"
-        texto="Rasgalo, voltea las cartas y llená tu álbum. Capaz te sale un cupón."
+        texto="Rasgalo, voltea las cartas y llená tu álbum."
       />
       <ZonaBlanca>
         <SobreDelDia />

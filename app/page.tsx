@@ -132,7 +132,7 @@ function BandaSobre() {
           Abrí el sobre del día
         </span>
         <span className="text-[15px] leading-snug font-medium md:text-[17px]">
-          Rasgalo, voltea las cartas, llená tu álbum y capaz te sale un cupón.
+          Rasgalo, voltea las cartas y llená tu álbum.
         </span>
       </span>
       <span className="boton boton-amarillo hidden shrink-0 md:inline-flex">
