@@ -20,7 +20,8 @@
       "numero": "197",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Rayo"
   },
   {
     "id": "C002",
@@ -44,7 +45,8 @@
       "numero": "174",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Incoloro"
   },
   {
     "id": "C003",
@@ -68,7 +70,8 @@
       "numero": "101",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Oscuro"
   },
   {
     "id": "C004",
@@ -91,7 +94,8 @@
       "numero": "100",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Psíquico"
   },
   {
     "id": "C005",
@@ -115,7 +119,8 @@
       "numero": "066",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Psíquico"
   },
   {
     "id": "C006",
@@ -138,7 +143,8 @@
       "numero": "60",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Oscuro"
   },
   {
     "id": "C007",
@@ -161,7 +167,8 @@
       "numero": "158",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Metálico"
   },
   {
     "id": "C008",
@@ -185,7 +192,8 @@
       "numero": "41",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Agua"
   },
   {
     "id": "C009",
@@ -209,7 +217,8 @@
       "numero": "85",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Dragón"
   },
   {
     "id": "C010",
@@ -233,7 +242,8 @@
       "numero": "150",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Rayo"
   },
   {
     "id": "C011",
@@ -256,7 +266,8 @@
       "numero": "513",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Psíquico"
   },
   {
     "id": "C012",
@@ -279,7 +290,8 @@
       "numero": "96",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Dragón"
   },
   {
     "id": "C013",
@@ -324,7 +336,7 @@
     "categoria": "Accesorios",
     "categoriaCorta": "Accesorio",
     "idioma": "",
-    "precio": 1500,
+    "precio": 2000,
     "stock": 1,
     "vendidos": 0,
     "orden": 15,
@@ -348,7 +360,8 @@
     "fotos": [
       "/productos/energia-planta.webp"
     ],
-    "descripcion": "Energía básica de tipo Planta para armar tu mazo."
+    "descripcion": "Energía básica de tipo Planta para armar tu mazo.",
+    "tipo": "Planta"
   },
   {
     "id": "C018",
@@ -365,7 +378,8 @@
     "fotos": [
       "/productos/energia-fuego.webp"
     ],
-    "descripcion": "Energía básica de tipo Fuego para armar tu mazo."
+    "descripcion": "Energía básica de tipo Fuego para armar tu mazo.",
+    "tipo": "Fuego"
   },
   {
     "id": "C019",
@@ -382,7 +396,8 @@
     "fotos": [
       "/productos/energia-agua.webp"
     ],
-    "descripcion": "Energía básica de tipo Agua para armar tu mazo."
+    "descripcion": "Energía básica de tipo Agua para armar tu mazo.",
+    "tipo": "Agua"
   },
   {
     "id": "C020",
@@ -399,7 +414,8 @@
     "fotos": [
       "/productos/energia-rayo.webp"
     ],
-    "descripcion": "Energía básica de tipo Rayo para armar tu mazo."
+    "descripcion": "Energía básica de tipo Rayo para armar tu mazo.",
+    "tipo": "Rayo"
   },
   {
     "id": "C021",
@@ -416,7 +432,8 @@
     "fotos": [
       "/productos/energia-psiquica.webp"
     ],
-    "descripcion": "Energía básica de tipo Psíquico para armar tu mazo."
+    "descripcion": "Energía básica de tipo Psíquico para armar tu mazo.",
+    "tipo": "Psíquico"
   },
   {
     "id": "C022",
@@ -433,7 +450,8 @@
     "fotos": [
       "/productos/energia-lucha.webp"
     ],
-    "descripcion": "Energía básica de tipo Lucha para armar tu mazo."
+    "descripcion": "Energía básica de tipo Lucha para armar tu mazo.",
+    "tipo": "Lucha"
   },
   {
     "id": "C023",
@@ -450,7 +468,8 @@
     "fotos": [
       "/productos/energia-oscura.webp"
     ],
-    "descripcion": "Energía básica de tipo Oscuro para armar tu mazo."
+    "descripcion": "Energía básica de tipo Oscuro para armar tu mazo.",
+    "tipo": "Oscuro"
   },
   {
     "id": "C024",
@@ -467,7 +486,8 @@
     "fotos": [
       "/productos/energia-metalica.webp"
     ],
-    "descripcion": "Energía básica de tipo Metálico para armar tu mazo."
+    "descripcion": "Energía básica de tipo Metálico para armar tu mazo.",
+    "tipo": "Metálico"
   },
   {
     "id": "C025",
@@ -507,7 +527,8 @@
       "numero": "005",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Planta"
   },
   {
     "id": "C027",
@@ -530,7 +551,8 @@
       "numero": "006",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Planta"
   },
   {
     "id": "C028",
@@ -553,7 +575,8 @@
       "numero": "007",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Planta"
   },
   {
     "id": "C029",
@@ -576,7 +599,8 @@
       "numero": "008",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Planta"
   },
   {
     "id": "C030",
@@ -599,7 +623,8 @@
       "numero": "011",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Fuego"
   },
   {
     "id": "C031",
@@ -622,7 +647,8 @@
       "numero": "012",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Fuego"
   },
   {
     "id": "C032",
@@ -645,7 +671,8 @@
       "numero": "013",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Fuego"
   },
   {
     "id": "C033",
@@ -668,7 +695,8 @@
       "numero": "014",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Fuego"
   },
   {
     "id": "C034",
@@ -691,7 +719,8 @@
       "numero": "016",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Agua"
   },
   {
     "id": "C035",
@@ -714,7 +743,8 @@
       "numero": "017",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Agua"
   },
   {
     "id": "C036",
@@ -737,7 +767,8 @@
       "numero": "018",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Agua"
   },
   {
     "id": "C037",
@@ -760,7 +791,8 @@
       "numero": "020",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Agua"
   },
   {
     "id": "C038",
@@ -783,7 +815,8 @@
       "numero": "022",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Agua"
   },
   {
     "id": "C039",
@@ -806,7 +839,8 @@
       "numero": "024",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Rayo"
   },
   {
     "id": "C040",
@@ -829,7 +863,8 @@
       "numero": "037",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Rayo"
   },
   {
     "id": "C041",
@@ -852,7 +887,8 @@
       "numero": "039",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Rayo"
   },
   {
     "id": "C042",
@@ -875,7 +911,8 @@
       "numero": "049",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Rayo"
   },
   {
     "id": "C043",
@@ -898,7 +935,8 @@
       "numero": "055",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Rayo"
   },
   {
     "id": "C044",
@@ -921,7 +959,8 @@
       "numero": "056",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Rayo"
   },
   {
     "id": "C045",
@@ -944,7 +983,8 @@
       "numero": "057",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Rayo"
   },
   {
     "id": "C046",
@@ -967,7 +1007,8 @@
       "numero": "058",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Rayo"
   },
   {
     "id": "C047",
@@ -990,7 +1031,8 @@
       "numero": "059",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Rayo"
   },
   {
     "id": "C048",
@@ -1013,7 +1055,8 @@
       "numero": "062",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Rayo"
   },
   {
     "id": "C049",
@@ -1036,7 +1079,8 @@
       "numero": "063",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Psíquico"
   },
   {
     "id": "C050",
@@ -1059,7 +1103,8 @@
       "numero": "065",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Psíquico"
   },
   {
     "id": "C051",
@@ -1082,7 +1127,8 @@
       "numero": "067",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Psíquico"
   },
   {
     "id": "C052",
@@ -1105,7 +1151,8 @@
       "numero": "068",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Psíquico"
   },
   {
     "id": "C053",
@@ -1128,7 +1175,8 @@
       "numero": "069",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Psíquico"
   },
   {
     "id": "C054",
@@ -1151,7 +1199,8 @@
       "numero": "071",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Psíquico"
   },
   {
     "id": "C055",
@@ -1174,7 +1223,8 @@
       "numero": "072",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Psíquico"
   },
   {
     "id": "C056",
@@ -1197,7 +1247,8 @@
       "numero": "073",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Psíquico"
   },
   {
     "id": "C057",
@@ -1220,7 +1271,8 @@
       "numero": "074",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Psíquico"
   },
   {
     "id": "C058",
@@ -1243,7 +1295,8 @@
       "numero": "075",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Psíquico"
   },
   {
     "id": "C059",
@@ -1266,7 +1319,8 @@
       "numero": "076",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Psíquico"
   },
   {
     "id": "C060",
@@ -1289,7 +1343,8 @@
       "numero": "077",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Psíquico"
   },
   {
     "id": "C061",
@@ -1312,7 +1367,8 @@
       "numero": "078",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Psíquico"
   },
   {
     "id": "C062",
@@ -1335,7 +1391,8 @@
       "numero": "079",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Psíquico"
   },
   {
     "id": "C063",
@@ -1358,7 +1415,8 @@
       "numero": "080",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Psíquico"
   },
   {
     "id": "C064",
@@ -1381,7 +1439,8 @@
       "numero": "081",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Psíquico"
   },
   {
     "id": "C065",
@@ -1404,7 +1463,8 @@
       "numero": "082",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Lucha"
   },
   {
     "id": "C066",
@@ -1427,7 +1487,8 @@
       "numero": "087",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Oscuro"
   },
   {
     "id": "C067",
@@ -1450,7 +1511,8 @@
       "numero": "088",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Oscuro"
   },
   {
     "id": "C068",
@@ -1473,7 +1535,8 @@
       "numero": "089",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Oscuro"
   },
   {
     "id": "C069",
@@ -1496,7 +1559,8 @@
       "numero": "091",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Oscuro"
   },
   {
     "id": "C070",
@@ -1519,7 +1583,8 @@
       "numero": "093",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Oscuro"
   },
   {
     "id": "C071",
@@ -1542,7 +1607,8 @@
       "numero": "094",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Oscuro"
   },
   {
     "id": "C072",
@@ -1565,7 +1631,8 @@
       "numero": "095",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Oscuro"
   },
   {
     "id": "C073",
@@ -1588,7 +1655,8 @@
       "numero": "096",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Oscuro"
   },
   {
     "id": "C074",
@@ -1611,7 +1679,8 @@
       "numero": "097",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Oscuro"
   },
   {
     "id": "C075",
@@ -1634,7 +1703,8 @@
       "numero": "099",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Oscuro"
   },
   {
     "id": "C076",
@@ -1657,7 +1727,8 @@
       "numero": "101",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Metálico"
   },
   {
     "id": "C077",
@@ -1680,7 +1751,8 @@
       "numero": "105",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Metálico"
   },
   {
     "id": "C078",
@@ -1703,7 +1775,8 @@
       "numero": "108",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Metálico"
   },
   {
     "id": "C079",
@@ -1726,7 +1799,8 @@
       "numero": "109",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Dragón"
   },
   {
     "id": "C080",
@@ -1749,7 +1823,8 @@
       "numero": "110",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Dragón"
   },
   {
     "id": "C081",
@@ -1772,7 +1847,8 @@
       "numero": "111",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Dragón"
   },
   {
     "id": "C082",
@@ -1795,7 +1871,8 @@
       "numero": "113",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Incoloro"
   },
   {
     "id": "C083",
@@ -1818,7 +1895,8 @@
       "numero": "117",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Incoloro"
   },
   {
     "id": "C084",
@@ -1841,7 +1919,8 @@
       "numero": "118",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Incoloro"
   },
   {
     "id": "C085",
@@ -1864,7 +1943,8 @@
       "numero": "119",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Incoloro"
   },
   {
     "id": "C086",
@@ -1887,7 +1967,8 @@
       "numero": "120",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Incoloro"
   },
   {
     "id": "C087",
@@ -1910,7 +1991,8 @@
       "numero": "121",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Incoloro"
   },
   {
     "id": "C088",
@@ -1933,7 +2015,8 @@
       "numero": "122",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Incoloro"
   },
   {
     "id": "C089",
@@ -1956,7 +2039,8 @@
       "numero": "124",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Incoloro"
   },
   {
     "id": "C090",
@@ -1979,7 +2063,8 @@
       "numero": "125",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Incoloro"
   },
   {
     "id": "C091",
@@ -2025,7 +2110,8 @@
       "numero": "002",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Planta"
   },
   {
     "id": "C093",
@@ -2048,7 +2134,8 @@
       "numero": "003",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Planta"
   },
   {
     "id": "C094",
@@ -2071,7 +2158,8 @@
       "numero": "006",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Planta"
   },
   {
     "id": "C095",
@@ -2094,7 +2182,8 @@
       "numero": "007",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Planta"
   },
   {
     "id": "C096",
@@ -2117,7 +2206,8 @@
       "numero": "008",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Planta"
   },
   {
     "id": "C097",
@@ -2140,7 +2230,8 @@
       "numero": "009",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Planta"
   },
   {
     "id": "C098",
@@ -2163,7 +2254,8 @@
       "numero": "010",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Planta"
   },
   {
     "id": "C099",
@@ -2186,7 +2278,8 @@
       "numero": "012",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Planta"
   },
   {
     "id": "C100",
@@ -2209,7 +2302,8 @@
       "numero": "015",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Planta"
   },
   {
     "id": "C101",
@@ -2232,7 +2326,8 @@
       "numero": "017",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Planta"
   },
   {
     "id": "C102",
@@ -2255,7 +2350,8 @@
       "numero": "018",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Fuego"
   },
   {
     "id": "C103",
@@ -2278,7 +2374,8 @@
       "numero": "020",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Fuego"
   },
   {
     "id": "C104",
@@ -2301,7 +2398,8 @@
       "numero": "022",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Fuego"
   },
   {
     "id": "C105",
@@ -2324,7 +2422,8 @@
       "numero": "024",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Fuego"
   },
   {
     "id": "C106",
@@ -2347,7 +2446,8 @@
       "numero": "028",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Agua"
   },
   {
     "id": "C107",
@@ -2370,7 +2470,8 @@
       "numero": "031",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Rayo"
   },
   {
     "id": "C108",
@@ -2393,7 +2494,8 @@
       "numero": "032",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Rayo"
   },
   {
     "id": "C109",
@@ -2416,7 +2518,8 @@
       "numero": "034",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Rayo"
   },
   {
     "id": "C110",
@@ -2439,7 +2542,8 @@
       "numero": "035",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Rayo"
   },
   {
     "id": "C111",
@@ -2462,7 +2566,8 @@
       "numero": "037",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Rayo"
   },
   {
     "id": "C112",
@@ -2485,7 +2590,8 @@
       "numero": "038",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Rayo"
   },
   {
     "id": "C113",
@@ -2508,7 +2614,8 @@
       "numero": "039",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Rayo"
   },
   {
     "id": "C114",
@@ -2531,7 +2638,8 @@
       "numero": "040",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Rayo"
   },
   {
     "id": "C115",
@@ -2554,7 +2662,8 @@
       "numero": "042",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Rayo"
   },
   {
     "id": "C116",
@@ -2577,7 +2686,8 @@
       "numero": "043",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Psíquico"
   },
   {
     "id": "C117",
@@ -2600,7 +2710,8 @@
       "numero": "044",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Psíquico"
   },
   {
     "id": "C118",
@@ -2623,7 +2734,8 @@
       "numero": "048",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Psíquico"
   },
   {
     "id": "C119",
@@ -2646,7 +2758,8 @@
       "numero": "049",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Lucha"
   },
   {
     "id": "C120",
@@ -2669,7 +2782,8 @@
       "numero": "050",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Lucha"
   },
   {
     "id": "C121",
@@ -2692,7 +2806,8 @@
       "numero": "054",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Lucha"
   },
   {
     "id": "C122",
@@ -2715,7 +2830,8 @@
       "numero": "059",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Oscuro"
   },
   {
     "id": "C123",
@@ -2738,7 +2854,8 @@
       "numero": "064",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Oscuro"
   },
   {
     "id": "C124",
@@ -2761,7 +2878,8 @@
       "numero": "066",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Oscuro"
   },
   {
     "id": "C125",
@@ -2784,7 +2902,8 @@
       "numero": "068",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Oscuro"
   },
   {
     "id": "C126",
@@ -2807,7 +2926,8 @@
       "numero": "072",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Dragón"
   },
   {
     "id": "C127",
@@ -2830,7 +2950,8 @@
       "numero": "074",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Dragón"
   },
   {
     "id": "C128",
@@ -2853,7 +2974,8 @@
       "numero": "077",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Incoloro"
   },
   {
     "id": "C129",
@@ -2876,7 +2998,8 @@
       "numero": "078",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Incoloro"
   },
   {
     "id": "C130",
@@ -2899,7 +3022,8 @@
       "numero": "079",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Incoloro"
   },
   {
     "id": "C131",
@@ -2922,7 +3046,8 @@
       "numero": "087",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Incoloro"
   },
   {
     "id": "C132",
@@ -3083,7 +3208,8 @@
       "numero": "001",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Planta"
   },
   {
     "id": "C139",
@@ -3106,7 +3232,8 @@
       "numero": "009",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Fuego"
   },
   {
     "id": "C140",
@@ -3129,7 +3256,8 @@
       "numero": "013",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Agua"
   },
   {
     "id": "C141",
@@ -3152,7 +3280,8 @@
       "numero": "021",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Agua"
   },
   {
     "id": "C142",
@@ -3175,7 +3304,8 @@
       "numero": "022",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Agua"
   },
   {
     "id": "C143",
@@ -3198,7 +3328,8 @@
       "numero": "028",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Rayo"
   },
   {
     "id": "C144",
@@ -3221,7 +3352,8 @@
       "numero": "029",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Psíquico"
   },
   {
     "id": "C145",
@@ -3244,7 +3376,8 @@
       "numero": "030",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Psíquico"
   },
   {
     "id": "C146",
@@ -3267,7 +3400,8 @@
       "numero": "033",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Psíquico"
   },
   {
     "id": "C147",
@@ -3290,7 +3424,8 @@
       "numero": "036",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Psíquico"
   },
   {
     "id": "C148",
@@ -3313,7 +3448,8 @@
       "numero": "037",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Psíquico"
   },
   {
     "id": "C149",
@@ -3336,7 +3472,8 @@
       "numero": "039",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Psíquico"
   },
   {
     "id": "C150",
@@ -3359,7 +3496,8 @@
       "numero": "040",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Psíquico"
   },
   {
     "id": "C151",
@@ -3382,7 +3520,8 @@
       "numero": "041",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Psíquico"
   },
   {
     "id": "C152",
@@ -3405,7 +3544,8 @@
       "numero": "042",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Lucha"
   },
   {
     "id": "C153",
@@ -3428,7 +3568,8 @@
       "numero": "044",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Lucha"
   },
   {
     "id": "C154",
@@ -3451,7 +3592,8 @@
       "numero": "049",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Oscuro"
   },
   {
     "id": "C155",
@@ -3474,7 +3616,8 @@
       "numero": "052",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Oscuro"
   },
   {
     "id": "C156",
@@ -3497,7 +3640,8 @@
       "numero": "054",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Oscuro"
   },
   {
     "id": "C157",
@@ -3520,7 +3664,8 @@
       "numero": "058",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Oscuro"
   },
   {
     "id": "C158",
@@ -3543,7 +3688,8 @@
       "numero": "059",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Oscuro"
   },
   {
     "id": "C159",
@@ -3566,7 +3712,8 @@
       "numero": "066",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Incoloro"
   },
   {
     "id": "C160",
@@ -3589,7 +3736,8 @@
       "numero": "068",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Incoloro"
   },
   {
     "id": "C161",
@@ -3612,7 +3760,8 @@
       "numero": "069",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Incoloro"
   },
   {
     "id": "C162",
@@ -3704,7 +3853,8 @@
       "numero": "011",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Fuego"
   },
   {
     "id": "C166",
@@ -3727,7 +3877,8 @@
       "numero": "016",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Agua"
   },
   {
     "id": "C167",
@@ -3750,7 +3901,8 @@
       "numero": "018",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Agua"
   },
   {
     "id": "C168",
@@ -3773,7 +3925,8 @@
       "numero": "021",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Agua"
   },
   {
     "id": "C169",
@@ -3796,7 +3949,8 @@
       "numero": "024",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Agua"
   },
   {
     "id": "C170",
@@ -3819,7 +3973,8 @@
       "numero": "031",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Psíquico"
   },
   {
     "id": "C171",
@@ -3842,7 +3997,8 @@
       "numero": "034",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Psíquico"
   },
   {
     "id": "C172",
@@ -3865,7 +4021,8 @@
       "numero": "037",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Psíquico"
   },
   {
     "id": "C173",
@@ -3888,7 +4045,8 @@
       "numero": "038",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Psíquico"
   },
   {
     "id": "C174",
@@ -3911,7 +4069,8 @@
       "numero": "040",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Psíquico"
   },
   {
     "id": "C175",
@@ -3934,7 +4093,8 @@
       "numero": "043",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Lucha"
   },
   {
     "id": "C176",
@@ -3957,7 +4117,8 @@
       "numero": "047",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Lucha"
   },
   {
     "id": "C177",
@@ -3980,7 +4141,8 @@
       "numero": "053",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Oscuro"
   },
   {
     "id": "C178",
@@ -4003,7 +4165,8 @@
       "numero": "056",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Oscuro"
   },
   {
     "id": "C179",
@@ -4026,7 +4189,8 @@
       "numero": "057",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Oscuro"
   },
   {
     "id": "C180",
@@ -4049,7 +4213,8 @@
       "numero": "059",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Metálico"
   },
   {
     "id": "C181",
@@ -4072,7 +4237,8 @@
       "numero": "066",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Dragón"
   },
   {
     "id": "C182",
@@ -4095,7 +4261,8 @@
       "numero": "068",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Dragón"
   },
   {
     "id": "C183",
@@ -4210,7 +4377,8 @@
       "numero": "002",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Planta"
   },
   {
     "id": "C188",
@@ -4233,7 +4401,8 @@
       "numero": "003",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Planta"
   },
   {
     "id": "C189",
@@ -4256,7 +4425,8 @@
       "numero": "038",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Lucha"
   },
   {
     "id": "C190",
@@ -4325,7 +4495,8 @@
       "numero": "004",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Planta"
   },
   {
     "id": "C193",
@@ -4348,7 +4519,8 @@
       "numero": "092",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Psíquico"
   },
   {
     "id": "C194",
@@ -4371,7 +4543,8 @@
       "numero": "127",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Oscuro"
   },
   {
     "id": "C195",
@@ -4417,7 +4590,8 @@
       "numero": "002",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Planta"
   },
   {
     "id": "C197",
@@ -4440,7 +4614,8 @@
       "numero": "010",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Planta"
   },
   {
     "id": "C198",
@@ -4463,7 +4638,8 @@
       "numero": "015",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Fuego"
   },
   {
     "id": "C199",
@@ -4486,7 +4662,8 @@
       "numero": "018",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Agua"
   },
   {
     "id": "C200",
@@ -4509,7 +4686,8 @@
       "numero": "035",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Psíquico"
   },
   {
     "id": "C201",
@@ -4532,7 +4710,8 @@
       "numero": "036",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Psíquico"
   },
   {
     "id": "C202",
@@ -4555,7 +4734,8 @@
       "numero": "047",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Lucha"
   },
   {
     "id": "C203",
@@ -4578,7 +4758,8 @@
       "numero": "050",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Lucha"
   },
   {
     "id": "C204",
@@ -4601,7 +4782,8 @@
       "numero": "053",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Lucha"
   },
   {
     "id": "C205",
@@ -4624,7 +4806,8 @@
       "numero": "055",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Lucha"
   },
   {
     "id": "C206",
@@ -4647,7 +4830,8 @@
       "numero": "066",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Metálico"
   },
   {
     "id": "C207",
@@ -4670,7 +4854,8 @@
       "numero": "067",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Metálico"
   },
   {
     "id": "C208",
@@ -4693,7 +4878,8 @@
       "numero": "068",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Metálico"
   },
   {
     "id": "C209",
@@ -4716,7 +4902,8 @@
       "numero": "069",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Metálico"
   },
   {
     "id": "C210",
@@ -4739,7 +4926,8 @@
       "numero": "071",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Dragón"
   },
   {
     "id": "C211",
@@ -4762,7 +4950,8 @@
       "numero": "072",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Dragón"
   },
   {
     "id": "C212",
@@ -4785,7 +4974,8 @@
       "numero": "087",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Incoloro"
   },
   {
     "id": "C213",
@@ -4969,7 +5159,8 @@
       "numero": "010",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Agua"
   },
   {
     "id": "C221",
@@ -4992,7 +5183,8 @@
       "numero": "012",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Agua"
   },
   {
     "id": "C222",
@@ -5015,7 +5207,8 @@
       "numero": "016",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Agua"
   },
   {
     "id": "C223",
@@ -5038,7 +5231,8 @@
       "numero": "062",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Psíquico"
   },
   {
     "id": "C224",
@@ -5061,7 +5255,8 @@
       "numero": "069",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Lucha"
   },
   {
     "id": "C225",
@@ -5084,7 +5279,8 @@
       "numero": "071",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Lucha"
   },
   {
     "id": "C228",
@@ -5107,7 +5303,8 @@
       "numero": "095",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Incoloro"
   },
   {
     "id": "C230",
@@ -5130,7 +5327,8 @@
       "numero": "117",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Incoloro"
   },
   {
     "id": "C231",
@@ -5153,7 +5351,8 @@
       "numero": "001",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Planta"
   },
   {
     "id": "C232",
@@ -5176,7 +5375,8 @@
       "numero": "005",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Planta"
   },
   {
     "id": "C233",
@@ -5199,7 +5399,8 @@
       "numero": "019",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Fuego"
   },
   {
     "id": "C234",
@@ -5222,7 +5423,8 @@
       "numero": "026",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Agua"
   },
   {
     "id": "C235",
@@ -5245,7 +5447,8 @@
       "numero": "027",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Agua"
   },
   {
     "id": "C236",
@@ -5268,7 +5471,8 @@
       "numero": "041",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Rayo"
   },
   {
     "id": "C237",
@@ -5291,7 +5495,8 @@
       "numero": "045",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Psíquico"
   },
   {
     "id": "C238",
@@ -5314,7 +5519,8 @@
       "numero": "052",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Lucha"
   },
   {
     "id": "C239",
@@ -5337,7 +5543,8 @@
       "numero": "052",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Lucha"
   },
   {
     "id": "C240",
@@ -5360,7 +5567,8 @@
       "numero": "053",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Lucha"
   },
   {
     "id": "C241",
@@ -5383,7 +5591,8 @@
       "numero": "057",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Oscuro"
   },
   {
     "id": "C242",
@@ -5406,7 +5615,8 @@
       "numero": "060",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Oscuro"
   },
   {
     "id": "C243",
@@ -5429,7 +5639,8 @@
       "numero": "063",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Oscuro"
   },
   {
     "id": "C244",
@@ -5452,7 +5663,8 @@
       "numero": "067",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Oscuro"
   },
   {
     "id": "C245",
@@ -5475,7 +5687,8 @@
       "numero": "075",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Dragón"
   },
   {
     "id": "C246",
@@ -5498,7 +5711,8 @@
       "numero": "076",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Dragón"
   },
   {
     "id": "C247",
@@ -5521,7 +5735,8 @@
       "numero": "086",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Incoloro"
   },
   {
     "id": "C248",
@@ -5590,7 +5805,8 @@
       "numero": "124",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Incoloro"
   },
   {
     "id": "C251",
@@ -5613,7 +5829,8 @@
       "numero": "002",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Planta"
   },
   {
     "id": "C252",
@@ -5636,7 +5853,8 @@
       "numero": "003",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Planta"
   },
   {
     "id": "C253",
@@ -5659,7 +5877,8 @@
       "numero": "012",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Fuego"
   },
   {
     "id": "C254",
@@ -5682,7 +5901,8 @@
       "numero": "018",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Agua"
   },
   {
     "id": "C255",
@@ -5705,7 +5925,8 @@
       "numero": "020",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Agua"
   },
   {
     "id": "C256",
@@ -5728,7 +5949,8 @@
       "numero": "023",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Rayo"
   },
   {
     "id": "C257",
@@ -5751,7 +5973,8 @@
       "numero": "024",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Rayo"
   },
   {
     "id": "C258",
@@ -5774,7 +5997,8 @@
       "numero": "025",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Rayo"
   },
   {
     "id": "C259",
@@ -5797,7 +6021,8 @@
       "numero": "026",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Rayo"
   },
   {
     "id": "C260",
@@ -5820,7 +6045,8 @@
       "numero": "032",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Psíquico"
   },
   {
     "id": "C261",
@@ -5843,7 +6069,8 @@
       "numero": "034",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Psíquico"
   },
   {
     "id": "C262",
@@ -5866,7 +6093,8 @@
       "numero": "045",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Lucha"
   },
   {
     "id": "C263",
@@ -5889,7 +6117,8 @@
       "numero": "050",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Oscuro"
   },
   {
     "id": "C264",
@@ -5912,7 +6141,8 @@
       "numero": "051",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Oscuro"
   },
   {
     "id": "C265",
@@ -5935,7 +6165,8 @@
       "numero": "053",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Oscuro"
   },
   {
     "id": "C266",
@@ -5958,7 +6189,8 @@
       "numero": "057",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Oscuro"
   },
   {
     "id": "C267",
@@ -5981,7 +6213,8 @@
       "numero": "060",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Metálico"
   },
   {
     "id": "C268",
@@ -6004,7 +6237,8 @@
       "numero": "061",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Metálico"
   },
   {
     "id": "C269",
@@ -6027,7 +6261,8 @@
       "numero": "062",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Metálico"
   },
   {
     "id": "C270",
@@ -6050,7 +6285,8 @@
       "numero": "063",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Metálico"
   },
   {
     "id": "C271",
@@ -6073,7 +6309,8 @@
       "numero": "064",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Metálico"
   },
   {
     "id": "C272",
@@ -6096,7 +6333,8 @@
       "numero": "067",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Incoloro"
   },
   {
     "id": "C273",
@@ -6257,7 +6495,8 @@
       "numero": "086",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Fuego"
   },
   {
     "id": "C280",
@@ -6280,7 +6519,8 @@
       "numero": "090",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Psíquico"
   },
   {
     "id": "C281",
@@ -6303,7 +6543,8 @@
       "numero": "001",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Planta"
   },
   {
     "id": "C282",
@@ -6326,7 +6567,8 @@
       "numero": "002",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Planta"
   },
   {
     "id": "C283",
@@ -6349,7 +6591,8 @@
       "numero": "004",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Planta"
   },
   {
     "id": "C284",
@@ -6372,7 +6615,8 @@
       "numero": "005",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Planta"
   },
   {
     "id": "C285",
@@ -6395,7 +6639,8 @@
       "numero": "006",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Planta"
   },
   {
     "id": "C286",
@@ -6418,7 +6663,8 @@
       "numero": "007",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Planta"
   },
   {
     "id": "C287",
@@ -6441,7 +6687,8 @@
       "numero": "014",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Fuego"
   },
   {
     "id": "C288",
@@ -6464,7 +6711,8 @@
       "numero": "019",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Agua"
   },
   {
     "id": "C289",
@@ -6487,7 +6735,8 @@
       "numero": "039",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Psíquico"
   },
   {
     "id": "C290",
@@ -6510,7 +6759,8 @@
       "numero": "044",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Lucha"
   },
   {
     "id": "C291",
@@ -6533,7 +6783,8 @@
       "numero": "049",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Oscuro"
   },
   {
     "id": "C292",
@@ -6556,7 +6807,8 @@
       "numero": "058",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Oscuro"
   },
   {
     "id": "C293",
@@ -6579,7 +6831,8 @@
       "numero": "060",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Metálico"
   },
   {
     "id": "C294",
@@ -6602,7 +6855,8 @@
       "numero": "062",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Metálico"
   },
   {
     "id": "C295",
@@ -6625,7 +6879,8 @@
       "numero": "070",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Incoloro"
   },
   {
     "id": "C296",
@@ -6648,7 +6903,8 @@
       "numero": "072",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Incoloro"
   },
   {
     "id": "C297",
@@ -6694,7 +6950,8 @@
       "numero": "025",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Agua"
   },
   {
     "id": "C299",
@@ -6717,7 +6974,8 @@
       "numero": "018",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Planta"
   },
   {
     "id": "C300",
@@ -6740,7 +6998,8 @@
       "numero": "029",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Fuego"
   },
   {
     "id": "C301",
@@ -6763,7 +7022,8 @@
       "numero": "106",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Lucha"
   },
   {
     "id": "C302",
@@ -6786,7 +7046,8 @@
       "numero": "123",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Oscuro"
   },
   {
     "id": "C303",
@@ -6809,7 +7070,8 @@
       "numero": "138",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Oscuro"
   },
   {
     "id": "C304",
@@ -6832,7 +7094,8 @@
       "numero": "147",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Metálico"
   },
   {
     "id": "C305",
@@ -6855,7 +7118,8 @@
       "numero": "165",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Incoloro"
   },
   {
     "id": "C306",
@@ -6878,7 +7142,8 @@
       "numero": "177",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Incoloro"
   },
   {
     "id": "C307",
@@ -6924,7 +7189,8 @@
       "numero": "003",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Planta"
   },
   {
     "id": "C309",
@@ -6947,7 +7213,8 @@
       "numero": "004",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Planta"
   },
   {
     "id": "C310",
@@ -6970,7 +7237,8 @@
       "numero": "007",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Planta"
   },
   {
     "id": "C311",
@@ -6993,7 +7261,8 @@
       "numero": "009",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Planta"
   },
   {
     "id": "C312",
@@ -7016,7 +7285,8 @@
       "numero": "013",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Fuego"
   },
   {
     "id": "C313",
@@ -7039,7 +7309,8 @@
       "numero": "016",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Fuego"
   },
   {
     "id": "C314",
@@ -7062,7 +7333,8 @@
       "numero": "019",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Agua"
   },
   {
     "id": "C315",
@@ -7085,7 +7357,8 @@
       "numero": "020",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Agua"
   },
   {
     "id": "C316",
@@ -7108,7 +7381,8 @@
       "numero": "040",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Psíquico"
   },
   {
     "id": "C317",
@@ -7131,7 +7405,8 @@
       "numero": "057",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Lucha"
   },
   {
     "id": "C318",
@@ -7154,7 +7429,8 @@
       "numero": "070",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Metálico"
   },
   {
     "id": "C319",
@@ -7177,7 +7453,8 @@
       "numero": "071",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Dragón"
   },
   {
     "id": "C320",
@@ -7200,7 +7477,8 @@
       "numero": "074",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Incoloro"
   },
   {
     "id": "C321",
@@ -7223,7 +7501,8 @@
       "numero": "077",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Incoloro"
   },
   {
     "id": "C322",
@@ -7246,7 +7525,8 @@
       "numero": "078",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Incoloro"
   },
   {
     "id": "C323",
@@ -7269,6 +7549,7 @@
       "numero": "088",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Oscuro"
   }
 ]

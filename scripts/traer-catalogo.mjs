@@ -177,6 +177,42 @@ function datosDeCarta(nombre) {
   };
 }
 
+const TIPOS = "Planta|Fuego|Agua|Rayo|Psíquico|Lucha|Oscuro|Metálico|Dragón|Incoloro|Hada";
+const TIPO_EN_DESCRIPCION = new RegExp(`\\btipo (${TIPOS})\\b`);
+const TIPO_DE_ENERGIA = {
+  Planta: "Planta",
+  Fuego: "Fuego",
+  Agua: "Agua",
+  Rayo: "Rayo",
+  Psíquica: "Psíquico",
+  Lucha: "Lucha",
+  Oscura: "Oscuro",
+  Metálica: "Metálico",
+};
+// Cartas de antes del control cuya descripción no dice el tipo (revisado en TCGplayer).
+const TIPO_A_MANO = {
+  "Rotom #197 (Destined Rivals)": "Rayo",
+  "Eevee ex #174 (Promo)": "Incoloro",
+  "Nidorina #101 (Promo)": "Oscuro",
+  "Sylveon ex #100 (Promo)": "Psíquico",
+  "Mew ex #066 (30th Celebration)": "Psíquico",
+  "Umbreon ex #60 (Prismatic Evolutions)": "Oscuro",
+  "Solgaleo GX #158 (Chinese 30th Celebration)": "Metálico",
+  "Greninja BREAK #41 (30th Celebration)": "Agua",
+  "Rayquaza EX #85 (30th Celebration)": "Dragón",
+  "Pikachu ex #150 (30th Celebration)": "Rayo",
+  "Espeon V #513 (Chinese Gem Pack 2)": "Psíquico",
+  "Altaria GX #96 (Chinese CSM1cC)": "Dragón",
+};
+
+/** Tipo de energía: de las energías básicas por su nombre y de las cartas por su descripción. */
+export function tipoDe(nombre, descripcion, carta) {
+  const energia = nombre.match(/^Energía (\S+)$/);
+  if (energia) return TIPO_DE_ENERGIA[energia[1]];
+  if (!carta) return undefined;
+  return TIPO_A_MANO[nombre] ?? descripcion.match(TIPO_EN_DESCRIPCION)?.[1];
+}
+
 function descripcionDe(producto, carta) {
   if (carta?.coleccion && carta.numero) {
     return `Carta de la colección ${carta.coleccion}, número ${carta.numero}.`;
@@ -250,6 +286,8 @@ export function armarCatalogo(textoCsv, fotos) {
     if (fotosFinales.length === 0) {
       avisos.push(`${grupo.nombre}: todavía no tiene foto.`);
     }
+    const descripcion = ultimo("Descripción") || descripcionDe(categoria, carta);
+    const tipo = tipoDe(grupo.nombre, descripcion, carta);
 
     return [
       {
@@ -273,9 +311,10 @@ export function armarCatalogo(textoCsv, fotos) {
         ),
         orden: grupo.orden,
         fotos: fotosFinales,
-        descripcion: ultimo("Descripción") || descripcionDe(categoria, carta),
+        descripcion,
         ...(llegada ? { llegada } : {}),
         ...(carta ? { carta } : {}),
+        ...(tipo ? { tipo } : {}),
       },
     ];
   });

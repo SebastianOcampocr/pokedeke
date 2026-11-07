@@ -8,6 +8,7 @@ import {
   PrecioYStock,
 } from "@/components/DetalleProducto";
 import { Cuenta } from "@/components/Cuenta";
+import { IconoTipo } from "@/components/IconoTipo";
 import { Calcomania, RejillaProductos } from "@/components/TarjetaProducto";
 import { VistosRecientes } from "@/components/VistosRecientes";
 import { colones, fechaCorta } from "@/lib/formato";
@@ -94,16 +95,21 @@ async function ContenidoProducto({
         </div>
 
         <div className="flex flex-col gap-2">
-          <p className="text-sm font-medium">
+          <p className="flex flex-wrap items-center gap-x-1.5 text-sm font-medium">
             <Link
               href={`/catalogo?categoria=${encodeURIComponent(producto.categoria)}`}
               className="underline underline-offset-2"
             >
               {producto.categoriaCorta}
             </Link>
-            {!producto.idioma || producto.idioma === "Otro"
-              ? null
-              : ` · ${producto.idioma}`}
+            {!producto.idioma || producto.idioma === "Otro" ? null : (
+              <span>· {producto.idioma}</span>
+            )}
+            {producto.tipo ? (
+              <span className="inline-flex items-center gap-1">
+                · <IconoTipo tipo={producto.tipo} tamano={20} /> {producto.tipo}
+              </span>
+            ) : null}
           </p>
           <h1 className="font-display text-3xl leading-[1.05] text-azul lg:text-[42px]">
             {producto.nombre}

@@ -32,7 +32,25 @@ export type Producto = {
     rareza: string;
     condicion: string;
   };
+  /** Tipo de energía del Pokémon, o de la energía básica. Los Entrenadores no tienen. */
+  tipo?: TipoEnergia;
 };
+
+export const TIPOS_ENERGIA = [
+  "Planta",
+  "Fuego",
+  "Agua",
+  "Rayo",
+  "Psíquico",
+  "Lucha",
+  "Oscuro",
+  "Metálico",
+  "Dragón",
+  "Incoloro",
+  "Hada",
+] as const;
+
+export type TipoEnergia = (typeof TIPOS_ENERGIA)[number];
 
 /**
  * Todo el inventario sale de la pestaña "Catálogo web" de la hoja de Google.

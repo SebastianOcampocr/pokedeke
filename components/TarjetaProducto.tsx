@@ -14,6 +14,7 @@ import { AgregarRapido } from "./AgregarRapido";
 import { BotonAvisame } from "./BotonAvisame";
 import { BotonFavorito } from "./BotonFavorito";
 import { FotoProducto } from "./FotoProducto";
+import { IconoTipo } from "./IconoTipo";
 import { Revelar } from "./Revelar";
 
 export function Calcomania({ producto: guardado }: { producto: Producto }) {
@@ -149,6 +150,12 @@ export function TarjetaProducto({
           nombre={producto.nombre}
           className="absolute -top-1.5 -left-1.5 z-[3]"
         />
+        {producto.tipo ? (
+          <IconoTipo
+            tipo={producto.tipo}
+            className="absolute -right-1.5 -bottom-1.5 z-[3]"
+          />
+        ) : null}
       </div>
       <div className="flex min-w-0 grow flex-col gap-0.5">
         <span
