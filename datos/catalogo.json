@@ -7649,7 +7649,7 @@
     "categoria": "Blister / sleeved booster",
     "categoriaCorta": "Blister",
     "idioma": "Inglés",
-    "precio": 15000,
+    "precio": 12500,
     "stock": 7,
     "vendidos": 0,
     "orden": 329,
@@ -7657,5 +7657,56 @@
       "/productos/blister-3-sobres-delta-reign.webp"
     ],
     "descripcion": "Blister de Mega Evolution: Delta Reign, en inglés. Trae 3 sobres de Delta Reign y la carta promo de Seel."
+  },
+  {
+    "id": "C330",
+    "slug": "poster-collection-30th-celebration",
+    "nombre": "Poster Collection 30th Celebration",
+    "juego": "Pokémon",
+    "categoria": "Tin o caja de colección",
+    "categoriaCorta": "Tin",
+    "idioma": "Inglés",
+    "precio": 16000,
+    "stock": 3,
+    "vendidos": 0,
+    "orden": 330,
+    "fotos": [
+      "/productos/poster-collection-30th-celebration.webp"
+    ],
+    "descripcion": "Poster Collection de 30th Celebration, en inglés. Trae cartas promo de Articuno, Zapdos y Moltres, un póster de Pikachu y sobres de 30th Celebration."
+  },
+  {
+    "id": "C331",
+    "slug": "greninja-ex-box-30th-celebration",
+    "nombre": "Greninja ex Box 30th Celebration",
+    "juego": "Pokémon",
+    "categoria": "Tin o caja de colección",
+    "categoriaCorta": "Tin",
+    "idioma": "Inglés",
+    "precio": 24000,
+    "stock": 3,
+    "vendidos": 0,
+    "orden": 331,
+    "fotos": [
+      "/productos/greninja-ex-box-30th-celebration.webp"
+    ],
+    "descripcion": "Caja ex de 30th Celebration, en inglés. Trae la carta promo de Greninja ex, la misma carta en tamaño gigante y sobres de 30th Celebration."
+  },
+  {
+    "id": "C332",
+    "slug": "sylveon-ex-box-30th-celebration",
+    "nombre": "Sylveon ex Box 30th Celebration",
+    "juego": "Pokémon",
+    "categoria": "Tin o caja de colección",
+    "categoriaCorta": "Tin",
+    "idioma": "Inglés",
+    "precio": 24000,
+    "stock": 3,
+    "vendidos": 0,
+    "orden": 332,
+    "fotos": [
+      "/productos/sylveon-ex-box-30th-celebration.webp"
+    ],
+    "descripcion": "Caja ex de 30th Celebration, en inglés. Trae la carta promo de Sylveon ex, la misma carta en tamaño gigante y sobres de 30th Celebration."
   }
 ]
