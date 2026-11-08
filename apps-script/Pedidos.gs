@@ -34,12 +34,13 @@ const CONFIG = {
   // Estos valores deben coincidir con lib/tienda.ts.
   envios: {
     correos: { nombre: "Correos de Costa Rica", pideDireccion: true },
-    // El cliente escribe la tienda en "Dirección". El envío no va en el SINPE.
+    // El cliente escribe la tienda en "Dirección". La tienda paga el envío al
+    // mandarlo; el monto varía, se le confirma por WhatsApp y se suma al mismo SINPE.
     "entre-tiendas": {
       nombre: "Envío entre tiendas",
       pideDireccion: false,
       pideTienda: true,
-      cobroAlRetirar: "₡500 a ₡600",
+      precioAparte: true,
     },
     "retiro-omni": { nombre: "Retiro en Edificio Omni", pideDireccion: false },
   },
@@ -568,7 +569,8 @@ function crearPedido(datos) {
   hoja(HOJAS.pedidos).appendRow(fila);
   olvidarStock();
 
-  const montos = resumenDeMontos(subtotal, descuento, cupon, costoEnvio, total, envio.cobroAlRetirar);
+  const montos = resumenDeMontos(subtotal, descuento, cupon, costoEnvio, total, envio.precioAparte);
+  const masEnvio = envio.precioAparte ? " más el envío" : "";
   const entrega = datosDeEntrega(envio, envio.nombre, ubicacion, direccion);
 
   avisar(
@@ -588,10 +590,10 @@ function crearPedido(datos) {
       "",
       "Subtotal: " + colones(subtotal),
       descuento ? "Descuento: " + colones(descuento) : "",
-      envio.cobroAlRetirar
-        ? "Envío: lo paga el cliente al retirar (" + envio.cobroAlRetirar + ")"
+      envio.precioAparte
+        ? "Envío: varía según la tienda. Confirmale el monto por WhatsApp; va en el mismo SINPE."
         : "Envío: " + colones(costoEnvio),
-      "Total a recibir por SINPE: " + colones(total),
+      "Total a recibir por SINPE: " + colones(total) + masEnvio,
       "",
       "Cuando el SINPE entre, cambiá el Estado a Pagado en la pestaña Pedidos web.",
     ],
@@ -601,7 +603,7 @@ function crearPedido(datos) {
       numero,
       fecha: fila[COL.fecha - 1],
       total,
-      rotuloTotal: "Total a recibir por SINPE",
+      rotuloTotal: envio.precioAparte ? "Productos (falta sumar el envío)" : "Total a recibir por SINPE",
       caja: datosDePago(numero, fila[COL.fecha - 1]),
       cliente: [
         ["Nombre", cliente],
@@ -613,12 +615,15 @@ function crearPedido(datos) {
         : entrega,
       lineas,
       resumen: montos,
-      pasos: [
+      pasos: (envio.precioAparte
+        ? ["Escribile por WhatsApp con el costo del envío entre tiendas. El SINPE debe ser " + colones(total) + " más ese envío."]
+        : []
+      ).concat([
         "Esperá el comprobante del cliente. Te llega en otro correo.",
         "Revisá en tu banco que entró el monto exacto, con " + numero + " en el detalle.",
         "Cambiá el Estado a Pagado en Pedidos web. La venta pasa sola a Ventas.",
         "Escribile por WhatsApp para coordinar la entrega.",
-      ],
+      ]),
       botones: botonesDelDueno(numero, whatsapp, cliente),
     }),
   );
@@ -634,7 +639,7 @@ function crearPedido(datos) {
     lineas: lineas.map(({ quedan, ...linea }) => linea),
     resumen,
     montos,
-    alRetirar: envio.cobroAlRetirar,
+    precioAparte: envio.precioAparte,
   });
 
   return { ok: true, numero, clave, subtotal, descuento, costoEnvio, total, lineas };
@@ -654,7 +659,7 @@ function datosDeEntrega(envio, nombre, ubicacion, direccion) {
     ["Método", nombre],
     ["Dirección", envio.pideDireccion ? ubicacion + ". " + direccion : ""],
     ["Tienda", envio.pideTienda ? direccion : ""],
-    ["Costo del envío", envio.cobroAlRetirar ? envio.cobroAlRetirar + ", se paga al retirar" : ""],
+    ["Costo del envío", envio.precioAparte ? "Varía según la tienda, se confirma por WhatsApp" : ""],
   ];
 }
 
@@ -687,6 +692,7 @@ function guardarComprobante(datos) {
   const numero = fila[COL.numero - 1];
   const cliente = fila[COL.cliente - 1];
   const detalle = leerDetalle(fila);
+  const aparte = envioPorNombre(fila[COL.envio - 1]).precioAparte;
   avisar(
     "Comprobante de " + numero + " · " + colones(fila[COL.total - 1]) + " · " + cliente,
     [
@@ -696,7 +702,7 @@ function guardarComprobante(datos) {
       "Cliente: " + cliente,
       "WhatsApp: " + fila[COL.whatsapp - 1],
       "Comprobante SINPE: " + comprobante,
-      "Monto que debió entrar: " + colones(fila[COL.total - 1]),
+      "Monto que debió entrar: " + colones(fila[COL.total - 1]) + (aparte ? " más el envío que le confirmaste" : ""),
       "",
       "Si entró, cambiá el Estado a Pagado en la pestaña Pedidos web.",
     ],
@@ -706,7 +712,7 @@ function guardarComprobante(datos) {
       numero,
       fecha: fila[COL.fecha - 1],
       total: fila[COL.total - 1],
-      rotuloTotal: "Monto que debió entrar",
+      rotuloTotal: aparte ? "Productos (más el envío que le confirmaste)" : "Monto que debió entrar",
       caja: datosDePago(numero, fila[COL.fecha - 1], comprobante),
       cliente: [
         ["Nombre", cliente],
@@ -715,7 +721,7 @@ function guardarComprobante(datos) {
       ],
       entrega: entregaDeFila(fila),
       lineas: detalle.lineas.map(({ quedan, ...linea }) => linea),
-      resumen: resumenDeMontos(detalle.subtotal, detalle.descuento, detalle.cupon, fila[COL.costoEnvio - 1], fila[COL.total - 1], envioPorNombre(fila[COL.envio - 1]).cobroAlRetirar),
+      resumen: resumenDeMontos(detalle.subtotal, detalle.descuento, detalle.cupon, fila[COL.costoEnvio - 1], fila[COL.total - 1], aparte),
       pasos: [
         "Revisá en tu banco que entró el monto exacto, con " + numero + " en el detalle. El número de comprobante solo no prueba el pago.",
         "Si entró, cambiá el Estado a Pagado en Pedidos web. La venta pasa sola a Ventas.",
@@ -795,12 +801,12 @@ function fechaLegible(fecha) {
   return Utilities.formatDate(new Date(fecha), libro().getSpreadsheetTimeZone(), "dd/MM/yyyy h:mm a");
 }
 
-/** `alRetirar` es el costo del envío que no va en el SINPE (envío entre tiendas). */
-function resumenDeMontos(subtotal, descuento, cupon, costoEnvio, total, alRetirar) {
+/** Con `aparte`, el envío se confirma por WhatsApp y no está en estos montos. */
+function resumenDeMontos(subtotal, descuento, cupon, costoEnvio, total, aparte) {
   return [
     ["Subtotal", colones(subtotal)],
     ["Cupón " + (cupon || ""), descuento ? "−" + colones(descuento) : ""],
-    ["Envío", alRetirar ? "Al retirar (" + alRetirar + ")" : costoEnvio ? colones(costoEnvio) : "Gratis"],
+    ["Envío", aparte ? "Se confirma por WhatsApp" : costoEnvio ? colones(costoEnvio) : "Gratis"],
     ["Total", colones(total)],
   ];
 }
@@ -940,16 +946,18 @@ function avisar(asunto, lineas, responderA, html) {
 }
 
 /** Las respuestas del cliente llegan al correo de la tienda. */
-function confirmarAlCliente({ correo, numero, fecha, total, cliente, whatsapp, entrega, lineas, resumen, montos, alRetirar }) {
+function confirmarAlCliente({ correo, numero, fecha, total, cliente, whatsapp, entrega, lineas, resumen, montos, precioAparte }) {
   const primerNombre = String(cliente).split(" ")[0];
-  const pasos = [
-    "Hacé el SINPE Móvil por el monto exacto, con " + numero + " en el detalle.",
+  const pasos = (precioAparte
+    ? [
+        "Esperá nuestro WhatsApp con el costo del envío entre tiendas.",
+        "Hacé un solo SINPE Móvil por los productos más el envío, con " + numero + " en el detalle.",
+      ]
+    : ["Hacé el SINPE Móvil por el monto exacto, con " + numero + " en el detalle."]
+  ).concat([
     "Escribí el número de comprobante en la página. Si ya la cerraste, respondé este correo con ese número.",
     "Cuando confirmemos el pago te llega otro correo y te escribimos por WhatsApp.",
-  ];
-  if (alRetirar) {
-    pasos.push("El envío entre tiendas (" + alRetirar + ") no va en el SINPE: lo pagás al retirar en la tienda.");
-  }
+  ]);
   mandarAlCliente({
     to: correo,
     subject: "Recibimos tu pedido " + numero + " · " + CONFIG.nombreTienda,
@@ -958,7 +966,9 @@ function confirmarAlCliente({ correo, numero, fecha, total, cliente, whatsapp, e
       "",
       resumen,
       "",
-      "Total a pagar: " + colones(total),
+      precioAparte
+        ? "Tus productos suman " + colones(total) + ". El envío entre tiendas te lo confirmamos por WhatsApp y va en el mismo SINPE."
+        : "Total a pagar: " + colones(total),
       "SINPE Móvil al " + CONFIG.sinpe + ", con " + numero + " en el detalle.",
       "Tus productos quedan apartados " + CONFIG.horasApartado + " horas.",
       "",
@@ -973,7 +983,7 @@ function confirmarAlCliente({ correo, numero, fecha, total, cliente, whatsapp, e
       numero,
       fecha,
       total,
-      rotuloTotal: "Total a pagar",
+      rotuloTotal: precioAparte ? "Tus productos suman (más el envío)" : "Total a pagar",
       caja: datosDePago(numero, fecha).filter(([rotulo]) => !rotulo.startsWith("Comprobante")),
       tituloCliente: "Tus datos",
       cliente: [
@@ -998,7 +1008,7 @@ function pasosTrasElPago(fila, lineas) {
     : envio.pideTienda
       ? [
           "Te escribimos por WhatsApp cuando lo enviemos a la tienda que nos dijiste.",
-          "Lo que tarda depende de la tienda. El envío (" + envio.cobroAlRetirar + ") lo pagás al retirar.",
+          "Lo que tarda depende de la tienda.",
         ]
       : [
           "Te escribimos por WhatsApp para confirmar la entrega.",
@@ -1019,13 +1029,14 @@ function confirmarPago(fila) {
   const total = fila[COL.total - 1];
   const detalle = leerDetalle(fila);
   const pasos = pasosTrasElPago(fila, detalle.lineas);
+  const aparte = envioPorNombre(fila[COL.envio - 1]).precioAparte;
   mandarAlCliente({
     to: correo,
     subject: "Pago confirmado de tu pedido " + numero + " · " + CONFIG.nombreTienda,
     body: [
       "¡Listo, " + primerNombre + "! Confirmamos tu pago del pedido " + numero + ".",
       "",
-      "Total pagado: " + colones(total),
+      aparte ? "Productos: " + colones(total) + ", más el envío que cuadramos por WhatsApp." : "Total pagado: " + colones(total),
       "",
       "Qué sigue:",
       ...pasos,
@@ -1038,14 +1049,14 @@ function confirmarPago(fila) {
       numero,
       fecha: fila[COL.fecha - 1],
       total,
-      rotuloTotal: "Total pagado",
+      rotuloTotal: aparte ? "Productos (el envío fue aparte)" : "Total pagado",
       caja: [
         ["Pagaste por", fila[COL.metodoPago - 1]],
         ["Comprobante", fila[COL.comprobante - 1]],
       ],
       entrega: entregaDeFila(fila),
       lineas: detalle.lineas.map(({ quedan, ...linea }) => linea),
-      resumen: resumenDeMontos(detalle.subtotal, detalle.descuento, detalle.cupon, fila[COL.costoEnvio - 1], total, envioPorNombre(fila[COL.envio - 1]).cobroAlRetirar),
+      resumen: resumenDeMontos(detalle.subtotal, detalle.descuento, detalle.cupon, fila[COL.costoEnvio - 1], total, aparte),
       pasos,
       botones: botonesDelCliente(numero),
       pie: "Si tenés alguna duda, respondé este correo o escribinos. Tus datos son solo para este pedido.",

@@ -165,9 +165,9 @@ function Confirmacion({
   const [enviado, setEnviado] = useState(false);
   const [enviando, setEnviando] = useState(false);
   const [error, setError] = useState("");
-  const cobroAlRetirar = ENVIOS.find(
+  const precioAparte = ENVIOS.find(
     (opcion) => opcion.nombre === pedido.envio,
-  )?.cobroAlRetirar;
+  )?.precioAparte;
 
   useEffect(() => lanzarConfeti(), []);
 
@@ -210,10 +210,18 @@ function Confirmacion({
       </div>
 
       <div className="marco flex flex-col gap-2 p-5">
-        <p className="font-bold">Hacé el SINPE Móvil por:</p>
+        <p className="font-bold">
+          {precioAparte ? "Tus productos suman:" : "Hacé el SINPE Móvil por:"}
+        </p>
         <p className="text-4xl font-extrabold text-azul">
           {colones(pedido.total)}
         </p>
+        {precioAparte ? (
+          <p className="font-bold">
+            Antes de pagar, esperá nuestro WhatsApp con el costo del envío entre
+            tiendas. Hacé un solo SINPE por los productos más el envío.
+          </p>
+        ) : null}
         {precioCambio ? (
           <p role="status" className="font-bold text-rojo">
             Los precios se actualizaron: este es el monto correcto.
@@ -223,12 +231,6 @@ function Confirmacion({
           Al número <strong>{TIENDA.sinpe}</strong>. En el detalle poné{" "}
           <strong>{pedido.numero}</strong>.
         </p>
-        {cobroAlRetirar ? (
-          <p className="text-sm leading-snug">
-            El {pedido.envio.toLowerCase()} ({cobroAlRetirar}) no va en este
-            monto: lo pagás al retirar en la tienda.
-          </p>
-        ) : null}
         {TIENDA_ABIERTA ? null : (
           <p className="text-sm text-gris">
             Esta página todavía es una demo: no pagués nada.
@@ -327,8 +329,8 @@ export function Pago() {
   );
   const faltaCanton = costoElegido === null && subtotal < ENVIO_GRATIS_DESDE;
 
-  function precioDeOpcion({ pideDireccion, cobroAlRetirar }: OpcionEnvio) {
-    if (cobroAlRetirar) return `${cobroAlRetirar}, al retirar`;
+  function precioDeOpcion({ pideDireccion, precioAparte }: OpcionEnvio) {
+    if (precioAparte) return precioAparte;
     if (!pideDireccion || subtotal >= ENVIO_GRATIS_DESDE) return "Gratis";
     return costoCorreos === null
       ? `Desde ${colones(TARIFA_CORREOS.gam.primerKilo)}`
@@ -474,11 +476,11 @@ export function Pago() {
             <div className="mt-2 flex flex-col gap-2">
               <Campo
                 id="tienda"
-                rotulo="¿A qué tienda te lo enviamos? Nombre de la tienda y lugar"
+                rotulo="¿A qué tienda te lo enviamos? Nombre de la tienda y la sucursal"
               />
               <p className="text-sm leading-snug text-gris">
-                El envío cuesta {envio.cobroAlRetirar} según la tienda y lo
-                pagás al retirar. No va en el SINPE.
+                El precio del envío varía según la tienda. Te escribimos por
+                WhatsApp con el monto y lo pagás en el mismo SINPE de tu pedido.
               </p>
             </div>
           ) : null}
@@ -557,8 +559,8 @@ export function Pago() {
           <Linea
             rotulo="Envío"
             monto={
-              envio.cobroAlRetirar
-                ? "Al retirar"
+              envio.precioAparte
+                ? "Por WhatsApp"
                 : faltaCanton
                   ? "Falta tu cantón"
                   : totales.envio === 0
@@ -567,6 +569,11 @@ export function Pago() {
             }
           />
           <Linea rotulo="Total" monto={colones(totales.total)} fuerte />
+          {envio.precioAparte ? (
+            <p className="text-sm leading-snug text-gris">
+              Más el envío, que te confirmamos por WhatsApp.
+            </p>
+          ) : null}
         </div>
         {error ? (
           <p role="alert" className="font-bold text-rojo">

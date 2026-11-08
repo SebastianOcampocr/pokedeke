@@ -114,7 +114,7 @@ const PASOS = [
   },
   {
     titulo: "Te llega",
-    texto: `Retirás en el ${LUGAR.nombre} o te lo mandamos por Correos.`,
+    texto: `Retirás en el ${LUGAR.nombre} o te lo mandamos por Correos o a la tienda que nos digás.`,
   },
 ];
 

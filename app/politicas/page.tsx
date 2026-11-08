@@ -43,9 +43,10 @@ export default function PaginaPoliticas() {
               tarifa de Correos, depende de tu cantón y del peso del pedido, y
               se muestra antes de confirmar. En compras desde ₡50 000, el envío
               por Correos va por nuestra cuenta. También hacemos envío entre
-              tiendas: nos decís a qué tienda lo mandamos, cuesta ₡500 a ₡600
-              según la tienda, no va en el SINPE y lo pagás al retirar. Lo que
-              tarda depende de la tienda.
+              tiendas: nos decís a qué tienda lo mandamos y te escribimos por
+              WhatsApp con el precio, que varía según la tienda. El envío se
+              paga en el mismo SINPE de los productos. Lo que tarda depende de
+              la tienda.
             </p>
             <p>
               Despachamos en 1 a 2 días hábiles después de confirmar el pago, y

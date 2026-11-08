@@ -34,8 +34,11 @@ export type OpcionEnvio = {
   pideDireccion: boolean;
   /** El cliente escribe a qué tienda se lo mandamos. */
   pideTienda?: boolean;
-  /** Si existe, el envío no entra en el SINPE: el cliente lo paga al retirar. */
-  cobroAlRetirar?: string;
+  /**
+   * Si existe, la página no calcula el envío: se cuadra por WhatsApp y se suma
+   * al mismo SINPE de los productos. Es el texto que se muestra como precio.
+   */
+  precioAparte?: string;
 };
 
 /** Deben coincidir con CONFIG.envios en apps-script/Pedidos.gs. */
@@ -49,10 +52,11 @@ export const ENVIOS: OpcionEnvio[] = [
   {
     id: "entre-tiendas",
     nombre: "Envío entre tiendas",
-    detalle: "Te lo mandamos a la tienda que nos digás. Tarda según la tienda",
+    detalle:
+      "Te lo mandamos a la tienda que nos digás. Precio y tiempo los cuadramos por WhatsApp",
     pideDireccion: false,
     pideTienda: true,
-    cobroAlRetirar: "₡500 a ₡600",
+    precioAparte: "El precio varía",
   },
   {
     id: "retiro-omni",

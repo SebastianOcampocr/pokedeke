@@ -159,8 +159,8 @@ async function ContenidoProducto({
                 >
                   <span>{envio.nombre}</span>
                   <span className="font-bold whitespace-nowrap">
-                    {envio.cobroAlRetirar
-                      ? `${envio.cobroAlRetirar}, al retirar`
+                    {envio.precioAparte
+                      ? envio.precioAparte
                       : envio.pideDireccion
                         ? `Desde ${colones(TARIFA_CORREOS.gam.primerKilo)}`
                         : "Gratis"}
