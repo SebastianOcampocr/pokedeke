@@ -146,7 +146,9 @@ export default function PaginaPoliticas() {
             </h2>
             <p>
               Los precios están en colones y vale el monto que ves al confirmar
-              tu pedido. El producto queda apartado por 24 horas desde que hacés
+              tu pedido. Algunos productos con mucha demanda y poca
+              disponibilidad cuestan más; hacemos lo posible por conseguirlos al
+              mejor precio. El producto queda apartado por 24 horas desde que hacés
               el pedido; si no se recibe el pago en ese plazo, el apartado se
               libera. El pedido se confirma cuando verificamos que el SINPE
               entró.

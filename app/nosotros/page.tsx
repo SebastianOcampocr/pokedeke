@@ -60,6 +60,11 @@ const PREGUNTAS = [
       "Son productos que casi no se consiguen en Costa Rica y que importamos para vos. Lo apartás pagando el 100% y se entrega después de la fecha que dice el producto. Hacemos todo lo posible por traerlo; si por algo no podemos, te devolvemos el 100% por SINPE Móvil a la misma cuenta. Si buscás algo que no está, pedilo en la sección de Estados Unidos y te lo cotizamos por WhatsApp.",
   },
   {
+    pregunta: "¿Por qué algunos productos cuestan más?",
+    respuesta:
+      "Productos como las Ultra Premium Collection, las ETB de Pokémon Center o algunas cartas casi no se consiguen y tienen mucha demanda, así que su precio está alto en todas partes, también en Estados Unidos. Hacemos lo posible por conseguirlos al mejor precio, y las cartas sueltas las comparamos con el precio de mercado de TCGplayer.",
+  },
+  {
     pregunta: "¿Solo venden Pokémon?",
     respuesta:
       "Por ahora sí, y le estamos poniendo toda la energía. One Piece, Magic y otros vienen en camino.",

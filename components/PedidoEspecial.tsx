@@ -34,6 +34,11 @@ export function AvisoPedidoEspecial({
           <li key={condicion}>{condicion}</li>
         ))}
       </ul>
+      <p className="mt-2 text-sm leading-snug text-gris">
+        Algunos cuestan más porque casi no se consiguen y tienen mucha demanda,
+        también en Estados Unidos. Hacemos lo posible por conseguirlos al mejor
+        precio.
+      </p>
     </div>
   );
 }
