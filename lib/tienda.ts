@@ -5,7 +5,8 @@ export const TIENDA = {
   nombre: "Pokedeke",
   sinpe: "8781-2831",
   whatsapp: "50687812831",
-  correo: "pokedekestore@gmail.com",
+  // Servicio al cliente: llega a la cuenta de la tienda por Cloudflare Email Routing.
+  correo: "sac@pokedeke.store",
   plazoPagoHoras: 24,
   adelantoPreventa: 0.5,
 };

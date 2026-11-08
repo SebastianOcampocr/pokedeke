@@ -104,6 +104,12 @@ export function PiePagina() {
             Cartas Pokémon en colones. Retiro en el {LUGAR.nombre}, San José,
             por Correos a todo el país o a la tienda que nos digás.
           </p>
+          <p className="text-[15px]">
+            Servicio al cliente:{" "}
+            <a href={`mailto:${TIENDA.correo}`} className="font-bold underline underline-offset-2">
+              {TIENDA.correo}
+            </a>
+          </p>
         </div>
         <nav aria-label="Ayuda" className="grid grid-cols-2 gap-x-8">
           <Link href="/nosotros" className="min-h-11 content-center underline-offset-4 hover:underline">

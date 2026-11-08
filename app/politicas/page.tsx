@@ -61,10 +61,17 @@ export default function PaginaPoliticas() {
               Cambios y devoluciones
             </h2>
             <p>
+              Antes de enviar cada pedido le tomamos fotos al producto y a cómo
+              va empacado, y te las mandamos por WhatsApp. Así queda claro en
+              qué estado salió, para vos y para nosotros.
+            </p>
+            <p>
               En compras por internet tenés 8 días hábiles desde que recibís el
               pedido para arrepentirte de la compra. El producto debe volver en
-              el mismo estado en que lo recibiste, y te devolvemos el monto por
-              SINPE Móvil.
+              el mismo estado en que lo recibiste, según esas fotos, y te
+              devolvemos el monto por SINPE Móvil en un plazo de 8 días hábiles
+              desde que nos llega. Si es por arrepentimiento, el envío de vuelta
+              corre por tu cuenta.
             </p>
             <p>
               Si tu producto llegó dañado o no es el que pediste,{" "}
@@ -77,13 +84,23 @@ export default function PaginaPoliticas() {
                 escribinos por WhatsApp
               </a>{" "}
               dentro de esos 8 días hábiles con fotos del empaque y del
-              producto. Te lo cambiamos o te devolvemos la plata.
+              producto. Te recomendamos grabar un video al abrir el paquete.
+              Te lo cambiamos o te devolvemos la plata, y el envío corre por
+              nuestra cuenta.
             </p>
             <ul>
-              <li>El producto sellado se acepta solo con el sello intacto.</li>
+              <li>
+                El producto sellado se acepta solo con el sello intacto. Los
+                sobres y cajas ya abiertos no se pueden devolver, porque no hay
+                forma de revisar su contenido.
+              </li>
               <li>
                 Las cartas sueltas deben volver en la misma condición en que
-                salieron.
+                salieron, según las fotos del envío.
+              </li>
+              <li>
+                No hacemos devoluciones ni ajustes por cambios en el precio de
+                mercado de una carta después de la compra.
               </li>
               <li>
                 Si una preventa se cancela o se atrasa más de 30 días, te
@@ -154,7 +171,11 @@ export default function PaginaPoliticas() {
             <p>
               Según la Ley 8968 de Protección de la Persona frente al
               Tratamiento de sus Datos Personales, podés pedir que te mostremos,
-              corrijamos o borremos tus datos escribiendo a {TIENDA.correo}.
+              corrijamos o borremos tus datos escribiendo a{" "}
+              <a href={`mailto:${TIENDA.correo}`} className="underline">
+                {TIENDA.correo}
+              </a>
+              .
             </p>
           </div>
         </div>

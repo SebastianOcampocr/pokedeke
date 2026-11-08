@@ -18,6 +18,8 @@
 
 const CONFIG = {
   correoAvisos: "pokedekestore@gmail.com",
+  // Servicio al cliente: las respuestas de los clientes van aquí (llega a la misma cuenta).
+  correoCliente: "sac@pokedeke.store",
   nombreTienda: "Pokedeke",
   canal: "Página web",
   metodoPago: "SINPE Móvil",
@@ -115,7 +117,7 @@ const HOJAS = {
 };
 
 // Sube con cada cambio: la página y las pruebas leen esta marca con un GET.
-const VERSION = "2026-11-08-comentarios";
+const VERSION = "2026-11-08-sac";
 const PEDIDO_ESPECIAL = "Pedido especial";
 const PRIMERA_FILA = 5;
 const PENDIENTE = "Pendiente de pago";
@@ -691,7 +693,7 @@ function crearPedido(datos) {
         especial
           ? "Trae un pedido especial: entregalo " + especial + ". Si al final no se consigue, devolvele el 100% por SINPE a la misma cuenta."
           : despacho
-            ? "Si paga a tiempo, despachalo el " + despacho + ". Escribile por WhatsApp para coordinar."
+            ? "Si paga a tiempo, despachalo el " + despacho + ". Antes de enviarlo, tomale fotos al producto y al empaque y mandáselas por WhatsApp."
             : "Escribile por WhatsApp para coordinar la entrega.",
       ]),
       botones: botonesDelDueno(numero, whatsapp, cliente),
@@ -1155,7 +1157,7 @@ function mandarAlCliente(opciones) {
     console.error("No se le escribió al cliente: el script corre con otra cuenta.");
     return;
   }
-  mandarCorreo({ replyTo: CONFIG.correoAvisos, ...opciones });
+  mandarCorreo({ replyTo: CONFIG.correoCliente, ...opciones });
 }
 
 function avisar(asunto, lineas, responderA, html) {
@@ -1247,12 +1249,12 @@ function pasosTrasElPago(fila, lineas) {
     ? ["Te escribimos por WhatsApp para cuadrar el día y la hora del retiro."]
     : envio.pideTienda
       ? [
-          "Lo enviamos el " + despacho + " a la tienda que nos dijiste y te avisamos por WhatsApp.",
+          "Lo enviamos el " + despacho + " a la tienda que nos dijiste. Antes te mandamos por WhatsApp fotos de cómo va empacado.",
           "Lo que tarda en llegar depende de la tienda.",
         ]
       : [
           "Sale el " + despacho + ". Los envíos salen los Miércoles y Sábados.",
-          "Te escribimos por WhatsApp con el número de guía.",
+          "Te escribimos por WhatsApp con fotos de cómo va empacado y el número de guía.",
         ];
   if (lineas.some((linea) => linea.preventa)) {
     pasos.unshift("Recibimos tu adelanto. Te avisamos cuando llegue la preventa para cobrar el resto.");
