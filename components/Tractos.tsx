@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { colones } from "@/lib/formato";
-import { esPreventa, estaAgotado, type Producto } from "@/lib/productos";
+import { estaAgotado, seAparta, type Producto } from "@/lib/productos";
 import { enlaceWhatsApp } from "@/lib/tienda";
 
 const DESDE = 30000;
@@ -17,7 +17,7 @@ export function Tractos({ producto }: { producto: Producto }) {
   const [tractos, setTractos] = useState(3);
 
   if (producto.precio < DESDE) return null;
-  if (estaAgotado(producto) || esPreventa(producto)) return null;
+  if (estaAgotado(producto) || seAparta(producto)) return null;
 
   const cuota = Math.ceil(producto.precio / tractos / 100) * 100;
   const ultima = producto.precio - cuota * (tractos - 1);

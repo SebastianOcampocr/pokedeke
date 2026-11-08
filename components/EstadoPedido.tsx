@@ -8,16 +8,26 @@ import { usePedidos, type Estado } from "@/lib/pedidos";
 import { TIENDA_ABIERTA } from "@/lib/tienda";
 import { Deke } from "./Deke";
 import { IconoCheque } from "./Iconos";
+import { cuandoSeEntrega } from "./PedidoEspecial";
 
 const PASOS: { estado: Estado; texto: string }[] = [
   { estado: "Pendiente de pago", texto: "Estamos esperando tu pago" },
   { estado: "Pagado", texto: "Recibimos tu pago" },
+  {
+    estado: "Conseguido",
+    texto: "Ya conseguimos tu pedido especial: pronto está listo para entregar",
+  },
   { estado: "Enviado", texto: "Tu pedido va en camino" },
   { estado: "Entregado", texto: "Ya lo tenés en tus manos" },
 ];
 
 function Seguimiento({ pedido }: { pedido: PedidoPublico }) {
-  const actual = PASOS.findIndex((paso) => paso.estado === pedido.estado);
+  // "Conseguido" es solo de los pedidos especiales.
+  const pasos =
+    pedido.especial || pedido.estado === "Conseguido"
+      ? PASOS
+      : PASOS.filter((paso) => paso.estado !== "Conseguido");
+  const actual = pasos.findIndex((paso) => paso.estado === pedido.estado);
 
   return (
     <div className="marco shadow-dura flex flex-col gap-5 p-5">
@@ -32,7 +42,7 @@ function Seguimiento({ pedido }: { pedido: PedidoPublico }) {
         </p>
       ) : (
         <ol className="flex flex-col">
-          {PASOS.map((paso, indice) => {
+          {pasos.map((paso, indice) => {
             // Mientras no paguen, el primer paso espera: todavía no va con cheque.
             const hecho =
               indice <= actual && pedido.estado !== "Pendiente de pago";
@@ -55,7 +65,7 @@ function Seguimiento({ pedido }: { pedido: PedidoPublico }) {
                       <Deke className="deke absolute top-1/2 -left-9 h-10 -translate-y-1/2" />
                     ) : null}
                   </span>
-                  {indice < PASOS.length - 1 ? (
+                  {indice < pasos.length - 1 ? (
                     <span className="h-7 w-[3px] bg-tinta" />
                   ) : null}
                 </div>
@@ -72,6 +82,12 @@ function Seguimiento({ pedido }: { pedido: PedidoPublico }) {
           })}
         </ol>
       )}
+
+      {pedido.especial ? (
+        <p>
+          Trae un pedido especial: se entrega <strong>{pedido.especial}</strong>.
+        </p>
+      ) : null}
 
       {pedido.guia ? (
         <p>
@@ -108,8 +124,16 @@ export function EstadoPedido({ numeroInicial = "" }: { numeroInicial?: string })
 
     if (!TIENDA_ABIERTA) {
       const local = pedidos.find((opcion) => opcion.numero === limpio);
-      if (local) setHallado(local);
-      else setError("No hallamos ese pedido. Revisá el número e intentá otra vez.");
+      if (local) {
+        setHallado({
+          ...local,
+          especial: local.especial
+            ? cuandoSeEntrega(local.especial.llegada)
+            : undefined,
+        });
+      } else {
+        setError("No hallamos ese pedido. Revisá el número e intentá otra vez.");
+      }
       return;
     }
 

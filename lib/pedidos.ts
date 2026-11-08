@@ -5,6 +5,7 @@ import { crearAlmacen } from "./almacen";
 export const ESTADOS = [
   "Pendiente de pago",
   "Pagado",
+  "Conseguido",
   "Enviado",
   "Entregado",
   "Cancelado",
@@ -34,6 +35,8 @@ export type Pedido = {
   clave?: string;
   /** Envío a una tienda fuera de la lista: el monto se confirma por WhatsApp. */
   envioPorWhatsApp?: boolean;
+  /** Trae un pedido especial: todo se entrega después de `llegada`. */
+  especial?: { llegada?: string };
 };
 
 const almacen = crearAlmacen<Pedido[]>("demo-pedidos-v3", () => [], []);

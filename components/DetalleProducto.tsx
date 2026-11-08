@@ -6,9 +6,11 @@ import { agregarAlCarrito } from "@/lib/carrito";
 import { colones } from "@/lib/formato";
 import {
   esCarta,
+  esPedidoEspecial,
   esPreventa,
   estaAgotado,
   precioACobrar,
+  seAparta,
   type Producto,
 } from "@/lib/productos";
 import { enlaceCompartir, enlaceWhatsApp, TIENDA } from "@/lib/tienda";
@@ -110,9 +112,11 @@ export function PrecioYStock({ producto: guardado }: { producto: Producto }) {
       </p>
       <p aria-live="polite" className="mb-3 text-[15px] font-bold">
         {agotado && "Agotado por ahora"}
-        {!agotado && esPreventa(producto) && `Quedan ${producto.stock} cupos`}
         {!agotado &&
-          !esPreventa(producto) &&
+          seAparta(producto) &&
+          (producto.stock === 1 ? "Queda 1 cupo" : `Quedan ${producto.stock} cupos`)}
+        {!agotado &&
+          !seAparta(producto) &&
           (producto.stock === 1 ? "Queda 1" : `Quedan ${producto.stock}`)}
       </p>
       {oferta && !agotado ? (
@@ -142,6 +146,7 @@ export function AccionesProducto({ producto: guardado }: { producto: Producto })
   );
 
   const preventa = esPreventa(producto);
+  const especial = esPedidoEspecial(producto);
   const porcentaje = Math.round(TIENDA.adelantoPreventa * 100);
 
   return (
@@ -181,7 +186,11 @@ export function AccionesProducto({ producto: guardado }: { producto: Producto })
               volarAlCarrito();
             }}
           >
-            {preventa ? "Apartar con adelanto" : "Agregar al carrito"}
+            {preventa
+              ? "Apartar con adelanto"
+              : especial
+                ? "Apartar pagando el 100%"
+                : "Agregar al carrito"}
           </button>
           {agregado ? (
             <p role="status" className="aparecer font-bold text-verde-oscuro">

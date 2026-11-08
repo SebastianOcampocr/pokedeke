@@ -37,6 +37,8 @@ export type PedidoPublico = {
   envio: string;
   guia: string;
   lineas: { nombre: string; cantidad: number }[];
+  /** Trae un pedido especial: "después del 5/12". */
+  especial?: string;
 };
 
 const SIN_CONEXION = "No pudimos conectar. Revisá tu internet e intentá otra vez.";

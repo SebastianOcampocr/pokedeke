@@ -6,6 +6,8 @@ import Link from "next/link";
 import {
   categoriasConProducto,
   coincide,
+  hayPedidosEspeciales,
+  PEDIDO_ESPECIAL,
   PRODUCTOS,
   valoresUnicos,
 } from "@/lib/productos";
@@ -29,6 +31,7 @@ const ORDENES = [
 ];
 
 const POR_TANDA = 24;
+const ETIQUETAS_DE_FILTRO = ["Preventa", PEDIDO_ESPECIAL];
 const SUELTAS = "Carta suelta (single)";
 
 const CATEGORIAS_RAPIDAS = categoriasConProducto();
@@ -92,8 +95,9 @@ export function Catalogo({
   const [rango, setRango] = useState("");
   const [rareza, setRareza] = useState("");
   const [orden, setOrden] = useState("nuevo");
-  const [soloPreventas, setSoloPreventas] = useState(
-    etiquetaInicial === "Preventa",
+  // "Preventa" o "Pedido especial": muestra solo lo que se aparta de esa forma.
+  const [etiqueta, setEtiqueta] = useState(
+    ETIQUETAS_DE_FILTRO.includes(etiquetaInicial) ? etiquetaInicial : "",
   );
   const [filtrosAbiertos, setFiltrosAbiertos] = useState(false);
   const [tanda, setTanda] = useState({ clave: "", cantidad: POR_TANDA });
@@ -106,7 +110,7 @@ export function Catalogo({
         (!categoria || producto.categoria === categoria) &&
         (!idioma || producto.idioma === idioma) &&
         (!rareza || producto.carta?.rareza === rareza) &&
-        (!soloPreventas || producto.etiqueta === "Preventa") &&
+        (!etiqueta || producto.etiqueta === etiqueta) &&
         producto.precio >= limites.min &&
         producto.precio <= limites.max &&
         coincide(producto, busqueda),
@@ -117,7 +121,7 @@ export function Catalogo({
       if (orden === "vendidos") return b.vendidos - a.vendidos;
       return b.orden - a.orden;
     });
-  }, [busqueda, juego, categoria, idioma, rango, rareza, orden, soloPreventas]);
+  }, [busqueda, juego, categoria, idioma, rango, rareza, orden, etiqueta]);
   const resultados = useAgotadosAlFinal(encontrados);
 
   const hayFiltros = Boolean(
@@ -127,11 +131,11 @@ export function Catalogo({
       idioma ||
       rango ||
       rareza ||
-      soloPreventas,
+      etiqueta,
   );
 
   // Al cambiar cualquier filtro se vuelve a la primera tanda.
-  const clave = [busqueda, juego, categoria, idioma, rango, rareza, orden, soloPreventas].join("|");
+  const clave = [busqueda, juego, categoria, idioma, rango, rareza, orden, etiqueta].join("|");
   const cantidad = tanda.clave === clave ? tanda.cantidad : POR_TANDA;
   const visibles = resultados.slice(0, cantidad);
   const restantes = resultados.length - visibles.length;
@@ -143,7 +147,7 @@ export function Catalogo({
     setIdioma("");
     setRango("");
     setRareza("");
-    setSoloPreventas(false);
+    setEtiqueta("");
   }
 
   return (
@@ -225,14 +229,32 @@ export function Catalogo({
             alCambiar={setOrden}
             opciones={ORDENES}
           />
-          <button
-            type="button"
-            className="chip w-fit"
-            aria-pressed={soloPreventas}
-            onClick={() => setSoloPreventas((activo) => !activo)}
-          >
-            Solo preventas
-          </button>
+          <div className="flex flex-wrap gap-2">
+            <button
+              type="button"
+              className="chip w-fit"
+              aria-pressed={etiqueta === "Preventa"}
+              onClick={() =>
+                setEtiqueta((actual) => (actual === "Preventa" ? "" : "Preventa"))
+              }
+            >
+              Solo preventas
+            </button>
+            {hayPedidosEspeciales() ? (
+              <button
+                type="button"
+                className="chip w-fit"
+                aria-pressed={etiqueta === PEDIDO_ESPECIAL}
+                onClick={() =>
+                  setEtiqueta((actual) =>
+                    actual === PEDIDO_ESPECIAL ? "" : PEDIDO_ESPECIAL,
+                  )
+                }
+              >
+                Pedidos especiales
+              </button>
+            ) : null}
+          </div>
         </div>
       </aside>
 

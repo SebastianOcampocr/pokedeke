@@ -5,8 +5,9 @@ import { ViewTransition } from "react";
 import { colones, fechaCorta } from "@/lib/formato";
 import {
   esCarta,
-  esPreventa,
+  esPedidoEspecial,
   estaAgotado,
+  seAparta,
   type Producto,
 } from "@/lib/productos";
 import { useAgotadosAlFinal, useProductoVivo } from "@/lib/vivo";
@@ -21,7 +22,7 @@ export function Calcomania({ producto: guardado }: { producto: Producto }) {
   const producto = useProductoVivo(guardado);
   if (estaAgotado(producto)) return null;
 
-  if (producto.precioAntes && !esPreventa(producto)) {
+  if (producto.precioAntes && !seAparta(producto)) {
     const rebaja = Math.round((1 - producto.precio / producto.precioAntes) * 100);
     return (
       <span className="estrella">
@@ -29,7 +30,7 @@ export function Calcomania({ producto: guardado }: { producto: Producto }) {
       </span>
     );
   }
-  if (!esPreventa(producto) && producto.stock <= 3) {
+  if (!seAparta(producto) && producto.stock <= 3) {
     return (
       <span className="calcomania rotate-3 bg-rojo">
         {producto.stock === 1 ? "¡Queda 1!" : `¡Quedan ${producto.stock}!`}
@@ -37,10 +38,10 @@ export function Calcomania({ producto: guardado }: { producto: Producto }) {
     );
   }
   if (producto.etiqueta) {
-    const fondo = producto.etiqueta === "Preventa" ? "bg-azul" : "bg-rojo";
+    const fondo = seAparta(producto) ? "bg-azul" : "bg-rojo";
     return (
       <span className={`calcomania -rotate-2 ${fondo}`}>
-        {producto.etiqueta}
+        {esPedidoEspecial(producto) ? "Especial" : producto.etiqueta}
       </span>
     );
   }
@@ -120,7 +121,9 @@ export function TarjetaProducto({
     agotado ? "Agotado" : null,
     producto.categoriaCorta,
     producto.idioma === "Otro" ? null : producto.idioma || null,
-    producto.llegada ? `Llega el ${fechaCorta(producto.llegada)}` : null,
+    producto.llegada
+      ? `${esPedidoEspecial(producto) ? "Entrega después del" : "Llega el"} ${fechaCorta(producto.llegada)}`
+      : null,
   ]
     .filter(Boolean)
     .join(" · ");

@@ -10,7 +10,7 @@ import {
   type Estado,
   type Pedido,
 } from "@/lib/pedidos";
-import { esPreventa, estaAgotado, PRODUCTOS } from "@/lib/productos";
+import { estaAgotado, PRODUCTOS, seAparta } from "@/lib/productos";
 import { RUTA_BASE, TIENDA_ABIERTA } from "@/lib/tienda";
 import { IconoCheque } from "./Iconos";
 
@@ -196,7 +196,7 @@ function Numeros({ pedidos }: { pedidos: Pedido[] }) {
   const pocoStock = PRODUCTOS.filter(
     (producto) =>
       !estaAgotado(producto) &&
-      !esPreventa(producto) &&
+      !seAparta(producto) &&
       !producto.carta &&
       producto.stock <= 3,
   )

@@ -8,6 +8,15 @@ export function colones(monto: number) {
   return `₡${cifras}`;
 }
 
+/** "5 de diciembre". */
+export function fechaLarga(iso: string) {
+  return new Intl.DateTimeFormat("es-CR", {
+    day: "numeric",
+    month: "long",
+    timeZone: "America/Costa_Rica",
+  }).format(new Date(iso));
+}
+
 export function fechaCorta(iso: string) {
   return new Intl.DateTimeFormat("es-CR", {
     day: "numeric",

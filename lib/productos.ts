@@ -14,7 +14,7 @@ export type Producto = {
   stock: number;
   /** Gramos, según la hoja. Llega con el stock en vivo. */
   peso?: number;
-  etiqueta?: "Nuevo" | "Preventa" | "Oferta";
+  etiqueta?: "Nuevo" | "Preventa" | "Pedido especial" | "Oferta";
   destacado?: boolean;
   parado?: boolean;
   vendidos: number;
@@ -23,7 +23,10 @@ export type Producto = {
   descripcion: string;
   /** Si existe, el carrito lleva aquí en vez de a la página del producto. */
   enlace?: string;
-  /** Solo preventas: fecha en que llega al mezzanine. */
+  /**
+   * Preventas: fecha en que llega al mezzanine. Pedidos especiales: se entrega
+   * después de esta fecha.
+   */
   llegada?: string;
   /** Solo cartas sueltas y gradadas. */
   carta?: {
@@ -91,6 +94,22 @@ export function esPreventa(producto: Producto) {
   return producto.etiqueta === "Preventa";
 }
 
+export const PEDIDO_ESPECIAL = "Pedido especial";
+
+/**
+ * Lo traemos de Estados Unidos: se paga completo para apartarlo y se entrega
+ * después de su fecha. Es sujeto a disponibilidad: si no se consigue, se
+ * devuelve el 100%.
+ */
+export function esPedidoEspecial(producto: Producto) {
+  return producto.etiqueta === PEDIDO_ESPECIAL;
+}
+
+/** Lo que todavía no está en el mezzanine: se aparta y se entrega después. */
+export function seAparta(producto: Producto) {
+  return esPreventa(producto) || esPedidoEspecial(producto);
+}
+
 export function estaAgotado(producto: Producto) {
   return producto.stock <= 0;
 }
@@ -110,7 +129,7 @@ export function valoresUnicos(campo: "juego" | "categoria" | "idioma") {
 
 export const novedades = () =>
   disponibles()
-    .filter((producto) => !esPreventa(producto))
+    .filter((producto) => !seAparta(producto))
     .sort((a, b) => b.orden - a.orden);
 
 /** Lo más nuevo, sin repetir categoría mientras alcance. */
@@ -168,3 +187,4 @@ export const categoriasConProducto = () =>
   );
 
 export const hayPreventas = () => disponibles().some(esPreventa);
+export const hayPedidosEspeciales = () => disponibles().some(esPedidoEspecial);

@@ -54,6 +54,11 @@ const PREGUNTAS = [
       "Apartás con un adelanto del 50% y pagás el resto cuando llegue el producto.",
   },
   {
+    pregunta: "¿Qué es un pedido especial?",
+    respuesta:
+      "Es algo difícil de conseguir aquí que traemos de Estados Unidos. Lo apartás pagando el 100% y se entrega después de la fecha que dice el producto. Hacemos todo lo posible por traerlo; si por algo no podemos, te devolvemos el 100% por SINPE Móvil a la misma cuenta.",
+  },
+  {
     pregunta: "¿Solo venden Pokémon?",
     respuesta:
       "Por ahora sí, y le estamos poniendo toda la energía. One Piece, Magic y otros vienen en camino.",

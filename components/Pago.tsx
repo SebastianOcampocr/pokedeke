@@ -9,6 +9,7 @@ import { idDelCarrito, useCarrito, vaciarCarrito } from "@/lib/carrito";
 import { lanzarConfeti } from "@/lib/confeti";
 import { calcularTotales, colones } from "@/lib/formato";
 import { ganarLogro } from "@/lib/logros";
+import { esPedidoEspecial } from "@/lib/productos";
 import { refrescarInventario } from "@/lib/vivo";
 import {
   actualizarPedido,
@@ -35,6 +36,11 @@ import {
   TIENDA_ABIERTA,
 } from "@/lib/tienda";
 import { Deke } from "./Deke";
+import {
+  AvisoPedidoEspecial,
+  cuandoSeEntrega,
+  llegadaDeEspeciales,
+} from "./PedidoEspecial";
 import { IconoCheque } from "./Iconos";
 import { CarritoVacio, Linea } from "./VistaCarrito";
 
@@ -235,7 +241,13 @@ function Confirmacion({
           Al número <strong>{TIENDA.sinpe}</strong>. En el detalle poné{" "}
           <strong>{pedido.numero}</strong>.
         </p>
-        {opcionEnvio?.despacho ? (
+        {pedido.especial ? (
+          <p className="text-sm leading-snug">
+            Tu pedido trae un pedido especial: se entrega{" "}
+            <strong>{cuandoSeEntrega(pedido.especial.llegada)}</strong>. Si por
+            algo no lo podemos traer, te devolvemos el 100% a la misma cuenta.
+          </p>
+        ) : opcionEnvio?.despacho ? (
           <p className="text-sm leading-snug">
             Si pagás a tiempo, tu pedido sale el{" "}
             <strong>{fechaDeDespacho(new Date(pedido.fecha))}</strong>. Los envíos
@@ -343,6 +355,11 @@ export function Pago() {
     : costoDeEnvio(costoElegido ?? 0, subtotal);
   const totales = calcularTotales(lineas, cupon, costoFinal);
   const faltaCanton = costoElegido === null && subtotal < ENVIO_GRATIS_DESDE;
+  // Con un pedido especial, todo sale junto cuando llegue.
+  const especiales = lineas.filter(({ producto }) => esPedidoEspecial(producto));
+  const llegadaEspecial = llegadaDeEspeciales(
+    especiales.map(({ producto }) => producto.llegada),
+  );
 
   function precioDeOpcion({ pideDireccion, pideTienda }: OpcionEnvio) {
     if (pideTienda) return `Desde ${colones(ENVIO_TIENDAS_DESDE)}`;
@@ -396,6 +413,7 @@ export function Pago() {
       estado: "Pendiente de pago",
       guia: "",
       envioPorWhatsApp: otraTienda,
+      ...(especiales.length > 0 ? { especial: { llegada: llegadaEspecial } } : {}),
     };
 
     if (TIENDA_ABIERTA) {
@@ -490,7 +508,13 @@ export function Pago() {
               alElegir={() => setEnvioId(opcion.id)}
             />
           ))}
-          {envio.despacho ? (
+          {especiales.length > 0 ? (
+            <p className="text-sm leading-snug font-bold">
+              Tu pedido trae un pedido especial: todo se entrega junto{" "}
+              {cuandoSeEntrega(llegadaEspecial)}. Si querés lo demás antes,
+              hacé dos pedidos.
+            </p>
+          ) : envio.despacho ? (
             <p className="text-sm leading-snug font-bold">
               Los envíos salen {DIAS_DE_DESPACHO}. Si pedís hoy, el tuyo sale
               el {fechaDeDespacho()}.
@@ -641,6 +665,12 @@ export function Pago() {
             </p>
           ) : null}
         </div>
+        {especiales.length > 0 ? (
+          <AvisoPedidoEspecial
+            llegada={llegadaEspecial}
+            titulo="Tu pedido trae un pedido especial"
+          />
+        ) : null}
         {error ? (
           <p role="alert" className="font-bold text-rojo">
             {error}

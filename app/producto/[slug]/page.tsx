@@ -8,11 +8,17 @@ import {
   PrecioYStock,
 } from "@/components/DetalleProducto";
 import { Cuenta } from "@/components/Cuenta";
+import { AvisoPedidoEspecial } from "@/components/PedidoEspecial";
 import { IconoTipo } from "@/components/IconoTipo";
 import { Calcomania, RejillaProductos } from "@/components/TarjetaProducto";
 import { VistosRecientes } from "@/components/VistosRecientes";
 import { colones, fechaCorta } from "@/lib/formato";
-import { buscarProducto, estaAgotado, PRODUCTOS } from "@/lib/productos";
+import {
+  buscarProducto,
+  esPedidoEspecial,
+  estaAgotado,
+  PRODUCTOS,
+} from "@/lib/productos";
 import {
   DIAS_DE_DESPACHO,
   ENVIO_GRATIS_DESDE,
@@ -121,7 +127,9 @@ async function ContenidoProducto({
             {producto.nombre}
           </h1>
           <PrecioYStock producto={producto} />
-          {producto.llegada ? (
+          {esPedidoEspecial(producto) ? (
+            <AvisoPedidoEspecial llegada={producto.llegada} className="mb-3" />
+          ) : producto.llegada ? (
             <div className="marco mb-3 flex w-fit flex-col gap-2 bg-crema p-3">
               <p className="font-bold">
                 Llega al mezzanine el {fechaCorta(producto.llegada)}

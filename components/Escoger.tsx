@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { ganarLogro } from "@/lib/logros";
 import {
   estaAgotado,
-  esPreventa,
+  seAparta,
   PRODUCTOS,
   type Producto,
 } from "@/lib/productos";
@@ -76,7 +76,7 @@ function recomendar(respuestas: Record<string, string>): Producto[] {
   return PRODUCTOS.filter(
     (producto) =>
       !estaAgotado(producto) &&
-      !esPreventa(producto) &&
+      !seAparta(producto) &&
       categorias.includes(producto.categoria) &&
       producto.precio <= tope &&
       !(respuestas.quien === "nino" && NO_PARA_NINOS.includes(producto.categoria)),

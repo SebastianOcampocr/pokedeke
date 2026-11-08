@@ -1,5 +1,9 @@
 import Link from "next/link";
-import { categoriasConProducto, hayPreventas } from "@/lib/productos";
+import {
+  categoriasConProducto,
+  hayPedidosEspeciales,
+  hayPreventas,
+} from "@/lib/productos";
 import {
   ENLACE_GRUPO,
   enlaceWhatsApp,
@@ -21,6 +25,14 @@ const ENLACES = [
   { href: "/caja-compartida", texto: "Caja compartida" },
   ...(hayPreventas()
     ? [{ href: "/catalogo?etiqueta=Preventa", texto: "Preventas" }]
+    : []),
+  ...(hayPedidosEspeciales()
+    ? [
+        {
+          href: "/catalogo?etiqueta=Pedido%20especial",
+          texto: "Pedidos especiales",
+        },
+      ]
     : []),
   { href: "/guia", texto: "Guía" },
   { href: "/nosotros", texto: "El Mezzanine" },

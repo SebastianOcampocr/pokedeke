@@ -10,8 +10,13 @@ import {
   useCarrito,
   type LineaCarrito,
 } from "@/lib/carrito";
-import { calcularTotales, colones } from "@/lib/formato";
-import { disponibles, esPreventa } from "@/lib/productos";
+import { calcularTotales, colones, fechaCorta } from "@/lib/formato";
+import {
+  disponibles,
+  esPedidoEspecial,
+  esPreventa,
+  seAparta,
+} from "@/lib/productos";
 import { CUPONES } from "@/lib/tienda";
 import { useInventarioVivo, useOfertasVivas } from "@/lib/vivo";
 import { AgregarRapido } from "./AgregarRapido";
@@ -116,7 +121,7 @@ function Complementos({ enCarrito }: { enCarrito: string[] }) {
     .filter(
       (producto) =>
         CATEGORIAS_COMPLEMENTO.includes(producto.categoria) &&
-        !esPreventa(producto) &&
+        !seAparta(producto) &&
         !enCarrito.includes(producto.slug),
     )
     .sort((a, b) => a.precio - b.precio)
@@ -231,6 +236,12 @@ export function VistaCarrito() {
                 <p className="text-sm text-gris">
                   {esPreventa(producto) ? (
                     `Adelanto de preventa: ${colones(precio)}`
+                  ) : esPedidoEspecial(producto) ? (
+                    `${colones(precio)} c/u · Pedido especial${
+                      producto.llegada
+                        ? `, se entrega después del ${fechaCorta(producto.llegada)}`
+                        : ""
+                    }`
                   ) : precioNormal ? (
                     <>
                       <s>{colones(precioNormal)}</s>{" "}

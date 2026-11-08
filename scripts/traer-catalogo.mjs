@@ -49,7 +49,7 @@ const DESCRIPCIONES = {
   "Colección premium / UPC": "Colección especial para quien quiere la pieza grande.",
 };
 
-const ETIQUETAS = ["Nuevo", "Preventa", "Oferta"];
+const ETIQUETAS = ["Nuevo", "Preventa", "Pedido especial", "Oferta"];
 const CARTAS = ["Carta suelta (single)", "Carta gradada"];
 
 export function leerCsv(texto) {

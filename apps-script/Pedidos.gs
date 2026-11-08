@@ -112,9 +112,14 @@ const HOJAS = {
   carritos: "Carritos",
 };
 
+// Sube con cada cambio: la página y las pruebas leen esta marca con un GET.
+const VERSION = "2026-11-07-pedido-especial";
+const PEDIDO_ESPECIAL = "Pedido especial";
 const PRIMERA_FILA = 5;
 const PENDIENTE = "Pendiente de pago";
 const PAGADO = "Pagado";
+// Solo para pedidos especiales ya pagados: avisa al cliente que ya lo tenemos.
+const CONSEGUIDO = "Conseguido";
 const CLAVE_STOCK = "stock-vivo";
 const CLAVE_VERSION = "stock-version";
 // Todo pedido y toda edición de la hoja borran esta memoria, así que no atrasa nada.
@@ -171,7 +176,7 @@ function doGet(e) {
   if (parametros.accion === "estado") {
     return responder(consultarPedido(parametros));
   }
-  return responder({ ok: true, tienda: CONFIG.nombreTienda });
+  return responder({ ok: true, tienda: CONFIG.nombreTienda, version: VERSION });
 }
 
 function doPost(e) {
@@ -377,6 +382,9 @@ function productosPorSlug() {
     const precio = Number(ultimo("Precio de venta (₡)") || ultimo("Precio sugerido (₡)")) || 0;
     grupo.nombre = String(ultimo("Nombre para mostrar") || grupo.nombre);
     grupo.preventa = preventa;
+    // Se paga completo y se entrega después de "Llega (preventas)".
+    grupo.especial = ultimo("Etiqueta") === PEDIDO_ESPECIAL;
+    grupo.llegada = ultimo("Llega (preventas)") || null;
     grupo.precio = precio;
     grupo.precioCobrado = preventa ? Math.round(precio * CONFIG.adelantoPreventa) : precio;
     grupo.peso =
@@ -554,6 +562,7 @@ function crearPedido(datos) {
       cantidad,
       precio: producto.precioCobrado,
       preventa: producto.preventa,
+      ...(producto.especial ? { especial: true, llega: fechaIso(producto.llegada) } : {}),
       quedan: producto.stock - (reservado[slug] || 0) - cantidad,
     });
   }
@@ -616,8 +625,9 @@ function crearPedido(datos) {
 
   const montos = resumenDeMontos(subtotal, descuento, cupon, costoEnvio, total, aparte);
   const masEnvio = aparte ? " más el envío" : "";
-  const despacho = envio.despacho ? textoDespacho(fila[COL.fecha - 1]) : "";
-  const entrega = datosDeEntrega(envio, envio.nombre, ubicacion, direccion, despacho, aparte);
+  const especial = entregaEspecial(lineas);
+  const despacho = envio.despacho && !especial ? textoDespacho(fila[COL.fecha - 1]) : "";
+  const entrega = datosDeEntrega(envio, envio.nombre, ubicacion, direccion, despacho, aparte, especial);
 
   avisar(
     "Nuevo pedido " + numero + " · " + colones(total) + " · " + cliente,
@@ -640,6 +650,7 @@ function crearPedido(datos) {
         ? "Envío: varía según la tienda. Confirmale el monto por WhatsApp; va en el mismo SINPE."
         : "Envío: " + colones(costoEnvio),
       "Total a recibir por SINPE: " + colones(total) + masEnvio,
+      especial ? "Trae un pedido especial: se entrega " + especial + "." : "",
       "",
       "Cuando el SINPE entre, cambiá el Estado a Pagado en la pestaña Pedidos web.",
     ],
@@ -668,9 +679,11 @@ function crearPedido(datos) {
         "Esperá el comprobante del cliente. Te llega en otro correo.",
         "Revisá en tu banco que entró el monto exacto, con " + numero + " en el detalle.",
         "Cambiá el Estado a Pagado en Pedidos web. La venta pasa sola a Ventas.",
-        despacho
-          ? "Si paga a tiempo, despachalo el " + despacho + ". Escribile por WhatsApp para coordinar."
-          : "Escribile por WhatsApp para coordinar la entrega.",
+        especial
+          ? "Trae un pedido especial: entregalo " + especial + ". Si al final no se consigue, devolvele el 100% por SINPE a la misma cuenta."
+          : despacho
+            ? "Si paga a tiempo, despachalo el " + despacho + ". Escribile por WhatsApp para coordinar."
+            : "Escribile por WhatsApp para coordinar la entrega.",
       ]),
       botones: botonesDelDueno(numero, whatsapp, cliente),
     }),
@@ -689,6 +702,7 @@ function crearPedido(datos) {
     montos,
     precioAparte: aparte,
     despacho,
+    especial,
   });
 
   return { ok: true, numero, clave, subtotal, descuento, costoEnvio, total, lineas };
@@ -723,6 +737,27 @@ function diaDeDespacho(desde) {
   return new Date(new Date(desde).getTime() + FALTAN_PARA_DESPACHO[dia] * 86400000);
 }
 
+/** La fecha de la hoja como "2026-12-05", para guardarla en el detalle del pedido. */
+function fechaIso(valor) {
+  if (!valor) return "";
+  const fecha = valor instanceof Date ? valor : new Date(valor);
+  if (isNaN(fecha.getTime())) return "";
+  return Utilities.formatDate(fecha, libro().getSpreadsheetTimeZone(), "yyyy-MM-dd");
+}
+
+/**
+ * "después del 5/12" si el pedido trae algo de pedido especial, "" si no. Con
+ * varios, vale la fecha más tardía: todo se entrega junto.
+ */
+function entregaEspecial(lineas) {
+  const especiales = (lineas || []).filter((linea) => linea.especial);
+  if (especiales.length === 0) return "";
+  const fechas = especiales.map((linea) => linea.llega).filter(Boolean).sort();
+  if (fechas.length === 0) return "cuando llegue";
+  const [anio, mes, dia] = fechas[fechas.length - 1].split("-");
+  return "después del " + Number(dia) + "/" + Number(mes);
+}
+
 /** "miércoles 11/11". */
 function textoDespacho(desde) {
   const zona = libro().getSpreadsheetTimeZone();
@@ -730,13 +765,14 @@ function textoDespacho(desde) {
   return DIAS[Number(Utilities.formatDate(fecha, zona, "u"))] + " " + Utilities.formatDate(fecha, zona, "d/M");
 }
 
-function datosDeEntrega(envio, nombre, ubicacion, direccion, despacho, aparte) {
+function datosDeEntrega(envio, nombre, ubicacion, direccion, despacho, aparte, especial) {
   return [
     ["Método", nombre],
     ["Dirección", envio.pideDireccion ? ubicacion + ". " + direccion : ""],
     ["Tienda", envio.pideTienda ? direccion : ""],
     ["Costo del envío", aparte ? "Varía según la tienda, se confirma por WhatsApp" : ""],
     ["Sale el", despacho || ""],
+    ["Se entrega", especial ? especial.charAt(0).toUpperCase() + especial.slice(1) + " (pedido especial)" : ""],
   ];
 }
 
@@ -744,13 +780,15 @@ function datosDeEntrega(envio, nombre, ubicacion, direccion, despacho, aparte) {
 function entregaDeFila(fila) {
   const nombre = fila[COL.envio - 1];
   const envio = envioPorNombre(nombre);
+  const especial = entregaEspecial(leerDetalle(fila).lineas);
   return datosDeEntrega(
     envio,
     nombre,
     fila[COL.ubicacion - 1],
     fila[COL.direccion - 1],
-    envio.despacho ? textoDespacho(new Date()) : "",
+    envio.despacho && !especial ? textoDespacho(new Date()) : "",
     envioAparte(fila),
+    especial,
   );
 }
 
@@ -909,6 +947,7 @@ function consultarPedido(parametros) {
       envio: fila[COL.envio - 1],
       guia: String(fila[COL.guia - 1] || ""),
       lineas: leerDetalle(fila).lineas.map(({ nombre, cantidad }) => ({ nombre, cantidad })),
+      especial: entregaEspecial(leerDetalle(fila).lineas),
     },
   };
 }
@@ -981,6 +1020,7 @@ function correoConDiseno({ etiqueta, estado, colorEstado, saludo, numero, fecha,
     '<div style="font-weight:bold;">' + escapar(linea.nombre) + "</div>" +
     '<div style="font-size:13px;color:#444444;">' + escapar(linea.cantidad) + " × " + escapar(colones(linea.precio)) +
     (linea.preventa ? " · Adelanto de preventa" : "") +
+    (linea.especial ? " · Pedido especial, se entrega " + entregaEspecial([linea]) : "") +
     (linea.oferta ? " · Oferta " + escapar(linea.oferta) + ", antes " + escapar(colones(linea.precioNormal)) : "") +
     (linea.quedan === undefined ? "" : " · " + (linea.quedan > 0 ? "Quedan " + escapar(linea.quedan) : "Era la última")) +
     '</div></td><td style="padding:9px 0;border-bottom:1px solid #e3d6ad;text-align:right;white-space:nowrap;font-weight:bold;vertical-align:top;">' +
@@ -1092,7 +1132,7 @@ function avisar(asunto, lineas, responderA, html) {
 }
 
 /** Las respuestas del cliente llegan al correo de la tienda. */
-function confirmarAlCliente({ correo, numero, fecha, total, cliente, whatsapp, entrega, lineas, resumen, montos, precioAparte, despacho }) {
+function confirmarAlCliente({ correo, numero, fecha, total, cliente, whatsapp, entrega, lineas, resumen, montos, precioAparte, despacho, especial }) {
   const primerNombre = String(cliente).split(" ")[0];
   const pasos = (precioAparte
     ? [
@@ -1104,7 +1144,12 @@ function confirmarAlCliente({ correo, numero, fecha, total, cliente, whatsapp, e
     "Escribí el número de comprobante en la página. Si ya la cerraste, respondé este correo con ese número.",
     "Cuando confirmemos el pago te llega otro correo y te escribimos por WhatsApp.",
   ]);
-  if (despacho) {
+  if (especial) {
+    pasos.push(
+      "Tu pedido trae un pedido especial que traemos de Estados Unidos: se entrega " + especial +
+        ". Hacemos todo lo posible por traerlo; si por algo no podemos, te devolvemos el 100% por SINPE Móvil a la misma cuenta.",
+    );
+  } else if (despacho) {
     pasos.push("Los envíos salen los miércoles y sábados: si pagás a tiempo, tu pedido sale el " + despacho + ".");
   }
   mandarAlCliente({
@@ -1153,6 +1198,13 @@ function confirmarAlCliente({ correo, numero, fecha, total, cliente, whatsapp, e
 function pasosTrasElPago(fila, lineas) {
   const envio = envioPorNombre(fila[COL.envio - 1]);
   const despacho = envio.despacho ? textoDespacho(new Date()) : "";
+  const especial = entregaEspecial(lineas);
+  if (especial) {
+    return [
+      "Tu pedido especial queda pagado y apartado. Se entrega " + especial + ": cuando lo tengamos te llega un correo y te escribimos por WhatsApp para coordinar.",
+      "Si por algo no lo podemos traer, te devolvemos el 100% por SINPE Móvil a la misma cuenta.",
+    ];
+  }
   const pasos = esRetiro(fila)
     ? ["Te escribimos por WhatsApp para cuadrar el día y la hora del retiro."]
     : envio.pideTienda
@@ -1214,6 +1266,56 @@ function confirmarPago(fila) {
   });
 }
 
+/**
+ * Quien administra la tienda cambia el Estado a "Conseguido" cuando ya tiene el
+ * pedido especial. Solo escribe si el pedido trae uno y ya está pagado. Devuelve
+ * el aviso para la hoja.
+ */
+function avisarConseguido(fila) {
+  const numero = fila[COL.numero - 1];
+  const detalle = leerDetalle(fila);
+  const especial = entregaEspecial(detalle.lineas);
+  if (!especial) return numero + " no trae un pedido especial: no se mandó correo.";
+  if (!fila[COL.enVentas - 1]) return numero + " todavía no está pagado: marcalo Pagado primero. No se mandó correo.";
+  const correo = String(fila[COL.correo - 1]);
+  if (!esCorreo(correo)) return numero + " no tiene correo: avisale por WhatsApp.";
+
+  const primerNombre = String(fila[COL.cliente - 1]).split(" ")[0];
+  const nombres = detalle.lineas.filter((linea) => linea.especial).map((linea) => linea.nombre).join(", ");
+  const pasos = [
+    "Ya tenemos " + nombres + ". Se entrega " + especial + ".",
+    "Te escribimos por WhatsApp para coordinar la entrega.",
+  ];
+  mandarAlCliente({
+    to: correo,
+    subject: "¡Ya conseguimos tu pedido especial! " + numero + " · " + CONFIG.nombreTienda,
+    body: [
+      "¡Buenas noticias, " + primerNombre + "! Ya conseguimos tu pedido especial " + numero + " y pronto está listo para entregar.",
+      "",
+      "Qué sigue:",
+      ...pasos,
+    ].join("\n"),
+    htmlBody: correoConDiseno({
+      etiqueta: "Pedido especial",
+      estado: CONSEGUIDO,
+      colorEstado: "#127a43",
+      saludo: "¡Buenas noticias, " + primerNombre + "! Ya conseguimos tu pedido especial y pronto está listo para entregar.",
+      numero,
+      fecha: fila[COL.fecha - 1],
+      total: fila[COL.total - 1],
+      rotuloTotal: "Total pagado",
+      caja: [["Se entrega", especial]],
+      entrega: entregaDeFila(fila),
+      lineas: detalle.lineas.map(({ quedan, ...linea }) => linea),
+      resumen: resumenDeMontos(detalle.subtotal, detalle.descuento, detalle.cupon, fila[COL.costoEnvio - 1], fila[COL.total - 1], envioAparte(fila)),
+      pasos,
+      botones: botonesDelCliente(numero),
+      pie: "Si tenés alguna duda, respondé este correo o escribinos. Tus datos son solo para este pedido.",
+    }),
+  });
+  return "Le avisamos a " + primerNombre + " que ya conseguiste su pedido especial " + numero + ".";
+}
+
 /* ---------- Pasar a Ventas ---------- */
 
 /**
@@ -1236,7 +1338,13 @@ function alEditarHoja(e) {
   }
   if (pestana !== HOJAS.pedidos) return;
   if (rango.getColumn() !== COL.estado || rango.getRow() < PRIMERA_FILA) return;
-  if (rango.getNumRows() !== 1 || e.value !== PAGADO) return;
+  if (rango.getNumRows() !== 1) return;
+  if (e.value === CONSEGUIDO) {
+    const fila = hoja(HOJAS.pedidos).getRange(rango.getRow(), 1, 1, TOTAL_COLUMNAS).getValues()[0];
+    libro().toast(avisarConseguido(fila), CONFIG.nombreTienda, 8);
+    return;
+  }
+  if (e.value !== PAGADO) return;
 
   const resultado = conCandado(() => pasarAVentas(rango.getRow(), e.oldValue));
   olvidarStock();
@@ -1332,6 +1440,7 @@ function pasarAVentas(numeroFila, estadoAnterior) {
     "SINPE " + (fila[COL.comprobante - 1] || "sin número"),
     "WhatsApp " + fila[COL.whatsapp - 1],
     detalle.lineas.some((linea) => linea.preventa) ? "Adelanto de preventa" : "",
+    detalle.lineas.some((linea) => linea.especial) ? "Pedido especial (" + entregaEspecial(detalle.lineas) + ")" : "",
     ...[...new Set(detalle.lineas.map((linea) => linea.oferta).filter(Boolean))].map(
       (oferta) => "Oferta " + oferta,
     ),

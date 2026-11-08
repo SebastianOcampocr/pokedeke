@@ -11,6 +11,7 @@ export const metadata: Metadata = {
 const SECCIONES = [
   { id: "envios", titulo: "Envíos" },
   { id: "cambios", titulo: "Cambios y devoluciones" },
+  { id: "pedidos-especiales", titulo: "Pedidos especiales" },
   { id: "terminos", titulo: "Términos" },
   { id: "privacidad", titulo: "Privacidad" },
 ];
@@ -88,6 +89,36 @@ export default function PaginaPoliticas() {
                 Si una preventa se cancela o se atrasa más de 30 días, te
                 devolvemos todo el adelanto. Si querés cancelarla vos, avisanos
                 dentro de 8 días hábiles desde que pagaste el adelanto.
+              </li>
+            </ul>
+
+            <h2 id="pedidos-especiales" className="scroll-mt-20">
+              Pedidos especiales
+            </h2>
+            <p>
+              Algunos productos difíciles de conseguir aquí los traemos de
+              Estados Unidos. Se marcan como pedido especial y funcionan así:
+            </p>
+            <ul>
+              <li>
+                Se apartan pagando el 100% por SINPE Móvil. El pago se confirma
+                igual que cualquier pedido.
+              </li>
+              <li>
+                Se entregan después de la fecha que dice cada producto. Si en tu
+                pedido hay otros productos, todo se entrega junto, salvo que lo
+                coordinemos distinto por WhatsApp.
+              </li>
+              <li>
+                Hacemos todo lo posible por traerlos, pero dependen de la
+                disponibilidad. Si por algo no podemos entregarte lo que
+                compraste, te avisamos por WhatsApp y te devolvemos el 100% de
+                lo que pagaste, por SINPE Móvil a la misma cuenta desde la que
+                pagaste.
+              </li>
+              <li>
+                Si querés cancelarlo vos, avisanos dentro de 8 días hábiles
+                desde que pagaste y te devolvemos todo.
               </li>
             </ul>
 

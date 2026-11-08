@@ -1,11 +1,16 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { categoriasConProducto, hayPreventas } from "@/lib/productos";
+import {
+  categoriasConProducto,
+  hayPedidosEspeciales,
+  hayPreventas,
+} from "@/lib/productos";
 
 const AVISOS = [
   ...categoriasConProducto().map(({ texto }) => `¡Hay ${texto.toLowerCase()}!`),
   ...(hayPreventas() ? ["¡Hay preventas!"] : []),
+  ...(hayPedidosEspeciales() ? ["¡Traemos de EE. UU.!"] : []),
 ];
 
 if (AVISOS.length === 0) AVISOS.push("¡Pase adelante!");

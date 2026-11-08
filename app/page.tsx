@@ -18,6 +18,7 @@ import {
   conFoto,
   destacados as elegirDestacados,
   disponibles,
+  esPedidoEspecial,
   esPreventa,
   novedadesVariadas,
   type Producto,
@@ -28,10 +29,12 @@ function Seccion({
   titulo,
   enlace,
   productos,
+  texto,
 }: {
   titulo: string;
   enlace: string;
   productos: Producto[];
+  texto?: string;
 }) {
   if (productos.length === 0) return null;
 
@@ -50,6 +53,9 @@ function Seccion({
           Ver todo
         </Link>
       </div>
+      {texto ? (
+        <p className="-mt-2 max-w-2xl leading-snug font-medium">{texto}</p>
+      ) : null}
       <RejillaProductos productos={productos} />
     </section>
   );
@@ -153,6 +159,7 @@ function BandaSobre() {
 export default function Inicio() {
   const destacados = elegirDestacados(8);
   const preventas = disponibles().filter(esPreventa).slice(0, 4);
+  const especiales = disponibles().filter(esPedidoEspecial).slice(0, 4);
   const recientes = novedadesVariadas(4);
   const hayCartas = cartasSueltas().length > 0;
 
@@ -239,6 +246,12 @@ export default function Inicio() {
       <div className="bg-white">
         <div className="mx-auto flex max-w-6xl flex-col gap-10 px-4 py-8 md:py-10">
           <SeViene />
+          <Seccion
+            titulo="Pedidos especiales"
+            enlace="/catalogo?etiqueta=Pedido%20especial"
+            productos={especiales}
+            texto="Lo que es difícil de conseguir aquí: lo traemos de Estados Unidos. Lo apartás pagando el 100% y, si al final no lo podemos traer, te devolvemos todo."
+          />
           <Seccion
             titulo="Preventas"
             enlace="/catalogo?etiqueta=Preventa"
