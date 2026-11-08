@@ -42,7 +42,10 @@ export default function PaginaPoliticas() {
               WhatsApp. El costo del envío lo paga quien compra. Sale de la
               tarifa de Correos, depende de tu cantón y del peso del pedido, y
               se muestra antes de confirmar. En compras desde ₡50 000, el envío
-              por Correos va por nuestra cuenta.
+              por Correos va por nuestra cuenta. También hacemos envío entre
+              tiendas: nos decís a qué tienda lo mandamos, cuesta ₡500 a ₡600
+              según la tienda, no va en el SINPE y lo pagás al retirar. Lo que
+              tarda depende de la tienda.
             </p>
             <p>
               Despachamos en 1 a 2 días hábiles después de confirmar el pago, y

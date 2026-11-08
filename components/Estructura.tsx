@@ -189,6 +189,7 @@ const CINTA = [
   ...categoriasConProducto().map(({ texto }) => texto),
   "Retiro en Edificio Omni",
   "Correos a todo el país",
+  "Envío entre tiendas",
   "Envío gratis desde ₡50 000",
   "Apartá en tractos",
   "Pagá con SINPE Móvil",

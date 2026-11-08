@@ -36,7 +36,7 @@ const PREGUNTAS = [
   {
     pregunta: "¿Hacen envíos?",
     respuesta:
-      "Sí, por Correos de Costa Rica a todo el país. El costo se calcula en el carrito y lo paga quien compra.",
+      "Sí, por Correos de Costa Rica a todo el país o con envío entre tiendas a la tienda que nos digás. El de Correos se calcula en el carrito; el envío entre tiendas cuesta ₡500 a ₡600 y se paga al retirar. Lo paga quien compra.",
   },
   {
     pregunta: "¿Cómo pago?",

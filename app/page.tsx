@@ -178,7 +178,7 @@ export default function Inicio() {
             style={{ animationDelay: "520ms" }}
           >
             Todo lo de Pokémon TCG en colones. Retirá en el Edificio Omni o te
-            lo mandamos por Correos a todo el país.
+            lo mandamos por Correos o a la tienda que nos digás.
           </p>
           <div className="aparecer" style={{ animationDelay: "620ms" }}>
             <BotonGrupo className="w-full md:w-fit" />

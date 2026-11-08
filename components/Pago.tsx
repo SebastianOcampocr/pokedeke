@@ -23,6 +23,7 @@ import {
   ENVIO_GRATIS_DESDE,
   ENVIOS,
   LUGAR,
+  type OpcionEnvio,
   TARIFA_CORREOS,
   tarifaCorreos,
   TIENDA,
@@ -164,6 +165,9 @@ function Confirmacion({
   const [enviado, setEnviado] = useState(false);
   const [enviando, setEnviando] = useState(false);
   const [error, setError] = useState("");
+  const cobroAlRetirar = ENVIOS.find(
+    (opcion) => opcion.nombre === pedido.envio,
+  )?.cobroAlRetirar;
 
   useEffect(() => lanzarConfeti(), []);
 
@@ -219,6 +223,12 @@ function Confirmacion({
           Al número <strong>{TIENDA.sinpe}</strong>. En el detalle poné{" "}
           <strong>{pedido.numero}</strong>.
         </p>
+        {cobroAlRetirar ? (
+          <p className="text-sm leading-snug">
+            El {pedido.envio.toLowerCase()} ({cobroAlRetirar}) no va en este
+            monto: lo pagás al retirar en la tienda.
+          </p>
+        ) : null}
         {TIENDA_ABIERTA ? null : (
           <p className="text-sm text-gris">
             Esta página todavía es una demo: no pagués nada.
@@ -317,7 +327,8 @@ export function Pago() {
   );
   const faltaCanton = costoElegido === null && subtotal < ENVIO_GRATIS_DESDE;
 
-  function precioDeOpcion(pideDireccion: boolean) {
+  function precioDeOpcion({ pideDireccion, cobroAlRetirar }: OpcionEnvio) {
+    if (cobroAlRetirar) return `${cobroAlRetirar}, al retirar`;
     if (!pideDireccion || subtotal >= ENVIO_GRATIS_DESDE) return "Gratis";
     return costoCorreos === null
       ? `Desde ${colones(TARIFA_CORREOS.gam.primerKilo)}`
@@ -340,8 +351,12 @@ export function Pago() {
       correo: texto("correo"),
       ubicacion: envio.pideDireccion
         ? [provincia, canton, distrito].join(", ")
-        : `${LUGAR.nombre}, San José`,
-      direccion: texto("direccion") || "Retiro coordinado por WhatsApp",
+        : envio.pideTienda
+          ? ""
+          : `${LUGAR.nombre}, San José`,
+      direccion: envio.pideTienda
+        ? texto("tienda")
+        : texto("direccion") || "Retiro coordinado por WhatsApp",
       envio: envio.nombre,
       lineas: lineas.map(({ producto, cantidad, precio }) => ({
         id: producto.id,
@@ -444,15 +459,28 @@ export function Pago() {
               activa={opcion.id === envio.id}
               titulo={opcion.nombre}
               detalle={opcion.detalle}
-              extra={precioDeOpcion(opcion.pideDireccion)}
+              extra={precioDeOpcion(opcion)}
               alElegir={() => setEnvioId(opcion.id)}
             />
           ))}
           {subtotal >= ENVIO_GRATIS_DESDE ? (
             <p className="text-sm font-bold text-verde-oscuro">
-              Tu compra pasa de {colones(ENVIO_GRATIS_DESDE)}: el envío va por
-              nuestra cuenta.
+              Tu compra pasa de {colones(ENVIO_GRATIS_DESDE)}: el envío por
+              Correos va por nuestra cuenta.
             </p>
+          ) : null}
+
+          {envio.pideTienda ? (
+            <div className="mt-2 flex flex-col gap-2">
+              <Campo
+                id="tienda"
+                rotulo="¿A qué tienda te lo enviamos? Nombre de la tienda y lugar"
+              />
+              <p className="text-sm leading-snug text-gris">
+                El envío cuesta {envio.cobroAlRetirar} según la tienda y lo
+                pagás al retirar. No va en el SINPE.
+              </p>
+            </div>
           ) : null}
 
           {envio.pideDireccion ? (
@@ -529,11 +557,13 @@ export function Pago() {
           <Linea
             rotulo="Envío"
             monto={
-              faltaCanton
-                ? "Falta tu cantón"
-                : totales.envio === 0
-                  ? "Gratis"
-                  : colones(totales.envio)
+              envio.cobroAlRetirar
+                ? "Al retirar"
+                : faltaCanton
+                  ? "Falta tu cantón"
+                  : totales.envio === 0
+                    ? "Gratis"
+                    : colones(totales.envio)
             }
           />
           <Linea rotulo="Total" monto={colones(totales.total)} fuerte />

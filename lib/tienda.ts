@@ -27,12 +27,32 @@ export const LUGAR = {
   mapa: "https://www.google.com/maps/search/?api=1&query=Edificio%20Omni%20San%20Jos%C3%A9%20Costa%20Rica",
 };
 
-export const ENVIOS = [
+export type OpcionEnvio = {
+  id: string;
+  nombre: string;
+  detalle: string;
+  pideDireccion: boolean;
+  /** El cliente escribe a qué tienda se lo mandamos. */
+  pideTienda?: boolean;
+  /** Si existe, el envío no entra en el SINPE: el cliente lo paga al retirar. */
+  cobroAlRetirar?: string;
+};
+
+/** Deben coincidir con CONFIG.envios en apps-script/Pedidos.gs. */
+export const ENVIOS: OpcionEnvio[] = [
   {
     id: "correos",
     nombre: "Correos de Costa Rica",
     detalle: "A todo el país, con rastreo. Depende de tu cantón y del peso",
     pideDireccion: true,
+  },
+  {
+    id: "entre-tiendas",
+    nombre: "Envío entre tiendas",
+    detalle: "Te lo mandamos a la tienda que nos digás. Tarda según la tienda",
+    pideDireccion: false,
+    pideTienda: true,
+    cobroAlRetirar: "₡500 a ₡600",
   },
   {
     id: "retiro-omni",

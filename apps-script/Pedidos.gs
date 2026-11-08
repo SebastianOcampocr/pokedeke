@@ -34,6 +34,13 @@ const CONFIG = {
   // Estos valores deben coincidir con lib/tienda.ts.
   envios: {
     correos: { nombre: "Correos de Costa Rica", pideDireccion: true },
+    // El cliente escribe la tienda en "Dirección". El envío no va en el SINPE.
+    "entre-tiendas": {
+      nombre: "Envío entre tiendas",
+      pideDireccion: false,
+      pideTienda: true,
+      cobroAlRetirar: "₡500 a ₡600",
+    },
     "retiro-omni": { nombre: "Retiro en Edificio Omni", pideDireccion: false },
   },
   // EMS Nacional Paquetes saliendo de la GAM, con IVA. correos.go.cr/servicio-ems
@@ -483,11 +490,14 @@ function crearPedido(datos) {
   }
 
   const ubicacion = envio.pideDireccion ? texto(datos.ubicacion, 150) : "";
-  const direccion = envio.pideDireccion
+  const direccion = envio.pideDireccion || envio.pideTienda
     ? texto(datos.direccion, 250)
     : "Retiro coordinado por WhatsApp";
   if (envio.pideDireccion && (!ubicacion || !direccion)) {
     return { ok: false, error: "Falta la dirección de entrega." };
+  }
+  if (envio.pideTienda && direccion.length < 3) {
+    return { ok: false, error: "Escribí a qué tienda te lo enviamos." };
   }
 
   const filas = filasDePedidos();
@@ -558,11 +568,8 @@ function crearPedido(datos) {
   hoja(HOJAS.pedidos).appendRow(fila);
   olvidarStock();
 
-  const montos = resumenDeMontos(subtotal, descuento, cupon, costoEnvio, total);
-  const entrega = [
-    ["Método", envio.nombre],
-    ["Dirección", envio.pideDireccion ? ubicacion + ". " + direccion : ""],
-  ];
+  const montos = resumenDeMontos(subtotal, descuento, cupon, costoEnvio, total, envio.cobroAlRetirar);
+  const entrega = datosDeEntrega(envio, envio.nombre, ubicacion, direccion);
 
   avisar(
     "Nuevo pedido " + numero + " · " + colones(total) + " · " + cliente,
@@ -575,12 +582,15 @@ function crearPedido(datos) {
       correo ? "Correo: " + correo : "",
       "Envío: " + envio.nombre,
       envio.pideDireccion ? "Dirección: " + ubicacion + ". " + direccion : "",
+      envio.pideTienda ? "Tienda: " + direccion : "",
       "",
       resumen,
       "",
       "Subtotal: " + colones(subtotal),
       descuento ? "Descuento: " + colones(descuento) : "",
-      "Envío: " + colones(costoEnvio),
+      envio.cobroAlRetirar
+        ? "Envío: lo paga el cliente al retirar (" + envio.cobroAlRetirar + ")"
+        : "Envío: " + colones(costoEnvio),
       "Total a recibir por SINPE: " + colones(total),
       "",
       "Cuando el SINPE entre, cambiá el Estado a Pagado en la pestaña Pedidos web.",
@@ -624,6 +634,7 @@ function crearPedido(datos) {
     lineas: lineas.map(({ quedan, ...linea }) => linea),
     resumen,
     montos,
+    alRetirar: envio.cobroAlRetirar,
   });
 
   return { ok: true, numero, clave, subtotal, descuento, costoEnvio, total, lineas };
@@ -633,11 +644,23 @@ function esRetiro(fila) {
   return fila[COL.envio - 1] === CONFIG.envios["retiro-omni"].nombre;
 }
 
-function entregaDeFila(fila) {
+/** La opción de envío por el nombre que queda en Pedidos web. */
+function envioPorNombre(nombre) {
+  return Object.values(CONFIG.envios).find((envio) => envio.nombre === nombre) || {};
+}
+
+function datosDeEntrega(envio, nombre, ubicacion, direccion) {
   return [
-    ["Método", fila[COL.envio - 1]],
-    ["Dirección", esRetiro(fila) ? "" : fila[COL.ubicacion - 1] + ". " + fila[COL.direccion - 1]],
+    ["Método", nombre],
+    ["Dirección", envio.pideDireccion ? ubicacion + ". " + direccion : ""],
+    ["Tienda", envio.pideTienda ? direccion : ""],
+    ["Costo del envío", envio.cobroAlRetirar ? envio.cobroAlRetirar + ", se paga al retirar" : ""],
   ];
+}
+
+function entregaDeFila(fila) {
+  const nombre = fila[COL.envio - 1];
+  return datosDeEntrega(envioPorNombre(nombre), nombre, fila[COL.ubicacion - 1], fila[COL.direccion - 1]);
 }
 
 function buscarFilaDePedido(numero) {
@@ -692,7 +715,7 @@ function guardarComprobante(datos) {
       ],
       entrega: entregaDeFila(fila),
       lineas: detalle.lineas.map(({ quedan, ...linea }) => linea),
-      resumen: resumenDeMontos(detalle.subtotal, detalle.descuento, detalle.cupon, fila[COL.costoEnvio - 1], fila[COL.total - 1]),
+      resumen: resumenDeMontos(detalle.subtotal, detalle.descuento, detalle.cupon, fila[COL.costoEnvio - 1], fila[COL.total - 1], envioPorNombre(fila[COL.envio - 1]).cobroAlRetirar),
       pasos: [
         "Revisá en tu banco que entró el monto exacto, con " + numero + " en el detalle. El número de comprobante solo no prueba el pago.",
         "Si entró, cambiá el Estado a Pagado en Pedidos web. La venta pasa sola a Ventas.",
@@ -772,11 +795,12 @@ function fechaLegible(fecha) {
   return Utilities.formatDate(new Date(fecha), libro().getSpreadsheetTimeZone(), "dd/MM/yyyy h:mm a");
 }
 
-function resumenDeMontos(subtotal, descuento, cupon, costoEnvio, total) {
+/** `alRetirar` es el costo del envío que no va en el SINPE (envío entre tiendas). */
+function resumenDeMontos(subtotal, descuento, cupon, costoEnvio, total, alRetirar) {
   return [
     ["Subtotal", colones(subtotal)],
     ["Cupón " + (cupon || ""), descuento ? "−" + colones(descuento) : ""],
-    ["Envío", costoEnvio ? colones(costoEnvio) : "Gratis"],
+    ["Envío", alRetirar ? "Al retirar (" + alRetirar + ")" : costoEnvio ? colones(costoEnvio) : "Gratis"],
     ["Total", colones(total)],
   ];
 }
@@ -916,13 +940,16 @@ function avisar(asunto, lineas, responderA, html) {
 }
 
 /** Las respuestas del cliente llegan al correo de la tienda. */
-function confirmarAlCliente({ correo, numero, fecha, total, cliente, whatsapp, entrega, lineas, resumen, montos }) {
+function confirmarAlCliente({ correo, numero, fecha, total, cliente, whatsapp, entrega, lineas, resumen, montos, alRetirar }) {
   const primerNombre = String(cliente).split(" ")[0];
   const pasos = [
     "Hacé el SINPE Móvil por el monto exacto, con " + numero + " en el detalle.",
     "Escribí el número de comprobante en la página. Si ya la cerraste, respondé este correo con ese número.",
     "Cuando confirmemos el pago te llega otro correo y te escribimos por WhatsApp.",
   ];
+  if (alRetirar) {
+    pasos.push("El envío entre tiendas (" + alRetirar + ") no va en el SINPE: lo pagás al retirar en la tienda.");
+  }
   mandarAlCliente({
     to: correo,
     subject: "Recibimos tu pedido " + numero + " · " + CONFIG.nombreTienda,
@@ -965,12 +992,18 @@ function confirmarAlCliente({ correo, numero, fecha, total, cliente, whatsapp, e
 }
 
 function pasosTrasElPago(fila, lineas) {
+  const envio = envioPorNombre(fila[COL.envio - 1]);
   const pasos = esRetiro(fila)
     ? ["Te escribimos por WhatsApp para cuadrar el día y la hora del retiro."]
-    : [
-        "Te escribimos por WhatsApp para confirmar la entrega.",
-        "Despachamos en 1 a 2 días hábiles y te pasamos el número de guía.",
-      ];
+    : envio.pideTienda
+      ? [
+          "Te escribimos por WhatsApp cuando lo enviemos a la tienda que nos dijiste.",
+          "Lo que tarda depende de la tienda. El envío (" + envio.cobroAlRetirar + ") lo pagás al retirar.",
+        ]
+      : [
+          "Te escribimos por WhatsApp para confirmar la entrega.",
+          "Despachamos en 1 a 2 días hábiles y te pasamos el número de guía.",
+        ];
   if (lineas.some((linea) => linea.preventa)) {
     pasos.unshift("Recibimos tu adelanto. Te avisamos cuando llegue la preventa para cobrar el resto.");
   }
@@ -1012,7 +1045,7 @@ function confirmarPago(fila) {
       ],
       entrega: entregaDeFila(fila),
       lineas: detalle.lineas.map(({ quedan, ...linea }) => linea),
-      resumen: resumenDeMontos(detalle.subtotal, detalle.descuento, detalle.cupon, fila[COL.costoEnvio - 1], total),
+      resumen: resumenDeMontos(detalle.subtotal, detalle.descuento, detalle.cupon, fila[COL.costoEnvio - 1], total, envioPorNombre(fila[COL.envio - 1]).cobroAlRetirar),
       pasos,
       botones: botonesDelCliente(numero),
       pie: "Si tenés alguna duda, respondé este correo o escribinos. Tus datos son solo para este pedido.",
