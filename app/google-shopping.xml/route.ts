@@ -1,5 +1,6 @@
 import {
   esPedidoEspecial,
+  esUsada,
   esPreventa,
   estaAgotado,
   PRODUCTOS,
@@ -72,7 +73,7 @@ function item(producto: Producto) {
           ["g:sale_price", monto(producto.precio)] as [string, string],
         ]
       : [["g:price", monto(producto.precio)] as [string, string]]),
-    ["g:condition", "new"],
+    ["g:condition", esUsada(producto) ? "used" : "new"],
     ["g:brand", "Pokémon"],
     ["g:identifier_exists", "no"],
     ["g:google_product_category", CATEGORIA_GOOGLE],

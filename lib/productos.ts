@@ -164,6 +164,18 @@ export const disponibles = () =>
 
 export const conFoto = (producto: Producto) => producto.fotos.length > 0;
 
+/**
+ * Las cartas usadas traen su condición ("Lightly Played (LP)"); sin condición es
+ * Near Mint. Devuelve la sigla ("LP") o "" si está como nueva.
+ */
+export function siglaDeCondicion(producto: Producto) {
+  const condicion = producto.carta?.condicion ?? "";
+  if (!condicion || /near mint|\bNM\b/i.test(condicion)) return "";
+  return condicion.match(/\(([A-Z]{2,3})\)/)?.[1] ?? condicion;
+}
+
+export const esUsada = (producto: Producto) => siglaDeCondicion(producto) !== "";
+
 const NOMBRES_DE_CATEGORIA = [
   { categoria: "ETB", texto: "ETB" },
   { categoria: "Booster box", texto: "Booster box" },

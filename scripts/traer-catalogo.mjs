@@ -168,8 +168,9 @@ function fotosDelProducto(nombre, celda, { existentes, porClave }, avisos) {
   );
 }
 
+/** "Unown #? (Unseen Forces)" también vale: algunas cartas se numeran con ? o !. */
 function datosDeCarta(nombre) {
-  const partes = nombre.match(/#\s*([\w/-]+)\s*(?:\((.+)\))?\s*$/);
+  const partes = nombre.match(/#\s*([\w/?!-]+)\s*(?:\((.+)\))?\s*$/);
   return {
     coleccion: partes?.[2]?.trim() ?? "",
     numero: partes?.[1] ?? "",
@@ -177,6 +178,13 @@ function datosDeCarta(nombre) {
     condicion: "",
   };
 }
+
+/**
+ * Las cartas usadas dicen su condición en la descripción: "Condición: Lightly
+ * Played (LP)." Las que no la dicen son Near Mint, recién salidas del sobre.
+ */
+export const condicionDe = (descripcion) =>
+  descripcion.match(/Condición:\s*([^.]+?)\s*\./)?.[1] ?? "";
 
 const TIPOS = "Planta|Fuego|Agua|Rayo|Psíquico|Lucha|Oscuro|Metálico|Dragón|Incoloro|Hada";
 const TIPO_EN_DESCRIPCION = new RegExp(`\\btipo (${TIPOS})\\b`);
@@ -323,6 +331,7 @@ export function armarCatalogo(textoCsv, fotos) {
       avisos.push(`${grupo.nombre}: todavía no tiene foto.`);
     }
     const descripcion = ultimo("Descripción") || descripcionDe(categoria, carta);
+    if (carta) carta.condicion = condicionDe(descripcion);
     const tipo = tipoDe(grupo.nombre, descripcion, carta);
 
     return [

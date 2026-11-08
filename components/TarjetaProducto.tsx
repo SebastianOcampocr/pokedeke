@@ -8,6 +8,7 @@ import {
   esPedidoEspecial,
   estaAgotado,
   seAparta,
+  siglaDeCondicion,
   type Producto,
 } from "@/lib/productos";
 import { useAgotadosAlFinal, useProductoVivo } from "@/lib/vivo";
@@ -121,6 +122,7 @@ export function TarjetaProducto({
     agotado ? "Agotado" : null,
     producto.categoriaCorta,
     producto.idioma === "Otro" ? null : producto.idioma || null,
+    siglaDeCondicion(producto) || null,
     producto.llegada
       ? `${esPedidoEspecial(producto) ? "Entrega después del" : "Llega el"} ${fechaCorta(producto.llegada)}`
       : null,

@@ -17,6 +17,7 @@ import { colones, fechaCorta } from "@/lib/formato";
 import {
   buscarProducto,
   esPedidoEspecial,
+  esUsada,
   estaAgotado,
   PRODUCTOS,
 } from "@/lib/productos";
@@ -130,7 +131,9 @@ async function ContenidoProducto({
               : esPedidoEspecial(producto)
                 ? "https://schema.org/PreOrder"
                 : "https://schema.org/InStock",
-            itemCondition: "https://schema.org/NewCondition",
+            itemCondition: esUsada(producto)
+              ? "https://schema.org/UsedCondition"
+              : "https://schema.org/NewCondition",
             seller: { "@type": "Organization", name: TIENDA.nombre },
           },
         }}
