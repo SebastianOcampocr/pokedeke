@@ -247,10 +247,10 @@ export default function Inicio() {
         <div className="mx-auto flex max-w-6xl flex-col gap-10 px-4 py-8 md:py-10">
           <SeViene />
           <Seccion
-            titulo="Pedidos especiales"
+            titulo="Te lo traemos de Estados Unidos"
             enlace="/catalogo?etiqueta=Pedido%20especial"
             productos={especiales}
-            texto="Lo que es difícil de conseguir aquí: lo traemos de Estados Unidos. Lo apartás pagando el 100% y, si al final no lo podemos traer, te devolvemos todo."
+            texto="Lo que casi no se consigue en Costa Rica, lo importamos para vos. Apartalo pagando el 100%: si al final no lo podemos traer, te devolvemos todo."
           />
           <Seccion
             titulo="Preventas"

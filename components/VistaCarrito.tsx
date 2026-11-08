@@ -237,7 +237,7 @@ export function VistaCarrito() {
                   {esPreventa(producto) ? (
                     `Adelanto de preventa: ${colones(precio)}`
                   ) : esPedidoEspecial(producto) ? (
-                    `${colones(precio)} c/u · Pedido especial${
+                    `${colones(precio)} c/u · De Estados Unidos${
                       producto.llegada
                         ? `, se entrega después del ${fechaCorta(producto.llegada)}`
                         : ""

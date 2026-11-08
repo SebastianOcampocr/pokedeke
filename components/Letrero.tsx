@@ -10,7 +10,7 @@ import {
 const AVISOS = [
   ...categoriasConProducto().map(({ texto }) => `¡Hay ${texto.toLowerCase()}!`),
   ...(hayPreventas() ? ["¡Hay preventas!"] : []),
-  ...(hayPedidosEspeciales() ? ["¡Traemos de EE. UU.!"] : []),
+  ...(hayPedidosEspeciales() ? ["¡Te lo traemos de EE. UU.!"] : []),
 ];
 
 if (AVISOS.length === 0) AVISOS.push("¡Pase adelante!");

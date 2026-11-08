@@ -251,7 +251,7 @@ export function Catalogo({
                   )
                 }
               >
-                Pedidos especiales
+                De Estados Unidos
               </button>
             ) : null}
           </div>

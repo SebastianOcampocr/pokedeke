@@ -113,7 +113,7 @@ const HOJAS = {
 };
 
 // Sube con cada cambio: la página y las pruebas leen esta marca con un GET.
-const VERSION = "2026-11-07-pedido-especial";
+const VERSION = "2026-11-07-de-estados-unidos";
 const PEDIDO_ESPECIAL = "Pedido especial";
 const PRIMERA_FILA = 5;
 const PENDIENTE = "Pendiente de pago";
@@ -772,7 +772,7 @@ function datosDeEntrega(envio, nombre, ubicacion, direccion, despacho, aparte, e
     ["Tienda", envio.pideTienda ? direccion : ""],
     ["Costo del envío", aparte ? "Varía según la tienda, se confirma por WhatsApp" : ""],
     ["Sale el", despacho || ""],
-    ["Se entrega", especial ? especial.charAt(0).toUpperCase() + especial.slice(1) + " (pedido especial)" : ""],
+    ["Se entrega", especial ? especial.charAt(0).toUpperCase() + especial.slice(1) + " (de Estados Unidos)" : ""],
   ];
 }
 
@@ -1020,7 +1020,7 @@ function correoConDiseno({ etiqueta, estado, colorEstado, saludo, numero, fecha,
     '<div style="font-weight:bold;">' + escapar(linea.nombre) + "</div>" +
     '<div style="font-size:13px;color:#444444;">' + escapar(linea.cantidad) + " × " + escapar(colones(linea.precio)) +
     (linea.preventa ? " · Adelanto de preventa" : "") +
-    (linea.especial ? " · Pedido especial, se entrega " + entregaEspecial([linea]) : "") +
+    (linea.especial ? " · De Estados Unidos, se entrega " + entregaEspecial([linea]) : "") +
     (linea.oferta ? " · Oferta " + escapar(linea.oferta) + ", antes " + escapar(colones(linea.precioNormal)) : "") +
     (linea.quedan === undefined ? "" : " · " + (linea.quedan > 0 ? "Quedan " + escapar(linea.quedan) : "Era la última")) +
     '</div></td><td style="padding:9px 0;border-bottom:1px solid #e3d6ad;text-align:right;white-space:nowrap;font-weight:bold;vertical-align:top;">' +
@@ -1146,7 +1146,7 @@ function confirmarAlCliente({ correo, numero, fecha, total, cliente, whatsapp, e
   ]);
   if (especial) {
     pasos.push(
-      "Tu pedido trae un pedido especial que traemos de Estados Unidos: se entrega " + especial +
+      "Tu pedido trae productos que importamos de Estados Unidos: se entrega " + especial +
         ". Hacemos todo lo posible por traerlo; si por algo no podemos, te devolvemos el 100% por SINPE Móvil a la misma cuenta.",
     );
   } else if (despacho) {
@@ -1201,7 +1201,7 @@ function pasosTrasElPago(fila, lineas) {
   const especial = entregaEspecial(lineas);
   if (especial) {
     return [
-      "Tu pedido especial queda pagado y apartado. Se entrega " + especial + ": cuando lo tengamos te llega un correo y te escribimos por WhatsApp para coordinar.",
+      "Tu producto de Estados Unidos queda pagado y apartado. Se entrega " + especial + ": cuando lo tengamos te llega un correo y te escribimos por WhatsApp para coordinar.",
       "Si por algo no lo podemos traer, te devolvemos el 100% por SINPE Móvil a la misma cuenta.",
     ];
   }
@@ -1288,18 +1288,18 @@ function avisarConseguido(fila) {
   ];
   mandarAlCliente({
     to: correo,
-    subject: "¡Ya conseguimos tu pedido especial! " + numero + " · " + CONFIG.nombreTienda,
+    subject: "¡Ya tenemos tu producto de Estados Unidos! " + numero + " · " + CONFIG.nombreTienda,
     body: [
-      "¡Buenas noticias, " + primerNombre + "! Ya conseguimos tu pedido especial " + numero + " y pronto está listo para entregar.",
+      "¡Buenas noticias, " + primerNombre + "! Ya tenemos lo que te trajimos de Estados Unidos (pedido " + numero + ") y pronto está listo para entregar.",
       "",
       "Qué sigue:",
       ...pasos,
     ].join("\n"),
     htmlBody: correoConDiseno({
-      etiqueta: "Pedido especial",
+      etiqueta: "De Estados Unidos",
       estado: CONSEGUIDO,
       colorEstado: "#127a43",
-      saludo: "¡Buenas noticias, " + primerNombre + "! Ya conseguimos tu pedido especial y pronto está listo para entregar.",
+      saludo: "¡Buenas noticias, " + primerNombre + "! Ya tenemos lo que te trajimos de Estados Unidos y pronto está listo para entregar.",
       numero,
       fecha: fila[COL.fecha - 1],
       total: fila[COL.total - 1],

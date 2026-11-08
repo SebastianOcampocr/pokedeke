@@ -30,7 +30,7 @@ const ENLACES = [
     ? [
         {
           href: "/catalogo?etiqueta=Pedido%20especial",
-          texto: "Pedidos especiales",
+          texto: "De Estados Unidos",
         },
       ]
     : []),

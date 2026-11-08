@@ -41,7 +41,7 @@ export function Calcomania({ producto: guardado }: { producto: Producto }) {
     const fondo = seAparta(producto) ? "bg-azul" : "bg-rojo";
     return (
       <span className={`calcomania -rotate-2 ${fondo}`}>
-        {esPedidoEspecial(producto) ? "Especial" : producto.etiqueta}
+        {esPedidoEspecial(producto) ? "De EE. UU." : producto.etiqueta}
       </span>
     );
   }

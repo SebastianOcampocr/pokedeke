@@ -243,7 +243,7 @@ function Confirmacion({
         </p>
         {pedido.especial ? (
           <p className="text-sm leading-snug">
-            Tu pedido trae un pedido especial: se entrega{" "}
+            Tu pedido trae productos de Estados Unidos: se entrega{" "}
             <strong>{cuandoSeEntrega(pedido.especial.llegada)}</strong>. Si por
             algo no lo podemos traer, te devolvemos el 100% a la misma cuenta.
           </p>
@@ -510,7 +510,7 @@ export function Pago() {
           ))}
           {especiales.length > 0 ? (
             <p className="text-sm leading-snug font-bold">
-              Tu pedido trae un pedido especial: todo se entrega junto{" "}
+              Tu pedido trae productos de Estados Unidos: todo se entrega junto{" "}
               {cuandoSeEntrega(llegadaEspecial)}. Si querés lo demás antes,
               hacé dos pedidos.
             </p>
@@ -668,7 +668,7 @@ export function Pago() {
         {especiales.length > 0 ? (
           <AvisoPedidoEspecial
             llegada={llegadaEspecial}
-            titulo="Tu pedido trae un pedido especial"
+            titulo="Tu pedido trae productos de Estados Unidos"
           />
         ) : null}
         {error ? (

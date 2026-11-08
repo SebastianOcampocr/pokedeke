@@ -15,7 +15,7 @@ const PASOS: { estado: Estado; texto: string }[] = [
   { estado: "Pagado", texto: "Recibimos tu pago" },
   {
     estado: "Conseguido",
-    texto: "Ya conseguimos tu pedido especial: pronto está listo para entregar",
+    texto: "Ya tenemos tu producto de Estados Unidos: pronto está listo para entregar",
   },
   { estado: "Enviado", texto: "Tu pedido va en camino" },
   { estado: "Entregado", texto: "Ya lo tenés en tus manos" },
@@ -85,7 +85,8 @@ function Seguimiento({ pedido }: { pedido: PedidoPublico }) {
 
       {pedido.especial ? (
         <p>
-          Trae un pedido especial: se entrega <strong>{pedido.especial}</strong>.
+          Trae productos de Estados Unidos: se entrega{" "}
+          <strong>{pedido.especial}</strong>.
         </p>
       ) : null}
 

@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 const SECCIONES = [
   { id: "envios", titulo: "Envíos" },
   { id: "cambios", titulo: "Cambios y devoluciones" },
-  { id: "pedidos-especiales", titulo: "Pedidos especiales" },
+  { id: "pedidos-especiales", titulo: "Productos de Estados Unidos" },
   { id: "terminos", titulo: "Términos" },
   { id: "privacidad", titulo: "Privacidad" },
 ];
@@ -93,11 +93,12 @@ export default function PaginaPoliticas() {
             </ul>
 
             <h2 id="pedidos-especiales" className="scroll-mt-20">
-              Pedidos especiales
+              Productos de Estados Unidos
             </h2>
             <p>
-              Algunos productos difíciles de conseguir aquí los traemos de
-              Estados Unidos. Se marcan como pedido especial y funcionan así:
+              Algunos productos que casi no se consiguen en Costa Rica los
+              importamos de Estados Unidos. Se marcan con “Te lo traemos de
+              Estados Unidos” y funcionan así:
             </p>
             <ul>
               <li>

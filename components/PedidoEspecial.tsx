@@ -12,14 +12,14 @@ export function cuandoSeEntrega(llegada?: string) {
 export function condicionesPedidoEspecial(llegada?: string) {
   return [
     "Lo apartás pagando el 100% por SINPE Móvil.",
-    `Lo traemos de Estados Unidos y se entrega ${cuandoSeEntrega(llegada)}.`,
+    `Lo importamos de Estados Unidos y se entrega ${cuandoSeEntrega(llegada)}.`,
     "Hacemos todo lo posible por traerlo, pero depende de la disponibilidad. Si por algo no lo podemos entregar, te avisamos por WhatsApp y te devolvemos el 100% de lo que pagaste, por SINPE Móvil a la misma cuenta.",
   ];
 }
 
 export function AvisoPedidoEspecial({
   llegada,
-  titulo = "Pedido especial desde Estados Unidos",
+  titulo = "Te lo traemos de Estados Unidos",
   className = "",
 }: {
   llegada?: string;
