@@ -7555,5 +7555,56 @@
       "condicion": ""
     },
     "tipo": "Oscuro"
+  },
+  {
+    "id": "C324",
+    "slug": "etb-destined-rivals",
+    "nombre": "ETB Destined Rivals",
+    "juego": "Pokémon",
+    "categoria": "ETB",
+    "categoriaCorta": "ETB",
+    "idioma": "Inglés",
+    "precio": 53500,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 324,
+    "fotos": [
+      "/productos/etb-destined-rivals.webp"
+    ],
+    "descripcion": "Elite Trainer Box de Scarlet & Violet: Destined Rivals, en inglés, con Giovanni y Mewtwo del Team Rocket en la caja. Trae 9 sobres de Destined Rivals y accesorios para jugar, en una caja para guardar tus cartas."
+  },
+  {
+    "id": "C325",
+    "slug": "booster-bundle-black-bolt",
+    "nombre": "Booster Bundle Black Bolt",
+    "juego": "Pokémon",
+    "categoria": "Booster bundle",
+    "categoriaCorta": "Bundle",
+    "idioma": "Inglés",
+    "precio": 58500,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 325,
+    "fotos": [
+      "/productos/booster-bundle-black-bolt.webp"
+    ],
+    "descripcion": "Booster Bundle de Scarlet & Violet: Black Bolt, en inglés, con Zekrom en la caja. Trae 6 sobres de Black Bolt."
+  },
+  {
+    "id": "C326",
+    "slug": "booster-bundle-white-flare",
+    "nombre": "Booster Bundle White Flare",
+    "juego": "Pokémon",
+    "categoria": "Booster bundle",
+    "categoriaCorta": "Bundle",
+    "idioma": "Inglés",
+    "precio": 54500,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 326,
+    "fotos": [
+      "/productos/booster-bundle-white-flare.webp"
+    ],
+    "descripcion": "Booster Bundle de Scarlet & Violet: White Flare, en inglés, con Reshiram en la caja. Trae 6 sobres de White Flare."
   }
 ]
