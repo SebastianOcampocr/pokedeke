@@ -32,16 +32,62 @@ export type OpcionEnvio = {
   nombre: string;
   detalle: string;
   pideDireccion: boolean;
-  /** El cliente escribe a qué tienda se lo mandamos. */
+  /** El cliente elige la tienda de TIENDAS_DESTINO, u "Otra tienda". */
   pideTienda?: boolean;
-  /**
-   * Si existe, la página no calcula el envío: se cuadra por WhatsApp y se suma
-   * al mismo SINPE de los productos. Es el texto que se muestra como precio.
-   */
-  precioAparte?: string;
   /** Sale en los días de despacho (miércoles y sábados). */
   despacho?: boolean;
 };
+
+export type TiendaDestino = {
+  id: string;
+  nombre: string;
+  detalle: string;
+  precio: number;
+};
+
+/**
+ * A dónde mandamos con envío entre tiendas y cuánto cuesta. El envío va en el
+ * mismo SINPE. Debe coincidir con CONFIG.tiendas en apps-script/Pedidos.gs.
+ */
+export const TIENDAS_DESTINO: TiendaDestino[] = [
+  {
+    id: "kira-barrio-chino",
+    nombre: "Kira Shop / Barrio Chino",
+    detalle: "Costado este del Parque de las Garantías Sociales.",
+    precio: 600,
+  },
+  {
+    id: "perron-zapote",
+    nombre: "Perron Store / Zapote",
+    detalle: "Centro Comercial Plaza del Castillo.",
+    precio: 800,
+  },
+  {
+    id: "omega-heredia",
+    nombre: "OMEGA Card Games Store / Heredia",
+    detalle: "125 metros al norte de la Municipalidad de Heredia.",
+    precio: 700,
+  },
+  {
+    id: "omega-alajuela",
+    nombre: "OMEGA Card Games Store / Alajuela",
+    detalle: "175 metros al norte de la Municipalidad de Alajuela.",
+    precio: 900,
+  },
+  {
+    id: "omega-cartago",
+    nombre: "OMEGA Card Games Store / Cartago",
+    detalle: "100 metros noroeste de los Tribunales de Justicia de Cartago.",
+    precio: 900,
+  },
+];
+
+/** Una tienda que no está en la lista: el precio se confirma por WhatsApp. */
+export const OTRA_TIENDA = "otra";
+
+export const ENVIO_TIENDAS_DESDE = Math.min(
+  ...TIENDAS_DESTINO.map((tienda) => tienda.precio),
+);
 
 export const DIAS_DE_DESPACHO = "los miércoles y sábados";
 const ZONA_CR = "America/Costa_Rica";
@@ -84,11 +130,9 @@ export const ENVIOS: OpcionEnvio[] = [
   {
     id: "entre-tiendas",
     nombre: "Envío entre tiendas",
-    detalle:
-      "Te lo mandamos a la tienda que nos digás. Precio y tiempo los cuadramos por WhatsApp",
+    detalle: "Lo retirás en una tienda de cartas. Tarda según la tienda",
     pideDireccion: false,
     pideTienda: true,
-    precioAparte: "El precio varía",
     despacho: true,
   },
   {

@@ -10,6 +10,8 @@ export type PedidoNuevo = {
   envio: string;
   ubicacion: string;
   direccion: string;
+  /** Solo envío entre tiendas: el id de TIENDAS_DESTINO u "otra". */
+  tienda?: string;
   cupon: string | null;
   lineas: { slug: string; cantidad: number }[];
   /** Campo escondido: si viene lleno, lo mandó un robot. */

@@ -32,6 +32,8 @@ export type Pedido = {
   guia: string;
   /** Solo la conoce quien hizo el pedido: permite mandar el comprobante. */
   clave?: string;
+  /** Envío a una tienda fuera de la lista: el monto se confirma por WhatsApp. */
+  envioPorWhatsApp?: boolean;
 };
 
 const almacen = crearAlmacen<Pedido[]>("demo-pedidos-v3", () => [], []);

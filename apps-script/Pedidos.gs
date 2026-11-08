@@ -35,16 +35,24 @@ const CONFIG = {
   // `despacho`: sale en los días de despacho (ver diaDeDespacho).
   envios: {
     correos: { nombre: "Correos de Costa Rica", pideDireccion: true, despacho: true },
-    // El cliente escribe la tienda en "Dirección". La tienda paga el envío al
-    // mandarlo; el monto varía, se le confirma por WhatsApp y se suma al mismo SINPE.
+    // El cliente elige una tienda de CONFIG.tiendas y el envío se suma al SINPE.
+    // Con "Otra tienda" escribe cuál; el monto se le confirma por WhatsApp y va
+    // en el mismo SINPE. La tienda queda en la columna Dirección.
     "entre-tiendas": {
       nombre: "Envío entre tiendas",
       pideDireccion: false,
       pideTienda: true,
-      precioAparte: true,
       despacho: true,
     },
     "retiro-omni": { nombre: "Retiro en Edificio Omni", pideDireccion: false },
+  },
+  // Tiendas del envío entre tiendas. Debe coincidir con TIENDAS_DESTINO en lib/tienda.ts.
+  tiendas: {
+    "kira-barrio-chino": { nombre: "Kira Shop / Barrio Chino", detalle: "Costado este del Parque de las Garantías Sociales.", precio: 600 },
+    "perron-zapote": { nombre: "Perron Store / Zapote", detalle: "Centro Comercial Plaza del Castillo.", precio: 800 },
+    "omega-heredia": { nombre: "OMEGA Card Games Store / Heredia", detalle: "125 metros al norte de la Municipalidad de Heredia.", precio: 700 },
+    "omega-alajuela": { nombre: "OMEGA Card Games Store / Alajuela", detalle: "175 metros al norte de la Municipalidad de Alajuela.", precio: 900 },
+    "omega-cartago": { nombre: "OMEGA Card Games Store / Cartago", detalle: "100 metros noroeste de los Tribunales de Justicia de Cartago.", precio: 900 },
   },
   // EMS Nacional Paquetes saliendo de la GAM, con IVA. correos.go.cr/servicio-ems
   tarifaCorreos: {
@@ -493,13 +501,21 @@ function crearPedido(datos) {
   }
 
   const ubicacion = envio.pideDireccion ? texto(datos.ubicacion, 150) : "";
-  const direccion = envio.pideDireccion || envio.pideTienda
-    ? texto(datos.direccion, 250)
-    : "Retiro coordinado por WhatsApp";
+  // Envío entre tiendas: una tienda de la lista tiene precio fijo; "otra" se cuadra por WhatsApp.
+  const tienda = envio.pideTienda ? CONFIG.tiendas[texto(datos.tienda, 60)] : null;
+  const aparte = Boolean(envio.pideTienda && !tienda);
+  if (envio.pideTienda && !tienda && texto(datos.tienda, 60) !== "otra") {
+    return { ok: false, error: "Elegí en cuál tienda lo retirás." };
+  }
+  const direccion = tienda
+    ? tienda.nombre + " (" + tienda.detalle + ")"
+    : envio.pideDireccion || envio.pideTienda
+      ? texto(datos.direccion, 250)
+      : "Retiro coordinado por WhatsApp";
   if (envio.pideDireccion && (!ubicacion || !direccion)) {
     return { ok: false, error: "Falta la dirección de entrega." };
   }
-  if (envio.pideTienda && direccion.length < 3) {
+  if (aparte && direccion.length < 3) {
     return { ok: false, error: "Escribí a qué tienda te lo enviamos." };
   }
 
@@ -537,7 +553,10 @@ function crearPedido(datos) {
   const subtotal = lineas.reduce((suma, linea) => suma + linea.precio * linea.cantidad, 0);
   const descuento = calcularDescuento(datos.cupon, subtotal);
   const tarifa = envio.pideDireccion ? costoDeCorreos(ubicacion, gramos) : 0;
-  const costoEnvio = subtotal >= CONFIG.envioGratisDesde ? 0 : tarifa;
+  // El envío entre tiendas lo pagamos al mandarlo: no entra en el envío gratis.
+  const costoEnvio = envio.pideTienda
+    ? (tienda ? tienda.precio : 0)
+    : subtotal >= CONFIG.envioGratisDesde ? 0 : tarifa;
   const total = subtotal - descuento + costoEnvio;
   const numero = siguienteNumero(filas);
   const clave = Utilities.getUuid();
@@ -571,10 +590,10 @@ function crearPedido(datos) {
   hoja(HOJAS.pedidos).appendRow(fila);
   olvidarStock();
 
-  const montos = resumenDeMontos(subtotal, descuento, cupon, costoEnvio, total, envio.precioAparte);
-  const masEnvio = envio.precioAparte ? " más el envío" : "";
+  const montos = resumenDeMontos(subtotal, descuento, cupon, costoEnvio, total, aparte);
+  const masEnvio = aparte ? " más el envío" : "";
   const despacho = envio.despacho ? textoDespacho(fila[COL.fecha - 1]) : "";
-  const entrega = datosDeEntrega(envio, envio.nombre, ubicacion, direccion, despacho);
+  const entrega = datosDeEntrega(envio, envio.nombre, ubicacion, direccion, despacho, aparte);
 
   avisar(
     "Nuevo pedido " + numero + " · " + colones(total) + " · " + cliente,
@@ -593,7 +612,7 @@ function crearPedido(datos) {
       "",
       "Subtotal: " + colones(subtotal),
       descuento ? "Descuento: " + colones(descuento) : "",
-      envio.precioAparte
+      aparte
         ? "Envío: varía según la tienda. Confirmale el monto por WhatsApp; va en el mismo SINPE."
         : "Envío: " + colones(costoEnvio),
       "Total a recibir por SINPE: " + colones(total) + masEnvio,
@@ -606,7 +625,7 @@ function crearPedido(datos) {
       numero,
       fecha: fila[COL.fecha - 1],
       total,
-      rotuloTotal: envio.precioAparte ? "Productos (falta sumar el envío)" : "Total a recibir por SINPE",
+      rotuloTotal: aparte ? "Productos (falta sumar el envío)" : "Total a recibir por SINPE",
       caja: datosDePago(numero, fila[COL.fecha - 1]),
       cliente: [
         ["Nombre", cliente],
@@ -618,7 +637,7 @@ function crearPedido(datos) {
         : entrega,
       lineas,
       resumen: montos,
-      pasos: (envio.precioAparte
+      pasos: (aparte
         ? ["Escribile por WhatsApp con el costo del envío entre tiendas. El SINPE debe ser " + colones(total) + " más ese envío."]
         : []
       ).concat([
@@ -644,7 +663,7 @@ function crearPedido(datos) {
     lineas: lineas.map(({ quedan, ...linea }) => linea),
     resumen,
     montos,
-    precioAparte: envio.precioAparte,
+    precioAparte: aparte,
     despacho,
   });
 
@@ -658,6 +677,11 @@ function esRetiro(fila) {
 /** La opción de envío por el nombre que queda en Pedidos web. */
 function envioPorNombre(nombre) {
   return Object.values(CONFIG.envios).find((envio) => envio.nombre === nombre) || {};
+}
+
+/** Envío a una tienda fuera de la lista: su costo se cuadró por WhatsApp y no está en el total. */
+function envioAparte(fila) {
+  return Boolean(envioPorNombre(fila[COL.envio - 1]).pideTienda && !Number(fila[COL.costoEnvio - 1]));
 }
 
 const DIAS = ["", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado", "domingo"];
@@ -682,12 +706,12 @@ function textoDespacho(desde) {
   return DIAS[Number(Utilities.formatDate(fecha, zona, "u"))] + " " + Utilities.formatDate(fecha, zona, "d/M");
 }
 
-function datosDeEntrega(envio, nombre, ubicacion, direccion, despacho) {
+function datosDeEntrega(envio, nombre, ubicacion, direccion, despacho, aparte) {
   return [
     ["Método", nombre],
     ["Dirección", envio.pideDireccion ? ubicacion + ". " + direccion : ""],
     ["Tienda", envio.pideTienda ? direccion : ""],
-    ["Costo del envío", envio.precioAparte ? "Varía según la tienda, se confirma por WhatsApp" : ""],
+    ["Costo del envío", aparte ? "Varía según la tienda, se confirma por WhatsApp" : ""],
     ["Sale el", despacho || ""],
   ];
 }
@@ -702,6 +726,7 @@ function entregaDeFila(fila) {
     fila[COL.ubicacion - 1],
     fila[COL.direccion - 1],
     envio.despacho ? textoDespacho(new Date()) : "",
+    envioAparte(fila),
   );
 }
 
@@ -729,7 +754,7 @@ function guardarComprobante(datos) {
   const numero = fila[COL.numero - 1];
   const cliente = fila[COL.cliente - 1];
   const detalle = leerDetalle(fila);
-  const aparte = envioPorNombre(fila[COL.envio - 1]).precioAparte;
+  const aparte = envioAparte(fila);
   avisar(
     "Comprobante de " + numero + " · " + colones(fila[COL.total - 1]) + " · " + cliente,
     [
@@ -1070,7 +1095,7 @@ function confirmarPago(fila) {
   const total = fila[COL.total - 1];
   const detalle = leerDetalle(fila);
   const pasos = pasosTrasElPago(fila, detalle.lineas);
-  const aparte = envioPorNombre(fila[COL.envio - 1]).precioAparte;
+  const aparte = envioAparte(fila);
   mandarAlCliente({
     to: correo,
     subject: "Pago confirmado de tu pedido " + numero + " · " + CONFIG.nombreTienda,

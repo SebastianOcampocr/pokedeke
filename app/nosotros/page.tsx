@@ -36,7 +36,7 @@ const PREGUNTAS = [
   {
     pregunta: "¿Hacen envíos?",
     respuesta:
-      "Sí, por Correos de Costa Rica a todo el país o con envío entre tiendas a la tienda que nos digás. El de Correos se calcula en el carrito. El precio del envío entre tiendas varía según la tienda: lo cuadramos por WhatsApp y se paga en el mismo SINPE. Lo paga quien compra. Los envíos salen los miércoles y sábados: lo que pedís de sábado a martes sale el miércoles, y de miércoles a viernes, el sábado.",
+      "Sí, por Correos de Costa Rica a todo el país o con envío entre tiendas a la tienda que nos digás. El de Correos se calcula en el carrito. El envío entre tiendas cuesta de ₡600 a ₡900 según la tienda y se paga en el mismo SINPE; si tu tienda no está en la lista, te confirmamos el precio por WhatsApp. Lo paga quien compra. Los envíos salen los miércoles y sábados: lo que pedís de sábado a martes sale el miércoles, y de miércoles a viernes, el sábado.",
   },
   {
     pregunta: "¿Cómo pago?",

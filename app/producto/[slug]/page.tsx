@@ -16,6 +16,7 @@ import { buscarProducto, estaAgotado, PRODUCTOS } from "@/lib/productos";
 import {
   DIAS_DE_DESPACHO,
   ENVIO_GRATIS_DESDE,
+  ENVIO_TIENDAS_DESDE,
   ENVIOS,
   TARIFA_CORREOS,
 } from "@/lib/tienda";
@@ -164,8 +165,8 @@ async function ContenidoProducto({
                 >
                   <span>{envio.nombre}</span>
                   <span className="font-bold whitespace-nowrap">
-                    {envio.precioAparte
-                      ? envio.precioAparte
+                    {envio.pideTienda
+                      ? `Desde ${colones(ENVIO_TIENDAS_DESDE)}`
                       : envio.pideDireccion
                         ? `Desde ${colones(TARIFA_CORREOS.gam.primerKilo)}`
                         : "Gratis"}

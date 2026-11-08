@@ -22,10 +22,13 @@ import {
   enlaceWhatsApp,
   ENVIO_GRATIS_DESDE,
   DIAS_DE_DESPACHO,
+  ENVIO_TIENDAS_DESDE,
   ENVIOS,
   fechaDeDespacho,
   LUGAR,
   type OpcionEnvio,
+  OTRA_TIENDA,
+  TIENDAS_DESTINO,
   TARIFA_CORREOS,
   tarifaCorreos,
   TIENDA,
@@ -168,7 +171,7 @@ function Confirmacion({
   const [enviando, setEnviando] = useState(false);
   const [error, setError] = useState("");
   const opcionEnvio = ENVIOS.find((opcion) => opcion.nombre === pedido.envio);
-  const precioAparte = opcionEnvio?.precioAparte;
+  const precioAparte = pedido.envioPorWhatsApp;
 
   useEffect(() => lanzarConfeti(), []);
 
@@ -304,6 +307,7 @@ export function Pago() {
   const { lineas, cupon } = useCarrito();
   const pedidos = usePedidos();
   const [envioId, setEnvioId] = useState(ENVIOS[0].id);
+  const [tiendaId, setTiendaId] = useState("");
   const [provincia, setProvincia] = useState("");
   const [canton, setCanton] = useState("");
   const [distrito, setDistrito] = useState("");
@@ -330,15 +334,18 @@ export function Pago() {
   );
   const costoCorreos = canton ? tarifaCorreos(provincia, canton, gramos) : null;
   const costoElegido = envio.pideDireccion ? costoCorreos : 0;
-  const totales = calcularTotales(
-    lineas,
-    cupon,
-    costoDeEnvio(costoElegido ?? 0, subtotal),
-  );
+  const tiendaElegida = TIENDAS_DESTINO.find((tienda) => tienda.id === tiendaId);
+  const otraTienda = Boolean(envio.pideTienda) && tiendaId === OTRA_TIENDA;
+  const faltaTienda = Boolean(envio.pideTienda) && !tiendaElegida && !otraTienda;
+  // El envío entre tiendas lo pagamos al mandarlo: no entra en el envío gratis.
+  const costoFinal = envio.pideTienda
+    ? (tiendaElegida?.precio ?? 0)
+    : costoDeEnvio(costoElegido ?? 0, subtotal);
+  const totales = calcularTotales(lineas, cupon, costoFinal);
   const faltaCanton = costoElegido === null && subtotal < ENVIO_GRATIS_DESDE;
 
-  function precioDeOpcion({ pideDireccion, precioAparte }: OpcionEnvio) {
-    if (precioAparte) return precioAparte;
+  function precioDeOpcion({ pideDireccion, pideTienda }: OpcionEnvio) {
+    if (pideTienda) return `Desde ${colones(ENVIO_TIENDAS_DESDE)}`;
     if (!pideDireccion || subtotal >= ENVIO_GRATIS_DESDE) return "Gratis";
     return costoCorreos === null
       ? `Desde ${colones(TARIFA_CORREOS.gam.primerKilo)}`
@@ -351,6 +358,10 @@ export function Pago() {
   async function hacerPedido(evento: React.FormEvent<HTMLFormElement>) {
     evento.preventDefault();
     if (enviando) return;
+    if (faltaTienda) {
+      setError("Elegí en cuál tienda lo retirás.");
+      return;
+    }
     const datos = new FormData(evento.currentTarget);
     const texto = (campo: string) => String(datos.get(campo) ?? "").trim();
     let pedido: Pedido = {
@@ -365,7 +376,9 @@ export function Pago() {
           ? ""
           : `${LUGAR.nombre}, San José`,
       direccion: envio.pideTienda
-        ? texto("tienda")
+        ? tiendaElegida
+          ? `${tiendaElegida.nombre} (${tiendaElegida.detalle})`
+          : texto("tienda")
         : texto("direccion") || "Retiro coordinado por WhatsApp",
       envio: envio.nombre,
       lineas: lineas.map(({ producto, cantidad, precio }) => ({
@@ -382,6 +395,7 @@ export function Pago() {
       referencia: "",
       estado: "Pendiente de pago",
       guia: "",
+      envioPorWhatsApp: otraTienda,
     };
 
     if (TIENDA_ABIERTA) {
@@ -394,6 +408,7 @@ export function Pago() {
         envio: envio.id,
         ubicacion: pedido.ubicacion,
         direccion: pedido.direccion,
+        ...(envio.pideTienda ? { tienda: tiendaId } : {}),
         cupon: cupon?.codigo ?? null,
         lineas: lineas.map(({ producto, cantidad }) => ({
           slug: producto.slug,
@@ -426,6 +441,7 @@ export function Pago() {
     setProvincia("");
     setCanton("");
     setDistrito("");
+    setTiendaId("");
     setConfirmado(pedido);
     window.scrollTo({ top: 0 });
   }
@@ -488,14 +504,35 @@ export function Pago() {
 
           {envio.pideTienda ? (
             <div className="mt-2 flex flex-col gap-2">
-              <Campo
-                id="tienda"
-                rotulo="¿A qué tienda te lo enviamos? Nombre de la tienda y la sucursal"
+              <p className="font-bold">¿En cuál tienda lo retirás?</p>
+              {TIENDAS_DESTINO.map((tienda) => (
+                <Opcion
+                  key={tienda.id}
+                  grupo="tienda-destino"
+                  activa={tiendaId === tienda.id}
+                  titulo={tienda.nombre}
+                  detalle={tienda.detalle}
+                  extra={colones(tienda.precio)}
+                  alElegir={() => setTiendaId(tienda.id)}
+                />
+              ))}
+              <Opcion
+                grupo="tienda-destino"
+                activa={otraTienda}
+                titulo="Otra tienda"
+                detalle="Escribí cuál y te confirmamos el precio por WhatsApp"
+                extra="Por WhatsApp"
+                alElegir={() => setTiendaId(OTRA_TIENDA)}
               />
-              <p className="text-sm leading-snug text-gris">
-                El precio del envío varía según la tienda. Te escribimos por
-                WhatsApp con el monto y lo pagás en el mismo SINPE de tu pedido.
-              </p>
+              {otraTienda ? (
+                <>
+                  <Campo id="tienda" rotulo="¿Cuál tienda? Nombre y sucursal" />
+                  <p className="text-sm leading-snug text-gris">
+                    El precio varía según la tienda. Te escribimos por WhatsApp
+                    con el monto y lo pagás en el mismo SINPE de tu pedido.
+                  </p>
+                </>
+              ) : null}
             </div>
           ) : null}
 
@@ -573,9 +610,13 @@ export function Pago() {
           <Linea
             rotulo="Envío"
             monto={
-              envio.precioAparte
+              otraTienda
                 ? "Por WhatsApp"
-                : faltaCanton
+                : faltaTienda
+                  ? "Elegí la tienda"
+                  : envio.pideTienda
+                    ? colones(totales.envio)
+                    : faltaCanton
                   ? "Falta tu cantón"
                   : totales.envio === 0
                     ? "Gratis"
@@ -583,7 +624,7 @@ export function Pago() {
             }
           />
           <Linea rotulo="Total" monto={colones(totales.total)} fuerte />
-          {envio.precioAparte ? (
+          {otraTienda ? (
             <p className="text-sm leading-snug text-gris">
               Más el envío, que te confirmamos por WhatsApp.
             </p>
