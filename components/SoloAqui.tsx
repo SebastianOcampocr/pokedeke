@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { RUTA_BASE } from "@/lib/tienda";
+import { RUTA_BASE, VENDER_ABIERTO } from "@/lib/tienda";
 import { Deke } from "./Deke";
 import { Revelar } from "./Revelar";
 
@@ -86,12 +86,16 @@ const IDEAS = [
     texto: "Próximamente: no sabés qué traen, pero sí lo mínimo que valen.",
     Arte: MiniCaja,
   },
-  {
-    href: "/vender",
-    titulo: "Vendenos tus cartas",
-    texto: "Calculá cuánto te damos por esa carta guardada.",
-    Arte: MiniMonedas,
-  },
+  ...(VENDER_ABIERTO
+    ? [
+        {
+          href: "/vender",
+          titulo: "Vendenos tus cartas",
+          texto: "Calculá cuánto te damos por esa carta guardada.",
+          Arte: MiniMonedas,
+        },
+      ]
+    : []),
 ];
 
 /** Lo que no hay en otra tienda: la razón para volver a Pokedeke. */

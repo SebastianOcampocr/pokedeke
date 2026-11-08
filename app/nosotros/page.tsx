@@ -77,9 +77,16 @@ export default function PaginaNosotros() {
                 Cómo arrancó esto
               </h2>
               <p>
-                {TIENDA.nombre} empezó en Octubre de 2026 vendiendo cartas por
-                los grupos de WhatsApp y Facebook de TCG Costa Rica. Sobre por
-                sobre, caja por caja, se fue llenando el mezzanine.
+                {TIENDA.nombre} nació de dos personas a las que Pokémon les
+                apasiona desde siempre. Entre sobres abiertos, cajas y
+                colecciones, las cartas se fueron acumulando hasta llenar el
+                mezzanine, y nos sobraban muchas.
+              </p>
+              <p>
+                En Octubre de 2026 empezamos a venderlas por los grupos de
+                WhatsApp y Facebook de TCG Costa Rica, y de ahí salió la tienda:
+                un lugar para que esas cartas lleguen a quien las va a
+                disfrutar.
               </p>
               <p>
                 Hicimos esta página para que tengás todo a mano: qué hay, cuánto

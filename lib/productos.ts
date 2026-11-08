@@ -170,7 +170,7 @@ const NOMBRES_DE_CATEGORIA = [
   { categoria: "Booster bundle", texto: "Bundles" },
   { categoria: "Booster pack", texto: "Sobres" },
   { categoria: "Blister / sleeved booster", texto: "Blisters" },
-  { categoria: "Tin o caja de colección", texto: "Tins" },
+  { categoria: "Tin o caja de colección", texto: "Cajas y tins" },
   { categoria: "Colección premium / UPC", texto: "Colecciones" },
   { categoria: "Mazos", texto: "Mazos" },
   { categoria: "Carta suelta (single)", texto: "Cartas sueltas" },

@@ -93,6 +93,12 @@ export const ENVIO_TIENDAS_DESDE = Math.min(
 export const DIAS_DE_DESPACHO = "los Miércoles y Sábados";
 
 /**
+ * "Vendenos tus cartas" queda guardada sin enlaces hasta Enero de 2027: la
+ * página /vender sigue existiendo, pero nada la anuncia. Para abrirla, true.
+ */
+export const VENDER_ABIERTO = false;
+
+/**
  * Encargos de Estados Unidos: el cliente pide cualquier producto TCG y se le
  * cotiza por WhatsApp. El formulario se esconde solo después de `hasta`.
  */

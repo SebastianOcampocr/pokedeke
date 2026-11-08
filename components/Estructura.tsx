@@ -10,6 +10,7 @@ import {
   LUGAR,
   TIENDA,
   TIENDA_ABIERTA,
+  VENDER_ABIERTO,
 } from "@/lib/tienda";
 import { BotonCarrito } from "./BotonCarrito";
 import { EnlaceFavoritos } from "./BotonFavorito";
@@ -120,9 +121,11 @@ export function PiePagina() {
           <Link href="/cedula" className="min-h-11 content-center underline-offset-4 hover:underline">
             Cédula de Coleccionista
           </Link>
-          <Link href="/vender" className="min-h-11 content-center underline-offset-4 hover:underline">
-            Vendenos tus cartas
-          </Link>
+          {VENDER_ABIERTO ? (
+            <Link href="/vender" className="min-h-11 content-center underline-offset-4 hover:underline">
+              Vendenos tus cartas
+            </Link>
+          ) : null}
           <Link href="/guia" className="min-h-11 content-center underline-offset-4 hover:underline">
             Guía de Deke
           </Link>
