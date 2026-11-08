@@ -90,6 +90,15 @@ export const ENVIO_TIENDAS_DESDE = Math.min(
 );
 
 export const DIAS_DE_DESPACHO = "los miércoles y sábados";
+
+/**
+ * Encargos de Estados Unidos: el cliente pide cualquier producto TCG y se le
+ * cotiza por WhatsApp. El formulario se esconde solo después de `hasta`.
+ */
+export const ENCARGOS_EEUU = {
+  hasta: "2026-11-30T23:59:59-06:00",
+  entrega: "2026-12-06T12:00:00-06:00",
+};
 const ZONA_CR = "America/Costa_Rica";
 const SEMANA = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 // Días que faltan para despachar, según el día del pedido (0 es domingo).

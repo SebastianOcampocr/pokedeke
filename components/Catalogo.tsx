@@ -2,6 +2,7 @@
 
 import { useSearchParams } from "next/navigation";
 import { useMemo, useState } from "react";
+import { EncargoEEUU } from "./EncargoEEUU";
 import Link from "next/link";
 import {
   categoriasConProducto,
@@ -259,6 +260,7 @@ export function Catalogo({
       </aside>
 
       <section aria-label="Resultados" className="min-w-0">
+        {etiqueta === PEDIDO_ESPECIAL ? <EncargoEEUU className="mb-5" /> : null}
         <nav
           aria-label="Categorías"
           className="-mx-4 mb-3 flex gap-2 overflow-x-auto px-4 pb-1 md:mx-0 md:flex-wrap md:overflow-visible md:px-0"

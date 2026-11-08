@@ -1,8 +1,9 @@
 import Link from "next/link";
-import type { CSSProperties } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import { BotonGrupo, Cinta } from "@/components/Estructura";
 import { FotoProducto } from "@/components/FotoProducto";
 import { Deke } from "@/components/Deke";
+import { EncargoEEUU } from "@/components/EncargoEEUU";
 import { Letrero } from "@/components/Letrero";
 import { ComoFunciona, ElMezzanine, QueBuscas } from "@/components/Marca";
 import { Proximamente } from "@/components/Proximamente";
@@ -30,11 +31,14 @@ function Seccion({
   enlace,
   productos,
   texto,
+  children,
 }: {
   titulo: string;
   enlace: string;
   productos: Producto[];
   texto?: string;
+  /** Va debajo de los productos. */
+  children?: ReactNode;
 }) {
   if (productos.length === 0) return null;
 
@@ -57,6 +61,7 @@ function Seccion({
         <p className="-mt-2 max-w-2xl leading-snug font-medium">{texto}</p>
       ) : null}
       <RejillaProductos productos={productos} />
+      {children}
     </section>
   );
 }
@@ -251,7 +256,9 @@ export default function Inicio() {
             enlace="/catalogo?etiqueta=Pedido%20especial"
             productos={especiales}
             texto="Lo que casi no se consigue en Costa Rica, lo importamos para vos. Apartalo pagando el 100%: si al final no lo podemos traer, te devolvemos todo."
-          />
+          >
+            <EncargoEEUU />
+          </Seccion>
           <Seccion
             titulo="Preventas"
             enlace="/catalogo?etiqueta=Preventa"
