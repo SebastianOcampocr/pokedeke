@@ -14,7 +14,7 @@ export default function PaginaFavoritos() {
         titulo="Mi lista"
         texto="Lo que te gustó, guardado para después o para mandar pistas."
       />
-      <ZonaBlanca>
+      <ZonaBlanca alta>
         <VistaFavoritos />
       </ZonaBlanca>
     </>

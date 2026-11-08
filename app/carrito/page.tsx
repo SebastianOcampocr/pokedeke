@@ -8,7 +8,7 @@ export default function PaginaCarrito() {
   return (
     <>
       <CabeceraPagina titulo="Tu carrito" />
-      <ZonaBlanca>
+      <ZonaBlanca alta>
         <VistaCarrito />
       </ZonaBlanca>
     </>

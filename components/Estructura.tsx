@@ -176,10 +176,24 @@ export function CabeceraPagina({
 }
 
 /** Zona blanca de contenido, con la raya negra del rótulo arriba. */
-export function ZonaBlanca({ children }: { children: React.ReactNode }) {
+/**
+ * `alta`: para páginas que se llenan en el navegador (carrito, pago, lista).
+ * Reserva espacio para que el pie de página no salte cuando aparece el contenido.
+ */
+export function ZonaBlanca({
+  children,
+  alta = false,
+}: {
+  children: React.ReactNode;
+  alta?: boolean;
+}) {
   return (
     <div className="grow border-t-3 border-tinta bg-white">
-      <div className="mx-auto max-w-6xl px-4 pt-6 pb-14 md:pt-8">{children}</div>
+      <div
+        className={`mx-auto max-w-6xl px-4 pt-6 pb-14 md:pt-8 ${alta ? "min-h-[70svh]" : ""}`}
+      >
+        {children}
+      </div>
     </div>
   );
 }

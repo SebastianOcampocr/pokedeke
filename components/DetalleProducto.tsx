@@ -23,6 +23,9 @@ import { IconoChat } from "./Iconos";
 
 export function Galeria({ producto }: { producto: Producto }) {
   const [vista, setVista] = useState(0);
+  // La foto voltea solo al cambiarla: al abrir la ficha se muestra de una vez,
+  // porque es lo primero que el navegador mide para saber si la página es rápida.
+  const [cambiada, setCambiada] = useState(false);
   const carta = esCarta(producto) && !estaAgotado(producto);
 
   return (
@@ -35,7 +38,7 @@ export function Galeria({ producto }: { producto: Producto }) {
         <div
           key={vista}
           data-foto-principal=""
-          className="voltear relative h-[310px] rounded-[7px] lg:h-[440px]"
+          className={`${cambiada ? "voltear " : ""}relative h-[310px] rounded-[7px] lg:h-[440px]`}
         >
           <div className="absolute inset-0 flex justify-center py-4">
             <div
@@ -46,7 +49,13 @@ export function Galeria({ producto }: { producto: Producto }) {
                 producto={producto}
                 indice={vista}
                 alt={producto.nombre}
-                sizes="(min-width: 1024px) 540px, 100vw"
+                // Una carta mide 5:7 dentro de un cuadro de 310 px (440 px en
+                // pantallas grandes): no ocupa todo el ancho.
+                sizes={
+                  carta
+                    ? "(min-width: 1024px) 315px, 225px"
+                    : "(min-width: 1024px) 540px, 100vw"
+                }
                 prioridad
                 className={carta ? "" : "px-5"}
               />
@@ -62,7 +71,10 @@ export function Galeria({ producto }: { producto: Producto }) {
               type="button"
               aria-label={`Ver foto ${indice + 1}`}
               aria-pressed={vista === indice}
-              onClick={() => setVista(indice)}
+              onClick={() => {
+                setCambiada(true);
+                setVista(indice);
+              }}
               className={`relative size-14 overflow-hidden rounded-md border-2 bg-crema transition-transform hover:-translate-y-0.5 ${
                 vista === indice ? "border-azul" : "border-tinta/25"
               }`}

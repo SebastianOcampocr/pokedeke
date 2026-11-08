@@ -15,7 +15,7 @@ export default function PaginaPedido() {
         titulo="¿En qué va mi pedido?"
         texto="Poné tu número de pedido y tu WhatsApp."
       />
-      <ZonaBlanca>
+      <ZonaBlanca alta>
         <Suspense fallback={<EstadoPedido />}>
           <EstadoPedidoDesdeEnlace />
         </Suspense>

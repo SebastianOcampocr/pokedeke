@@ -8,7 +8,7 @@ export default function PaginaPago() {
   return (
     <>
       <CabeceraPagina titulo="Terminar la compra" />
-      <ZonaBlanca>
+      <ZonaBlanca alta>
         <Pago />
       </ZonaBlanca>
     </>
