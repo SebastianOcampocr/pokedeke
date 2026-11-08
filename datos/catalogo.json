@@ -5316,6 +5316,7 @@
     "idioma": "Inglés",
     "precio": 11600,
     "stock": 1,
+    "destacado": true,
     "vendidos": 0,
     "orden": 230,
     "fotos": [
@@ -5793,8 +5794,9 @@
     "categoriaCorta": "Suelta",
     "idioma": "Inglés",
     "precio": 6900,
-    "stock": 1,
-    "vendidos": 0,
+    "stock": 0,
+    "destacado": true,
+    "vendidos": 1,
     "orden": 250,
     "fotos": [
       "/productos/talonflame-ex-124-delta-reign.webp"
@@ -6484,6 +6486,7 @@
     "idioma": "Inglés",
     "precio": 1200,
     "stock": 1,
+    "destacado": true,
     "vendidos": 0,
     "orden": 279,
     "fotos": [
@@ -6507,8 +6510,9 @@
     "categoriaCorta": "Suelta",
     "idioma": "Inglés",
     "precio": 2600,
-    "stock": 1,
-    "vendidos": 0,
+    "stock": 0,
+    "destacado": true,
+    "vendidos": 1,
     "orden": 280,
     "fotos": [
       "/productos/slowbro-090-pitch-black.webp"
