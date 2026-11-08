@@ -9760,7 +9760,8 @@
       "numero": "017",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Rayo"
   },
   {
     "id": "C421",
@@ -9783,7 +9784,8 @@
       "numero": "018",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Rayo"
   },
   {
     "id": "C422",
@@ -9806,7 +9808,8 @@
       "numero": "019",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Rayo"
   },
   {
     "id": "C423",
@@ -9829,7 +9832,8 @@
       "numero": "022",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Rayo"
   },
   {
     "id": "C424",
@@ -9852,7 +9856,8 @@
       "numero": "023",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Rayo"
   },
   {
     "id": "C425",
@@ -9875,7 +9880,8 @@
       "numero": "025",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Rayo"
   },
   {
     "id": "C426",
@@ -9898,7 +9904,8 @@
       "numero": "026",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Rayo"
   },
   {
     "id": "C427",
@@ -9921,7 +9928,8 @@
       "numero": "028",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Rayo"
   },
   {
     "id": "C428",
@@ -9944,7 +9952,8 @@
       "numero": "029",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Rayo"
   },
   {
     "id": "C429",
@@ -9967,7 +9976,8 @@
       "numero": "030",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Rayo"
   },
   {
     "id": "C430",
@@ -9990,7 +10000,8 @@
       "numero": "031",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Rayo"
   },
   {
     "id": "C431",
@@ -10013,7 +10024,8 @@
       "numero": "032",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Rayo"
   },
   {
     "id": "C432",
@@ -10036,7 +10048,8 @@
       "numero": "034",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Rayo"
   },
   {
     "id": "C433",
@@ -10059,7 +10072,8 @@
       "numero": "036",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Rayo"
   },
   {
     "id": "C434",
@@ -10082,7 +10096,8 @@
       "numero": "037",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Rayo"
   },
   {
     "id": "C435",
@@ -10105,7 +10120,8 @@
       "numero": "038",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Rayo"
   },
   {
     "id": "C436",
@@ -10128,7 +10144,8 @@
       "numero": "039",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Rayo"
   },
   {
     "id": "C437",
@@ -10151,7 +10168,8 @@
       "numero": "041",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Rayo"
   },
   {
     "id": "C438",
@@ -10174,7 +10192,8 @@
       "numero": "042",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Rayo"
   },
   {
     "id": "C439",
@@ -10197,7 +10216,8 @@
       "numero": "045",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Rayo"
   },
   {
     "id": "C440",
@@ -10220,7 +10240,8 @@
       "numero": "047",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Rayo"
   },
   {
     "id": "C441",
@@ -10243,7 +10264,8 @@
       "numero": "059",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Psíquico"
   },
   {
     "id": "C442",
@@ -10266,7 +10288,8 @@
       "numero": "093",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Incoloro"
   },
   {
     "id": "C443",
@@ -10289,7 +10312,8 @@
       "numero": "099",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Incoloro"
   },
   {
     "id": "C444",
@@ -10312,7 +10336,8 @@
       "numero": "015",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Agua"
   },
   {
     "id": "C445",
@@ -10335,7 +10360,8 @@
       "numero": "088",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Dragón"
   },
   {
     "id": "C446",
@@ -10358,7 +10384,8 @@
       "numero": "049",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Rayo"
   },
   {
     "id": "C447",
@@ -10381,7 +10408,8 @@
       "numero": "007",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Fuego"
   },
   {
     "id": "C448",
@@ -10404,7 +10432,8 @@
       "numero": "087",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Metálico"
   },
   {
     "id": "C449",
@@ -10427,7 +10456,8 @@
       "numero": "075",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Oscuro"
   },
   {
     "id": "C450",
@@ -10450,7 +10480,8 @@
       "numero": "058",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Psíquico"
   },
   {
     "id": "C451",
@@ -10473,7 +10504,8 @@
       "numero": "068",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Lucha"
   },
   {
     "id": "C452",
@@ -10496,7 +10528,8 @@
       "numero": "097",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Incoloro"
   },
   {
     "id": "C453",
@@ -10519,7 +10552,8 @@
       "numero": "051",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Rayo"
   },
   {
     "id": "C454",
@@ -10542,7 +10576,8 @@
       "numero": "094",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Incoloro"
   },
   {
     "id": "C455",
@@ -10565,7 +10600,8 @@
       "numero": "080",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Metálico"
   },
   {
     "id": "C456",
@@ -10588,7 +10624,8 @@
       "numero": "092",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Incoloro"
   },
   {
     "id": "C457",
@@ -10611,7 +10648,8 @@
       "numero": "004",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Planta"
   },
   {
     "id": "C458",
@@ -10634,7 +10672,8 @@
       "numero": "052",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Rayo"
   },
   {
     "id": "C459",
@@ -10657,7 +10696,8 @@
       "numero": "054",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Psíquico"
   },
   {
     "id": "C460",
@@ -10680,7 +10720,8 @@
       "numero": "084",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Metálico"
   },
   {
     "id": "C461",
@@ -10703,7 +10744,8 @@
       "numero": "111",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Psíquico"
   },
   {
     "id": "C462",
@@ -10726,7 +10768,8 @@
       "numero": "122",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Incoloro"
   },
   {
     "id": "C463",
@@ -10749,7 +10792,8 @@
       "numero": "104",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Planta"
   },
   {
     "id": "C464",
@@ -10772,6 +10816,7 @@
       "numero": "145",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Metálico"
   }
 ]

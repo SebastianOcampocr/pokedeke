@@ -6,6 +6,7 @@
  * archivo local con `--archivo ruta.csv`. Si Google no responde, deja el catálogo como
  * está. Si la pestaña cambió de forma, falla y tampoco lo toca.
  */
+import { readFileSync } from "node:fs";
 import { appendFile, readdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -205,6 +206,41 @@ const TIPO_A_MANO = {
   "Altaria GX #96 (Chinese CSM1cC)": "Dragón",
 };
 
+// Tipo de cada Pokémon por nombre ("Pikachu": "Rayo"), sacado de las cartas de TCGdex que ya
+// se bajaron. Sirve para las cartas cuya descripción no dice el tipo, como las chinas.
+const TIPOS_POKEMON = JSON.parse(readFileSync(path.join(RAIZ, "datos/tipos-pokemon.json"), "utf8"));
+const VARIANTES = /\s+(Reverse Holo|Poké Ball|Master Ball|Friend Ball|Energy Symbol|Quick Ball)$/i;
+const ENTRENADOR = /^(Carta de Entrenador|Son 2 cartas)/;
+
+/** "Pikachu ex Poké Ball #047 (Set)" → "Pikachu ex". */
+export const pokemonDe = (nombre) => nombre.replace(/\s*#.*$/, "").replace(VARIANTES, "").trim();
+
+/**
+ * Las cartas de Pokémon sin tipo en la descripción lo toman de otra carta del
+ * mismo Pokémon en el catálogo y, si no hay, de datos/tipos-pokemon.json. Así
+ * una carta nueva sale con su ícono sin tocar nada.
+ */
+export function completarTipos(productos) {
+  const conocidos = new Map();
+  for (const p of productos) {
+    if (!p.tipo || !p.carta) continue;
+    const nombre = pokemonDe(p.nombre);
+    const cuenta = conocidos.get(nombre) ?? {};
+    cuenta[p.tipo] = (cuenta[p.tipo] ?? 0) + 1;
+    conocidos.set(nombre, cuenta);
+  }
+  for (const p of productos) {
+    if (p.tipo || !p.carta || ENTRENADOR.test(p.descripcion ?? "")) continue;
+    const nombre = pokemonDe(p.nombre);
+    const cuenta = conocidos.get(nombre);
+    const tipo = cuenta
+      ? Object.entries(cuenta).sort((a, b) => b[1] - a[1])[0][0]
+      : TIPOS_POKEMON[nombre];
+    if (tipo) p.tipo = tipo;
+  }
+  return productos;
+}
+
 /** Tipo de energía: de las energías básicas por su nombre y de las cartas por su descripción. */
 export function tipoDe(nombre, descripcion, carta) {
   const energia = nombre.match(/^Energía (\S+)$/);
@@ -319,7 +355,7 @@ export function armarCatalogo(textoCsv, fotos) {
     ];
   });
 
-  return { productos, avisos };
+  return { productos: completarTipos(productos), avisos };
 }
 
 async function descargar(url) {
