@@ -7755,7 +7755,7 @@
     "categoria": "Colección premium / UPC",
     "categoriaCorta": "Premium",
     "idioma": "Inglés",
-    "precio": 255000,
+    "precio": 235000,
     "stock": 1,
     "etiqueta": "Pedido especial",
     "vendidos": 0,
@@ -7802,6 +7802,25 @@
       "/productos/etb-y-booster-bundle-30th-celebration.webp"
     ],
     "descripcion": "Paquete de 30th Celebration con una Elite Trainer Box y un Booster Bundle, en inglés. Te lo traemos de Estados Unidos: se entrega después del 5 de diciembre.",
+    "llegada": "2026-12-05T12:00:00-06:00"
+  },
+  {
+    "id": "C338",
+    "slug": "etb-pokemon-center-chaos-rising",
+    "nombre": "ETB Pokémon Center Chaos Rising",
+    "juego": "Pokémon",
+    "categoria": "ETB",
+    "categoriaCorta": "ETB",
+    "idioma": "Inglés",
+    "precio": 119000,
+    "stock": 2,
+    "etiqueta": "Pedido especial",
+    "vendidos": 0,
+    "orden": 338,
+    "fotos": [
+      "/productos/etb-pokemon-center-chaos-rising.webp"
+    ],
+    "descripcion": "Elite Trainer Box exclusiva de Pokémon Center de Mega Evolution: Chaos Rising, en inglés. Trae más sobres que la ETB normal y una carta promo con el sello de Pokémon Center. Solo se vende en la tienda oficial de Estados Unidos. Te la traemos: se entrega después del 5 de diciembre y está sujeta a disponibilidad; si no la conseguimos, te devolvemos el 100%.",
     "llegada": "2026-12-05T12:00:00-06:00"
   }
 ]
