@@ -10840,5 +10840,22 @@
       "/productos/preventa-etb-30th-celebration.webp"
     ],
     "descripcion": "Elite Trainer Box de 30th Celebration, en inglés. Trae sobres de 30th Celebration y accesorios para jugar, en una caja para guardar tus cartas. La tenemos en el mezzanine: sale en el próximo envío."
+  },
+  {
+    "id": "C467",
+    "slug": "booster-bundle-151",
+    "nombre": "Booster Bundle 151",
+    "juego": "Pokémon",
+    "categoria": "Booster bundle",
+    "categoriaCorta": "Bundle",
+    "idioma": "Inglés",
+    "precio": 85000,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 467,
+    "fotos": [
+      "/productos/booster-bundle-151.webp"
+    ],
+    "descripcion": "Booster Bundle de Scarlet & Violet: 151, en inglés, con Mew en la caja. Trae 6 sobres de 151, la colección de los primeros 151 Pokémon. Ya casi no se consigue."
   }
 ]
