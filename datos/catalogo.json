@@ -7554,7 +7554,7 @@
     "categoria": "ETB",
     "categoriaCorta": "ETB",
     "idioma": "Inglés",
-    "precio": 53500,
+    "precio": 45000,
     "stock": 1,
     "destacado": true,
     "vendidos": 0,
@@ -7623,7 +7623,7 @@
     "categoria": "ETB",
     "categoriaCorta": "ETB",
     "idioma": "Inglés",
-    "precio": 45500,
+    "precio": 40000,
     "stock": 1,
     "destacado": true,
     "vendidos": 0,
@@ -7705,7 +7705,7 @@
   {
     "id": "C333",
     "slug": "etb-30th-celebration",
-    "nombre": "ETB 30th Celebration",
+    "nombre": "ETB 30th Celebration (de Estados Unidos)",
     "juego": "Pokémon",
     "categoria": "ETB",
     "categoriaCorta": "ETB",
@@ -10842,5 +10842,22 @@
       "condicion": ""
     },
     "tipo": "Incoloro"
+  },
+  {
+    "id": "C466",
+    "slug": "etb-30th-celebration-en-stock",
+    "nombre": "ETB 30th Celebration",
+    "juego": "Pokémon",
+    "categoria": "ETB",
+    "categoriaCorta": "ETB",
+    "idioma": "Inglés",
+    "precio": 47000,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 466,
+    "fotos": [
+      "/productos/preventa-etb-30th-celebration.webp"
+    ],
+    "descripcion": "Elite Trainer Box de 30th Celebration, en inglés. Trae sobres de 30th Celebration y accesorios para jugar, en una caja para guardar tus cartas. La tenemos en el mezzanine: sale en el próximo envío."
   }
 ]
