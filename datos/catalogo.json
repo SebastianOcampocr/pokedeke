@@ -10857,5 +10857,56 @@
       "/productos/booster-bundle-151.webp"
     ],
     "descripcion": "Booster Bundle de Scarlet & Violet: 151, en inglés, con Mew en la caja. Trae 6 sobres de 151, la colección de los primeros 151 Pokémon. Ya casi no se consigue."
+  },
+  {
+    "id": "C468",
+    "slug": "blister-3-sobres-chaos-rising",
+    "nombre": "Blister 3 sobres Chaos Rising",
+    "juego": "Pokémon",
+    "categoria": "Blister / sleeved booster",
+    "categoriaCorta": "Blister",
+    "idioma": "Inglés",
+    "precio": 12700,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 468,
+    "fotos": [
+      "/productos/blister-3-sobres-chaos-rising.webp"
+    ],
+    "descripcion": "Blister de Mega Evolution: Chaos Rising, en inglés. Trae 3 sobres de Chaos Rising y la carta promo de Charmeleon."
+  },
+  {
+    "id": "C469",
+    "slug": "etb-chaos-rising",
+    "nombre": "ETB Chaos Rising",
+    "juego": "Pokémon",
+    "categoria": "ETB",
+    "categoriaCorta": "ETB",
+    "idioma": "Inglés",
+    "precio": 46000,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 469,
+    "fotos": [
+      "/productos/etb-chaos-rising.webp"
+    ],
+    "descripcion": "Elite Trainer Box de Mega Evolution: Chaos Rising, en inglés. Trae sobres de Chaos Rising y accesorios para jugar, en una caja para guardar tus cartas."
+  },
+  {
+    "id": "C470",
+    "slug": "booster-bundle-chaos-rising",
+    "nombre": "Booster Bundle Chaos Rising",
+    "juego": "Pokémon",
+    "categoria": "Booster bundle",
+    "categoriaCorta": "Bundle",
+    "idioma": "Inglés",
+    "precio": 22500,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 470,
+    "fotos": [
+      "/productos/booster-bundle-chaos-rising.webp"
+    ],
+    "descripcion": "Booster Bundle de Mega Evolution: Chaos Rising, en inglés. Trae 6 sobres de Chaos Rising."
   }
 ]
