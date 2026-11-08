@@ -13,7 +13,12 @@ import { Calcomania, RejillaProductos } from "@/components/TarjetaProducto";
 import { VistosRecientes } from "@/components/VistosRecientes";
 import { colones, fechaCorta } from "@/lib/formato";
 import { buscarProducto, estaAgotado, PRODUCTOS } from "@/lib/productos";
-import { ENVIO_GRATIS_DESDE, ENVIOS, TARIFA_CORREOS } from "@/lib/tienda";
+import {
+  DIAS_DE_DESPACHO,
+  ENVIO_GRATIS_DESDE,
+  ENVIOS,
+  TARIFA_CORREOS,
+} from "@/lib/tienda";
 
 export function generateStaticParams() {
   // GitHub Pages no acepta una lista vacía: esta ruta da "no encontrado".
@@ -168,6 +173,7 @@ async function ContenidoProducto({
                 </div>
               ))}
               <p className="mt-2 text-sm text-gris">
+                Los envíos por Correos y entre tiendas salen {DIAS_DE_DESPACHO}.
                 Correos va gratis en compras desde {colones(ENVIO_GRATIS_DESDE)}.
               </p>
             </section>

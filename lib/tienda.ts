@@ -39,7 +39,38 @@ export type OpcionEnvio = {
    * al mismo SINPE de los productos. Es el texto que se muestra como precio.
    */
   precioAparte?: string;
+  /** Sale en los días de despacho (miércoles y sábados). */
+  despacho?: boolean;
 };
+
+export const DIAS_DE_DESPACHO = "los miércoles y sábados";
+const ZONA_CR = "America/Costa_Rica";
+const SEMANA = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+// Días que faltan para despachar, según el día del pedido (0 es domingo).
+const FALTAN_PARA_DESPACHO = [3, 2, 1, 3, 2, 1, 4];
+
+/**
+ * Lo que se pide de sábado a martes sale el miércoles; de miércoles a viernes,
+ * el sábado. Debe calcular igual que diaDeDespacho en apps-script/Pedidos.gs.
+ */
+export function diaDeDespacho(desde: Date = new Date()) {
+  const dia = SEMANA.indexOf(
+    new Intl.DateTimeFormat("en-US", { timeZone: ZONA_CR, weekday: "short" }).format(desde),
+  );
+  return new Date(desde.getTime() + FALTAN_PARA_DESPACHO[dia] * 86_400_000);
+}
+
+/** "miércoles 12 de noviembre". */
+export function fechaDeDespacho(desde: Date = new Date()) {
+  return new Intl.DateTimeFormat("es-CR", {
+    timeZone: ZONA_CR,
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+  })
+    .format(diaDeDespacho(desde))
+    .replace(",", "");
+}
 
 /** Deben coincidir con CONFIG.envios en apps-script/Pedidos.gs. */
 export const ENVIOS: OpcionEnvio[] = [
@@ -48,6 +79,7 @@ export const ENVIOS: OpcionEnvio[] = [
     nombre: "Correos de Costa Rica",
     detalle: "A todo el país, con rastreo. Depende de tu cantón y del peso",
     pideDireccion: true,
+    despacho: true,
   },
   {
     id: "entre-tiendas",
@@ -57,6 +89,7 @@ export const ENVIOS: OpcionEnvio[] = [
     pideDireccion: false,
     pideTienda: true,
     precioAparte: "El precio varía",
+    despacho: true,
   },
   {
     id: "retiro-omni",

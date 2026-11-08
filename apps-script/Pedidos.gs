@@ -32,8 +32,9 @@ const CONFIG = {
   maxLlamadasPorHora: 60,
   maxLineasPorPedido: 100,
   // Estos valores deben coincidir con lib/tienda.ts.
+  // `despacho`: sale en los días de despacho (ver diaDeDespacho).
   envios: {
-    correos: { nombre: "Correos de Costa Rica", pideDireccion: true },
+    correos: { nombre: "Correos de Costa Rica", pideDireccion: true, despacho: true },
     // El cliente escribe la tienda en "Dirección". La tienda paga el envío al
     // mandarlo; el monto varía, se le confirma por WhatsApp y se suma al mismo SINPE.
     "entre-tiendas": {
@@ -41,6 +42,7 @@ const CONFIG = {
       pideDireccion: false,
       pideTienda: true,
       precioAparte: true,
+      despacho: true,
     },
     "retiro-omni": { nombre: "Retiro en Edificio Omni", pideDireccion: false },
   },
@@ -571,7 +573,8 @@ function crearPedido(datos) {
 
   const montos = resumenDeMontos(subtotal, descuento, cupon, costoEnvio, total, envio.precioAparte);
   const masEnvio = envio.precioAparte ? " más el envío" : "";
-  const entrega = datosDeEntrega(envio, envio.nombre, ubicacion, direccion);
+  const despacho = envio.despacho ? textoDespacho(fila[COL.fecha - 1]) : "";
+  const entrega = datosDeEntrega(envio, envio.nombre, ubicacion, direccion, despacho);
 
   avisar(
     "Nuevo pedido " + numero + " · " + colones(total) + " · " + cliente,
@@ -622,7 +625,9 @@ function crearPedido(datos) {
         "Esperá el comprobante del cliente. Te llega en otro correo.",
         "Revisá en tu banco que entró el monto exacto, con " + numero + " en el detalle.",
         "Cambiá el Estado a Pagado en Pedidos web. La venta pasa sola a Ventas.",
-        "Escribile por WhatsApp para coordinar la entrega.",
+        despacho
+          ? "Si paga a tiempo, despachalo el " + despacho + ". Escribile por WhatsApp para coordinar."
+          : "Escribile por WhatsApp para coordinar la entrega.",
       ]),
       botones: botonesDelDueno(numero, whatsapp, cliente),
     }),
@@ -640,6 +645,7 @@ function crearPedido(datos) {
     resumen,
     montos,
     precioAparte: envio.precioAparte,
+    despacho,
   });
 
   return { ok: true, numero, clave, subtotal, descuento, costoEnvio, total, lineas };
@@ -654,18 +660,49 @@ function envioPorNombre(nombre) {
   return Object.values(CONFIG.envios).find((envio) => envio.nombre === nombre) || {};
 }
 
-function datosDeEntrega(envio, nombre, ubicacion, direccion) {
+const DIAS = ["", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado", "domingo"];
+// Días que faltan para despachar según el día del pedido (1 es lunes, 7 domingo).
+const FALTAN_PARA_DESPACHO = { 1: 2, 2: 1, 3: 3, 4: 2, 5: 1, 6: 4, 7: 3 };
+
+/**
+ * Los envíos salen los miércoles y sábados: lo que se pide de sábado a martes
+ * sale el miércoles, y de miércoles a viernes, el sábado. Debe calcular igual
+ * que diaDeDespacho en lib/tienda.ts.
+ */
+function diaDeDespacho(desde) {
+  const zona = libro().getSpreadsheetTimeZone();
+  const dia = Number(Utilities.formatDate(new Date(desde), zona, "u"));
+  return new Date(new Date(desde).getTime() + FALTAN_PARA_DESPACHO[dia] * 86400000);
+}
+
+/** "miércoles 11/11". */
+function textoDespacho(desde) {
+  const zona = libro().getSpreadsheetTimeZone();
+  const fecha = diaDeDespacho(desde);
+  return DIAS[Number(Utilities.formatDate(fecha, zona, "u"))] + " " + Utilities.formatDate(fecha, zona, "d/M");
+}
+
+function datosDeEntrega(envio, nombre, ubicacion, direccion, despacho) {
   return [
     ["Método", nombre],
     ["Dirección", envio.pideDireccion ? ubicacion + ". " + direccion : ""],
     ["Tienda", envio.pideTienda ? direccion : ""],
     ["Costo del envío", envio.precioAparte ? "Varía según la tienda, se confirma por WhatsApp" : ""],
+    ["Sale el", despacho || ""],
   ];
 }
 
+/** El día de despacho se cuenta desde hoy: si el pago llegó tarde, sale en el siguiente. */
 function entregaDeFila(fila) {
   const nombre = fila[COL.envio - 1];
-  return datosDeEntrega(envioPorNombre(nombre), nombre, fila[COL.ubicacion - 1], fila[COL.direccion - 1]);
+  const envio = envioPorNombre(nombre);
+  return datosDeEntrega(
+    envio,
+    nombre,
+    fila[COL.ubicacion - 1],
+    fila[COL.direccion - 1],
+    envio.despacho ? textoDespacho(new Date()) : "",
+  );
 }
 
 function buscarFilaDePedido(numero) {
@@ -946,7 +983,7 @@ function avisar(asunto, lineas, responderA, html) {
 }
 
 /** Las respuestas del cliente llegan al correo de la tienda. */
-function confirmarAlCliente({ correo, numero, fecha, total, cliente, whatsapp, entrega, lineas, resumen, montos, precioAparte }) {
+function confirmarAlCliente({ correo, numero, fecha, total, cliente, whatsapp, entrega, lineas, resumen, montos, precioAparte, despacho }) {
   const primerNombre = String(cliente).split(" ")[0];
   const pasos = (precioAparte
     ? [
@@ -958,6 +995,9 @@ function confirmarAlCliente({ correo, numero, fecha, total, cliente, whatsapp, e
     "Escribí el número de comprobante en la página. Si ya la cerraste, respondé este correo con ese número.",
     "Cuando confirmemos el pago te llega otro correo y te escribimos por WhatsApp.",
   ]);
+  if (despacho) {
+    pasos.push("Los envíos salen los miércoles y sábados: si pagás a tiempo, tu pedido sale el " + despacho + ".");
+  }
   mandarAlCliente({
     to: correo,
     subject: "Recibimos tu pedido " + numero + " · " + CONFIG.nombreTienda,
@@ -1003,16 +1043,17 @@ function confirmarAlCliente({ correo, numero, fecha, total, cliente, whatsapp, e
 
 function pasosTrasElPago(fila, lineas) {
   const envio = envioPorNombre(fila[COL.envio - 1]);
+  const despacho = envio.despacho ? textoDespacho(new Date()) : "";
   const pasos = esRetiro(fila)
     ? ["Te escribimos por WhatsApp para cuadrar el día y la hora del retiro."]
     : envio.pideTienda
       ? [
-          "Te escribimos por WhatsApp cuando lo enviemos a la tienda que nos dijiste.",
-          "Lo que tarda depende de la tienda.",
+          "Lo enviamos el " + despacho + " a la tienda que nos dijiste y te avisamos por WhatsApp.",
+          "Lo que tarda en llegar depende de la tienda.",
         ]
       : [
-          "Te escribimos por WhatsApp para confirmar la entrega.",
-          "Despachamos en 1 a 2 días hábiles y te pasamos el número de guía.",
+          "Sale el " + despacho + ". Los envíos salen los miércoles y sábados.",
+          "Te escribimos por WhatsApp con el número de guía.",
         ];
   if (lineas.some((linea) => linea.preventa)) {
     pasos.unshift("Recibimos tu adelanto. Te avisamos cuando llegue la preventa para cobrar el resto.");

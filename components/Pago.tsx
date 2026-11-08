@@ -21,7 +21,9 @@ import {
   costoDeEnvio,
   enlaceWhatsApp,
   ENVIO_GRATIS_DESDE,
+  DIAS_DE_DESPACHO,
   ENVIOS,
+  fechaDeDespacho,
   LUGAR,
   type OpcionEnvio,
   TARIFA_CORREOS,
@@ -165,9 +167,8 @@ function Confirmacion({
   const [enviado, setEnviado] = useState(false);
   const [enviando, setEnviando] = useState(false);
   const [error, setError] = useState("");
-  const precioAparte = ENVIOS.find(
-    (opcion) => opcion.nombre === pedido.envio,
-  )?.precioAparte;
+  const opcionEnvio = ENVIOS.find((opcion) => opcion.nombre === pedido.envio);
+  const precioAparte = opcionEnvio?.precioAparte;
 
   useEffect(() => lanzarConfeti(), []);
 
@@ -231,6 +232,13 @@ function Confirmacion({
           Al número <strong>{TIENDA.sinpe}</strong>. En el detalle poné{" "}
           <strong>{pedido.numero}</strong>.
         </p>
+        {opcionEnvio?.despacho ? (
+          <p className="text-sm leading-snug">
+            Si pagás a tiempo, tu pedido sale el{" "}
+            <strong>{fechaDeDespacho(new Date(pedido.fecha))}</strong>. Los envíos
+            salen {DIAS_DE_DESPACHO}.
+          </p>
+        ) : null}
         {TIENDA_ABIERTA ? null : (
           <p className="text-sm text-gris">
             Esta página todavía es una demo: no pagués nada.
@@ -465,6 +473,12 @@ export function Pago() {
               alElegir={() => setEnvioId(opcion.id)}
             />
           ))}
+          {envio.despacho ? (
+            <p className="text-sm leading-snug font-bold">
+              Los envíos salen {DIAS_DE_DESPACHO}. Si pedís hoy, el tuyo sale
+              el {fechaDeDespacho()}.
+            </p>
+          ) : null}
           {subtotal >= ENVIO_GRATIS_DESDE ? (
             <p className="text-sm font-bold text-verde-oscuro">
               Tu compra pasa de {colones(ENVIO_GRATIS_DESDE)}: el envío por
