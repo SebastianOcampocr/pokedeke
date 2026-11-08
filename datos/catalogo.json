@@ -10818,5 +10818,29 @@
       "condicion": ""
     },
     "tipo": "Metálico"
+  },
+  {
+    "id": "C465",
+    "slug": "lopunny-poke-ball-084-prismatic-evolutions",
+    "nombre": "Lopunny Poké Ball #084 (Prismatic Evolutions)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 500,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 465,
+    "fotos": [
+      "/productos/lopunny-poke-ball-084-prismatic-evolutions.webp"
+    ],
+    "descripcion": "Lopunny de 90 HP, tipo Incoloro, con arte de Tika Matsuno. Número 084/131 de Prismatic Evolutions, común, en inglés. Trae el ataque Rear Kick. Versión con patrón de Poké Ball.",
+    "carta": {
+      "coleccion": "Prismatic Evolutions",
+      "numero": "084",
+      "rareza": "",
+      "condicion": ""
+    },
+    "tipo": "Incoloro"
   }
 ]
