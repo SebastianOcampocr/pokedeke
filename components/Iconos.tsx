@@ -21,6 +21,15 @@ function Base({
   );
 }
 
+/** Un avión visto desde arriba: lo que traemos de Estados Unidos. */
+export function IconoAvion(props: Props) {
+  return (
+    <Base {...props}>
+      <path d="M12 2c1 0 1.5 1 1.5 2.5V9l7.5 4.5v2L13.5 13v5l2.5 2v1.5L12 20.5l-4 1V20l2.5-2v-5L3 15.5v-2L10.5 9V4.5C10.5 3 11 2 12 2z" />
+    </Base>
+  );
+}
+
 export function IconoBuscar(props: Props) {
   return (
     <Base {...props}>

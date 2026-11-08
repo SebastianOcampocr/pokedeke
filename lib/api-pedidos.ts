@@ -83,6 +83,15 @@ export function avisarCarrito(
   }).catch(() => undefined);
 }
 
+/** Comentario de la página Danos tu opinión. `sitio` es el campo trampa para robots. */
+export const mandarComentario = (datos: {
+  calificacion: number;
+  comentario: string;
+  nombre: string;
+  contacto: string;
+  sitio: string;
+}) => enviar<object>({ accion: "comentario", ...datos });
+
 export const crearPedido = (pedido: PedidoNuevo) =>
   enviar<PedidoCreado>({ accion: "pedido", ...pedido });
 

@@ -33,6 +33,7 @@ const CONFIG = {
   // Avisos anónimos de la pestaña Carritos: llevan su propio límite para no
   // gastar el de los pedidos.
   maxCarritosPorHora: 600,
+  maxComentariosPorHora: 30,
   maxLineasPorPedido: 100,
   // Estos valores deben coincidir con lib/tienda.ts.
   // `despacho`: sale en los días de despacho (ver diaDeDespacho).
@@ -110,10 +111,11 @@ const HOJAS = {
   ventas: "Ventas",
   interesados: "Interesados",
   carritos: "Carritos",
+  comentarios: "Comentarios",
 };
 
 // Sube con cada cambio: la página y las pruebas leen esta marca con un GET.
-const VERSION = "2026-11-08-mayusculas";
+const VERSION = "2026-11-08-comentarios";
 const PEDIDO_ESPECIAL = "Pedido especial";
 const PRIMERA_FILA = 5;
 const PENDIENTE = "Pendiente de pago";
@@ -190,11 +192,18 @@ function doPost(e) {
       comprobante: guardarComprobante,
       interesado: guardarInteresado,
       carrito: guardarCarrito,
+      comentario: guardarComentario,
     };
     const accion = acciones[datos.accion];
     if (!accion) return responder({ ok: false, error: "Acción desconocida." });
     if (datos.accion === "carrito") {
       if (!hayCupo("carritos", CONFIG.maxCarritosPorHora)) return responder({ ok: false });
+      return responder(conCandado(() => accion(datos)));
+    }
+    if (datos.accion === "comentario") {
+      if (!hayCupo("comentarios", CONFIG.maxComentariosPorHora)) {
+        return responder({ ok: false, error: "Recibimos muchos comentarios. Intentá en un rato." });
+      }
       return responder(conCandado(() => accion(datos)));
     }
     if (!hayCupo()) {
@@ -916,6 +925,34 @@ function anotarCarrito(id, { resumen, unidades, total, estado }, desdePedido) {
   pestana
     .getRange(fila, COL_CARRITO.ultima, 1, 5)
     .setValues([[ahora, comoTexto(resumen), unidades, total, estado]]);
+}
+
+/** "Danos tu opinión": se guarda en Comentarios y le llega un correo a la tienda. */
+function guardarComentario(datos) {
+  const comentario = texto(datos.comentario, 1000);
+  const calificacion = Math.floor(Number(datos.calificacion));
+  const estrellas = calificacion >= 1 && calificacion <= 5 ? calificacion : "";
+  const nombre = texto(datos.nombre, 80);
+  const contacto = texto(datos.contacto, 120);
+  if (comentario.length < 3) return { ok: false, error: "Escribí tu comentario." };
+  const pestana = hoja(HOJAS.comentarios);
+  if (!pestana) return { ok: false, error: "No pudimos guardarlo." };
+  pestana.appendRow([new Date(), estrellas, comoTexto(comentario), comoTexto(nombre), comoTexto(contacto)]);
+  avisar(
+    "Comentario nuevo" + (estrellas ? " · " + "★".repeat(estrellas) + "☆".repeat(5 - estrellas) : ""),
+    [
+      "Alguien dejó un comentario en la página.",
+      "",
+      estrellas ? "Calificación: " + estrellas + " de 5" : "",
+      "Comentario: " + comentario,
+      nombre ? "Nombre: " + nombre : "",
+      contacto ? "Contacto: " + contacto : "",
+      "",
+      "Está en la pestaña Comentarios de la hoja.",
+    ],
+    esCorreo(contacto) ? contacto : "",
+  );
+  return { ok: true };
 }
 
 function guardarInteresado(datos) {

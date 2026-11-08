@@ -6,7 +6,6 @@ import {
 } from "@/lib/productos";
 import {
   ENLACE_GRUPO,
-  enlaceWhatsApp,
   LEMA,
   LUGAR,
   TIENDA,
@@ -57,32 +56,15 @@ function LogoAnimado() {
 export function Encabezado() {
   return (
     <>
-      <p className="relative z-10 bg-tinta px-4 py-1.5 text-center text-xs font-medium text-white">
-        {TIENDA_ABIERTA ? (
-          <>
-            Estamos en beta y los pedidos son reales. ¿Algo falló?{" "}
-            <a
-              href={enlaceWhatsApp("¡Hola! Encontré algo raro en la página.")}
-              target="_blank"
-              rel="noreferrer"
-              className="font-bold underline underline-offset-2"
-            >
-              Escribinos
-            </a>
-          </>
-        ) : (
-          "Demo: los pedidos son de prueba. No se cobra nada."
-        )}
-      </p>
+      {TIENDA_ABIERTA ? null : (
+        <p className="relative z-10 bg-tinta px-4 py-1.5 text-center text-xs font-medium text-white">
+          Demo: los pedidos son de prueba. No se cobra nada.
+        </p>
+      )}
       <header className="encabezado bg-amarillo">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 py-2 pr-2 pl-4">
           <Link href="/" aria-label={TIENDA.nombre} className="logo relative">
             <LogoAnimado />
-            {TIENDA_ABIERTA ? (
-              <span className="sello-beta" aria-hidden="true">
-                Beta
-              </span>
-            ) : null}
           </Link>
           <nav aria-label="Principal" className="hidden gap-4 lg:flex xl:gap-5">
             {ENLACES.map((enlace) => (
@@ -146,6 +128,9 @@ export function PiePagina() {
           </Link>
           <Link href="/pedido" className="min-h-11 content-center underline-offset-4 hover:underline">
             Ver mi pedido
+          </Link>
+          <Link href="/comentarios" className="min-h-11 content-center underline-offset-4 hover:underline">
+            Danos tu opinión
           </Link>
           <Link href="/politicas#envios" className="min-h-11 content-center underline-offset-4 hover:underline">
             Envíos

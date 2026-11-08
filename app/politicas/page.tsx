@@ -147,7 +147,9 @@ export default function PaginaPoliticas() {
               Para saber qué productos interesan, guardamos de forma anónima lo
               que se agrega al carrito: los productos y las cantidades, con un
               número al azar y sin nombre ni contacto. No usamos cookies de
-              publicidad.
+              publicidad. Si nos dejás un comentario, lo guardamos para mejorar
+              la tienda; tu nombre y contacto son opcionales y solo los usamos
+              para responderte.
             </p>
             <p>
               Según la Ley 8968 de Protección de la Persona frente al

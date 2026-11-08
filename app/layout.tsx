@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   },
   description:
     "Sobres, cajas y cartas de Pokémon, en colones y con envío a todo Costa Rica.",
-  // Mientras esté en beta, que no salga en los buscadores.
+  // Por ahora no sale en los buscadores: se abre cuando quien administra la tienda lo decida.
   robots: { index: false, follow: false },
 };
 
