@@ -45,7 +45,7 @@ export function Vitrina() {
                 <FotoProducto
                   producto={carta}
                   alt=""
-                  sizes="178px"
+                  sizes="(min-width: 768px) 178px, 128px"
                   className="mix-blend-normal"
                 />
               </div>

@@ -55,20 +55,28 @@ function Seccion({
   );
 }
 
+// La del centro es lo más grande de la pantalla al abrir: es la que mide
+// Cloudflare (LCP). Por eso sale primero, baja con prioridad y las otras dos
+// esperan. `sizes` es el ancho real de la foto (la caja menos el p-2), para no
+// bajar la versión de 640 px en los celulares.
 const PIEZAS_HERO = [
   {
     clase: "size-[min(27vw,7rem)] -rotate-6 lg:size-36 xl:size-40",
-    retraso: "650ms",
+    sizes: "(min-width: 1280px) 144px, (min-width: 1024px) 128px, 96px",
+    retraso: "300ms",
     k: "22px",
   },
   {
     clase: "z-10 size-[min(36vw,9rem)] rotate-2 lg:size-48 xl:size-56",
-    retraso: "800ms",
+    sizes: "(min-width: 1280px) 208px, (min-width: 1024px) 176px, 128px",
+    retraso: "150ms",
     k: "10px",
+    prioridad: true,
   },
   {
     clase: "size-[min(27vw,7rem)] rotate-6 lg:size-36 xl:size-44",
-    retraso: "950ms",
+    sizes: "(min-width: 1280px) 160px, (min-width: 1024px) 128px, 96px",
+    retraso: "420ms",
     k: "30px",
   },
 ];
@@ -102,8 +110,8 @@ function VitrinaHero() {
               <FotoProducto
                 producto={producto}
                 alt=""
-                sizes="(min-width: 1024px) 224px, 144px"
-                prioridad
+                sizes={pieza.sizes}
+                prioridad={pieza.prioridad}
               />
             </span>
           </Link>
@@ -175,12 +183,12 @@ export default function Inicio() {
           </h1>
           <p
             className="aparecer max-w-md text-[17px] leading-snug font-medium"
-            style={{ animationDelay: "520ms" }}
+            style={{ animationDelay: "200ms" }}
           >
             Todo lo de Pokémon TCG en colones. Retirá en el Edificio Omni o te
             lo mandamos por Correos o a la tienda que nos digás.
           </p>
-          <div className="aparecer" style={{ animationDelay: "620ms" }}>
+          <div className="aparecer" style={{ animationDelay: "280ms" }}>
             <BotonGrupo className="w-full md:w-fit" />
           </div>
         </div>
