@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { enlaceWhatsApp, ENTREGA_BAJO_PEDIDO, TIENDA } from "@/lib/tienda";
+import { enlaceWhatsApp, TIENDA } from "@/lib/tienda";
 import Link from "next/link";
 import { CabeceraPagina, ZonaBlanca } from "@/components/Estructura";
 
@@ -13,7 +13,6 @@ const SECCIONES = [
   { id: "envios", titulo: "Envíos" },
   { id: "cambios", titulo: "Cambios y devoluciones" },
   { id: "pedidos-especiales", titulo: "Productos de Estados Unidos" },
-  { id: "bajo-pedido", titulo: "Bajo pedido" },
   { id: "terminos", titulo: "Términos" },
   { id: "privacidad", titulo: "Privacidad" },
 ];
@@ -139,32 +138,6 @@ export default function PaginaPoliticas() {
               <li>
                 Si querés cancelarlo vos, avisanos dentro de 8 días hábiles
                 desde que pagaste y te devolvemos todo.
-              </li>
-            </ul>
-
-            <h2 id="bajo-pedido" className="scroll-mt-20">
-              Bajo pedido
-            </h2>
-            <p>
-              Algunos productos no los tenemos en el mezzanine, pero los
-              conseguimos en tiendas de Costa Rica. Se marcan con “Bajo pedido”
-              y funcionan así:
-            </p>
-            <ul>
-              <li>Se piden pagando el 100% por SINPE Móvil.</li>
-              <li>
-                Apenas se confirma tu pago, vamos por el producto. Está listo{" "}
-                {ENTREGA_BAJO_PEDIDO} después de pagar y sale en el siguiente
-                envío, o lo coordinamos por WhatsApp si lo retirás.
-              </li>
-              <li>
-                Si por algo no lo conseguimos, te avisamos por WhatsApp y te
-                devolvemos el 100% de lo que pagaste, por SINPE Móvil a la misma
-                cuenta desde la que pagaste.
-              </li>
-              <li>
-                Una vez que lo conseguimos, aplican los mismos cambios y
-                devoluciones que a cualquier producto.
               </li>
             </ul>
 

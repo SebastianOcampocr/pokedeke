@@ -111,12 +111,6 @@ export const ENCARGOS_EEUU = {
   hasta: "2026-11-30T23:59:59-06:00",
   entrega: "2026-12-06T12:00:00-06:00",
 };
-/**
- * Bajo pedido: no está en el mezzanine, lo conseguimos en una tienda de Costa
- * Rica cuando entra el pago. Debe coincidir con CONFIG.entregaBajoPedido en
- * apps-script/Pedidos.gs.
- */
-export const ENTREGA_BAJO_PEDIDO = "de 2 a 5 días hábiles";
 const ZONA_CR = "America/Costa_Rica";
 const SEMANA = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 // Días que faltan para despachar, según el día del pedido (0 es domingo).

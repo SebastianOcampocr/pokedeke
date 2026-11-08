@@ -7,8 +7,6 @@ import Link from "next/link";
 import {
   categoriasConProducto,
   coincide,
-  BAJO_PEDIDO,
-  hayBajoPedido,
   hayPedidosEspeciales,
   PEDIDO_ESPECIAL,
   PRODUCTOS,
@@ -34,7 +32,7 @@ const ORDENES = [
 ];
 
 const POR_TANDA = 24;
-const ETIQUETAS_DE_FILTRO = ["Preventa", PEDIDO_ESPECIAL, BAJO_PEDIDO];
+const ETIQUETAS_DE_FILTRO = ["Preventa", PEDIDO_ESPECIAL];
 const SUELTAS = "Carta suelta (single)";
 
 const CATEGORIAS_RAPIDAS = categoriasConProducto();
@@ -98,7 +96,7 @@ export function Catalogo({
   const [rango, setRango] = useState("");
   const [rareza, setRareza] = useState("");
   const [orden, setOrden] = useState("nuevo");
-  // "Preventa", "Pedido especial" o "Bajo pedido": muestra solo lo que se aparta de esa forma.
+  // "Preventa" o "Pedido especial": muestra solo lo que se aparta de esa forma.
   const [etiqueta, setEtiqueta] = useState(
     ETIQUETAS_DE_FILTRO.includes(etiquetaInicial) ? etiquetaInicial : "",
   );
@@ -255,18 +253,6 @@ export function Catalogo({
                 }
               >
                 De Estados Unidos
-              </button>
-            ) : null}
-            {hayBajoPedido() ? (
-              <button
-                type="button"
-                className="chip w-fit"
-                aria-pressed={etiqueta === BAJO_PEDIDO}
-                onClick={() =>
-                  setEtiqueta((actual) => (actual === BAJO_PEDIDO ? "" : BAJO_PEDIDO))
-                }
-              >
-                Bajo pedido
               </button>
             ) : null}
           </div>

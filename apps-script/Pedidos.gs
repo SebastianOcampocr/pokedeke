@@ -37,9 +37,6 @@ const CONFIG = {
   sitio: "https://pokedeke.store/",
   horasApartado: 24,
   adelantoPreventa: 0.5,
-  // Bajo pedido: se consigue en una tienda de aquí cuando entra el pago. Debe
-  // coincidir con ENTREGA_BAJO_PEDIDO en lib/tienda.ts.
-  entregaBajoPedido: "de 2 a 5 días hábiles",
   envioGratisDesde: 50000,
   maxLlamadasPorHora: 60,
   // Avisos anónimos de la pestaña Carritos: llevan su propio límite para no
@@ -138,10 +135,9 @@ const HOJAS = {
 };
 
 // Sube con cada cambio: la página y las pruebas leen esta marca con un GET.
-const VERSION = "2026-11-08-bajo-pedido";
+const VERSION = "2026-11-08-avisos";
 const ENTREGADO = "Entregado";
 const PEDIDO_ESPECIAL = "Pedido especial";
-const BAJO_PEDIDO = "Bajo pedido";
 const PRIMERA_FILA = 5;
 const PENDIENTE = "Pendiente de pago";
 const PAGADO = "Pagado";
@@ -446,8 +442,6 @@ function productosPorSlug() {
     grupo.preventa = preventa;
     // Se paga completo y se entrega después de "Llega (preventas)".
     grupo.especial = ultimo("Etiqueta") === PEDIDO_ESPECIAL;
-    // Se paga completo y se consigue en una tienda de aquí cuando entra el pago.
-    grupo.bajoPedido = ultimo("Etiqueta") === BAJO_PEDIDO;
     grupo.llegada = ultimo("Llega (preventas)") || null;
     grupo.precio = precio;
     grupo.precioCobrado = preventa ? Math.round(precio * CONFIG.adelantoPreventa) : precio;
@@ -627,7 +621,6 @@ function crearPedido(datos) {
       precio: producto.precioCobrado,
       preventa: producto.preventa,
       ...(producto.especial ? { especial: true, llega: fechaIso(producto.llegada) } : {}),
-      ...(producto.bajoPedido ? { bajoPedido: true } : {}),
       quedan: producto.stock - (reservado[slug] || 0) - cantidad,
     });
   }
@@ -691,9 +684,8 @@ function crearPedido(datos) {
   const montos = resumenDeMontos(subtotal, descuento, cupon, costoEnvio, total, aparte);
   const masEnvio = aparte ? " más el envío" : "";
   const especial = entregaEspecial(lineas);
-  const porConseguir = entregaBajoPedido(lineas);
-  const despacho = envio.despacho && !especial && !porConseguir ? textoDespacho(fila[COL.fecha - 1]) : "";
-  const entrega = datosDeEntrega(envio, envio.nombre, ubicacion, direccion, despacho, aparte, especial, porConseguir);
+  const despacho = envio.despacho && !especial ? textoDespacho(fila[COL.fecha - 1]) : "";
+  const entrega = datosDeEntrega(envio, envio.nombre, ubicacion, direccion, despacho, aparte, especial);
 
   avisar(
     "Nuevo pedido " + numero + " · " + colones(total) + " · " + cliente,
@@ -717,7 +709,6 @@ function crearPedido(datos) {
         : "Envío: " + colones(costoEnvio),
       "Total a recibir por SINPE: " + colones(total) + masEnvio,
       especial ? "Trae un pedido especial: se entrega " + especial + "." : "",
-      porConseguir ? "Trae productos bajo pedido: conseguilos apenas entre el pago." : "",
       "",
       "Cuando el SINPE entre, cambiá el Estado a Pagado en la pestaña Pedidos web.",
     ],
@@ -748,9 +739,7 @@ function crearPedido(datos) {
         "Cambiá el Estado a Pagado en Pedidos web. La venta pasa sola a Ventas.",
         especial
           ? "Trae un pedido especial: entregalo " + especial + ". Si al final no se consigue, devolvele el 100% por SINPE a la misma cuenta."
-          : porConseguir
-            ? "Trae productos bajo pedido: cuando entre el pago, conseguilos y cambiá el Estado a Conseguido (al cliente le llega un correo). Prometimos " + porConseguir + ". Si no los conseguís, devolvele el 100% por SINPE a la misma cuenta."
-            : despacho
+          : despacho
             ? "Si paga a tiempo, despachalo el " + despacho + ". Antes de enviarlo, tomale fotos al producto y al empaque y mandáselas por WhatsApp."
             : "Escribile por WhatsApp para coordinar la entrega.",
       ]),
@@ -772,7 +761,6 @@ function crearPedido(datos) {
     precioAparte: aparte,
     despacho,
     especial,
-    porConseguir,
   });
 
   return { ok: true, numero, clave, subtotal, descuento, costoEnvio, total, lineas };
@@ -829,11 +817,6 @@ function entregaEspecial(lineas) {
   return "después del " + Number(dia) + "/" + Number(mes);
 }
 
-/** "de 2 a 5 días hábiles" si el pedido trae algo bajo pedido, "" si no. */
-function entregaBajoPedido(lineas) {
-  return (lineas || []).some((linea) => linea.bajoPedido) ? CONFIG.entregaBajoPedido : "";
-}
-
 /** "Miércoles 11/11". */
 function textoDespacho(desde) {
   const zona = libro().getSpreadsheetTimeZone();
@@ -841,21 +824,14 @@ function textoDespacho(desde) {
   return DIAS[Number(Utilities.formatDate(fecha, zona, "u"))] + " " + Utilities.formatDate(fecha, zona, "d/M");
 }
 
-function datosDeEntrega(envio, nombre, ubicacion, direccion, despacho, aparte, especial, porConseguir) {
+function datosDeEntrega(envio, nombre, ubicacion, direccion, despacho, aparte, especial) {
   return [
     ["Método", nombre],
     ["Dirección", envio.pideDireccion ? ubicacion + ". " + direccion : ""],
     ["Tienda", envio.pideTienda ? direccion : ""],
     ["Costo del envío", aparte ? "Varía según la tienda, se confirma por WhatsApp" : ""],
     ["Sale el", despacho || ""],
-    [
-      "Se entrega",
-      especial
-        ? especial.charAt(0).toUpperCase() + especial.slice(1) + " (de Estados Unidos)"
-        : porConseguir
-          ? "Listo " + porConseguir + " después del pago (bajo pedido)"
-          : "",
-    ],
+    ["Se entrega", especial ? especial.charAt(0).toUpperCase() + especial.slice(1) + " (de Estados Unidos)" : ""],
   ];
 }
 
@@ -863,18 +839,15 @@ function datosDeEntrega(envio, nombre, ubicacion, direccion, despacho, aparte, e
 function entregaDeFila(fila) {
   const nombre = fila[COL.envio - 1];
   const envio = envioPorNombre(nombre);
-  const lineas = leerDetalle(fila).lineas;
-  const especial = entregaEspecial(lineas);
-  const porConseguir = entregaBajoPedido(lineas);
+  const especial = entregaEspecial(leerDetalle(fila).lineas);
   return datosDeEntrega(
     envio,
     nombre,
     fila[COL.ubicacion - 1],
     fila[COL.direccion - 1],
-    envio.despacho && !especial && !porConseguir ? textoDespacho(new Date()) : "",
+    envio.despacho && !especial ? textoDespacho(new Date()) : "",
     envioAparte(fila),
     especial,
-    porConseguir,
   );
 }
 
@@ -1390,7 +1363,6 @@ function consultarPedido(parametros) {
       guia: String(fila[COL.guia - 1] || ""),
       lineas: leerDetalle(fila).lineas.map(({ nombre, cantidad }) => ({ nombre, cantidad })),
       especial: entregaEspecial(leerDetalle(fila).lineas),
-      bajoPedido: entregaBajoPedido(leerDetalle(fila).lineas),
     },
   };
 }
@@ -1464,7 +1436,6 @@ function correoConDiseno({ etiqueta, estado, colorEstado, saludo, numero, fecha,
     '<div style="font-size:13px;color:#444444;">' + escapar(linea.cantidad) + " × " + escapar(colones(linea.precio)) +
     (linea.preventa ? " · Adelanto de preventa" : "") +
     (linea.especial ? " · De Estados Unidos, se entrega " + entregaEspecial([linea]) : "") +
-    (linea.bajoPedido ? " · Bajo pedido, listo " + CONFIG.entregaBajoPedido : "") +
     (linea.oferta ? " · Oferta " + escapar(linea.oferta) + ", antes " + escapar(colones(linea.precioNormal)) : "") +
     (linea.quedan === undefined ? "" : " · " + (linea.quedan > 0 ? "Quedan " + escapar(linea.quedan) : "Era la última")) +
     '</div></td><td style="padding:9px 0;border-bottom:1px solid #e3d6ad;text-align:right;white-space:nowrap;font-weight:bold;vertical-align:top;">' +
@@ -1597,7 +1568,7 @@ function avisar(asunto, lineas, responderA, html) {
 }
 
 /** Las respuestas del cliente llegan al correo de la tienda. */
-function confirmarAlCliente({ correo, numero, fecha, total, cliente, whatsapp, entrega, lineas, resumen, montos, precioAparte, despacho, especial, porConseguir }) {
+function confirmarAlCliente({ correo, numero, fecha, total, cliente, whatsapp, entrega, lineas, resumen, montos, precioAparte, despacho, especial }) {
   const primerNombre = String(cliente).split(" ")[0];
   const pasos = (precioAparte
     ? [
@@ -1613,11 +1584,6 @@ function confirmarAlCliente({ correo, numero, fecha, total, cliente, whatsapp, e
     pasos.push(
       "Tu pedido trae productos que importamos de Estados Unidos: se entrega " + especial +
         ". Hacemos todo lo posible por traerlo; si por algo no podemos, te devolvemos el 100% por SINPE Móvil a la misma cuenta.",
-    );
-  } else if (porConseguir) {
-    pasos.push(
-      "Tu pedido trae productos bajo pedido: los conseguimos apenas entre tu pago y está listo " + porConseguir +
-        ". Si por algo no lo conseguimos, te devolvemos el 100% por SINPE Móvil a la misma cuenta.",
     );
   } else if (despacho) {
     pasos.push("Los envíos salen los Miércoles y Sábados: si pagás a tiempo, tu pedido sale el " + despacho + ".");
@@ -1673,13 +1639,6 @@ function pasosTrasElPago(fila, lineas) {
     return [
       "Tu producto de Estados Unidos queda pagado y apartado. Se entrega " + especial + ": cuando lo tengamos te llega un correo y te escribimos por WhatsApp para coordinar.",
       "Si por algo no lo podemos traer, te devolvemos el 100% por SINPE Móvil a la misma cuenta.",
-    ];
-  }
-  const porConseguir = entregaBajoPedido(lineas);
-  if (porConseguir) {
-    return [
-      "Ya vamos por tu producto bajo pedido: está listo " + porConseguir + ". Cuando lo tengamos te llega un correo con el día en que sale.",
-      "Si por algo no lo conseguimos, te devolvemos el 100% por SINPE Móvil a la misma cuenta.",
     ];
   }
   const pasos = esRetiro(fila)
@@ -1744,59 +1703,44 @@ function confirmarPago(fila) {
 }
 
 /**
- * Quien administra la tienda cambia el Estado a "Conseguido" cuando ya tiene lo
- * de Estados Unidos o lo bajo pedido. Solo escribe si el pedido trae algo así y
- * ya está pagado. Devuelve el aviso para la hoja.
+ * Quien administra la tienda cambia el Estado a "Conseguido" cuando ya tiene el
+ * pedido especial. Solo escribe si el pedido trae uno y ya está pagado. Devuelve
+ * el aviso para la hoja.
  */
 function avisarConseguido(fila) {
   const numero = fila[COL.numero - 1];
   const detalle = leerDetalle(fila);
   const especial = entregaEspecial(detalle.lineas);
-  const porConseguir = entregaBajoPedido(detalle.lineas);
-  if (!especial && !porConseguir) {
-    return numero + " no trae nada de Estados Unidos ni bajo pedido: no se mandó correo.";
-  }
+  if (!especial) return numero + " no trae un pedido especial: no se mandó correo.";
   if (!fila[COL.enVentas - 1]) return numero + " todavía no está pagado: marcalo Pagado primero. No se mandó correo.";
   const correo = String(fila[COL.correo - 1]);
   if (!esCorreo(correo)) return numero + " no tiene correo: avisale por WhatsApp.";
 
   const primerNombre = String(fila[COL.cliente - 1]).split(" ")[0];
-  const nombres = detalle.lineas
-    .filter((linea) => linea.especial || linea.bajoPedido)
-    .map((linea) => linea.nombre)
-    .join(", ");
-  const envio = envioPorNombre(fila[COL.envio - 1]);
-  // Lo de Estados Unidos se entrega después de su fecha; lo bajo pedido sale en el siguiente envío.
-  const saleEl = !especial && envio.despacho ? textoDespacho(new Date()) : "";
-  const pasos = especial
-    ? ["Ya tenemos " + nombres + ". Se entrega " + especial + ".", "Te escribimos por WhatsApp para coordinar la entrega."]
-    : saleEl
-      ? [
-          "Ya tenemos " + nombres + ". Sale el " + saleEl + " (los envíos salen los Miércoles y Sábados).",
-          "Antes de enviarlo te mandamos por WhatsApp fotos de cómo va empacado.",
-        ]
-      : ["Ya tenemos " + nombres + ".", "Te escribimos por WhatsApp para coordinar la entrega."];
-  const saludo = especial
-    ? "¡Buenas noticias, " + primerNombre + "! Ya tenemos lo que te trajimos de Estados Unidos y pronto está listo para entregar."
-    : "¡Buenas noticias, " + primerNombre + "! Ya conseguimos tu producto bajo pedido.";
+  const nombres = detalle.lineas.filter((linea) => linea.especial).map((linea) => linea.nombre).join(", ");
+  const pasos = [
+    "Ya tenemos " + nombres + ". Se entrega " + especial + ".",
+    "Te escribimos por WhatsApp para coordinar la entrega.",
+  ];
   mandarAlCliente({
     to: correo,
-    subject: (especial ? "¡Ya tenemos tu producto de Estados Unidos! " : "¡Ya conseguimos tu producto! ") + numero + " · " + CONFIG.nombreTienda,
-    body: [saludo + " (pedido " + numero + ")", "", "Qué sigue:", ...pasos].join("\n"),
+    subject: "¡Ya tenemos tu producto de Estados Unidos! " + numero + " · " + CONFIG.nombreTienda,
+    body: [
+      "¡Buenas noticias, " + primerNombre + "! Ya tenemos lo que te trajimos de Estados Unidos (pedido " + numero + ") y pronto está listo para entregar.",
+      "",
+      "Qué sigue:",
+      ...pasos,
+    ].join("\n"),
     htmlBody: correoConDiseno({
-      etiqueta: especial ? "De Estados Unidos" : "Bajo pedido",
+      etiqueta: "De Estados Unidos",
       estado: CONSEGUIDO,
       colorEstado: "#127a43",
-      saludo,
+      saludo: "¡Buenas noticias, " + primerNombre + "! Ya tenemos lo que te trajimos de Estados Unidos y pronto está listo para entregar.",
       numero,
       fecha: fila[COL.fecha - 1],
       total: fila[COL.total - 1],
       rotuloTotal: "Total pagado",
-      caja: especial
-        ? [["Se entrega", especial]]
-        : saleEl
-          ? [["Sale el", saleEl]]
-          : [["Entrega", "La coordinamos por WhatsApp"]],
+      caja: [["Se entrega", especial]],
       entrega: entregaDeFila(fila),
       lineas: detalle.lineas.map(({ quedan, ...linea }) => linea),
       resumen: resumenDeMontos(detalle.subtotal, detalle.descuento, detalle.cupon, fila[COL.costoEnvio - 1], fila[COL.total - 1], envioAparte(fila)),
@@ -1805,7 +1749,7 @@ function avisarConseguido(fila) {
       pie: "Si tenés alguna duda, respondé este correo o escribinos. Tus datos son solo para este pedido.",
     }),
   });
-  return "Le avisamos a " + primerNombre + " que ya conseguiste su pedido " + numero + ".";
+  return "Le avisamos a " + primerNombre + " que ya conseguiste su pedido especial " + numero + ".";
 }
 
 /* ---------- Pasar a Ventas ---------- */
@@ -1952,7 +1896,6 @@ function pasarAVentas(numeroFila, estadoAnterior) {
     "WhatsApp " + fila[COL.whatsapp - 1],
     detalle.lineas.some((linea) => linea.preventa) ? "Adelanto de preventa" : "",
     detalle.lineas.some((linea) => linea.especial) ? "Pedido especial (" + entregaEspecial(detalle.lineas) + ")" : "",
-    detalle.lineas.some((linea) => linea.bajoPedido) ? "Bajo pedido" : "",
     ...[...new Set(detalle.lineas.map((linea) => linea.oferta).filter(Boolean))].map(
       (oferta) => "Oferta " + oferta,
     ),

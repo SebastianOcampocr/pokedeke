@@ -37,8 +37,6 @@ export type Pedido = {
   envioPorWhatsApp?: boolean;
   /** Trae un pedido especial: todo se entrega después de `llegada`. */
   especial?: { llegada?: string };
-  /** Trae algo bajo pedido: se consigue cuando entra el pago. */
-  bajoPedido?: boolean;
 };
 
 const almacen = crearAlmacen<Pedido[]>("demo-pedidos-v3", () => [], []);

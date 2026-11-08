@@ -14,7 +14,7 @@ export type Producto = {
   stock: number;
   /** Gramos, según la hoja. Llega con el stock en vivo. */
   peso?: number;
-  etiqueta?: "Nuevo" | "Preventa" | "Pedido especial" | "Bajo pedido" | "Oferta";
+  etiqueta?: "Nuevo" | "Preventa" | "Pedido especial" | "Oferta";
   destacado?: boolean;
   parado?: boolean;
   vendidos: number;
@@ -105,25 +105,9 @@ export function esPedidoEspecial(producto: Producto) {
   return producto.etiqueta === PEDIDO_ESPECIAL;
 }
 
-export const BAJO_PEDIDO = "Bajo pedido";
-
-/**
- * No lo tenemos, pero lo conseguimos en una tienda de Costa Rica cuando entra
- * el pago: se paga completo y sale en unos días. Si no se consigue, se devuelve
- * el 100%.
- */
-export function esBajoPedido(producto: Producto) {
-  return producto.etiqueta === BAJO_PEDIDO;
-}
-
-/** Se paga el 100% y se entrega cuando lo tengamos: de Estados Unidos o bajo pedido. */
-export function sePagaCompleto(producto: Producto) {
-  return esPedidoEspecial(producto) || esBajoPedido(producto);
-}
-
 /** Lo que todavía no está en el mezzanine: se aparta y se entrega después. */
 export function seAparta(producto: Producto) {
-  return esPreventa(producto) || sePagaCompleto(producto);
+  return esPreventa(producto) || esPedidoEspecial(producto);
 }
 
 export function estaAgotado(producto: Producto) {
@@ -205,4 +189,3 @@ export const categoriasConProducto = () =>
 
 export const hayPreventas = () => disponibles().some(esPreventa);
 export const hayPedidosEspeciales = () => disponibles().some(esPedidoEspecial);
-export const hayBajoPedido = () => disponibles().some(esBajoPedido);

@@ -10,7 +10,7 @@ import { lanzarConfeti } from "@/lib/confeti";
 import { prepararAudio, sonarCompra } from "@/lib/sonido";
 import { calcularTotales, colones } from "@/lib/formato";
 import { ganarLogro } from "@/lib/logros";
-import { esBajoPedido, esPedidoEspecial } from "@/lib/productos";
+import { esPedidoEspecial } from "@/lib/productos";
 import { refrescarInventario } from "@/lib/vivo";
 import {
   actualizarPedido,
@@ -23,7 +23,6 @@ import {
   costoDeEnvio,
   enlaceWhatsApp,
   ENVIO_GRATIS_DESDE,
-  ENTREGA_BAJO_PEDIDO,
   DIAS_DE_DESPACHO,
   ENVIO_TIENDAS_DESDE,
   ENVIOS,
@@ -39,7 +38,6 @@ import {
 } from "@/lib/tienda";
 import { Deke } from "./Deke";
 import {
-  AvisoBajoPedido,
   AvisoPedidoEspecial,
   cuandoSeEntrega,
   llegadaDeEspeciales,
@@ -253,12 +251,6 @@ function Confirmacion({
             <strong>{cuandoSeEntrega(pedido.especial.llegada)}</strong>. Si por
             algo no lo podemos traer, te devolvemos el 100% a la misma cuenta.
           </p>
-        ) : pedido.bajoPedido ? (
-          <p className="text-sm leading-snug">
-            Tu pedido trae productos bajo pedido: los conseguimos apenas entre
-            tu pago y está listo <strong>{ENTREGA_BAJO_PEDIDO}</strong>. Si por
-            algo no lo conseguimos, te devolvemos el 100% a la misma cuenta.
-          </p>
         ) : opcionEnvio?.despacho ? (
           <p className="text-sm leading-snug">
             Si pagás a tiempo, tu pedido sale el{" "}
@@ -372,8 +364,6 @@ export function Pago() {
   const llegadaEspecial = llegadaDeEspeciales(
     especiales.map(({ producto }) => producto.llegada),
   );
-  // Lo que se consigue en tiendas de aquí cuando entra el pago.
-  const hayBajoPedido = lineas.some(({ producto }) => esBajoPedido(producto));
 
   function precioDeOpcion({ pideDireccion, pideTienda }: OpcionEnvio) {
     if (pideTienda) return `Desde ${colones(ENVIO_TIENDAS_DESDE)}`;
@@ -429,7 +419,6 @@ export function Pago() {
       guia: "",
       envioPorWhatsApp: otraTienda,
       ...(especiales.length > 0 ? { especial: { llegada: llegadaEspecial } } : {}),
-      ...(hayBajoPedido ? { bajoPedido: true } : {}),
     };
 
     if (TIENDA_ABIERTA) {
@@ -529,12 +518,6 @@ export function Pago() {
               Tu pedido trae productos de Estados Unidos: todo se entrega junto{" "}
               {cuandoSeEntrega(llegadaEspecial)}. Si querés lo demás antes,
               hacé dos pedidos.
-            </p>
-          ) : hayBajoPedido ? (
-            <p className="text-sm leading-snug font-bold">
-              Tu pedido trae productos bajo pedido: todo sale junto cuando los
-              consigamos, {ENTREGA_BAJO_PEDIDO} después de pagar. Si querés lo
-              demás antes, hacé dos pedidos.
             </p>
           ) : envio.despacho ? (
             <p className="text-sm leading-snug font-bold">
@@ -692,8 +675,6 @@ export function Pago() {
             llegada={llegadaEspecial}
             titulo="Tu pedido trae productos de Estados Unidos"
           />
-        ) : hayBajoPedido ? (
-          <AvisoBajoPedido titulo="Tu pedido trae productos bajo pedido" />
         ) : null}
         {error ? (
           <p role="alert" className="font-bold text-rojo">

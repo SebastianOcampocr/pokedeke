@@ -39,8 +39,6 @@ export type PedidoPublico = {
   lineas: { nombre: string; cantidad: number }[];
   /** Trae un pedido especial: "después del 5/12". */
   especial?: string;
-  /** Trae algo bajo pedido: "de 2 a 5 días hábiles". */
-  bajoPedido?: string;
 };
 
 const SIN_CONEXION = "No pudimos conectar. Revisá tu internet e intentá otra vez.";

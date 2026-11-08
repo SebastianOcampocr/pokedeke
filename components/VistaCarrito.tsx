@@ -13,12 +13,11 @@ import {
 import { calcularTotales, colones, fechaCorta } from "@/lib/formato";
 import {
   disponibles,
-  esBajoPedido,
   esPedidoEspecial,
   esPreventa,
   seAparta,
 } from "@/lib/productos";
-import { CUPONES, ENTREGA_BAJO_PEDIDO } from "@/lib/tienda";
+import { CUPONES } from "@/lib/tienda";
 import { useInventarioVivo, useOfertasVivas } from "@/lib/vivo";
 import { AgregarRapido } from "./AgregarRapido";
 import { BarraEnvio } from "./BarraEnvio";
@@ -243,8 +242,6 @@ export function VistaCarrito() {
                         ? `, se entrega después del ${fechaCorta(producto.llegada)}`
                         : ""
                     }`
-                  ) : esBajoPedido(producto) ? (
-                    `${colones(precio)} c/u · Bajo pedido: lo conseguimos ${ENTREGA_BAJO_PEDIDO}`
                   ) : precioNormal ? (
                     <>
                       <s>{colones(precioNormal)}</s>{" "}

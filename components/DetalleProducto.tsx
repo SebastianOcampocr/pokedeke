@@ -5,7 +5,6 @@ import { useLayoutEffect, useState, ViewTransition } from "react";
 import { agregarAlCarrito } from "@/lib/carrito";
 import { colones } from "@/lib/formato";
 import {
-  esBajoPedido,
   esCarta,
   esPedidoEspecial,
   esPreventa,
@@ -148,7 +147,6 @@ export function AccionesProducto({ producto: guardado }: { producto: Producto })
 
   const preventa = esPreventa(producto);
   const especial = esPedidoEspecial(producto);
-  const bajoPedido = esBajoPedido(producto);
   const porcentaje = Math.round(TIENDA.adelantoPreventa * 100);
 
   return (
@@ -193,9 +191,7 @@ export function AccionesProducto({ producto: guardado }: { producto: Producto })
               ? "Apartar con adelanto"
               : especial
                 ? "Apartar pagando el 100%"
-                : bajoPedido
-                  ? "Pedir pagando el 100%"
-                  : "Agregar al carrito"}
+                : "Agregar al carrito"}
           </button>
           {agregado ? (
             <p role="status" className="aparecer font-bold text-verde-oscuro">
