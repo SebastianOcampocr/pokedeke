@@ -1,19 +1,26 @@
 "use client";
 
 import { useId, useLayoutEffect, useRef, useState } from "react";
-import { anotarInteresado } from "@/lib/api-pedidos";
+import { anotarInteresado, pedirAviso } from "@/lib/api-pedidos";
 import { TIENDA_ABIERTA } from "@/lib/tienda";
 
+/**
+ * Con `slug` es un producto agotado: la hoja le escribe sola a la persona
+ * cuando vuelve a haber. Sin `slug` (juegos que vienen), solo la anota.
+ */
 export function BotonAvisame({
   nombreProducto,
+  slug,
   className = "",
 }: {
   nombreProducto: string;
+  slug?: string;
   className?: string;
 }) {
   const dialogo = useRef<HTMLDialogElement>(null);
   const id = useId();
   const [listo, setListo] = useState(false);
+  const [porCorreo, setPorCorreo] = useState(true);
   const [enviando, setEnviando] = useState(false);
   const [error, setError] = useState("");
 
@@ -29,10 +36,14 @@ export function BotonAvisame({
     <>
       <button
         type="button"
-        onClick={() => dialogo.current?.showModal()}
+        onClick={() => {
+          setListo(false);
+          setError("");
+          dialogo.current?.showModal();
+        }}
         className={`boton boton-amarillo boton-chico ${className}`}
       >
-        Avisame cuando llegue
+        {slug ? "Avisame cuando vuelva" : "Avisame cuando llegue"}
       </button>
       <dialog
         ref={dialogo}
@@ -42,7 +53,11 @@ export function BotonAvisame({
           <div className="flex flex-col gap-4">
             <p className="font-display text-2xl text-azul">¡Listo!</p>
             <p>
-              Cuando llegue {nombreProducto} te avisamos.
+              {slug
+                ? porCorreo
+                  ? `Apenas vuelva ${nombreProducto} te llega un correo. Es un solo aviso.`
+                  : `Apenas vuelva ${nombreProducto} te escribimos por WhatsApp.`
+                : `Cuando llegue ${nombreProducto} te avisamos.`}
             </p>
             <button
               type="button"
@@ -58,14 +73,19 @@ export function BotonAvisame({
             onSubmit={async (evento) => {
               evento.preventDefault();
               const datos = new FormData(evento.currentTarget);
+              const nombre = String(datos.get("nombre") ?? "");
+              const contacto = String(datos.get("contacto") ?? "");
+              setPorCorreo(contacto.includes("@"));
               if (TIENDA_ABIERTA) {
                 setEnviando(true);
                 setError("");
-                const respuesta = await anotarInteresado(
-                  String(datos.get("nombre") ?? ""),
-                  String(datos.get("contacto") ?? ""),
-                  nombreProducto,
-                );
+                let respuesta = slug
+                  ? await pedirAviso(slug, nombre, contacto)
+                  : await anotarInteresado(nombre, contacto, nombreProducto);
+                // Mientras la hoja no tenga la versión con avisos, queda anotado como antes.
+                if (slug && !respuesta.ok && respuesta.error === "Acción desconocida.") {
+                  respuesta = await anotarInteresado(nombre, contacto, nombreProducto);
+                }
                 setEnviando(false);
                 if (!respuesta.ok) {
                   setError(respuesta.error);
@@ -79,7 +99,9 @@ export function BotonAvisame({
               {nombreProducto}
             </p>
             <p className="text-[15px]">
-              Dejanos tus datos y te escribimos apenas entre.
+              {slug
+                ? "Dejanos tu correo y te llega un aviso apenas vuelva. Si preferís WhatsApp, te escribimos nosotros."
+                : "Dejanos tus datos y te escribimos apenas entre."}
             </p>
             <div>
               <label className="rotulo-campo" htmlFor={`${id}-nombre`}>
@@ -89,12 +111,13 @@ export function BotonAvisame({
             </div>
             <div>
               <label className="rotulo-campo" htmlFor={`${id}-contacto`}>
-                WhatsApp o correo
+                {slug ? "Correo o WhatsApp" : "WhatsApp o correo"}
               </label>
               <input
                 id={`${id}-contacto`}
                 name="contacto"
                 className="campo"
+                autoComplete="email"
                 required
               />
             </div>

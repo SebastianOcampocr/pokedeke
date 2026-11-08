@@ -83,14 +83,70 @@ export function avisarCarrito(
   }).catch(() => undefined);
 }
 
-/** Comentario de la página Danos tu opinión. `sitio` es el campo trampa para robots. */
+/**
+ * Comentario de la página Danos tu opinión. `sitio` es el campo trampa para
+ * robots. `pedido` y `clave` vienen del correo de "¿Cómo te fue?": con ellos la
+ * hoja sabe que es una compra real.
+ */
 export const mandarComentario = (datos: {
   calificacion: number;
   comentario: string;
   nombre: string;
   contacto: string;
   sitio: string;
+  /** La persona marcó que se puede mostrar en la página. */
+  permiso: boolean;
+  pedido?: string;
+  clave?: string;
 }) => enviar<object>({ accion: "comentario", ...datos });
+
+/** "Avisame cuando vuelva": la hoja escribe sola cuando vuelve a haber. */
+export const pedirAviso = (slug: string, nombre: string, contacto: string) =>
+  enviar<{ porCorreo?: boolean }>({ accion: "aviso", slug, nombre, contacto });
+
+const ROBOT = /bot|crawl|spider|slurp|lighthouse|headless|preview/i;
+/** Lo que ya se contó hoy en este navegador. Se vacía solo al cambiar el día. */
+const CONTADOS = "pokedeke-contados";
+
+/**
+ * Anónimo: cuenta que alguien abrió un producto ("vista") o lo agregó al
+ * carrito, para la pestaña Lo más visto. Una vez al día por navegador y
+ * producto, para que recargar no infle la cuenta. Si falla, no pasa nada.
+ */
+export function contarVisita(slug: string, tipo: "vista" | "carrito") {
+  if (!TIENDA_ABIERTA || !PEDIDOS_URL) return;
+  if (navigator.webdriver || ROBOT.test(navigator.userAgent)) return;
+  const hoy = new Date().toISOString().slice(0, 10);
+  const marca = `${tipo}:${slug}`;
+  try {
+    const guardado = JSON.parse(localStorage.getItem(CONTADOS) ?? "null") as {
+      dia: string;
+      marcas: string[];
+    } | null;
+    const marcas = guardado?.dia === hoy ? guardado.marcas : [];
+    if (marcas.includes(marca)) return;
+    localStorage.setItem(
+      CONTADOS,
+      JSON.stringify({ dia: hoy, marcas: [...marcas, marca] }),
+    );
+  } catch {
+    // Sin almacenamiento se cuenta igual.
+  }
+  const cuerpo = JSON.stringify({ accion: "visto", slug, tipo });
+  if (typeof navigator.sendBeacon === "function") {
+    navigator.sendBeacon(
+      PEDIDOS_URL,
+      new Blob([cuerpo], { type: "text/plain;charset=utf-8" }),
+    );
+    return;
+  }
+  void fetch(PEDIDOS_URL, {
+    method: "POST",
+    headers: { "Content-Type": "text/plain;charset=utf-8" },
+    body: cuerpo,
+    keepalive: true,
+  }).catch(() => undefined);
+}
 
 export const crearPedido = (pedido: PedidoNuevo) =>
   enviar<PedidoCreado>({ accion: "pedido", ...pedido });

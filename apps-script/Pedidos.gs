@@ -8,12 +8,19 @@
  * 3. Cuando el Estado de un pedido pasa a "Pagado", anota la venta en "Ventas".
  * 4. Le entrega a GitHub el catálogo, a la página el stock en vivo y a cada
  *    cliente el estado de su pedido.
+ * 5. "Avisame cuando vuelva": anota a quien espera un producto agotado y le
+ *    escribe cuando vuelve a haber.
+ * 6. Cuenta cuántas veces se ve y se agrega al carrito cada producto, en
+ *    "Lo más visto", sin datos personales.
+ * 7. Dos días después de marcar un pedido Entregado, le pide al cliente su
+ *    opinión. Las opiniones marcadas para publicar salen en la portada.
  *
  * Los precios y el stock siempre se leen de la hoja: lo que manda el navegador
  * nunca se usa para calcular cuánto se cobra.
  *
  * Todo corre con la cuenta de la tienda: la implementación se crea desde esa
- * cuenta y ahí mismo se corre instalarAvisos() una vez.
+ * cuenta y ahí mismo se corre instalarAvisos() una vez (y otra vez cada vez que
+ * este archivo traiga activadores nuevos).
  */
 
 const CONFIG = {
@@ -36,6 +43,15 @@ const CONFIG = {
   // gastar el de los pedidos.
   maxCarritosPorHora: 600,
   maxComentariosPorHora: 30,
+  maxAvisosPorHora: 60,
+  // Cada visita a un producto cuenta una vez al día por navegador.
+  maxVistasPorHora: 3000,
+  // Google deja mandar unos 100 correos al día: cada revisión manda como mucho estos.
+  maxCorreosPorRevision: 40,
+  // Días después de marcar Entregado para pedir la opinión.
+  diasParaOpinion: 2,
+  // Las opiniones se piden de día, entre estas horas (hora de Costa Rica).
+  horasParaEscribir: [9, 19],
   maxLineasPorPedido: 100,
   // Estos valores deben coincidir con lib/tienda.ts.
   // `despacho`: sale en los días de despacho (ver diaDeDespacho).
@@ -114,10 +130,13 @@ const HOJAS = {
   interesados: "Interesados",
   carritos: "Carritos",
   comentarios: "Comentarios",
+  avisos: "Avisos de stock",
+  masVistos: "Lo más visto",
 };
 
 // Sube con cada cambio: la página y las pruebas leen esta marca con un GET.
-const VERSION = "2026-11-08-sac";
+const VERSION = "2026-11-08-avisos";
+const ENTREGADO = "Entregado";
 const PEDIDO_ESPECIAL = "Pedido especial";
 const PRIMERA_FILA = 5;
 const PENDIENTE = "Pendiente de pago";
@@ -180,6 +199,9 @@ function doGet(e) {
   if (parametros.accion === "estado") {
     return responder(consultarPedido(parametros));
   }
+  if (parametros.accion === "extras") {
+    return responder({ ok: true, opiniones: opinionesPublicadas(), masVistos: listaMasVistos() });
+  }
   return responder({ ok: true, tienda: CONFIG.nombreTienda, version: VERSION });
 }
 
@@ -195,11 +217,24 @@ function doPost(e) {
       interesado: guardarInteresado,
       carrito: guardarCarrito,
       comentario: guardarComentario,
+      aviso: guardarAviso,
+      visto: anotarVisto,
     };
     const accion = acciones[datos.accion];
     if (!accion) return responder({ ok: false, error: "Acción desconocida." });
     if (datos.accion === "carrito") {
       if (!hayCupo("carritos", CONFIG.maxCarritosPorHora)) return responder({ ok: false });
+      return responder(conCandado(() => accion(datos)));
+    }
+    if (datos.accion === "visto") {
+      // Si la hoja está ocupada, esta visita no se cuenta: no vale la pena esperar.
+      if (!hayCupo("vistas", CONFIG.maxVistasPorHora)) return responder({ ok: false });
+      return responder(siEstaLibre(() => accion(datos)));
+    }
+    if (datos.accion === "aviso") {
+      if (!hayCupo("avisos", CONFIG.maxAvisosPorHora)) {
+        return responder({ ok: false, error: "Recibimos muchos avisos. Intentá en un rato." });
+      }
       return responder(conCandado(() => accion(datos)));
     }
     if (datos.accion === "comentario") {
@@ -234,6 +269,18 @@ function responder(datos) {
 function conCandado(tarea) {
   const candado = LockService.getDocumentLock();
   candado.waitLock(20000);
+  try {
+    return tarea();
+  } finally {
+    SpreadsheetApp.flush();
+    candado.releaseLock();
+  }
+}
+
+/** Como conCandado, pero si la hoja está ocupada más de 5 segundos se rinde. */
+function siEstaLibre(tarea) {
+  const candado = LockService.getDocumentLock();
+  if (!candado.tryLock(5000)) return { ok: false };
   try {
     return tarea();
   } finally {
@@ -295,7 +342,7 @@ function respuestaDeStock(respuesta, version, versionDeLaPagina) {
 }
 
 function olvidarStock() {
-  CacheService.getScriptCache().removeAll([CLAVE_STOCK, CLAVE_VERSION]);
+  CacheService.getScriptCache().removeAll([CLAVE_STOCK, CLAVE_VERSION, CLAVE_NOMBRES]);
 }
 
 /* ---------- Limpieza de lo que escribe la gente ---------- */
@@ -929,7 +976,12 @@ function anotarCarrito(id, { resumen, unidades, total, estado }, desdePedido) {
     .setValues([[ahora, comoTexto(resumen), unidades, total, estado]]);
 }
 
-/** "Danos tu opinión": se guarda en Comentarios y le llega un correo a la tienda. */
+/**
+ * "Danos tu opinión": se guarda en Comentarios y le llega un correo a la tienda.
+ * Si viene del correo de "¿Cómo te fue?", trae el pedido y su clave: así se sabe
+ * que es una compra real. Sale en la portada solo si la persona dio permiso y
+ * además alguien de la tienda pone sí en Publicar.
+ */
 function guardarComentario(datos) {
   const comentario = texto(datos.comentario, 1000);
   const calificacion = Math.floor(Number(datos.calificacion));
@@ -939,22 +991,63 @@ function guardarComentario(datos) {
   if (comentario.length < 3) return { ok: false, error: "Escribí tu comentario." };
   const pestana = hoja(HOJAS.comentarios);
   if (!pestana) return { ok: false, error: "No pudimos guardarlo." };
-  pestana.appendRow([new Date(), estrellas, comoTexto(comentario), comoTexto(nombre), comoTexto(contacto)]);
+  const pedido = pedidoVerificado(datos.pedido, datos.clave);
+  const permiso = datos.permiso === true;
+  pestana.appendRow([
+    new Date(),
+    estrellas,
+    comoTexto(comentario),
+    comoTexto(nombre),
+    comoTexto(contacto),
+    permiso ? "sí" : "no",
+    "",
+    pedido,
+  ]);
   avisar(
     "Comentario nuevo" + (estrellas ? " · " + "★".repeat(estrellas) + "☆".repeat(5 - estrellas) : ""),
     [
-      "Alguien dejó un comentario en la página.",
+      pedido ? "El cliente del pedido " + pedido + " dejó su opinión." : "Alguien dejó un comentario en la página.",
       "",
       estrellas ? "Calificación: " + estrellas + " de 5" : "",
       "Comentario: " + comentario,
       nombre ? "Nombre: " + nombre : "",
       contacto ? "Contacto: " + contacto : "",
       "",
-      "Está en la pestaña Comentarios de la hoja.",
+      permiso
+        ? "Dio permiso para mostrarlo. Si querés que salga en la portada, poné sí en la columna Publicar de la pestaña Comentarios."
+        : "No dio permiso para mostrarlo en la página. Está en la pestaña Comentarios.",
     ],
     esCorreo(contacto) ? contacto : "",
   );
   return { ok: true };
+}
+
+/** El número del pedido si la clave calza; si no, vacío. */
+function pedidoVerificado(numero, clave) {
+  if (!numero || !clave) return "";
+  const hallado = buscarFilaDePedido(numero);
+  if (!hallado || hallado.fila[COL.clave - 1] !== texto(clave, 60)) return "";
+  return hallado.fila[COL.numero - 1];
+}
+
+/** Con permiso y sí en Publicar, de la más nueva a la más vieja. Solo el primer nombre. */
+function opinionesPublicadas() {
+  const pestana = hoja(HOJAS.comentarios);
+  if (!pestana || pestana.getLastRow() < PRIMERA_FILA) return [];
+  const esSi = (valor) => /^s[ií]$/i.test(String(valor).trim());
+  return pestana
+    .getRange(PRIMERA_FILA, 1, pestana.getLastRow() - PRIMERA_FILA + 1, 8)
+    .getValues()
+    .filter((fila) => esSi(fila[5]) && esSi(fila[6]) && String(fila[2]).trim())
+    .reverse()
+    .slice(0, 12)
+    .map((fila) => ({
+      fecha: fila[0] instanceof Date ? Utilities.formatDate(fila[0], "UTC", "yyyy-MM-dd") : "",
+      estrellas: Number(fila[1]) || 0,
+      comentario: sinApostrofe(fila[2]),
+      nombre: sinApostrofe(fila[3]).trim().split(/\s+/)[0] || "",
+      compra: Boolean(String(fila[7]).trim()),
+    }));
 }
 
 function guardarInteresado(datos) {
@@ -969,6 +1062,288 @@ function guardarInteresado(datos) {
     comoTexto(producto),
   ]);
   return { ok: true };
+}
+
+/* ---------- Avisame cuando vuelva ---------- */
+
+// Columnas de "Avisos de stock", contando desde 1.
+const COL_AVISO = { fecha: 1, producto: 2, nombre: 3, contacto: 4, estado: 5, avisado: 6, slug: 7 };
+const ESPERANDO = "Esperando";
+const AVISADO_POR_CORREO = "Avisado por correo";
+const AVISALE_POR_WHATSAPP = "Avisale por WhatsApp";
+
+/** Un producto agotado: la persona deja su correo o WhatsApp para el aviso. */
+function guardarAviso(datos) {
+  const pestana = hoja(HOJAS.avisos);
+  if (!pestana) return { ok: false, error: "No pudimos guardarlo." };
+  const producto = productosPorSlug()[texto(datos.slug, 200)];
+  if (!producto) return { ok: false, error: "Ese producto ya no está en la página." };
+  const nombre = texto(datos.nombre, 80);
+  const escrito = texto(datos.contacto, 120);
+  const contacto = esCorreo(escrito) ? escrito.toLowerCase() : normalizarWhatsapp(escrito);
+  if (!contacto) return { ok: false, error: "Escribí un correo o un WhatsApp de 8 números." };
+
+  const repetido = filasDeAvisos(pestana).some(
+    ({ valores }) =>
+      valores[COL_AVISO.estado - 1] === ESPERANDO &&
+      valores[COL_AVISO.slug - 1] === producto.slug &&
+      sinApostrofe(valores[COL_AVISO.contacto - 1]).toLowerCase() === contacto,
+  );
+  if (!repetido) {
+    pestana.appendRow([
+      new Date(),
+      comoTexto(producto.nombre),
+      comoTexto(nombre),
+      comoTexto(contacto),
+      ESPERANDO,
+      "",
+      producto.slug,
+    ]);
+  }
+  return { ok: true, porCorreo: esCorreo(contacto) };
+}
+
+function filasDeAvisos(pestana) {
+  const ultima = pestana.getLastRow();
+  if (ultima < PRIMERA_FILA) return [];
+  return pestana
+    .getRange(PRIMERA_FILA, 1, ultima - PRIMERA_FILA + 1, 7)
+    .getValues()
+    .map((valores, indice) => ({ fila: PRIMERA_FILA + indice, valores }));
+}
+
+/**
+ * Le escribe a quien esperaba un producto que volvió a haber (stock menos lo
+ * apartado). Corre con cada edición de Compras, Ventas, Catálogo web o Pedidos
+ * web, y cada hora por los apartados que vencen solos. Los que dejaron WhatsApp
+ * le llegan a la tienda en un solo correo, con el mensaje listo para mandar.
+ */
+function revisarAvisos() {
+  const pestana = hoja(HOJAS.avisos);
+  if (!pestana) return;
+  const esperando = filasDeAvisos(pestana).filter(
+    ({ valores }) => valores[COL_AVISO.estado - 1] === ESPERANDO,
+  );
+  if (esperando.length === 0) return;
+
+  const productos = productosPorSlug();
+  const reservado = apartados(filasDePedidos());
+  const hay = (slug) => productos[slug] && productos[slug].stock - (reservado[slug] || 0) > 0;
+  const ahora = new Date();
+  const porWhatsapp = [];
+  let correos = 0;
+
+  esperando.forEach(({ fila, valores }) => {
+    const producto = productos[valores[COL_AVISO.slug - 1]];
+    if (!hay(valores[COL_AVISO.slug - 1])) return;
+    const nombre = sinApostrofe(valores[COL_AVISO.nombre - 1]);
+    const contacto = sinApostrofe(valores[COL_AVISO.contacto - 1]);
+    let estado = AVISALE_POR_WHATSAPP;
+    if (esCorreo(contacto)) {
+      if (correos >= CONFIG.maxCorreosPorRevision) return;
+      if (!avisarQueVolvio(contacto, nombre, producto)) return;
+      correos += 1;
+      estado = AVISADO_POR_CORREO;
+    } else {
+      porWhatsapp.push({ nombre, contacto, producto });
+    }
+    pestana.getRange(fila, COL_AVISO.estado, 1, 2).setValues([[estado, ahora]]);
+  });
+  if (porWhatsapp.length > 0) avisarWhatsappsPendientes(porWhatsapp);
+}
+
+function avisarQueVolvio(correo, nombre, producto) {
+  const enlace = CONFIG.sitio + "producto/" + producto.slug;
+  const saludo = nombre ? "¡Hola " + nombre.split(" ")[0] + "!" : "¡Hola!";
+  const parrafos = [
+    saludo + " Nos pediste que te avisáramos: " + producto.nombre + " ya está otra vez en la página, a " + colones(producto.precio) + ".",
+    "Se aparta al hacer el pedido, así que si lo querés, no te durmás.",
+  ];
+  const pie = "Es un solo aviso: no te vamos a escribir más por esto. Tus datos son solo para este aviso.";
+  return mandarAlCliente({
+    to: correo,
+    subject: "¡Volvió " + producto.nombre + "! · " + CONFIG.nombreTienda,
+    body: [...parrafos, "", enlace, "", pie].join("\n"),
+    htmlBody: correoSencillo({
+      etiqueta: "Volvió",
+      titulo: producto.nombre,
+      parrafos,
+      botones: [botonDeCorreo("Verlo en la página", enlace, "#c9201c")],
+      pie,
+    }),
+  });
+}
+
+/** A la tienda: un botón de WhatsApp por persona, con el mensaje ya escrito. */
+function avisarWhatsappsPendientes(lista) {
+  const enlaces = lista.map(({ nombre, contacto, producto }) => {
+    const mensaje =
+      "¡Hola" + (nombre ? " " + nombre.split(" ")[0] : "") + "! Te escribimos de " + CONFIG.nombreTienda +
+      ": ya volvió " + producto.nombre + ", a " + colones(producto.precio) + ". Lo ves aquí: " +
+      CONFIG.sitio + "producto/" + producto.slug;
+    return {
+      texto: (nombre || contacto) + " · " + producto.nombre,
+      enlace: "https://wa.me/506" + soloDigitos(contacto) + "?text=" + encodeURIComponent(mensaje),
+    };
+  });
+  const parrafos = [
+    "Estas personas pidieron que les avisáramos y dejaron WhatsApp. Tocá cada botón: el mensaje ya va escrito.",
+    "Cuando les escribás, cambiá el Estado a Avisado en la pestaña Avisos de stock.",
+  ];
+  avisar(
+    "Volvieron productos: avisale a " + lista.length + " por WhatsApp",
+    [...parrafos, "", ...enlaces.map(({ texto: rotulo, enlace }) => rotulo + ": " + enlace)],
+    "",
+    correoSencillo({
+      etiqueta: "Avisos de stock",
+      titulo: "Avisales por WhatsApp",
+      parrafos,
+      botones: enlaces.map(({ texto: rotulo, enlace }) => botonDeCorreo(rotulo, enlace, "#127a43")),
+      pie: "Aviso automático de la tienda.",
+    }),
+  );
+}
+
+/* ---------- Lo más visto: cuántas veces se ve y se agrega cada producto ---------- */
+
+// Columnas de "Lo más visto", contando desde 1.
+const COL_VISTO = { producto: 1, vistas: 2, carrito: 3, ultima: 4, slug: 5 };
+const CLAVE_NOMBRES = "nombres-productos";
+
+/** Nombre de cada producto publicado, guardado un rato para no leer el catálogo con cada visita. */
+function nombresDeProductos() {
+  const memoria = CacheService.getScriptCache();
+  const guardado = memoria.get(CLAVE_NOMBRES);
+  if (guardado) return JSON.parse(guardado);
+  const nombres = {};
+  Object.values(productosPorSlug()).forEach((producto) => {
+    nombres[producto.slug] = producto.nombre;
+  });
+  try {
+    memoria.put(CLAVE_NOMBRES, JSON.stringify(nombres), 6 * 3600);
+  } catch (error) {
+    console.error(error);
+  }
+  return nombres;
+}
+
+/** La página manda una "vista" al abrir un producto y un "carrito" al agregarlo, una vez al día por navegador. */
+function anotarVisto(datos) {
+  const slug = texto(datos.slug, 200);
+  const nombre = nombresDeProductos()[slug];
+  const columna = { vista: COL_VISTO.vistas, carrito: COL_VISTO.carrito }[datos.tipo];
+  const pestana = hoja(HOJAS.masVistos);
+  if (!nombre || !columna || !pestana) return { ok: false };
+
+  const ultima = pestana.getLastRow();
+  const slugs =
+    ultima >= PRIMERA_FILA
+      ? pestana.getRange(PRIMERA_FILA, COL_VISTO.slug, ultima - PRIMERA_FILA + 1, 1).getValues()
+      : [];
+  const indice = slugs.findIndex(([valor]) => valor === slug);
+  const ahora = new Date();
+  if (indice === -1) {
+    pestana.appendRow([
+      comoTexto(nombre),
+      columna === COL_VISTO.vistas ? 1 : 0,
+      columna === COL_VISTO.carrito ? 1 : 0,
+      ahora,
+      slug,
+    ]);
+    return { ok: true };
+  }
+  const fila = PRIMERA_FILA + indice;
+  const celda = pestana.getRange(fila, columna);
+  celda.setValue((Number(celda.getValue()) || 0) + 1);
+  pestana.getRange(fila, COL_VISTO.ultima).setValue(ahora);
+  return { ok: true };
+}
+
+/** Para la portada: agregar al carrito pesa como tres vistas. */
+function listaMasVistos() {
+  const pestana = hoja(HOJAS.masVistos);
+  if (!pestana || pestana.getLastRow() < PRIMERA_FILA) return [];
+  const puntos = (producto) => producto.vistas + 3 * producto.agregados;
+  return pestana
+    .getRange(PRIMERA_FILA, 1, pestana.getLastRow() - PRIMERA_FILA + 1, 5)
+    .getValues()
+    .filter((fila) => fila[COL_VISTO.slug - 1])
+    .map((fila) => ({
+      slug: String(fila[COL_VISTO.slug - 1]),
+      vistas: Number(fila[COL_VISTO.vistas - 1]) || 0,
+      agregados: Number(fila[COL_VISTO.carrito - 1]) || 0,
+    }))
+    .sort((a, b) => puntos(b) - puntos(a))
+    .slice(0, 40);
+}
+
+/* ---------- ¿Cómo te fue? ---------- */
+
+const PREFIJO_OPINION = "opinion:";
+
+/** Al marcar Entregado: se guarda cuándo, y tareasCadaHora() escribe días después. */
+function programarOpinion(numero) {
+  PropertiesService.getScriptProperties().setProperty(PREFIJO_OPINION + numero, String(Date.now()));
+}
+
+function pedirOpiniones() {
+  const hora = Number(Utilities.formatDate(new Date(), libro().getSpreadsheetTimeZone(), "H"));
+  if (hora < CONFIG.horasParaEscribir[0] || hora >= CONFIG.horasParaEscribir[1]) return;
+  const propiedades = PropertiesService.getScriptProperties();
+  const limite = Date.now() - CONFIG.diasParaOpinion * 24 * 3600 * 1000;
+  const pendientes = Object.entries(propiedades.getProperties()).filter(
+    ([clave, cuando]) => clave.indexOf(PREFIJO_OPINION) === 0 && Number(cuando) <= limite,
+  );
+  if (pendientes.length === 0) return;
+
+  const pedidos = leerPedidos();
+  pendientes.slice(0, CONFIG.maxCorreosPorRevision).forEach(([clave]) => {
+    const numero = clave.slice(PREFIJO_OPINION.length);
+    const hallado = pedidos.find(({ fila }) => fila[COL.numero - 1] === numero);
+    // Si el Estado cambió (por ejemplo, a Cancelado), no se escribe.
+    if (hallado && hallado.fila[COL.estado - 1] === ENTREGADO) pedirOpinion(hallado.fila);
+    propiedades.deleteProperty(clave);
+  });
+}
+
+function pedirOpinion(fila) {
+  const correo = String(fila[COL.correo - 1]);
+  if (!esCorreo(correo)) return false;
+  const numero = fila[COL.numero - 1];
+  const primerNombre = String(fila[COL.cliente - 1]).split(" ")[0];
+  const enlace =
+    CONFIG.sitio + "comentarios?pedido=" + encodeURIComponent(numero) +
+    "&clave=" + encodeURIComponent(fila[COL.clave - 1]);
+  const nombres = leerDetalle(fila).lineas.map((linea) => linea.nombre);
+  const queLlevaste = nombres.length === 1 ? nombres[0] : nombres.length + " productos";
+  const parrafos = [
+    "Ya tenés tu pedido " + numero + " (" + queLlevaste + "). ¿Llegó bien? ¿Qué te pareció?",
+    "Contanos en un minuto: nos ayuda a mejorar y a que más gente se anime a comprarnos.",
+    "Si algo llegó mal, respondé este correo y lo arreglamos.",
+  ];
+  const pie = "Te escribimos una sola vez por este pedido.";
+  return mandarAlCliente({
+    to: correo,
+    subject: "¿Cómo te fue con tu pedido " + numero + "? · " + CONFIG.nombreTienda,
+    body: ["¡Hola " + primerNombre + "!", "", ...parrafos, "", "Dejá tu opinión aquí: " + enlace, "", pie].join("\n"),
+    htmlBody: correoSencillo({
+      etiqueta: "Tu opinión",
+      titulo: "¿Cómo te fue, " + primerNombre + "?",
+      parrafos,
+      botones: [botonDeCorreo("Dejar mi opinión", enlace, "#c9201c")],
+      pie,
+    }),
+  });
+}
+
+/** Corre sola cada hora, gracias a instalarAvisos(). */
+function tareasCadaHora() {
+  try {
+    conCandado(() => revisarAvisos());
+  } catch (error) {
+    console.error(error);
+  }
+  pedirOpiniones();
 }
 
 function consultarPedido(parametros) {
@@ -1078,20 +1453,10 @@ function correoConDiseno({ etiqueta, estado, colorEstado, saludo, numero, fecha,
     '<tr><td style="padding:5px 10px 5px 0;vertical-align:top;"><span style="display:inline-block;width:24px;height:24px;line-height:24px;text-align:center;border-radius:6px;background:#1437a8;color:#ffffff;font-weight:bold;font-size:13px;">' +
     (indice + 1) + '</span></td><td style="padding:5px 0;">' + escapar(textoPaso) + "</td></tr>";
 
-  const imagenes = CONFIG.sitio + "correo/";
   const filaDeCaja = ([rotulo, valor]) =>
     valor ? escapar(rotulo) + ": <strong>" + escapar(valor) + "</strong>" : "";
-  const patron = (archivo) => "background-image:url(" + imagenes + archivo + ");background-repeat:repeat;";
 
-  return (
-    '<div style="margin:0;padding:0;background-color:#ffce1f;font-family:Arial,Helvetica,sans-serif;color:#141414;">' +
-    '<div style="height:16px;border-bottom:3px solid #141414;background-color:#c9201c;' + patron("toldo.png") + '"></div>' +
-    '<div style="max-width:580px;margin:0 auto;padding:6px 12px 4px;">' +
-    '<img src="' + imagenes + 'nombre.png" alt="POKEDEKE" width="556" style="display:block;width:100%;max-width:556px;height:auto;margin:0 auto;font-size:34px;font-weight:900;color:#c9201c;text-align:center;">' +
-    "</div>" +
-    '<div style="padding:0 0 24px;background-color:#ffce1f;' + patron("fondo.png") + '">' +
-    '<div style="max-width:580px;margin:0 auto;padding:12px 12px 0;">' +
-    '<div style="background-color:#fff4d6;' + patron("fondo-tarjeta.png") + 'border:3px solid #141414;border-radius:12px;padding:22px;">' +
+  return marcoDeCorreo(
     '<span style="display:inline-block;padding:4px 10px;border-radius:6px;background:#1437a8;color:#ffffff;font-size:13px;font-weight:bold;">' + escapar(etiqueta) + "</span> " +
     '<span style="display:inline-block;padding:4px 10px;border-radius:6px;background:' + (colorEstado || "#c9201c") + ';color:#ffffff;font-size:13px;font-weight:bold;">' + escapar(estado || PENDIENTE) + "</span>" +
     '<h1 style="margin:12px 0 0;font-size:30px;color:#1437a8;">' + escapar(numero) + "</h1>" +
@@ -1113,8 +1478,36 @@ function correoConDiseno({ etiqueta, estado, colorEstado, saludo, numero, fecha,
     tituloDeCorreo("Qué sigue") +
     '<table style="width:100%;border-collapse:collapse;font-size:15px;">' + pasos.map(paso).join("") + "</table>" +
     '<div style="margin-top:16px;">' + botones.join("") + "</div>" +
-    '<p style="margin:16px 0 0;font-size:12px;color:#444444;">' + escapar(pie || "Aviso automático de la tienda. Los datos del cliente son solo para este pedido.") + "</p>" +
+    '<p style="margin:16px 0 0;font-size:12px;color:#444444;">' + escapar(pie || "Aviso automático de la tienda. Los datos del cliente son solo para este pedido.") + "</p>",
+  );
+}
+
+/** El toldo, el nombre y la tarjeta crema de todos los correos; `interior` va adentro de la tarjeta. */
+function marcoDeCorreo(interior) {
+  const imagenes = CONFIG.sitio + "correo/";
+  const patron = (archivo) => "background-image:url(" + imagenes + archivo + ");background-repeat:repeat;";
+  return (
+    '<div style="margin:0;padding:0;background-color:#ffce1f;font-family:Arial,Helvetica,sans-serif;color:#141414;">' +
+    '<div style="height:16px;border-bottom:3px solid #141414;background-color:#c9201c;' + patron("toldo.png") + '"></div>' +
+    '<div style="max-width:580px;margin:0 auto;padding:6px 12px 4px;">' +
+    '<img src="' + imagenes + 'nombre.png" alt="POKEDEKE" width="556" style="display:block;width:100%;max-width:556px;height:auto;margin:0 auto;font-size:34px;font-weight:900;color:#c9201c;text-align:center;">' +
+    "</div>" +
+    '<div style="padding:0 0 24px;background-color:#ffce1f;' + patron("fondo.png") + '">' +
+    '<div style="max-width:580px;margin:0 auto;padding:12px 12px 0;">' +
+    '<div style="background-color:#fff4d6;' + patron("fondo-tarjeta.png") + 'border:3px solid #141414;border-radius:12px;padding:22px;">' +
+    interior +
     "</div></div></div></div>"
+  );
+}
+
+/** Correo corto: etiqueta, título, unos párrafos y botones. */
+function correoSencillo({ etiqueta, titulo, parrafos, botones, pie }) {
+  return marcoDeCorreo(
+    '<span style="display:inline-block;padding:4px 10px;border-radius:6px;background:#1437a8;color:#ffffff;font-size:13px;font-weight:bold;">' + escapar(etiqueta) + "</span>" +
+    '<h1 style="margin:12px 0 14px;font-size:26px;line-height:1.2;color:#1437a8;">' + escapar(titulo) + "</h1>" +
+    parrafos.map((parrafo) => '<p style="margin:0 0 12px;font-size:16px;line-height:1.45;">' + escapar(parrafo) + "</p>").join("") +
+    '<div style="margin-top:16px;">' + botones.join("") + "</div>" +
+    '<p style="margin:16px 0 0;font-size:12px;color:#444444;">' + escapar(pie) + "</p>",
   );
 }
 
@@ -1138,26 +1531,29 @@ function botonesDelCliente(numero) {
   ];
 }
 
+/** Devuelve si salió. */
 function mandarCorreo(opciones) {
   try {
     MailApp.sendEmail({ name: CONFIG.nombreTienda, ...opciones });
+    return true;
   } catch (error) {
     // Un correo que falla no debe perder el pedido: ya quedó en la hoja.
     console.error(error);
+    return false;
   }
 }
 
 /**
  * Al cliente solo se le escribe desde la cuenta de la tienda: el correo personal
- * de quien administra la hoja nunca debe quedar a la vista.
+ * de quien administra la hoja nunca debe quedar a la vista. Devuelve si salió.
  */
 function mandarAlCliente(opciones) {
   const cuenta = Session.getEffectiveUser().getEmail().toLowerCase();
   if (cuenta !== CONFIG.correoAvisos) {
     console.error("No se le escribió al cliente: el script corre con otra cuenta.");
-    return;
+    return false;
   }
-  mandarCorreo({ replyTo: CONFIG.correoCliente, ...opciones });
+  return mandarCorreo({ replyTo: CONFIG.correoCliente, ...opciones });
 }
 
 function avisar(asunto, lineas, responderA, html) {
@@ -1359,14 +1755,16 @@ function avisarConseguido(fila) {
 /* ---------- Pasar a Ventas ---------- */
 
 /**
- * Correr una sola vez desde el editor, con la cuenta de la tienda. Google no
- * deja mandar correos desde un onEdit común: ocupa este activador instalado.
+ * Correr desde el editor, con la cuenta de la tienda, una vez y otra vez cada
+ * vez que este archivo traiga activadores nuevos. Google no deja mandar correos
+ * desde un onEdit común: ocupa estos activadores instalados.
  */
 function instalarAvisos() {
   ScriptApp.getProjectTriggers()
-    .filter((activador) => activador.getHandlerFunction() === "alEditarHoja")
+    .filter((activador) => ["alEditarHoja", "tareasCadaHora"].includes(activador.getHandlerFunction()))
     .forEach((activador) => ScriptApp.deleteTrigger(activador));
   ScriptApp.newTrigger("alEditarHoja").forSpreadsheet(libro()).onEdit().create();
+  ScriptApp.newTrigger("tareasCadaHora").timeBased().everyHours(1).create();
 }
 
 /** Corre con cada edición de la hoja, gracias a instalarAvisos(). */
@@ -1375,10 +1773,27 @@ function alEditarHoja(e) {
   const pestana = rango.getSheet().getName();
   if ([HOJAS.compras, HOJAS.ventas, HOJAS.catalogo, HOJAS.pedidos].includes(pestana)) {
     olvidarStock();
+    // Si volvió a haber algo que alguien esperaba, le avisa.
+    try {
+      conCandado(() => revisarAvisos());
+    } catch (error) {
+      console.error(error);
+    }
   }
   if (pestana !== HOJAS.pedidos) return;
   if (rango.getColumn() !== COL.estado || rango.getRow() < PRIMERA_FILA) return;
   if (rango.getNumRows() !== 1) return;
+  if (e.value === ENTREGADO) {
+    const numero = hoja(HOJAS.pedidos).getRange(rango.getRow(), COL.numero).getValue();
+    if (!numero) return;
+    programarOpinion(numero);
+    libro().toast(
+      "En " + CONFIG.diasParaOpinion + " días le pedimos su opinión por correo a " + numero + ".",
+      CONFIG.nombreTienda,
+      8,
+    );
+    return;
+  }
   if (e.value === CONSEGUIDO) {
     const fila = hoja(HOJAS.pedidos).getRange(rango.getRow(), 1, 1, TOTAL_COLUMNAS).getValues()[0];
     libro().toast(avisarConseguido(fila), CONFIG.nombreTienda, 8);

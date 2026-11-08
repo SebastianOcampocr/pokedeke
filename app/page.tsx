@@ -6,6 +6,7 @@ import { FotoProducto } from "@/components/FotoProducto";
 import { Deke } from "@/components/Deke";
 import { EncargoEEUU } from "@/components/EncargoEEUU";
 import { Letrero } from "@/components/Letrero";
+import { Opiniones } from "@/components/Opiniones";
 import { ComoFunciona, ElMezzanine, QueBuscas } from "@/components/Marca";
 import { Proximamente } from "@/components/Proximamente";
 import { Revelar } from "@/components/Revelar";
@@ -25,6 +26,7 @@ import {
   novedadesVariadas,
   type Producto,
 } from "@/lib/productos";
+import { masVistos } from "@/lib/extras";
 import { LEMA, SITIO, TIENDA } from "@/lib/tienda";
 import { DatosEstructurados } from "@/components/DatosEstructurados";
 
@@ -170,6 +172,11 @@ export default function Inicio() {
   const preventas = disponibles().filter(esPreventa).slice(0, 4);
   const especiales = disponibles().filter(esPedidoEspecial).slice(0, 4);
   const recientes = novedadesVariadas(4);
+  // Sin repetir lo que ya sale más arriba.
+  const vistos = masVistos(
+    4,
+    [...destacados, ...recientes].map((producto) => producto.slug),
+  );
   const hayCartas = cartasSueltas().length > 0;
 
   return (
@@ -263,6 +270,12 @@ export default function Inicio() {
             enlace="/catalogo"
             productos={recientes}
           />
+          <Seccion
+            titulo="Lo más visto"
+            enlace="/catalogo"
+            productos={vistos}
+            texto="Lo que más está mirando la gente en la página."
+          />
         </div>
       </div>
 
@@ -285,6 +298,7 @@ export default function Inicio() {
             enlace="/catalogo?etiqueta=Preventa"
             productos={preventas}
           />
+          <Opiniones />
           <ComoFunciona />
           <Proximamente />
         </div>

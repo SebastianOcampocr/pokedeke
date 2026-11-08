@@ -172,7 +172,11 @@ export function TarjetaProducto({
           </Link>
         </h3>
         {agotado ? (
-          <BotonAvisame nombreProducto={producto.nombre} className="mt-2" />
+          <BotonAvisame
+            nombreProducto={producto.nombre}
+            slug={producto.slug}
+            className="mt-2"
+          />
         ) : (
           <div className="mt-auto flex flex-wrap items-end justify-between gap-2">
             <Precio producto={producto} />

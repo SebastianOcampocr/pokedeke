@@ -162,6 +162,7 @@ export function AccionesProducto({ producto: guardado }: { producto: Producto })
       {agotado ? (
         <BotonAvisame
           nombreProducto={producto.nombre}
+          slug={producto.slug}
           className="min-h-14 text-[17px]"
         />
       ) : (

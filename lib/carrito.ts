@@ -1,7 +1,7 @@
 "use client";
 
 import { crearAlmacen } from "./almacen";
-import { avisarCarrito } from "./api-pedidos";
+import { avisarCarrito, contarVisita } from "./api-pedidos";
 import { buscarProducto, precioACobrar, type Producto } from "./productos";
 import { CUPONES, type Cupon } from "./tienda";
 import {
@@ -127,6 +127,7 @@ export function agregarAlCarrito(producto: Producto, cantidad: number) {
     };
   });
   contarCarrito();
+  contarVisita(producto.slug, "carrito");
 }
 
 export function cambiarCantidad(producto: Producto, cantidad: number) {

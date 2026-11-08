@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useState } from "react";
+import { useId, useMemo, useState, useSyncExternalStore } from "react";
 import { mandarComentario } from "@/lib/api-pedidos";
 import { enlaceWhatsApp, PEDIDOS_URL, TIENDA_ABIERTA } from "@/lib/tienda";
 import { IconoChat, IconoCheque } from "./Iconos";
@@ -8,13 +8,32 @@ import { IconoChat, IconoCheque } from "./Iconos";
 const ESTRELLAS = [1, 2, 3, 4, 5];
 const PALABRAS = ["", "Mal", "Regular", "Bien", "Muy bien", "¡Excelente!"];
 
+const leerBusqueda = () => window.location.search;
+const sinBusqueda = () => "";
+const noCambia = () => () => {};
+
+/**
+ * El correo de "¿Cómo te fue?" trae ?pedido=PD-0007&clave=…: con eso la hoja
+ * marca el comentario como compra real.
+ */
+function usePedidoDelCorreo() {
+  const busqueda = useSyncExternalStore(noCambia, leerBusqueda, sinBusqueda);
+  return useMemo(() => {
+    const parametros = new URLSearchParams(busqueda);
+    const pedido = parametros.get("pedido")?.trim().toUpperCase() ?? "";
+    const clave = parametros.get("clave")?.trim() ?? "";
+    return /^PD-\d+$/.test(pedido) && clave ? { pedido, clave } : null;
+  }, [busqueda]);
+}
+
 /**
  * Comentarios de la gente: se guardan en la pestaña Comentarios de la hoja y
  * le llega un correo a la tienda. Si el servidor no responde, se manda por
- * WhatsApp para no perderlo.
+ * WhatsApp para no perderlo. Solo sale en la página con permiso de la persona.
  */
 export function FormularioComentario() {
   const id = useId();
+  const delCorreo = usePedidoDelCorreo();
   const [calificacion, setCalificacion] = useState(0);
   const [comentario, setComentario] = useState("");
   const [enviando, setEnviando] = useState(false);
@@ -42,6 +61,8 @@ export function FormularioComentario() {
       nombre: String(datos.get("nombre") ?? "").trim(),
       contacto: String(datos.get("contacto") ?? "").trim(),
       sitio: String(datos.get("sitio") ?? ""),
+      permiso: datos.get("permiso") === "si",
+      ...(delCorreo ?? {}),
     });
     setEnviando(false);
     if (respuesta.ok) setListo(true);
@@ -62,6 +83,11 @@ export function FormularioComentario() {
 
   return (
     <form className="marco flex flex-col gap-4 bg-white p-5" onSubmit={enviar}>
+      {delCorreo ? (
+        <p className="rounded-md bg-crema p-3 font-bold">
+          Tu opinión sobre el pedido {delCorreo.pedido}
+        </p>
+      ) : null}
       <fieldset>
         <legend className="rotulo-campo">¿Cómo te fue con nosotros?</legend>
         <div className="flex flex-wrap items-center gap-1">
@@ -117,6 +143,15 @@ export function FormularioComentario() {
           />
         </div>
       </div>
+      <label className="flex items-start gap-3 text-[15px] leading-snug">
+        <input
+          type="checkbox"
+          name="permiso"
+          value="si"
+          className="mt-0.5 size-5 shrink-0 accent-azul"
+        />
+        Pueden mostrar mi comentario en la página, solo con mi primer nombre.
+      </label>
       {/* Solo los robots llenan este campo. */}
       <input
         name="sitio"

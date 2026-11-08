@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { contarVisita } from "@/lib/api-pedidos";
 import { anotarVisto, useVistos } from "@/lib/vistos";
 import { useAgotadosAlFinal } from "@/lib/vivo";
 import { TarjetaProducto } from "./TarjetaProducto";
@@ -8,7 +9,10 @@ import { TarjetaProducto } from "./TarjetaProducto";
 export function VistosRecientes({ slug }: { slug: string }) {
   const vistos = useAgotadosAlFinal(useVistos(slug).slice(0, 4));
 
-  useEffect(() => anotarVisto(slug), [slug]);
+  useEffect(() => {
+    anotarVisto(slug);
+    contarVisita(slug, "vista");
+  }, [slug]);
 
   if (vistos.length === 0) return null;
 

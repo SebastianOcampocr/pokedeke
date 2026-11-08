@@ -33,10 +33,14 @@ jobs:
         run: node scripts/traer-catalogo.mjs
         env:
           PEDIDOS_URL: ${{ vars.PEDIDOS_URL }}
+      - name: Traer las opiniones publicadas
+        run: node scripts/traer-extras.mjs --solo opiniones
+        env:
+          PEDIDOS_URL: ${{ vars.PEDIDOS_URL }}
       - name: Guardar el catálogo si cambió
         id: cambios
         run: |
-          if git diff --quiet datos/catalogo.json; then
+          if git diff --quiet datos/catalogo.json datos/opiniones.json; then
             if [ "$GITHUB_EVENT_NAME" = "schedule" ]; then
               echo "publicar=no" >> "$GITHUB_OUTPUT"
             else
@@ -45,7 +49,7 @@ jobs:
           else
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add datos/catalogo.json
+            git add datos/catalogo.json datos/opiniones.json
             git commit -m "Actualizar catálogo desde la hoja"
             git pull --rebase origin main
             git push origin HEAD:main
@@ -72,6 +76,10 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci
+      - name: Traer lo más visto
+        run: node scripts/traer-extras.mjs --solo vistos
+        env:
+          PEDIDOS_URL: ${{ vars.PEDIDOS_URL }}
       - run: npm run build
         env:
           NEXT_PUBLIC_RUTA_BASE: /${{ github.event.repository.name }}
@@ -100,6 +108,10 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci
+      - name: Traer lo más visto
+        run: node scripts/traer-extras.mjs --solo vistos
+        env:
+          PEDIDOS_URL: ${{ vars.PEDIDOS_URL }}
       - run: npm run build
         env:
           ARCHIVOS_ARMADOS: si
@@ -141,6 +153,10 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci
+      - name: Traer lo más visto
+        run: node scripts/traer-extras.mjs --solo vistos
+        env:
+          PEDIDOS_URL: ${{ vars.PEDIDOS_URL }}
       - run: npm run build
         env:
           ARCHIVOS_ARMADOS: si
