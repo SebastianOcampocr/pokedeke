@@ -10867,7 +10867,7 @@
     "categoriaCorta": "Blister",
     "idioma": "Inglés",
     "precio": 12700,
-    "stock": 1,
+    "stock": 3,
     "vendidos": 0,
     "orden": 468,
     "fotos": [
@@ -10901,7 +10901,7 @@
     "categoriaCorta": "Bundle",
     "idioma": "Inglés",
     "precio": 22500,
-    "stock": 1,
+    "stock": 3,
     "vendidos": 0,
     "orden": 470,
     "fotos": [
@@ -10931,17 +10931,17 @@
     "slug": "first-partner-illustration-collection-serie-3",
     "nombre": "First Partner Illustration Collection Serie 3",
     "juego": "Pokémon",
-    "categoria": "Tin o caja de colección",
-    "categoriaCorta": "Tin",
+    "categoria": "Blister / sleeved booster",
+    "categoriaCorta": "Blister",
     "idioma": "Inglés",
     "precio": 19500,
-    "stock": 1,
+    "stock": 3,
     "vendidos": 0,
     "orden": 472,
     "fotos": [
       "/productos/first-partner-illustration-collection-serie-3.webp"
     ],
-    "descripcion": "First Partner Illustration Collection (Serie 3), en inglés. Trae un sobre con 3 de 9 cartas promo estilo Illustration Rare de los iniciales de Hoenn, Kalos o Paldea, 2 sobres más de Pokémon TCG y una hoja de stickers."
+    "descripcion": "Blister First Partner Illustration Collection (Serie 3), en inglés. Trae un sobre con 3 de 9 cartas promo estilo Illustration Rare de los iniciales de Hoenn, Kalos o Paldea, 2 sobres más de Pokémon TCG y una hoja de stickers."
   },
   {
     "id": "C473",
@@ -10969,12 +10969,29 @@
     "categoriaCorta": "Tin",
     "idioma": "Inglés",
     "precio": 18300,
-    "stock": 1,
+    "stock": 3,
     "vendidos": 0,
     "orden": 474,
     "fotos": [
       "/productos/pokemon-day-2026-collection.webp"
     ],
     "descripcion": "Pokémon Day 2026 Collection, en inglés, por los 30 años de Pokémon. Trae una carta promo foil de Pikachu con sello de Pokémon Day, una moneda metálica y 3 sobres de distintas colecciones."
+  },
+  {
+    "id": "C475",
+    "slug": "sobre-chaos-rising",
+    "nombre": "Sobre Chaos Rising",
+    "juego": "Pokémon",
+    "categoria": "Booster pack",
+    "categoriaCorta": "Sobre",
+    "idioma": "Inglés",
+    "precio": 6400,
+    "stock": 5,
+    "vendidos": 0,
+    "orden": 475,
+    "fotos": [
+      "/productos/sobre-chaos-rising.webp"
+    ],
+    "descripcion": "Sobre de Mega Evolution: Chaos Rising, en inglés. Trae 10 cartas de Chaos Rising."
   }
 ]
