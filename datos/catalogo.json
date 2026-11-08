@@ -11034,7 +11034,7 @@
     "categoria": "ETB",
     "categoriaCorta": "ETB",
     "idioma": "Inglés",
-    "precio": 34500,
+    "precio": 35600,
     "stock": 1,
     "vendidos": 0,
     "orden": 478,
@@ -11042,5 +11042,327 @@
       "/productos/etb-perfect-order.webp"
     ],
     "descripcion": "Elite Trainer Box de Mega Evolution: Perfect Order, en inglés. Trae 9 sobres de Perfect Order, 1 carta promo full art, 65 fundas, 45 energías, guía del jugador, 6 dados de daño, 1 dado de moneda, 2 marcadores de estado, una caja con 4 divisores y un código para Pokémon TCG Live."
+  },
+  {
+    "id": "C479",
+    "slug": "rocket-s-articuno-ex-096-team-rocket-returns",
+    "nombre": "Rocket's Articuno ex #096 (Team Rocket Returns)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 171000,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 479,
+    "fotos": [
+      "/productos/rocket-s-articuno-ex-096-team-rocket-returns.webp"
+    ],
+    "descripcion": "Rocket's Articuno ex de 100 HP, tipo Oscuro. Número 96/109 de EX Team Rocket Returns, Ultra Rare holo, en inglés. Condición: Moderately Played (MP). Tiene desgaste visible en bordes o superficie. La foto es de referencia: si querés ver la carta real, pedinos fotos por WhatsApp.",
+    "carta": {
+      "coleccion": "Team Rocket Returns",
+      "numero": "096",
+      "rareza": "",
+      "condicion": "Moderately Played (MP)"
+    },
+    "tipo": "Oscuro"
+  },
+  {
+    "id": "C480",
+    "slug": "giratina-vstar-gg69-crown-zenith-galarian-gallery",
+    "nombre": "Giratina VSTAR #GG69 (Crown Zenith Galarian Gallery)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 99800,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 480,
+    "fotos": [
+      "/productos/giratina-vstar-gg69-crown-zenith-galarian-gallery.webp"
+    ],
+    "descripcion": "Giratina VSTAR de 280 HP, tipo Dragón. Número GG69/GG70 de Crown Zenith: Galarian Gallery, Secret Rare dorada, en inglés. Condición: Moderately Played (MP). Tiene desgaste visible en bordes o superficie. La foto es de referencia: si querés ver la carta real, pedinos fotos por WhatsApp.",
+    "carta": {
+      "coleccion": "Crown Zenith Galarian Gallery",
+      "numero": "GG69",
+      "rareza": "",
+      "condicion": "Moderately Played (MP)"
+    },
+    "tipo": "Dragón"
+  },
+  {
+    "id": "C481",
+    "slug": "mega-charizard-x-ex-130-phantasmal-flames",
+    "nombre": "Mega Charizard X ex #130 (Phantasmal Flames)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 92300,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 481,
+    "fotos": [
+      "/productos/mega-charizard-x-ex-130-phantasmal-flames.webp"
+    ],
+    "descripcion": "Mega Charizard X ex de 360 HP, tipo Fuego. Número 130/094 de Phantasmal Flames, Mega Hyper Rare dorada, en inglés. Condición: Near Mint (NM).",
+    "carta": {
+      "coleccion": "Phantasmal Flames",
+      "numero": "130",
+      "rareza": "",
+      "condicion": "Near Mint (NM)"
+    },
+    "tipo": "Fuego"
+  },
+  {
+    "id": "C482",
+    "slug": "gyarados-008-deoxys",
+    "nombre": "Gyarados #008 (Deoxys)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 70200,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 482,
+    "fotos": [
+      "/productos/gyarados-008-deoxys.webp"
+    ],
+    "descripcion": "Gyarados de 90 HP, tipo Agua. Número 8/107 de EX Deoxys, Rare holo, en inglés. Condición: Moderately Played (MP). Tiene desgaste visible en bordes o superficie. La foto es de referencia: si querés ver la carta real, pedinos fotos por WhatsApp.",
+    "carta": {
+      "coleccion": "Deoxys",
+      "numero": "008",
+      "rareza": "",
+      "condicion": "Moderately Played (MP)"
+    },
+    "tipo": "Agua"
+  },
+  {
+    "id": "C483",
+    "slug": "unown-unseen-forces",
+    "nombre": "Unown #? (Unseen Forces)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 63000,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 483,
+    "fotos": [
+      "/productos/unown-unseen-forces.webp"
+    ],
+    "descripcion": "Unown (?) de 60 HP, tipo Psíquico. Número ?/28 de la colección Unown de EX Unseen Forces, holo, en inglés. Condición: Lightly Played (LP). Tiene desgaste leve. La foto es de referencia: si querés ver la carta real, pedinos fotos por WhatsApp.",
+    "carta": {
+      "coleccion": "Unseen Forces",
+      "numero": "?",
+      "rareza": "",
+      "condicion": "Lightly Played (LP)"
+    },
+    "tipo": "Psíquico"
+  },
+  {
+    "id": "C484",
+    "slug": "lillie-s-clefairy-ex-280-ascended-heroes",
+    "nombre": "Lillie's Clefairy ex #280 (Ascended Heroes)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 53500,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 484,
+    "fotos": [
+      "/productos/lillie-s-clefairy-ex-280-ascended-heroes.webp"
+    ],
+    "descripcion": "Lillie's Clefairy ex de 190 HP, tipo Psíquico. Número 280/217 de Ascended Heroes, Special Illustration Rare, en inglés. Condición: Near Mint (NM).",
+    "carta": {
+      "coleccion": "Ascended Heroes",
+      "numero": "280",
+      "rareza": "",
+      "condicion": "Near Mint (NM)"
+    },
+    "tipo": "Psíquico"
+  },
+  {
+    "id": "C485",
+    "slug": "rocket-s-wobbuffet-reverse-holo-047-team-rocket-returns",
+    "nombre": "Rocket's Wobbuffet Reverse Holo #047 (Team Rocket Returns)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 42200,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 485,
+    "fotos": [
+      "/productos/rocket-s-wobbuffet-reverse-holo-047-team-rocket-returns.webp"
+    ],
+    "descripcion": "Rocket's Wobbuffet de 70 HP, tipo Oscuro. Número 47/109 de EX Team Rocket Returns, reverse holo, en inglés. Condición: Lightly Played (LP). Tiene desgaste leve. La foto es de referencia: si querés ver la carta real, pedinos fotos por WhatsApp.",
+    "carta": {
+      "coleccion": "Team Rocket Returns",
+      "numero": "047",
+      "rareza": "",
+      "condicion": "Lightly Played (LP)"
+    },
+    "tipo": "Oscuro"
+  },
+  {
+    "id": "C486",
+    "slug": "thundurus-ex-110-plasma-freeze",
+    "nombre": "Thundurus-EX #110 (Plasma Freeze)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 39000,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 486,
+    "fotos": [
+      "/productos/thundurus-ex-110-plasma-freeze.webp"
+    ],
+    "descripcion": "Thundurus-EX del Team Plasma de 170 HP, tipo Rayo. Número 110/116 de Plasma Freeze, Full Art, en inglés. Condición: Lightly Played (LP). Tiene desgaste leve. La foto es de referencia: si querés ver la carta real, pedinos fotos por WhatsApp.",
+    "carta": {
+      "coleccion": "Plasma Freeze",
+      "numero": "110",
+      "rareza": "",
+      "condicion": "Lightly Played (LP)"
+    },
+    "tipo": "Rayo"
+  },
+  {
+    "id": "C487",
+    "slug": "kingdra-ex-131-promo",
+    "nombre": "Kingdra ex #131 (Promo)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 38400,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 487,
+    "fotos": [
+      "/productos/kingdra-ex-131-promo.webp"
+    ],
+    "descripcion": "Kingdra ex de 310 HP, tipo Agua. Promo SVP 131 de Scarlet & Violet, en inglés. Condición: Near Mint (NM).",
+    "carta": {
+      "coleccion": "Promo",
+      "numero": "131",
+      "rareza": "",
+      "condicion": "Near Mint (NM)"
+    },
+    "tipo": "Agua"
+  },
+  {
+    "id": "C488",
+    "slug": "regice-ex-097-hidden-legends",
+    "nombre": "Regice ex #097 (Hidden Legends)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 37000,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 488,
+    "fotos": [
+      "/productos/regice-ex-097-hidden-legends.webp"
+    ],
+    "descripcion": "Regice ex de 90 HP, tipo Agua. Número 97/101 de EX Hidden Legends, Ultra Rare holo, en inglés. Condición: Heavily Played (HP). Tiene bastante desgaste en bordes y superficie. La foto es de referencia: si querés ver la carta real, pedinos fotos por WhatsApp.",
+    "carta": {
+      "coleccion": "Hidden Legends",
+      "numero": "097",
+      "rareza": "",
+      "condicion": "Heavily Played (HP)"
+    },
+    "tipo": "Agua"
+  },
+  {
+    "id": "C489",
+    "slug": "farfetch-d-reverse-holo-055-skyridge",
+    "nombre": "Farfetch'd Reverse Holo #055 (Skyridge)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 37000,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 489,
+    "fotos": [
+      "/productos/farfetch-d-reverse-holo-055-skyridge.webp"
+    ],
+    "descripcion": "Farfetch'd de 50 HP, tipo Incoloro. Número 55/144 de Skyridge, reverse holo, en inglés. Condición: Lightly Played (LP). Tiene desgaste leve. La foto es de referencia: si querés ver la carta real, pedinos fotos por WhatsApp.",
+    "carta": {
+      "coleccion": "Skyridge",
+      "numero": "055",
+      "rareza": "",
+      "condicion": "Lightly Played (LP)"
+    },
+    "tipo": "Incoloro"
+  },
+  {
+    "id": "C490",
+    "slug": "team-rocket-s-moltres-ex-229-destined-rivals",
+    "nombre": "Team Rocket's Moltres ex #229 (Destined Rivals)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 32800,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 490,
+    "fotos": [
+      "/productos/team-rocket-s-moltres-ex-229-destined-rivals.webp"
+    ],
+    "descripcion": "Team Rocket's Moltres ex de 220 HP, tipo Fuego. Número 229/182 de Destined Rivals, Special Illustration Rare, en inglés. Condición: Near Mint (NM).",
+    "carta": {
+      "coleccion": "Destined Rivals",
+      "numero": "229",
+      "rareza": "",
+      "condicion": "Near Mint (NM)"
+    },
+    "tipo": "Fuego"
+  },
+  {
+    "id": "C491",
+    "slug": "151-blooming-waters-premium-collection",
+    "nombre": "151 Blooming Waters Premium Collection",
+    "juego": "Pokémon",
+    "categoria": "Colección premium / UPC",
+    "categoriaCorta": "Premium",
+    "idioma": "Inglés",
+    "precio": 172400,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 491,
+    "fotos": [
+      "/productos/151-blooming-waters-premium-collection.webp"
+    ],
+    "descripcion": "Premium Collection de Scarlet & Violet: 151, en inglés. Trae 4 cartas foil de Venusaur ex, Blastoise ex, Bulbasaur y Squirtle, una carta gigante de Blastoise ex, 12 sobres y un código para Pokémon TCG Live."
+  },
+  {
+    "id": "C492",
+    "slug": "prismatic-evolutions-super-premium-collection",
+    "nombre": "Prismatic Evolutions Super-Premium Collection",
+    "juego": "Pokémon",
+    "categoria": "Colección premium / UPC",
+    "categoriaCorta": "Premium",
+    "idioma": "Inglés",
+    "precio": 86200,
+    "stock": 2,
+    "vendidos": 0,
+    "orden": 492,
+    "fotos": [
+      "/productos/prismatic-evolutions-super-premium-collection.webp"
+    ],
+    "descripcion": "Super-Premium Collection de Prismatic Evolutions, en inglés. Trae la carta promo full art de Eevee ex, una caja de mazo peluda de Eevee, un playmat, 65 fundas con Eevee y sus evoluciones y 15 sobres de Prismatic Evolutions."
   }
 ]
