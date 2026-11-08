@@ -8,6 +8,7 @@ import {
   PrecioYStock,
 } from "@/components/DetalleProducto";
 import { Cuenta } from "@/components/Cuenta";
+import { DatosEstructurados } from "@/components/DatosEstructurados";
 import { AvisoPedidoEspecial } from "@/components/PedidoEspecial";
 import { IconoTipo } from "@/components/IconoTipo";
 import { Calcomania, RejillaProductos } from "@/components/TarjetaProducto";
@@ -24,7 +25,9 @@ import {
   ENVIO_GRATIS_DESDE,
   ENVIO_TIENDAS_DESDE,
   ENVIOS,
+  SITIO,
   TARIFA_CORREOS,
+  TIENDA,
 } from "@/lib/tienda";
 
 export function generateStaticParams() {
@@ -42,9 +45,14 @@ export async function generateMetadata(
   return {
     title: producto.nombre,
     description: `${colones(producto.precio)} · ${producto.descripcion}`,
+    alternates: { canonical: `/producto/${producto.slug}` },
     openGraph: {
       title: `${producto.nombre} · ${colones(producto.precio)}`,
       description: producto.descripcion,
+      url: `/producto/${producto.slug}`,
+      ...(producto.fotos[0] && !/^https?:/.test(producto.fotos[0])
+        ? { images: [producto.fotos[0]] }
+        : {}),
     },
   };
 }
@@ -100,6 +108,33 @@ async function ContenidoProducto({
 
   return (
     <>
+      <DatosEstructurados
+        datos={{
+          "@context": "https://schema.org",
+          "@type": "Product",
+          name: producto.nombre,
+          sku: producto.id,
+          description: producto.descripcion || producto.nombre,
+          category: producto.categoria,
+          brand: { "@type": "Brand", name: "Pokémon" },
+          ...(producto.fotos[0] && !/^https?:/.test(producto.fotos[0])
+            ? { image: `${SITIO}${producto.fotos[0]}` }
+            : {}),
+          offers: {
+            "@type": "Offer",
+            url: `${SITIO}/producto/${producto.slug}`,
+            priceCurrency: "CRC",
+            price: producto.precio,
+            availability: estaAgotado(producto)
+              ? "https://schema.org/OutOfStock"
+              : esPedidoEspecial(producto)
+                ? "https://schema.org/PreOrder"
+                : "https://schema.org/InStock",
+            itemCondition: "https://schema.org/NewCondition",
+            seller: { "@type": "Organization", name: TIENDA.nombre },
+          },
+        }}
+      />
       <section className="mx-auto grid w-full max-w-6xl gap-6 px-4 pt-2 pb-7 md:grid-cols-2 lg:gap-10 lg:pb-10">
         <div className="marco shadow-dura relative self-start">
           <Galeria producto={producto} />

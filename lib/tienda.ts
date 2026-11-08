@@ -14,6 +14,10 @@ export const TIENDA = {
 /** Subcarpeta donde vive la página. En la compu va vacía. */
 export const RUTA_BASE = process.env.NEXT_PUBLIC_RUTA_BASE ?? "";
 
+/** La dirección oficial: Google solo debe mostrar esta, no la copia de GitHub Pages. */
+export const SITIO = "https://pokedeke.store";
+export const INDEXAR = !RUTA_BASE;
+
 /** Dirección del servidor de la hoja (apps-script/Pedidos.gs). */
 export const PEDIDOS_URL = process.env.NEXT_PUBLIC_PEDIDOS_URL ?? "";
 

@@ -6,7 +6,7 @@ import { BarraInferior } from "@/components/BarraInferior";
 import { DekeCompa } from "@/components/DekeCompa";
 import { EfectosGlobales } from "@/components/EfectosGlobales";
 import { Encabezado, PiePagina } from "@/components/Estructura";
-import { TIENDA } from "@/lib/tienda";
+import { INDEXAR, SITIO, TIENDA } from "@/lib/tienda";
 import "./globals.css";
 
 const bungee = Bungee({
@@ -21,14 +21,22 @@ const rubik = Rubik({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITIO),
   title: {
-    default: `${TIENDA.nombre} · Cartas Pokémon en Costa Rica`,
+    default: `${TIENDA.nombre} Store · Tienda de Pokémon TCG en Costa Rica`,
     template: `%s · ${TIENDA.nombre}`,
   },
   description:
-    "Sobres, cajas y cartas de Pokémon, en colones y con envío a todo Costa Rica.",
-  // Por ahora no sale en los buscadores: se abre cuando quien administra la tienda lo decida.
-  robots: { index: false, follow: false },
+    "Pokedeke es una tienda de Pokémon TCG en Costa Rica: cartas sueltas, sobres, ETB y cajas en colones, con envío a todo el país y pago por SINPE Móvil.",
+  applicationName: TIENDA.nombre,
+  keywords: ["Pokedeke", "Pokedeke Store", "TCG Costa Rica", "Pokémon TCG Costa Rica", "cartas Pokémon Costa Rica"],
+  openGraph: {
+    type: "website",
+    siteName: TIENDA.nombre,
+    locale: "es_CR",
+  },
+  // La copia de GitHub Pages no se indexa: solo pokedeke.store.
+  robots: INDEXAR ? { index: true, follow: true } : { index: false, follow: false },
 };
 
 export const viewport: Viewport = {

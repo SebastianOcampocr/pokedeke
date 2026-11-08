@@ -7,6 +7,7 @@ import { useHidratado } from "@/lib/almacen";
 import { crearPedido, mandarComprobante } from "@/lib/api-pedidos";
 import { idDelCarrito, useCarrito, vaciarCarrito } from "@/lib/carrito";
 import { lanzarConfeti } from "@/lib/confeti";
+import { prepararAudio, sonarCompra } from "@/lib/sonido";
 import { calcularTotales, colones } from "@/lib/formato";
 import { ganarLogro } from "@/lib/logros";
 import { esPedidoEspecial } from "@/lib/productos";
@@ -179,7 +180,10 @@ function Confirmacion({
   const opcionEnvio = ENVIOS.find((opcion) => opcion.nombre === pedido.envio);
   const precioAparte = pedido.envioPorWhatsApp;
 
-  useEffect(() => lanzarConfeti(), []);
+  useEffect(() => {
+    lanzarConfeti();
+    sonarCompra();
+  }, []);
 
   async function avisarPago(evento: React.FormEvent<HTMLFormElement>) {
     evento.preventDefault();
@@ -375,6 +379,7 @@ export function Pago() {
   async function hacerPedido(evento: React.FormEvent<HTMLFormElement>) {
     evento.preventDefault();
     if (enviando) return;
+    prepararAudio();
     if (faltaTienda) {
       setError("Elegí en cuál tienda lo retirás.");
       return;

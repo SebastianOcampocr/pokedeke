@@ -4,6 +4,7 @@ import Link from "next/link";
 import { CabeceraPagina, ZonaBlanca } from "@/components/Estructura";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/politicas" },
   title: "Políticas",
   description: "Envíos, cambios y devoluciones, términos y privacidad.",
 };

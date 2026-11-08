@@ -9,6 +9,7 @@ import {
 import { LEMA, LUGAR, TIENDA } from "@/lib/tienda";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/nosotros" },
   title: "El Mezzanine",
   description: `La historia de ${TIENDA.nombre} y dónde retirar tu pedido en el ${LUGAR.nombre}.`,
 };

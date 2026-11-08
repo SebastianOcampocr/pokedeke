@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import type { CSSProperties, ReactNode } from "react";
 import { BotonGrupo, Cinta } from "@/components/Estructura";
@@ -24,7 +25,10 @@ import {
   novedadesVariadas,
   type Producto,
 } from "@/lib/productos";
-import { LEMA } from "@/lib/tienda";
+import { LEMA, SITIO, TIENDA } from "@/lib/tienda";
+import { DatosEstructurados } from "@/components/DatosEstructurados";
+
+export const metadata: Metadata = { alternates: { canonical: "/" } };
 
 function Seccion({
   titulo,
@@ -170,6 +174,23 @@ export default function Inicio() {
 
   return (
     <>
+      <DatosEstructurados
+        datos={{
+          "@context": "https://schema.org",
+          "@type": "Store",
+          name: TIENDA.nombre,
+          alternateName: [`${TIENDA.nombre} Store`, "Pokedeke TCG"],
+          description: "Tienda de Pokémon TCG en Costa Rica: cartas sueltas, sobres, ETB y cajas en colones.",
+          url: SITIO,
+          logo: `${SITIO}/icon.svg`,
+          email: TIENDA.correo,
+          telephone: `+${TIENDA.whatsapp}`,
+          currenciesAccepted: "CRC",
+          paymentAccepted: "SINPE Móvil",
+          areaServed: { "@type": "Country", name: "Costa Rica" },
+          address: { "@type": "PostalAddress", addressLocality: "San José", addressCountry: "CR" },
+        }}
+      />
       <section className="relative mx-auto grid w-full max-w-6xl items-center gap-8 px-4 pt-[60px] pb-7 md:grid-cols-2 md:py-10">
         <div className="absolute top-2 right-4 z-10 [--mecate:26px] md:top-9 md:[--mecate:54px] lg:right-[46%]">
           <Letrero />

@@ -101,8 +101,9 @@ export function PiePagina() {
           <p className="font-display text-2xl">{TIENDA.nombre}</p>
           <p className="text-[15px] font-bold">{LEMA}</p>
           <p className="text-[15px] leading-snug">
-            Cartas Pokémon en colones. Retiro en el {LUGAR.nombre}, San José,
-            por Correos a todo el país o a la tienda que nos digás.
+            Tienda de Pokémon TCG en Costa Rica: cartas en colones, retiro en
+            el {LUGAR.nombre}, San José, por Correos a todo el país o a la
+            tienda que nos digás.
           </p>
           <p className="text-[15px]">
             Servicio al cliente:{" "}

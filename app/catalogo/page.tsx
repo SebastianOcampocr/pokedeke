@@ -4,6 +4,7 @@ import { Catalogo, CatalogoDesdeEnlace } from "@/components/Catalogo";
 import { CabeceraPagina, ZonaBlanca } from "@/components/Estructura";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/catalogo" },
   title: "Catálogo",
   description: "Sobres, cajas, ETB, cartas sueltas, gradadas y accesorios de Pokémon.",
 };
