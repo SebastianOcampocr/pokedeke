@@ -8,21 +8,40 @@ export function colones(monto: number) {
   return `₡${cifras}`;
 }
 
-/** "5 de diciembre". */
-export function fechaLarga(iso: string) {
-  return new Intl.DateTimeFormat("es-CR", {
-    day: "numeric",
-    month: "long",
-    timeZone: "America/Costa_Rica",
-  }).format(new Date(iso));
+const DIAS_Y_MESES =
+  /(?<![\p{L}])(lunes|martes|miércoles|jueves|viernes|sábado|domingo|enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|setiembre|octubre|noviembre|diciembre|ene|feb|mar|abr|may|jun|jul|ago|sept|set|oct|nov|dic)(?![\p{L}])/giu;
+
+/**
+ * La tienda escribe los días y los meses con mayúscula ("Miércoles 12 de
+ * Noviembre"), aunque Intl los da en minúscula.
+ */
+export function conMayusculas(texto: string) {
+  return texto.replace(
+    DIAS_Y_MESES,
+    (nombre) => nombre.charAt(0).toUpperCase() + nombre.slice(1),
+  );
 }
 
+/** "5 de Diciembre". */
+export function fechaLarga(iso: string) {
+  return conMayusculas(
+    new Intl.DateTimeFormat("es-CR", {
+      day: "numeric",
+      month: "long",
+      timeZone: "America/Costa_Rica",
+    }).format(new Date(iso)),
+  );
+}
+
+/** "5 Dic". */
 export function fechaCorta(iso: string) {
-  return new Intl.DateTimeFormat("es-CR", {
-    day: "numeric",
-    month: "short",
-    timeZone: "America/Costa_Rica",
-  }).format(new Date(iso));
+  return conMayusculas(
+    new Intl.DateTimeFormat("es-CR", {
+      day: "numeric",
+      month: "short",
+      timeZone: "America/Costa_Rica",
+    }).format(new Date(iso)),
+  );
 }
 
 export function calcularTotales(

@@ -18,7 +18,7 @@ import {
 import { useHidratado } from "@/lib/almacen";
 import { aplicarCupon, useCarrito } from "@/lib/carrito";
 import { lanzarConfeti } from "@/lib/confeti";
-import { colones } from "@/lib/formato";
+import { colones, conMayusculas } from "@/lib/formato";
 import { ganarLogro } from "@/lib/logros";
 import type { Producto } from "@/lib/productos";
 import {
@@ -276,11 +276,13 @@ function ProximoSobre({ hasta, ahora }: { hasta: number; ahora: number }) {
   const horas = Math.floor(minutos / 60);
   const espera =
     horas > 0 ? `${horas} h ${minutos % 60} min` : `${minutos} min`;
-  const momento = new Intl.DateTimeFormat("es-CR", {
-    weekday: "long",
-    hour: "numeric",
-    minute: "2-digit",
-  }).format(hasta);
+  const momento = conMayusculas(
+    new Intl.DateTimeFormat("es-CR", {
+      weekday: "long",
+      hour: "numeric",
+      minute: "2-digit",
+    }).format(hasta),
+  );
 
   return (
     <p role="status" className="font-medium">

@@ -1,6 +1,7 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
+import { fechaLarga } from "@/lib/formato";
 
 function suscribir(aviso: () => void) {
   const reloj = window.setInterval(aviso, 1000);
@@ -29,11 +30,7 @@ function Digito({ valor, rotulo }: { valor: number | null; rotulo: string }) {
 /** Reloj de preventa. Antes de hidratar muestra rayas para no dar una hora vieja. */
 export function Cuenta({ llegada }: { llegada: string }) {
   const ahora = useSyncExternalStore(suscribir, leerAhora, sinHora);
-  const fecha = new Intl.DateTimeFormat("es-CR", {
-    day: "numeric",
-    month: "long",
-    timeZone: "America/Costa_Rica",
-  }).format(new Date(llegada));
+  const fecha = fechaLarga(llegada);
 
   const resta = ahora ? new Date(llegada).getTime() - ahora : null;
 

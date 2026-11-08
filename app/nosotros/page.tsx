@@ -36,7 +36,7 @@ const PREGUNTAS = [
   {
     pregunta: "¿Hacen envíos?",
     respuesta:
-      "Sí, por Correos de Costa Rica a todo el país o con envío entre tiendas a la tienda que nos digás. El de Correos se calcula en el carrito. El envío entre tiendas cuesta de ₡600 a ₡900 según la tienda y se paga en el mismo SINPE; si tu tienda no está en la lista, te confirmamos el precio por WhatsApp. Lo paga quien compra. Los envíos salen los miércoles y sábados: lo que pedís de sábado a martes sale el miércoles, y de miércoles a viernes, el sábado.",
+      "Sí, por Correos de Costa Rica a todo el país o con envío entre tiendas a la tienda que nos digás. El de Correos se calcula en el carrito. El envío entre tiendas cuesta de ₡600 a ₡900 según la tienda y se paga en el mismo SINPE; si tu tienda no está en la lista, te confirmamos el precio por WhatsApp. Lo paga quien compra. Los envíos salen los Miércoles y Sábados: lo que pedís de Sábado a Martes sale el Miércoles, y de Miércoles a Viernes, el Sábado.",
   },
   {
     pregunta: "¿Cómo pago?",
@@ -77,7 +77,7 @@ export default function PaginaNosotros() {
                 Cómo arrancó esto
               </h2>
               <p>
-                {TIENDA.nombre} empezó en octubre de 2026 vendiendo cartas por
+                {TIENDA.nombre} empezó en Octubre de 2026 vendiendo cartas por
                 los grupos de WhatsApp y Facebook de TCG Costa Rica. Sobre por
                 sobre, caja por caja, se fue llenando el mezzanine.
               </p>

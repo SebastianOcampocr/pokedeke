@@ -50,9 +50,9 @@ export default function PaginaPoliticas() {
               precio por WhatsApp. Lo que tarda depende de la tienda.
             </p>
             <p>
-              Los envíos por Correos y entre tiendas salen los miércoles y
-              sábados. Lo que se pide de sábado a martes sale el miércoles, y lo
-              que se pide de miércoles a viernes sale el sábado, siempre que el
+              Los envíos por Correos y entre tiendas salen los Miércoles y
+              Sábados. Lo que se pide de Sábado a Martes sale el Miércoles, y lo
+              que se pide de Miércoles a Viernes sale el Sábado, siempre que el
               pago ya esté confirmado. Te pasamos el número de guía por
               WhatsApp. El tiempo de entrega de Correos depende de tu zona.
             </p>

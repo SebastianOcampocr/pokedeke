@@ -30,7 +30,7 @@ const POR_PAGINA: { ruta: string; dicho: Dicho }[] = [
   },
   {
     ruta: "/nosotros",
-    dicho: { texto: "Sí, ese mezzanine lo cuido yo. Hasta los domingos." },
+    dicho: { texto: "Sí, ese mezzanine lo cuido yo. Hasta los Domingos." },
   },
   {
     ruta: "/caja-compartida",

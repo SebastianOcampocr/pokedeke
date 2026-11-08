@@ -113,7 +113,7 @@ const HOJAS = {
 };
 
 // Sube con cada cambio: la página y las pruebas leen esta marca con un GET.
-const VERSION = "2026-11-07-de-estados-unidos";
+const VERSION = "2026-11-08-mayusculas";
 const PEDIDO_ESPECIAL = "Pedido especial";
 const PRIMERA_FILA = 5;
 const PENDIENTE = "Pendiente de pago";
@@ -722,7 +722,8 @@ function envioAparte(fila) {
   return Boolean(envioPorNombre(fila[COL.envio - 1]).pideTienda && !Number(fila[COL.costoEnvio - 1]));
 }
 
-const DIAS = ["", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado", "domingo"];
+// Con mayúscula: así escribe la tienda los días y los meses.
+const DIAS = ["", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
 // Días que faltan para despachar según el día del pedido (1 es lunes, 7 domingo).
 const FALTAN_PARA_DESPACHO = { 1: 2, 2: 1, 3: 3, 4: 2, 5: 1, 6: 4, 7: 3 };
 
@@ -758,7 +759,7 @@ function entregaEspecial(lineas) {
   return "después del " + Number(dia) + "/" + Number(mes);
 }
 
-/** "miércoles 11/11". */
+/** "Miércoles 11/11". */
 function textoDespacho(desde) {
   const zona = libro().getSpreadsheetTimeZone();
   const fecha = diaDeDespacho(desde);
@@ -1150,7 +1151,7 @@ function confirmarAlCliente({ correo, numero, fecha, total, cliente, whatsapp, e
         ". Hacemos todo lo posible por traerlo; si por algo no podemos, te devolvemos el 100% por SINPE Móvil a la misma cuenta.",
     );
   } else if (despacho) {
-    pasos.push("Los envíos salen los miércoles y sábados: si pagás a tiempo, tu pedido sale el " + despacho + ".");
+    pasos.push("Los envíos salen los Miércoles y Sábados: si pagás a tiempo, tu pedido sale el " + despacho + ".");
   }
   mandarAlCliente({
     to: correo,
@@ -1213,7 +1214,7 @@ function pasosTrasElPago(fila, lineas) {
           "Lo que tarda en llegar depende de la tienda.",
         ]
       : [
-          "Sale el " + despacho + ". Los envíos salen los miércoles y sábados.",
+          "Sale el " + despacho + ". Los envíos salen los Miércoles y Sábados.",
           "Te escribimos por WhatsApp con el número de guía.",
         ];
   if (lineas.some((linea) => linea.preventa)) {

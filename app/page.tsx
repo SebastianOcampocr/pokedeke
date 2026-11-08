@@ -197,8 +197,8 @@ export default function Inicio() {
             className="aparecer max-w-md text-[17px] leading-snug font-medium"
             style={{ animationDelay: "200ms" }}
           >
-            Todo lo de Pokémon TCG en colones. Retirá en el Edificio Omni o te
-            lo mandamos por Correos o a la tienda que nos digás.
+            Desde cartas de ₡500 hasta cajas que no se consiguen en Costa Rica.
+            Pagás por SINPE Móvil y te lo mandamos a todo el país.
           </p>
           <div className="aparecer" style={{ animationDelay: "280ms" }}>
             <BotonGrupo className="w-full md:w-fit" />

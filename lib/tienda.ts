@@ -1,3 +1,4 @@
+import { conMayusculas } from "./formato";
 // Datos generales de la tienda.
 
 export const TIENDA = {
@@ -89,7 +90,7 @@ export const ENVIO_TIENDAS_DESDE = Math.min(
   ...TIENDAS_DESTINO.map((tienda) => tienda.precio),
 );
 
-export const DIAS_DE_DESPACHO = "los miércoles y sábados";
+export const DIAS_DE_DESPACHO = "los Miércoles y Sábados";
 
 /**
  * Encargos de Estados Unidos: el cliente pide cualquier producto TCG y se le
@@ -115,16 +116,18 @@ export function diaDeDespacho(desde: Date = new Date()) {
   return new Date(desde.getTime() + FALTAN_PARA_DESPACHO[dia] * 86_400_000);
 }
 
-/** "miércoles 12 de noviembre". */
+/** "Miércoles 12 de Noviembre". */
 export function fechaDeDespacho(desde: Date = new Date()) {
-  return new Intl.DateTimeFormat("es-CR", {
-    timeZone: ZONA_CR,
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-  })
-    .format(diaDeDespacho(desde))
-    .replace(",", "");
+  return conMayusculas(
+    new Intl.DateTimeFormat("es-CR", {
+      timeZone: ZONA_CR,
+      weekday: "long",
+      day: "numeric",
+      month: "long",
+    })
+      .format(diaDeDespacho(desde))
+      .replace(",", ""),
+  );
 }
 
 /** Deben coincidir con CONFIG.envios en apps-script/Pedidos.gs. */
