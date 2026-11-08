@@ -10993,5 +10993,54 @@
       "/productos/sobre-chaos-rising.webp"
     ],
     "descripcion": "Sobre de Mega Evolution: Chaos Rising, en inglés. Trae 10 cartas de Chaos Rising."
+  },
+  {
+    "id": "C476",
+    "slug": "protector-acrilico-para-etb",
+    "nombre": "Protector acrílico para ETB",
+    "juego": "Pokémon",
+    "categoria": "Accesorios",
+    "categoriaCorta": "Accesorio",
+    "idioma": "Otro",
+    "precio": 16100,
+    "stock": 4,
+    "vendidos": 0,
+    "orden": 476,
+    "fotos": [
+      "/productos/acrilico-etb.webp"
+    ],
+    "descripcion": "Estuche de acrílico transparente de 4 mm para guardar y exhibir una Elite Trainer Box. Viene armado y la tapa de abajo se desliza. Protege la caja del polvo, los golpes y los rayones. Mide 190 × 166 × 92 mm."
+  },
+  {
+    "id": "C477",
+    "slug": "protector-para-booster-box",
+    "nombre": "Protector para Booster Box",
+    "juego": "Pokémon",
+    "categoria": "Accesorios",
+    "categoriaCorta": "Accesorio",
+    "idioma": "Otro",
+    "precio": 2300,
+    "stock": 4,
+    "vendidos": 0,
+    "orden": 477,
+    "fotos": [],
+    "descripcion": "Protector de plástico PET transparente de 0,50 mm para una Booster Box de Pokémon. Resistente a rayones y sin ácido, para que la caja se mantenga como nueva. Precio por unidad."
+  },
+  {
+    "id": "C478",
+    "slug": "etb-perfect-order",
+    "nombre": "ETB Perfect Order",
+    "juego": "Pokémon",
+    "categoria": "ETB",
+    "categoriaCorta": "ETB",
+    "idioma": "Inglés",
+    "precio": 34500,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 478,
+    "fotos": [
+      "/productos/etb-perfect-order.webp"
+    ],
+    "descripcion": "Elite Trainer Box de Mega Evolution: Perfect Order, en inglés. Trae 9 sobres de Perfect Order, 1 carta promo full art, 65 fundas, 45 energías, guía del jugador, 6 dados de daño, 1 dado de moneda, 2 marcadores de estado, una caja con 4 divisores y un código para Pokémon TCG Live."
   }
 ]
