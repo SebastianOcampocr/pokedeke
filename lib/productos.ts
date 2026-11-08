@@ -148,14 +148,15 @@ export function novedadesVariadas(cantidad: number) {
   return [...variadas, ...resto].slice(0, cantidad);
 }
 
-/** Lo marcado como destacado en la hoja. Si no hay, lo de mayor precio. */
+/**
+ * Lo marcado como destacado en la hoja, del más caro al más barato: la portada
+ * pone los tres primeros arriba, con el más caro al centro. Si no hay marcados,
+ * lo de mayor precio.
+ */
 export function destacados(cantidad: number) {
   const marcados = disponibles().filter((producto) => producto.destacado);
-  const lista =
-    marcados.length > 0
-      ? marcados
-      : disponibles().sort((a, b) => b.precio - a.precio);
-  return lista.slice(0, cantidad);
+  const lista = marcados.length > 0 ? marcados : disponibles();
+  return lista.sort((a, b) => b.precio - a.precio).slice(0, cantidad);
 }
 
 export const disponibles = () =>

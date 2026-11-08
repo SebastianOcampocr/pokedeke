@@ -33,7 +33,6 @@
     "idioma": "",
     "precio": 7500,
     "stock": 1,
-    "destacado": true,
     "vendidos": 0,
     "orden": 2,
     "fotos": [
@@ -58,7 +57,6 @@
     "idioma": "",
     "precio": 1500,
     "stock": 2,
-    "destacado": true,
     "vendidos": 0,
     "orden": 3,
     "fotos": [
@@ -107,7 +105,6 @@
     "idioma": "",
     "precio": 1500,
     "stock": 1,
-    "destacado": true,
     "vendidos": 0,
     "orden": 5,
     "fotos": [
@@ -180,7 +177,6 @@
     "idioma": "",
     "precio": 5500,
     "stock": 1,
-    "destacado": true,
     "vendidos": 0,
     "orden": 8,
     "fotos": [
@@ -205,7 +201,6 @@
     "idioma": "",
     "precio": 12000,
     "stock": 1,
-    "destacado": true,
     "vendidos": 0,
     "orden": 9,
     "fotos": [
@@ -303,7 +298,6 @@
     "idioma": "Inglés",
     "precio": 4000,
     "stock": 25,
-    "destacado": true,
     "vendidos": 3,
     "orden": 13,
     "fotos": [
@@ -5316,7 +5310,6 @@
     "idioma": "Inglés",
     "precio": 11600,
     "stock": 1,
-    "destacado": true,
     "vendidos": 0,
     "orden": 230,
     "fotos": [
@@ -5795,7 +5788,6 @@
     "idioma": "Inglés",
     "precio": 6900,
     "stock": 0,
-    "destacado": true,
     "vendidos": 1,
     "orden": 250,
     "fotos": [
@@ -6486,7 +6478,6 @@
     "idioma": "Inglés",
     "precio": 1200,
     "stock": 1,
-    "destacado": true,
     "vendidos": 0,
     "orden": 279,
     "fotos": [
@@ -6511,7 +6502,6 @@
     "idioma": "Inglés",
     "precio": 2600,
     "stock": 0,
-    "destacado": true,
     "vendidos": 1,
     "orden": 280,
     "fotos": [
@@ -7566,6 +7556,7 @@
     "idioma": "Inglés",
     "precio": 53500,
     "stock": 1,
+    "destacado": true,
     "vendidos": 0,
     "orden": 324,
     "fotos": [
@@ -7634,6 +7625,7 @@
     "idioma": "Inglés",
     "precio": 45500,
     "stock": 1,
+    "destacado": true,
     "vendidos": 0,
     "orden": 328,
     "fotos": [
@@ -7685,6 +7677,7 @@
     "idioma": "Inglés",
     "precio": 24000,
     "stock": 3,
+    "destacado": true,
     "vendidos": 0,
     "orden": 331,
     "fotos": [
@@ -7739,6 +7732,7 @@
     "precio": 255000,
     "stock": 1,
     "etiqueta": "Pedido especial",
+    "destacado": true,
     "vendidos": 0,
     "orden": 334,
     "fotos": [
@@ -7758,6 +7752,7 @@
     "precio": 235000,
     "stock": 1,
     "etiqueta": "Pedido especial",
+    "destacado": true,
     "vendidos": 0,
     "orden": 335,
     "fotos": [
@@ -7777,6 +7772,7 @@
     "precio": 82000,
     "stock": 1,
     "etiqueta": "Pedido especial",
+    "destacado": true,
     "vendidos": 0,
     "orden": 336,
     "fotos": [
@@ -7815,6 +7811,7 @@
     "precio": 119000,
     "stock": 2,
     "etiqueta": "Pedido especial",
+    "destacado": true,
     "vendidos": 0,
     "orden": 338,
     "fotos": [

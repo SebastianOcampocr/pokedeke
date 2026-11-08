@@ -242,6 +242,5 @@ export function enlaceCompartir(texto: string) {
   return `https://wa.me/?text=${encodeURIComponent(texto)}`;
 }
 
-export const ENLACE_GRUPO = enlaceWhatsApp(
-  `¡Hola! Quiero unirme al grupo de WhatsApp de ${TIENDA.nombre}.`,
-);
+/** Invitación al grupo de WhatsApp de la tienda (sin los datos de rastreo del enlace). */
+export const ENLACE_GRUPO = "https://chat.whatsapp.com/LFK9vTc7v2q8l3YIqDm6Yc";
