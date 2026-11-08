@@ -21,13 +21,14 @@ import {
   conFoto,
   destacados as elegirDestacados,
   disponibles,
+  esBajoPedido,
   esPedidoEspecial,
   esPreventa,
   novedadesVariadas,
   type Producto,
 } from "@/lib/productos";
 import { masVistos } from "@/lib/extras";
-import { LEMA, SITIO, TIENDA } from "@/lib/tienda";
+import { ENTREGA_BAJO_PEDIDO, LEMA, SITIO, TIENDA } from "@/lib/tienda";
 import { DatosEstructurados } from "@/components/DatosEstructurados";
 
 export const metadata: Metadata = { alternates: { canonical: "/" } };
@@ -171,6 +172,7 @@ export default function Inicio() {
   const destacados = elegirDestacados(8);
   const preventas = disponibles().filter(esPreventa).slice(0, 4);
   const especiales = disponibles().filter(esPedidoEspecial).slice(0, 4);
+  const bajoPedido = disponibles().filter(esBajoPedido).slice(0, 4);
   const recientes = novedadesVariadas(4);
   // Sin repetir lo que ya sale más arriba.
   const vistos = masVistos(
@@ -293,6 +295,12 @@ export default function Inicio() {
           >
             <EncargoEEUU />
           </Seccion>
+          <Seccion
+            titulo="Lo conseguimos para vos"
+            enlace="/catalogo?etiqueta=Bajo%20pedido"
+            productos={bajoPedido}
+            texto={`No está en el mezzanine, pero lo conseguimos en tiendas de Costa Rica apenas pagás. Está listo ${ENTREGA_BAJO_PEDIDO}, y si no lo conseguimos te devolvemos todo.`}
+          />
           <Seccion
             titulo="Preventas"
             enlace="/catalogo?etiqueta=Preventa"

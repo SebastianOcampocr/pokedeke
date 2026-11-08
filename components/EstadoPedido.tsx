@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { consultarPedido, type PedidoPublico } from "@/lib/api-pedidos";
 import { colones } from "@/lib/formato";
 import { usePedidos, type Estado } from "@/lib/pedidos";
-import { TIENDA_ABIERTA } from "@/lib/tienda";
+import { ENTREGA_BAJO_PEDIDO, TIENDA_ABIERTA } from "@/lib/tienda";
 import { Deke } from "./Deke";
 import { IconoCheque } from "./Iconos";
 import { cuandoSeEntrega } from "./PedidoEspecial";
@@ -22,11 +22,16 @@ const PASOS: { estado: Estado; texto: string }[] = [
 ];
 
 function Seguimiento({ pedido }: { pedido: PedidoPublico }) {
-  // "Conseguido" es solo de los pedidos especiales.
-  const pasos =
-    pedido.especial || pedido.estado === "Conseguido"
+  // "Conseguido" es solo de lo que se trae de Estados Unidos o se consigue bajo pedido.
+  const pasos = (
+    pedido.especial || pedido.bajoPedido || pedido.estado === "Conseguido"
       ? PASOS
-      : PASOS.filter((paso) => paso.estado !== "Conseguido");
+      : PASOS.filter((paso) => paso.estado !== "Conseguido")
+  ).map((paso) =>
+    paso.estado === "Conseguido" && !pedido.especial
+      ? { ...paso, texto: "Ya conseguimos tu producto: pronto sale" }
+      : paso,
+  );
   const actual = pasos.findIndex((paso) => paso.estado === pedido.estado);
 
   return (
@@ -88,6 +93,11 @@ function Seguimiento({ pedido }: { pedido: PedidoPublico }) {
           Trae productos de Estados Unidos: se entrega{" "}
           <strong>{pedido.especial}</strong>.
         </p>
+      ) : pedido.bajoPedido ? (
+        <p>
+          Trae productos bajo pedido: los conseguimos y está listo{" "}
+          <strong>{pedido.bajoPedido}</strong> después de pagar.
+        </p>
       ) : null}
 
       {pedido.guia ? (
@@ -131,6 +141,7 @@ export function EstadoPedido({ numeroInicial = "" }: { numeroInicial?: string })
           especial: local.especial
             ? cuandoSeEntrega(local.especial.llegada)
             : undefined,
+          bajoPedido: local.bajoPedido ? ENTREGA_BAJO_PEDIDO : undefined,
         });
       } else {
         setError("No hallamos ese pedido. Revisá el número e intentá otra vez.");

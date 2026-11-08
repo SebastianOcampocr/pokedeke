@@ -9,13 +9,14 @@ import {
 } from "@/components/DetalleProducto";
 import { Cuenta } from "@/components/Cuenta";
 import { DatosEstructurados } from "@/components/DatosEstructurados";
-import { AvisoPedidoEspecial } from "@/components/PedidoEspecial";
+import { AvisoBajoPedido, AvisoPedidoEspecial } from "@/components/PedidoEspecial";
 import { IconoTipo } from "@/components/IconoTipo";
 import { Calcomania, RejillaProductos } from "@/components/TarjetaProducto";
 import { VistosRecientes } from "@/components/VistosRecientes";
 import { colones, fechaCorta } from "@/lib/formato";
 import {
   buscarProducto,
+  esBajoPedido,
   esPedidoEspecial,
   estaAgotado,
   PRODUCTOS,
@@ -129,7 +130,9 @@ async function ContenidoProducto({
               ? "https://schema.org/OutOfStock"
               : esPedidoEspecial(producto)
                 ? "https://schema.org/PreOrder"
-                : "https://schema.org/InStock",
+                : esBajoPedido(producto)
+                  ? "https://schema.org/BackOrder"
+                  : "https://schema.org/InStock",
             itemCondition: "https://schema.org/NewCondition",
             seller: { "@type": "Organization", name: TIENDA.nombre },
           },
@@ -164,6 +167,8 @@ async function ContenidoProducto({
           <PrecioYStock producto={producto} />
           {esPedidoEspecial(producto) ? (
             <AvisoPedidoEspecial llegada={producto.llegada} className="mb-3" />
+          ) : esBajoPedido(producto) ? (
+            <AvisoBajoPedido className="mb-3" />
           ) : producto.llegada ? (
             <div className="marco mb-3 flex w-fit flex-col gap-2 bg-crema p-3">
               <p className="font-bold">

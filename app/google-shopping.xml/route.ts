@@ -1,4 +1,5 @@
 import {
+  esBajoPedido,
   esPedidoEspecial,
   esPreventa,
   estaAgotado,
@@ -40,11 +41,17 @@ function titulo(producto: Producto) {
   return `${marca}${producto.nombre}${idioma}`.slice(0, 150);
 }
 
+// Bajo pedido: Google pide una fecha; una semana desde que se armó la lista cubre los 2 a 5 días hábiles.
+const EN_UNA_SEMANA = new Date(Date.now() + 7 * 24 * 3600 * 1000)
+  .toISOString()
+  .replace(/\.\d{3}Z$/, "Z");
+
 function disponibilidad(producto: Producto) {
   if (estaAgotado(producto)) return { estado: "out_of_stock" };
   if ((esPreventa(producto) || esPedidoEspecial(producto)) && producto.llegada) {
     return { estado: "preorder", fecha: producto.llegada };
   }
+  if (esBajoPedido(producto)) return { estado: "backorder", fecha: EN_UNA_SEMANA };
   return { estado: "in_stock" };
 }
 
