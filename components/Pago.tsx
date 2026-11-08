@@ -5,7 +5,7 @@ import { useEffect, useLayoutEffect, useState } from "react";
 import ubicaciones from "@/datos/ubicaciones-cr.json";
 import { useHidratado } from "@/lib/almacen";
 import { crearPedido, mandarComprobante } from "@/lib/api-pedidos";
-import { useCarrito, vaciarCarrito } from "@/lib/carrito";
+import { idDelCarrito, useCarrito, vaciarCarrito } from "@/lib/carrito";
 import { lanzarConfeti } from "@/lib/confeti";
 import { calcularTotales, colones } from "@/lib/formato";
 import { ganarLogro } from "@/lib/logros";
@@ -409,6 +409,7 @@ export function Pago() {
         ubicacion: pedido.ubicacion,
         direccion: pedido.direccion,
         ...(envio.pideTienda ? { tienda: tiendaId } : {}),
+        carrito: idDelCarrito(),
         cupon: cupon?.codigo ?? null,
         lineas: lineas.map(({ producto, cantidad }) => ({
           slug: producto.slug,
@@ -436,7 +437,7 @@ export function Pago() {
     }
 
     guardarPedido(pedido);
-    vaciarCarrito();
+    vaciarCarrito({ trasPedido: true });
     ganarLogro("pedido");
     setProvincia("");
     setCanton("");
@@ -504,26 +505,36 @@ export function Pago() {
 
           {envio.pideTienda ? (
             <div className="mt-2 flex flex-col gap-2">
-              <p className="font-bold">¿En cuál tienda lo retirás?</p>
-              {TIENDAS_DESTINO.map((tienda) => (
-                <Opcion
-                  key={tienda.id}
-                  grupo="tienda-destino"
-                  activa={tiendaId === tienda.id}
-                  titulo={tienda.nombre}
-                  detalle={tienda.detalle}
-                  extra={colones(tienda.precio)}
-                  alElegir={() => setTiendaId(tienda.id)}
-                />
-              ))}
-              <Opcion
-                grupo="tienda-destino"
-                activa={otraTienda}
-                titulo="Otra tienda"
-                detalle="Escribí cuál y te confirmamos el precio por WhatsApp"
-                extra="Por WhatsApp"
-                alElegir={() => setTiendaId(OTRA_TIENDA)}
-              />
+              <div>
+                <label htmlFor="tienda-destino" className="rotulo-campo">
+                  ¿En cuál tienda lo retirás?
+                </label>
+                <select
+                  id="tienda-destino"
+                  className="campo"
+                  required
+                  value={tiendaId}
+                  onChange={(evento) => setTiendaId(evento.target.value)}
+                >
+                  <option value="">Elegí una tienda</option>
+                  {TIENDAS_DESTINO.map((tienda) => (
+                    <option key={tienda.id} value={tienda.id}>
+                      {tienda.nombre} · {colones(tienda.precio)}
+                    </option>
+                  ))}
+                  <option value={OTRA_TIENDA}>Otra tienda · precio por WhatsApp</option>
+                </select>
+              </div>
+              {tiendaElegida ? (
+                <p className="rounded-md border-2 border-tinta bg-crema p-3 text-[15px] leading-snug">
+                  <strong>{tiendaElegida.nombre}</strong>
+                  <br />
+                  {tiendaElegida.detalle}
+                  <br />
+                  Envío: <strong>{colones(tiendaElegida.precio)}</strong>, va en
+                  el mismo SINPE.
+                </p>
+              ) : null}
               {otraTienda ? (
                 <>
                   <Campo id="tienda" rotulo="¿Cuál tienda? Nombre y sucursal" />

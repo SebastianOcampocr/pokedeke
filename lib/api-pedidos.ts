@@ -1,4 +1,4 @@
-import { PEDIDOS_URL } from "./tienda";
+import { PEDIDOS_URL, TIENDA_ABIERTA } from "./tienda";
 
 /** Lo que el servidor de la hoja responde siempre: `ok` y, si falló, `error`. */
 type Respuesta<T> = ({ ok: true } & T) | { ok: false; error: string };
@@ -12,6 +12,8 @@ export type PedidoNuevo = {
   direccion: string;
   /** Solo envío entre tiendas: el id de TIENDAS_DESTINO u "otra". */
   tienda?: string;
+  /** Número anónimo del carrito, para marcarlo como "Pidió" en la pestaña Carritos. */
+  carrito?: string;
   cupon: string | null;
   lineas: { slug: string; cantidad: number }[];
   /** Campo escondido: si viene lleno, lo mandó un robot. */
@@ -51,6 +53,32 @@ async function enviar<T>(datos: object): Promise<Respuesta<T>> {
   } catch {
     return { ok: false, error: SIN_CONEXION };
   }
+}
+
+/**
+ * Anónimo: qué productos hay en un carrito, para la pestaña Carritos de la hoja.
+ * No lleva nombre ni contacto. Si falla, no pasa nada.
+ */
+export function avisarCarrito(
+  id: string,
+  lineas: { slug: string; cantidad: number }[],
+  alSalir = false,
+) {
+  if (!TIENDA_ABIERTA || !PEDIDOS_URL) return;
+  const cuerpo = JSON.stringify({ accion: "carrito", id, lineas });
+  if (alSalir && typeof navigator.sendBeacon === "function") {
+    navigator.sendBeacon(
+      PEDIDOS_URL,
+      new Blob([cuerpo], { type: "text/plain;charset=utf-8" }),
+    );
+    return;
+  }
+  void fetch(PEDIDOS_URL, {
+    method: "POST",
+    headers: { "Content-Type": "text/plain;charset=utf-8" },
+    body: cuerpo,
+    keepalive: true,
+  }).catch(() => undefined);
 }
 
 export const crearPedido = (pedido: PedidoNuevo) =>

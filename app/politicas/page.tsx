@@ -112,6 +112,12 @@ export default function PaginaPoliticas() {
               de Costa Rica cuando hace falta para el envío. No los vendemos.
             </p>
             <p>
+              Para saber qué productos interesan, guardamos de forma anónima lo
+              que se agrega al carrito: los productos y las cantidades, con un
+              número al azar y sin nombre ni contacto. No usamos cookies de
+              publicidad.
+            </p>
+            <p>
               Según la Ley 8968 de Protección de la Persona frente al
               Tratamiento de sus Datos Personales, podés pedir que te mostremos,
               corrijamos o borremos tus datos escribiendo a {TIENDA.correo}.

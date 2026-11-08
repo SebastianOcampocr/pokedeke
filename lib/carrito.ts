@@ -1,6 +1,7 @@
 "use client";
 
 import { crearAlmacen } from "./almacen";
+import { avisarCarrito } from "./api-pedidos";
 import { buscarProducto, precioACobrar, type Producto } from "./productos";
 import { CUPONES, type Cupon } from "./tienda";
 import {
@@ -24,6 +25,48 @@ export type LineaCarrito = {
 
 const VACIO: Carrito = { lineas: [], cupon: null };
 const almacen = crearAlmacen<Carrito>("demo-carrito", () => VACIO, VACIO);
+
+/* ---------- Pestaña Carritos: qué hay en cada carrito, sin datos personales ---------- */
+
+const CLAVE_ID = "pokedeke-carrito-id";
+const ESPERA_MS = 4000;
+let pendiente: ReturnType<typeof setTimeout> | undefined;
+
+/** Un número al azar por carrito. Después de un pedido se cambia por otro. */
+export function idDelCarrito(nuevo = false) {
+  try {
+    let id = nuevo ? null : window.localStorage.getItem(CLAVE_ID);
+    if (!id) {
+      id =
+        typeof crypto.randomUUID === "function"
+          ? crypto.randomUUID()
+          : `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 12)}`;
+      window.localStorage.setItem(CLAVE_ID, id);
+    }
+    return id;
+  } catch {
+    return "";
+  }
+}
+
+function mandarCarrito(alSalir = false) {
+  clearTimeout(pendiente);
+  pendiente = undefined;
+  const id = idDelCarrito();
+  if (id) avisarCarrito(id, almacen.leer().lineas, alSalir);
+}
+
+/** Espera unos segundos para mandar un solo aviso aunque la persona toque varias veces. */
+function contarCarrito() {
+  clearTimeout(pendiente);
+  pendiente = setTimeout(() => mandarCarrito(), ESPERA_MS);
+}
+
+if (typeof window !== "undefined") {
+  window.addEventListener("pagehide", () => {
+    if (pendiente !== undefined) mandarCarrito(true);
+  });
+}
 
 /** Debe calcular igual que aplicarOfertas en apps-script/Pedidos.gs. */
 export function aplicarOfertas(lineas: LineaCarrito[], ofertas: Oferta[]) {
@@ -83,6 +126,7 @@ export function agregarAlCarrito(producto: Producto, cantidad: number) {
       lineas: [...resto, { slug: producto.slug, cantidad: nueva }],
     };
   });
+  contarCarrito();
 }
 
 export function cambiarCantidad(producto: Producto, cantidad: number) {
@@ -96,6 +140,7 @@ export function cambiarCantidad(producto: Producto, cantidad: number) {
       )
       .filter((linea) => linea.cantidad > 0),
   }));
+  contarCarrito();
 }
 
 /** Devuelve falso si el código no existe, para avisarle a quien lo escribió. */
@@ -110,6 +155,17 @@ export function quitarCupon() {
   almacen.guardar((previo) => ({ ...previo, cupon: null }));
 }
 
-export function vaciarCarrito() {
+/**
+ * Después de un pedido, el script ya marcó el carrito como "Pidió": no se avisa
+ * que quedó vacío y el próximo carrito lleva un número nuevo.
+ */
+export function vaciarCarrito({ trasPedido = false } = {}) {
   almacen.guardar(() => VACIO);
+  if (trasPedido) {
+    clearTimeout(pendiente);
+    pendiente = undefined;
+    idDelCarrito(true);
+  } else {
+    contarCarrito();
+  }
 }

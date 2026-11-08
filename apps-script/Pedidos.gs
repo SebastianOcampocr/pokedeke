@@ -30,6 +30,9 @@ const CONFIG = {
   adelantoPreventa: 0.5,
   envioGratisDesde: 50000,
   maxLlamadasPorHora: 60,
+  // Avisos anónimos de la pestaña Carritos: llevan su propio límite para no
+  // gastar el de los pedidos.
+  maxCarritosPorHora: 600,
   maxLineasPorPedido: 100,
   // Estos valores deben coincidir con lib/tienda.ts.
   // `despacho`: sale en los días de despacho (ver diaDeDespacho).
@@ -106,6 +109,7 @@ const HOJAS = {
   compras: "Compras",
   ventas: "Ventas",
   interesados: "Interesados",
+  carritos: "Carritos",
 };
 
 const PRIMERA_FILA = 5;
@@ -180,9 +184,14 @@ function doPost(e) {
       pedido: crearPedido,
       comprobante: guardarComprobante,
       interesado: guardarInteresado,
+      carrito: guardarCarrito,
     };
     const accion = acciones[datos.accion];
     if (!accion) return responder({ ok: false, error: "Acción desconocida." });
+    if (datos.accion === "carrito") {
+      if (!hayCupo("carritos", CONFIG.maxCarritosPorHora)) return responder({ ok: false });
+      return responder(conCandado(() => accion(datos)));
+    }
     if (!hayCupo()) {
       return responder({
         ok: false,
@@ -218,12 +227,12 @@ function conCandado(tarea) {
 }
 
 /** Frena a quien mande pedidos falsos sin parar. */
-function hayCupo() {
+function hayCupo(tipo, maximo) {
   const memoria = CacheService.getScriptCache();
   const hora = Utilities.formatDate(new Date(), "UTC", "yyyyMMddHH");
-  const clave = "pedidos-" + hora;
+  const clave = (tipo || "pedidos") + "-" + hora;
   const cuenta = Number(memoria.get(clave) || 0);
-  if (cuenta >= CONFIG.maxLlamadasPorHora) return false;
+  if (cuenta >= (maximo || CONFIG.maxLlamadasPorHora)) return false;
   memoria.put(clave, String(cuenta + 1), 3700);
   return true;
 }
@@ -589,6 +598,21 @@ function crearPedido(datos) {
   fila[COL.clave - 1] = clave;
   hoja(HOJAS.pedidos).appendRow(fila);
   olvidarStock();
+  try {
+    anotarCarrito(
+      texto(datos.carrito, 40),
+      {
+        resumen: lineas.map((linea) => linea.cantidad + " × " + linea.nombre).join("\n"),
+        unidades: lineas.reduce((suma, linea) => suma + linea.cantidad, 0),
+        total: subtotal - descuento,
+        estado: "Pidió " + numero,
+      },
+      true,
+    );
+  } catch (error) {
+    // La pestaña Carritos es solo para mirar: nunca debe frenar un pedido.
+    console.error(error);
+  }
 
   const montos = resumenDeMontos(subtotal, descuento, cupon, costoEnvio, total, aparte);
   const masEnvio = aparte ? " más el envío" : "";
@@ -793,6 +817,66 @@ function guardarComprobante(datos) {
     }),
   );
   return { ok: true };
+}
+
+/* ---------- Carritos: qué tiene la gente en el carrito, sin datos personales ---------- */
+
+// Columnas de "Carritos", contando desde 1.
+const COL_CARRITO = { id: 1, empezo: 2, ultima: 3, productos: 4, unidades: 5, total: 6, estado: 7 };
+const ABIERTO = "Abierto";
+const VACIADO = "Vaciado";
+
+/** La página manda el carrito unos segundos después de cada cambio. Los precios salen de la hoja. */
+function guardarCarrito(datos) {
+  const pedidas = Array.isArray(datos.lineas) ? datos.lineas.slice(0, CONFIG.maxLineasPorPedido) : [];
+  const productos = productosPorSlug();
+  const lineas = [];
+  pedidas.forEach((pedida) => {
+    const producto = productos[texto(pedida && pedida.slug, 200)];
+    const cantidad = Math.floor(Number(pedida && pedida.cantidad));
+    if (!producto || !Number.isInteger(cantidad) || cantidad < 1) return;
+    lineas.push({ slug: producto.slug, nombre: producto.nombre, cantidad: Math.min(cantidad, 99), precio: producto.precioCobrado });
+  });
+  aplicarOfertas(lineas, ofertasVigentes(productos));
+  anotarCarrito(texto(datos.id, 40), {
+    resumen: lineas.map((linea) => linea.cantidad + " × " + linea.nombre).join("\n"),
+    unidades: lineas.reduce((suma, linea) => suma + linea.cantidad, 0),
+    total: lineas.reduce((suma, linea) => suma + linea.precio * linea.cantidad, 0),
+    estado: lineas.length ? ABIERTO : VACIADO,
+  });
+  return { ok: true };
+}
+
+/**
+ * Una fila por carrito. Un carrito vacío que nunca tuvo nada no se anota, uno
+ * vaciado guarda lo último que tuvo, y uno que terminó en pedido ya no cambia
+ * salvo que lo marque el pedido mismo (`desdePedido`).
+ */
+function anotarCarrito(id, { resumen, unidades, total, estado }, desdePedido) {
+  if (!/^[a-z0-9-]{8,40}$/.test(id)) return;
+  const pestana = hoja(HOJAS.carritos);
+  if (!pestana) return;
+  const ultima = pestana.getLastRow();
+  const ids = ultima >= PRIMERA_FILA ? pestana.getRange(PRIMERA_FILA, 1, ultima - PRIMERA_FILA + 1, 1).getValues() : [];
+  const indice = ids.findIndex(([valor]) => String(valor) === id);
+  const ahora = new Date();
+
+  if (indice === -1) {
+    if (estado === VACIADO) return;
+    pestana.appendRow([id, ahora, ahora, comoTexto(resumen), unidades, total, estado]);
+    return;
+  }
+  const fila = PRIMERA_FILA + indice;
+  const anterior = String(pestana.getRange(fila, COL_CARRITO.estado, 1, 1).getValues()[0][0]);
+  if (anterior.indexOf("Pidió") === 0 && !desdePedido) return;
+  if (estado === VACIADO) {
+    pestana.getRange(fila, COL_CARRITO.ultima, 1, 1).setValues([[ahora]]);
+    pestana.getRange(fila, COL_CARRITO.estado, 1, 1).setValues([[estado]]);
+    return;
+  }
+  pestana
+    .getRange(fila, COL_CARRITO.ultima, 1, 5)
+    .setValues([[ahora, comoTexto(resumen), unidades, total, estado]]);
 }
 
 function guardarInteresado(datos) {
