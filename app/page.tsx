@@ -181,6 +181,16 @@ export default function Inicio() {
 
   return (
     <>
+      {/* Así Google muestra "Pokedeke" como nombre del sitio, no "pokedeke.store". */}
+      <DatosEstructurados
+        datos={{
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          name: TIENDA.nombre,
+          alternateName: [`${TIENDA.nombre} Store`, "Pokedeke TCG"],
+          url: `${SITIO}/`,
+        }}
+      />
       <DatosEstructurados
         datos={{
           "@context": "https://schema.org",
@@ -189,7 +199,7 @@ export default function Inicio() {
           alternateName: [`${TIENDA.nombre} Store`, "Pokedeke TCG"],
           description: "Tienda de Pokémon TCG en Costa Rica: cartas sueltas, sobres, ETB y cajas en colones.",
           url: SITIO,
-          logo: `${SITIO}/icon.svg`,
+          logo: `${SITIO}/icono-512.png`,
           email: TIENDA.correo,
           telephone: `+${TIENDA.whatsapp}`,
           currenciesAccepted: "CRC",

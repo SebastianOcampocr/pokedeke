@@ -23,7 +23,7 @@ const rubik = Rubik({
 export const metadata: Metadata = {
   metadataBase: new URL(SITIO),
   title: {
-    default: `${TIENDA.nombre} Store · Tienda de Pokémon TCG en Costa Rica`,
+    default: `${TIENDA.nombre} · Tienda de Pokémon TCG en Costa Rica`,
     template: `%s · ${TIENDA.nombre}`,
   },
   description:
