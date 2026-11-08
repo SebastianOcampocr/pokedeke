@@ -7606,5 +7606,56 @@
       "/productos/booster-bundle-white-flare.webp"
     ],
     "descripcion": "Booster Bundle de Scarlet & Violet: White Flare, en inglés, con Reshiram en la caja. Trae 6 sobres de White Flare."
+  },
+  {
+    "id": "C327",
+    "slug": "booster-bundle-delta-reign",
+    "nombre": "Booster Bundle Delta Reign",
+    "juego": "Pokémon",
+    "categoria": "Booster bundle",
+    "categoriaCorta": "Bundle",
+    "idioma": "Inglés",
+    "precio": 25000,
+    "stock": 4,
+    "vendidos": 0,
+    "orden": 327,
+    "fotos": [
+      "/productos/booster-bundle-delta-reign.webp"
+    ],
+    "descripcion": "Booster Bundle de Mega Evolution: Delta Reign, en inglés. Trae 6 sobres de Delta Reign."
+  },
+  {
+    "id": "C328",
+    "slug": "etb-delta-reign",
+    "nombre": "ETB Delta Reign",
+    "juego": "Pokémon",
+    "categoria": "ETB",
+    "categoriaCorta": "ETB",
+    "idioma": "Inglés",
+    "precio": 45500,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 328,
+    "fotos": [
+      "/productos/preventa-etb-delta-reign.webp"
+    ],
+    "descripcion": "Elite Trainer Box de Mega Evolution: Delta Reign, en inglés, con Mega Rayquaza en la caja. Trae sobres de Delta Reign y accesorios para jugar, en una caja para guardar tus cartas."
+  },
+  {
+    "id": "C329",
+    "slug": "blister-3-sobres-delta-reign",
+    "nombre": "Blister 3 sobres Delta Reign",
+    "juego": "Pokémon",
+    "categoria": "Blister / sleeved booster",
+    "categoriaCorta": "Blister",
+    "idioma": "Inglés",
+    "precio": 15000,
+    "stock": 7,
+    "vendidos": 0,
+    "orden": 329,
+    "fotos": [
+      "/productos/blister-3-sobres-delta-reign.webp"
+    ],
+    "descripcion": "Blister de Mega Evolution: Delta Reign, en inglés. Trae 3 sobres de Delta Reign y la carta promo de Seel."
   }
 ]
