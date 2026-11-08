@@ -135,7 +135,7 @@ function Complementos({ enCarrito }: { enCarrito: string[] }) {
         <article key={producto.slug} className="marco flex items-center gap-3 p-2">
           <div
             data-foto-tarjeta=""
-            className="relative size-12 shrink-0 overflow-hidden rounded-md bg-crema"
+            className="relative size-12 shrink-0 overflow-hidden rounded-md bg-white"
           >
             <FotoProducto
               producto={producto}
@@ -216,7 +216,7 @@ export function VistaCarrito() {
               href={producto.enlace ?? `/producto/${producto.slug}`}
               tabIndex={-1}
               aria-hidden="true"
-              className="relative h-24 w-20 shrink-0 overflow-hidden rounded-md bg-crema"
+              className="relative h-24 w-20 shrink-0 overflow-hidden rounded-md bg-white"
             >
               <FotoProducto
                 producto={producto}

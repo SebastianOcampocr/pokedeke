@@ -77,7 +77,7 @@ export function Galeria({ producto }: { producto: Producto }) {
                 setCambiada(true);
                 setVista(indice);
               }}
-              className={`relative size-14 overflow-hidden rounded-md border-2 bg-crema transition-transform hover:-translate-y-0.5 ${
+              className={`relative size-14 overflow-hidden rounded-md border-2 bg-white transition-transform hover:-translate-y-0.5 ${
                 vista === indice ? "border-azul" : "border-tinta/25"
               }`}
             >

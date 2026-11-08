@@ -142,7 +142,7 @@ export function TarjetaProducto({
           data-foto-tarjeta=""
           data-holo={esCarta(producto) ? undefined : "suave"}
           className={`brillo relative block h-[116px] w-24 overflow-hidden rounded-md lg:h-48 lg:w-full ${
-            agotado ? "bg-gris-medio" : "bg-crema"
+            agotado ? "bg-gris-medio" : "bg-white"
           }`}
         >
           <FotoTarjeta producto={producto} viaja={viaja} />
