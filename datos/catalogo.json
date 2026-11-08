@@ -11364,5 +11364,77 @@
       "/productos/prismatic-evolutions-super-premium-collection.webp"
     ],
     "descripcion": "Super-Premium Collection de Prismatic Evolutions, en inglés. Trae la carta promo full art de Eevee ex, una caja de mazo peluda de Eevee, un playmat, 65 fundas con Eevee y sus evoluciones y 15 sobres de Prismatic Evolutions."
+  },
+  {
+    "id": "C493",
+    "slug": "umbreon-ex-161-prismatic-evolutions",
+    "nombre": "Umbreon ex #161 (Prismatic Evolutions)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 645000,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 493,
+    "fotos": [
+      "/productos/umbreon-ex-161-prismatic-evolutions.webp"
+    ],
+    "descripcion": "Umbreon ex de 280 HP, tipo Oscuro. Número 161/131 de Prismatic Evolutions, Special Illustration Rare, en inglés. Condición: Near Mint (NM).",
+    "carta": {
+      "coleccion": "Prismatic Evolutions",
+      "numero": "161",
+      "rareza": "",
+      "condicion": "Near Mint (NM)"
+    },
+    "tipo": "Oscuro"
+  },
+  {
+    "id": "C494",
+    "slug": "giratina-vstar-nm-gg69-crown-zenith-galarian-gallery",
+    "nombre": "Giratina VSTAR #GG69 (Crown Zenith Galarian Gallery)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 142500,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 494,
+    "fotos": [
+      "/productos/giratina-vstar-gg69-crown-zenith-galarian-gallery.webp"
+    ],
+    "descripcion": "Giratina VSTAR de 280 HP, tipo Dragón. Número GG69/GG70 de Crown Zenith: Galarian Gallery, Secret Rare dorada, en inglés. Condición: Near Mint (NM).",
+    "carta": {
+      "coleccion": "Crown Zenith Galarian Gallery",
+      "numero": "GG69",
+      "rareza": "",
+      "condicion": "Near Mint (NM)"
+    },
+    "tipo": "Dragón"
+  },
+  {
+    "id": "C495",
+    "slug": "charizard-v-alternate-art-154-brilliant-stars",
+    "nombre": "Charizard V Alternate Art #154 (Brilliant Stars)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 132500,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 495,
+    "fotos": [
+      "/productos/charizard-v-alternate-art-154-brilliant-stars.webp"
+    ],
+    "descripcion": "Charizard V de 220 HP, tipo Fuego. Número 154/172 de Brilliant Stars, Alternate Full Art, en inglés. Condición: Near Mint (NM).",
+    "carta": {
+      "coleccion": "Brilliant Stars",
+      "numero": "154",
+      "rareza": "",
+      "condicion": "Near Mint (NM)"
+    },
+    "tipo": "Fuego"
   }
 ]
