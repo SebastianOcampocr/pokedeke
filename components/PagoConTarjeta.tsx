@@ -81,11 +81,13 @@ export function PagoConTarjeta({
   numero,
   clave,
   total,
+  titulo = "¿Preferís pagar con tarjeta?",
   alPagar,
 }: {
   numero: string;
   clave: string;
   total: number;
+  titulo?: string;
   alPagar: () => void;
 }) {
   const config = useConfigPaypal();
@@ -147,7 +149,7 @@ export function PagoConTarjeta({
       className="marco flex flex-col gap-3 p-5"
     >
       <h2 id="pago-tarjeta" className="font-bold">
-        ¿Preferís pagar con tarjeta?
+        {titulo}
       </h2>
       <p className="leading-snug">
         Pagás con tarjeta de débito o crédito por medio de PayPal. Se cobra en

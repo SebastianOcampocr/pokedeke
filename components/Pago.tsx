@@ -43,10 +43,11 @@ import {
   llegadaDeEspeciales,
 } from "./PedidoEspecial";
 import { IconoCheque } from "./Iconos";
-import { PagoConTarjeta, useConfigPaypal } from "./PagoConTarjeta";
+import { enDolares, PagoConTarjeta, useConfigPaypal } from "./PagoConTarjeta";
 import { CarritoVacio, Linea } from "./VistaCarrito";
 
 const METODO_PAGO = "SINPE Móvil";
+const METODO_TARJETA = "Tarjeta (PayPal)";
 
 function Campo({
   id,
@@ -177,6 +178,10 @@ function Confirmacion({
   const [referencia, setReferencia] = useState("");
   const [enviado, setEnviado] = useState(false);
   const [pagadoConTarjeta, setPagadoConTarjeta] = useState(false);
+  // Eligió tarjeta: solo sale PayPal. Si PayPal falla, puede pasarse a SINPE.
+  const [conTarjeta, setConTarjeta] = useState(
+    pedido.metodoPago === METODO_TARJETA && !pedido.envioPorWhatsApp,
+  );
   const [enviando, setEnviando] = useState(false);
   const [error, setError] = useState("");
   const opcionEnvio = ENVIOS.find((opcion) => opcion.nombre === pedido.envio);
@@ -242,7 +247,28 @@ function Confirmacion({
         </p>
       ) : null}
 
-      <div className={`marco flex flex-col gap-2 p-5 ${pagadoConTarjeta ? "hidden" : ""}`}>
+      {conTarjeta && !pagadoConTarjeta && pedido.clave ? (
+        <>
+          <PagoConTarjeta
+            numero={pedido.numero}
+            clave={pedido.clave}
+            total={pedido.total}
+            titulo="Pagá con tarjeta"
+            alPagar={marcarPagadoConTarjeta}
+          />
+          <button
+            type="button"
+            className="min-h-11 font-bold underline underline-offset-2"
+            onClick={() => setConTarjeta(false)}
+          >
+            Prefiero pagar por SINPE Móvil
+          </button>
+        </>
+      ) : null}
+
+      <div
+        className={`marco flex flex-col gap-2 p-5 ${pagadoConTarjeta || conTarjeta ? "hidden" : ""}`}
+      >
         <p className="font-bold">
           {precioAparte ? "Tus productos suman:" : "Hacé el SINPE Móvil por:"}
         </p>
@@ -284,7 +310,7 @@ function Confirmacion({
         )}
       </div>
 
-      {pagadoConTarjeta ? null : enviado ? (
+      {pagadoConTarjeta || conTarjeta ? null : enviado ? (
         <p
           role="status"
           className="marco flex items-center gap-3 bg-white p-4 font-bold text-verde-oscuro"
@@ -319,15 +345,6 @@ function Confirmacion({
         </form>
       )}
 
-      {/* Con envío por confirmar el total todavía no es final: ese se paga por SINPE. */}
-      {TIENDA_ABIERTA && !precioAparte && !enviado && !pagadoConTarjeta && pedido.clave ? (
-        <PagoConTarjeta
-          numero={pedido.numero}
-          clave={pedido.clave}
-          total={pedido.total}
-          alPagar={marcarPagadoConTarjeta}
-        />
-      ) : null}
 
       <Link
         href={`/pedido?numero=${pedido.numero}`}
@@ -350,6 +367,7 @@ function Confirmacion({
 export function Pago() {
   const hidratado = useHidratado();
   const paypal = useConfigPaypal();
+  const [metodo, setMetodo] = useState<"sinpe" | "tarjeta">("sinpe");
   const { lineas, cupon } = useCarrito();
   const pedidos = usePedidos();
   const [envioId, setEnvioId] = useState(ENVIOS[0].id);
@@ -382,6 +400,8 @@ export function Pago() {
   const costoElegido = envio.pideDireccion ? costoCorreos : 0;
   const tiendaElegida = TIENDAS_DESTINO.find((tienda) => tienda.id === tiendaId);
   const otraTienda = Boolean(envio.pideTienda) && tiendaId === OTRA_TIENDA;
+  // Con envío por confirmar el total no es final: ese se paga por SINPE.
+  const pagaConTarjeta = metodo === "tarjeta" && Boolean(paypal) && !otraTienda;
   const faltaTienda = Boolean(envio.pideTienda) && !tiendaElegida && !otraTienda;
   // El envío entre tiendas lo pagamos al mandarlo: no entra en el envío gratis.
   const costoFinal = envio.pideTienda
@@ -443,7 +463,7 @@ export function Pago() {
       descuento: totales.descuento,
       costoEnvio: totales.envio,
       total: totales.total,
-      metodoPago: METODO_PAGO,
+      metodoPago: pagaConTarjeta ? METODO_TARJETA : METODO_PAGO,
       referencia: "",
       estado: "Pendiente de pago",
       guia: "",
@@ -644,14 +664,27 @@ export function Pago() {
         <Bloque titulo="Cómo pagás">
           <Opcion
             grupo="pago"
-            activa
+            activa={!pagaConTarjeta}
             titulo={METODO_PAGO}
-            alElegir={() => undefined}
+            detalle="Te damos el monto y nos mandás el comprobante."
+            alElegir={() => setMetodo("sinpe")}
           />
-          <div className="flex min-h-14 items-center justify-between gap-3 rounded-md border-2 border-dashed border-gris p-3 text-gris">
-            <span className="font-bold">Tarjeta</span>
-            <span className="text-sm">Muy pronto</span>
-          </div>
+          {paypal && !otraTienda ? (
+            <Opcion
+              grupo="pago"
+              activa={pagaConTarjeta}
+              titulo="Tarjeta de débito o crédito"
+              detalle={`Con PayPal, en dólares: $${enDolares(totales.total, paypal.colonesPorDolar)}. El pedido queda confirmado al pagar.`}
+              alElegir={() => setMetodo("tarjeta")}
+            />
+          ) : (
+            <div className="flex min-h-14 items-center justify-between gap-3 rounded-md border-2 border-dashed border-gris p-3 text-gris">
+              <span className="font-bold">Tarjeta</span>
+              <span className="text-sm">
+                {otraTienda ? "Con este envío se paga por SINPE" : "Muy pronto"}
+              </span>
+            </div>
+          )}
         </Bloque>
       </div>
 
@@ -709,11 +742,6 @@ export function Pago() {
         {error ? (
           <p role="alert" className="font-bold text-rojo">
             {error}
-          </p>
-        ) : null}
-        {paypal && !otraTienda ? (
-          <p className="text-sm leading-snug font-bold">
-            En el siguiente paso pagás por SINPE Móvil o con tarjeta (PayPal).
           </p>
         ) : null}
         <button type="submit" className="boton boton-rojo" disabled={enviando}>
