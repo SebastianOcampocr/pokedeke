@@ -11016,7 +11016,9 @@
     "stock": 4,
     "vendidos": 0,
     "orden": 477,
-    "fotos": [],
+    "fotos": [
+      "https://www.platinumprotectors.com/cdn/shop/files/BoosterBoxProtector_1200x1200.jpg?v=1777572740"
+    ],
     "descripcion": "Protector de plástico PET transparente de 0,50 mm para una Booster Box de Pokémon. Resistente a rayones y sin ácido, para que la caja se mantenga como nueva. Precio por unidad."
   },
   {
@@ -11507,5 +11509,38 @@
       "condicion": ""
     },
     "tipo": "Lucha"
+  },
+  {
+    "id": "C500",
+    "slug": "booster-bundle-30th-celebration",
+    "nombre": "Booster Bundle 30th Celebration",
+    "juego": "Pokémon",
+    "categoria": "Booster bundle",
+    "categoriaCorta": "Bundle",
+    "idioma": "Inglés",
+    "precio": 31500,
+    "stock": 4,
+    "destacado": true,
+    "vendidos": 0,
+    "orden": 500,
+    "fotos": [
+      "https://m.media-amazon.com/images/I/71ilu-FwFyL.jpg"
+    ],
+    "descripcion": "Booster Bundle de 30th Celebration, en inglés, con Pikachu en la caja. Trae 6 sobres de 30th Celebration."
+  },
+  {
+    "id": "C501",
+    "slug": "sylveon-ex-promo-jumbo-100",
+    "nombre": "Sylveon Ex PROMO Jumbo #100",
+    "juego": "Pokémon",
+    "categoria": "Tin o caja de colección",
+    "categoriaCorta": "Tin",
+    "idioma": "Inglés",
+    "precio": 2000,
+    "stock": 0,
+    "vendidos": 1,
+    "orden": 501,
+    "fotos": [],
+    "descripcion": "Lata o caja de colección con sobres."
   }
 ]
