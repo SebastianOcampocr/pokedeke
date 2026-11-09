@@ -111,11 +111,14 @@ const ROBOT = /bot|crawl|spider|slurp|lighthouse|headless|preview/i;
 const CONTADOS = "pokedeke-contados";
 
 /**
- * Anónimo: cuenta que alguien abrió un producto ("vista") o lo agregó al
- * carrito, para la pestaña Lo más visto. Una vez al día por navegador y
+ * Anónimo: cuenta que alguien abrió un producto ("vista"), lo agregó al
+ * carrito o tocó el botón de WhatsApp, para la pestaña Lo más visto. Una vez al día por navegador y
  * producto, para que recargar no infle la cuenta. Si falla, no pasa nada.
  */
-export function contarVisita(slug: string, tipo: "vista" | "carrito") {
+export function contarVisita(
+  slug: string,
+  tipo: "vista" | "carrito" | "whatsapp",
+) {
   if (!TIENDA_ABIERTA || !PEDIDOS_URL) return;
   if (navigator.webdriver || ROBOT.test(navigator.userAgent)) return;
   const hoy = new Date().toISOString().slice(0, 10);
@@ -209,4 +212,93 @@ export async function consultarPedido(
   } catch {
     return { ok: false, error: SIN_CONEXION };
   }
+}
+
+/** De dónde llega una solicitud de Pokedeke Busca. Debe coincidir con ORIGENES en apps-script/Pedidos.gs. */
+export type OrigenBusca =
+  | "portada"
+  | "busca"
+  | "catalogo"
+  | "buscador"
+  | "agotado"
+  | "eeuu";
+
+/** Manda algo a la hoja sin esperar respuesta: llega aunque la persona cambie de página. */
+function avisarSinEsperar(datos: object) {
+  const cuerpo = JSON.stringify(datos);
+  if (typeof navigator.sendBeacon === "function") {
+    navigator.sendBeacon(
+      PEDIDOS_URL,
+      new Blob([cuerpo], { type: "text/plain;charset=utf-8" }),
+    );
+    return;
+  }
+  void fetch(PEDIDOS_URL, {
+    method: "POST",
+    headers: { "Content-Type": "text/plain;charset=utf-8" },
+    body: cuerpo,
+    keepalive: true,
+  }).catch(() => undefined);
+}
+
+/**
+ * Pokedeke Busca: lo que la persona pide queda en la pestaña Solicitudes aunque
+ * no llegue a mandar el WhatsApp. No lleva nombre ni contacto.
+ */
+export function anotarSolicitud(datos: {
+  producto: string;
+  cantidad: number;
+  detalle: string;
+  presupuesto: string;
+  origen: OrigenBusca;
+}) {
+  if (!TIENDA_ABIERTA || !PEDIDOS_URL) return;
+  avisarSinEsperar({ accion: "solicitud", ...datos });
+}
+
+/** Lo que ya se buscó hoy en este navegador. */
+const BUSCADOS = "pokedeke-buscados";
+
+/** "Charizárd  EX " y "charizard ex" son la misma búsqueda. Limpia igual que terminoDeBusqueda en Pedidos.gs. */
+export function terminoDeBusqueda(texto: string) {
+  return texto
+    .normalize("NFD")
+    .replace(/\p{M}/gu, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9#/&.' -]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, 60);
+}
+
+/**
+ * Anónimo: qué se buscó y cuántos productos salieron, para la pestaña Búsquedas.
+ * Una vez al día por navegador y búsqueda. Lo que no da resultados es lo que la
+ * gente quiere y no tenemos.
+ */
+export function contarBusqueda(
+  texto: string,
+  resultados: number,
+  origen: "buscador" | "catalogo",
+) {
+  if (!TIENDA_ABIERTA || !PEDIDOS_URL) return;
+  if (navigator.webdriver || ROBOT.test(navigator.userAgent)) return;
+  const termino = terminoDeBusqueda(texto);
+  if (termino.length < 3) return;
+  const hoy = new Date().toISOString().slice(0, 10);
+  try {
+    const guardado = JSON.parse(localStorage.getItem(BUSCADOS) ?? "null") as {
+      dia: string;
+      terminos: string[];
+    } | null;
+    const terminos = guardado?.dia === hoy ? guardado.terminos : [];
+    if (terminos.includes(termino)) return;
+    localStorage.setItem(
+      BUSCADOS,
+      JSON.stringify({ dia: hoy, terminos: [...terminos, termino].slice(-200) }),
+    );
+  } catch {
+    // Sin almacenamiento se cuenta igual.
+  }
+  avisarSinEsperar({ accion: "busqueda", texto: termino, resultados, origen });
 }

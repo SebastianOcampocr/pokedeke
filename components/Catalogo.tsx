@@ -1,8 +1,9 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { useMemo, useState } from "react";
-import { EncargoEEUU } from "./EncargoEEUU";
+import { useEffect, useMemo, useState } from "react";
+import { contarBusqueda } from "@/lib/api-pedidos";
+import { Busca } from "./Busca";
 import Link from "next/link";
 import {
   categoriasConProducto,
@@ -12,7 +13,6 @@ import {
   PRODUCTOS,
   valoresUnicos,
 } from "@/lib/productos";
-import { enlaceWhatsApp } from "@/lib/tienda";
 import { useAgotadosAlFinal } from "@/lib/vivo";
 import { Revelar } from "./Revelar";
 import { TarjetaProducto } from "./TarjetaProducto";
@@ -124,6 +124,19 @@ export function Catalogo({
     });
   }, [busqueda, juego, categoria, idioma, rango, rareza, orden, etiqueta]);
   const resultados = useAgotadosAlFinal(encontrados);
+
+  // Qué se busca y si hay: dos segundos sin escribir cuentan como búsqueda terminada.
+  // Se cuenta contra todo el catálogo, sin los demás filtros.
+  useEffect(() => {
+    if (busqueda.trim().length < 3) return;
+    const reloj = window.setTimeout(() => {
+      const cuantos = PRODUCTOS.filter((producto) =>
+        coincide(producto, busqueda),
+      ).length;
+      contarBusqueda(busqueda, cuantos, "catalogo");
+    }, 2000);
+    return () => window.clearTimeout(reloj);
+  }, [busqueda]);
 
   const hayFiltros = Boolean(
     busqueda ||
@@ -260,7 +273,9 @@ export function Catalogo({
       </aside>
 
       <section aria-label="Resultados" className="min-w-0">
-        {etiqueta === PEDIDO_ESPECIAL ? <EncargoEEUU className="mb-5" /> : null}
+        {etiqueta === PEDIDO_ESPECIAL ? (
+          <Busca origen="eeuu" className="mb-5" />
+        ) : null}
         <nav
           aria-label="Categorías"
           className="-mx-4 mb-3 flex gap-2 overflow-x-auto px-4 pb-1 md:mx-0 md:flex-wrap md:overflow-visible md:px-0"
@@ -330,20 +345,23 @@ export function Catalogo({
             ) : null}
           </>
         ) : (
-          <div className="marco bg-crema p-6">
-            <p className="font-display text-xl text-azul">No hallamos nada</p>
-            <p className="mt-2">
-              Probá con otra palabra o{" "}
-              <a
-                href={enlaceWhatsApp("¡Hola! Estoy buscando un producto.")}
-                target="_blank"
-                rel="noreferrer"
-                className="font-bold underline underline-offset-2"
-              >
-                escribinos por WhatsApp
-              </a>
-              : tal vez lo tenemos en camino.
-            </p>
+          <div className="flex flex-col gap-5">
+            <div className="marco bg-crema p-6">
+              <p className="font-display text-xl text-azul">No hallamos nada</p>
+              <p className="mt-2">
+                Probá con otra palabra o quitá algún filtro. Y si de verdad no
+                está, lo buscamos por vos.
+              </p>
+            </div>
+            {/* Con Estados Unidos elegido, el formulario ya salió arriba. */}
+            {etiqueta === PEDIDO_ESPECIAL ? null : (
+              <Busca
+                key={busqueda}
+                origen="catalogo"
+                productoInicial={busqueda.trim().slice(0, 150)}
+                titulo="¿No encontraste lo que buscás?"
+              />
+            )}
           </div>
         )}
       </section>

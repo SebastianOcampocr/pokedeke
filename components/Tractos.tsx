@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { contarVisita } from "@/lib/api-pedidos";
 import { colones } from "@/lib/formato";
 import { estaAgotado, seAparta, type Producto } from "@/lib/productos";
 import { enlaceWhatsApp } from "@/lib/tienda";
@@ -65,6 +66,7 @@ export function Tractos({ producto }: { producto: Producto }) {
           target="_blank"
           rel="noreferrer"
           className="boton boton-amarillo boton-chico"
+          onClick={() => contarVisita(producto.slug, "whatsapp")}
         >
           Apartarlo por WhatsApp
         </a>

@@ -34,6 +34,7 @@ const ENLACES = [
         },
       ]
     : []),
+  { href: "/busca", texto: "Lo buscamos" },
   { href: "/guia", texto: "Guía" },
   { href: "/nosotros", texto: "El Mezzanine" },
 ];
@@ -133,6 +134,9 @@ export function PiePagina() {
               Vendenos tus cartas
             </Link>
           ) : null}
+          <Link href="/busca" className="min-h-11 content-center underline-offset-4 hover:underline">
+            Pokedeke Busca
+          </Link>
           <Link href="/guia" className="min-h-11 content-center underline-offset-4 hover:underline">
             Guía de Deke
           </Link>
@@ -214,6 +218,8 @@ const CINTA = [
   "Envío gratis desde ₡50 000",
   "Apartá en tractos",
   "Pagá con SINPE Móvil",
+  "Pagá con tarjeta",
+  "Si no está, lo buscamos",
 ];
 
 function TiraCinta() {

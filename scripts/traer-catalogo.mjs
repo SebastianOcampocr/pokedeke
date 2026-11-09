@@ -4,7 +4,11 @@
  *
  * Lee esa pestaña desde el servidor de la hoja (variable PEDIDOS_URL) o desde un
  * archivo local con `--archivo ruta.csv`. Si Google no responde, deja el catálogo como
- * está. Si la pestaña cambió de forma, falla y tampoco lo toca.
+ * está. Si la pestaña cambió de forma, trae errores de fórmula o de golpe le falta
+ * mucho de lo que había (el freno), falla y tampoco lo toca.
+ *
+ * También lleva datos/enlaces-viejos.json: si un producto cambia de nombre en la
+ * hoja, su dirección vieja manda a la nueva.
  */
 import { readFileSync } from "node:fs";
 import { appendFile, readdir, readFile, writeFile } from "node:fs/promises";
@@ -49,6 +53,8 @@ const DESCRIPCIONES = {
   "Tin o caja de colección": "Lata o caja de colección con sobres.",
   "Colección premium / UPC": "Colección especial para quien quiere la pieza grande.",
 };
+
+const COLUMNAS_DE_NUMEROS = ["En stock", "Vendidas", "Precio sugerido (₡)", "Precio de venta (₡)"];
 
 const ETIQUETAS = ["Nuevo", "Preventa", "Pedido especial", "Oferta"];
 const CARTAS = ["Carta suelta (single)", "Carta gradada"];
@@ -288,6 +294,16 @@ export function armarCatalogo(textoCsv, fotos) {
   if (lotes.length === 0) {
     throw new Error('"Catálogo web" vino sin productos.');
   }
+  // #REF!, #N/A y compañía: una fórmula rota no debe volverse "agotado" o "sin precio".
+  const rotas = lotes.filter((lote) =>
+    COLUMNAS_DE_NUMEROS.some((columna) => String(lote[columna] ?? "").trim().startsWith("#")),
+  );
+  if (rotas.length > 0) {
+    throw new Error(
+      '"Catálogo web" tiene ' + rotas.length + " filas con errores de fórmula (por ejemplo " +
+        rotas[0].Producto.trim() + "): no se publica hasta arreglarlas.",
+    );
+  }
 
   const avisos = [];
   const grupos = new Map();
@@ -367,6 +383,88 @@ export function armarCatalogo(textoCsv, fotos) {
   return { productos: completarTipos(productos), avisos };
 }
 
+const ejemplos = (productos) =>
+  productos
+    .slice(0, 3)
+    .map((producto) => producto.nombre ?? producto.slug)
+    .join(", ");
+
+/**
+ * El freno: si de golpe falta mucho de lo que había, es más probable una fórmula
+ * rota en la hoja que una decisión. Devuelve los motivos para no publicar; vacío
+ * si todo se ve normal. Con catálogos chiquitos no aplica.
+ */
+export function revisarCambio(previos, nuevos) {
+  if (previos.length < 20) return [];
+  const motivos = [];
+  const actuales = new Map(nuevos.map((producto) => [producto.slug, producto]));
+  const ids = new Set(nuevos.map((producto) => producto.id));
+
+  // Un producto que solo cambió de nombre sigue estando: se reconoce por su ID.
+  const perdidos = previos.filter(
+    (producto) => !actuales.has(producto.slug) && !ids.has(producto.id),
+  );
+  if (perdidos.length > Math.max(10, previos.length * 0.15)) {
+    motivos.push(
+      "Desaparecieron " + perdidos.length + " de " + previos.length +
+        " productos (por ejemplo " + ejemplos(perdidos) + ").",
+    );
+  }
+
+  const conStock = previos.filter((producto) => producto.stock > 0);
+  const agotados = conStock.filter((producto) => actuales.get(producto.slug)?.stock === 0);
+  if (conStock.length >= 20 && agotados.length > conStock.length * 0.5) {
+    motivos.push(
+      "Se agotaron de golpe " + agotados.length + " de " + conStock.length +
+        " productos (por ejemplo " + ejemplos(agotados) + ").",
+    );
+  }
+
+  const regalados = previos.filter((producto) => {
+    const actual = actuales.get(producto.slug);
+    return actual && producto.precio >= 1000 && actual.precio < producto.precio * 0.2;
+  });
+  if (regalados.length > Math.max(5, previos.length * 0.05)) {
+    motivos.push(
+      regalados.length + " productos bajaron de precio más de un 80% de golpe (por ejemplo " +
+        ejemplos(regalados) + ").",
+    );
+  }
+  return motivos;
+}
+
+/**
+ * Si un producto cambió de nombre en la hoja, cambia su dirección: aquí queda
+ * la vieja apuntando a la nueva, para que los enlaces compartidos y los de
+ * Google sigan sirviendo. El producto se reconoce por su ID.
+ */
+export function enlacesViejos(previos, nuevos, guardados = {}) {
+  const porId = new Map(nuevos.map((producto) => [producto.id, producto.slug]));
+  const vigentes = new Set(nuevos.map((producto) => producto.slug));
+  const enlaces = { ...guardados };
+  for (const previo of previos) {
+    const nuevo = porId.get(previo.id);
+    if (nuevo && nuevo !== previo.slug) enlaces[previo.slug] = nuevo;
+  }
+  // Cadena A → B → C: A va directo a C.
+  for (const [viejo, destino] of Object.entries(enlaces)) {
+    if (!vigentes.has(destino) && enlaces[destino]) enlaces[viejo] = enlaces[destino];
+  }
+  // Una dirección que volvió a existir ya no se redirige, y una sin destino tampoco.
+  for (const viejo of Object.keys(enlaces)) {
+    if (vigentes.has(viejo) || !vigentes.has(enlaces[viejo])) delete enlaces[viejo];
+  }
+  return Object.fromEntries(Object.entries(enlaces).sort());
+}
+
+async function leerJson(ruta, siFalta) {
+  try {
+    return JSON.parse(await readFile(ruta, "utf8"));
+  } catch {
+    return siFalta;
+  }
+}
+
 async function descargar(url) {
   for (let intento = 1; intento <= 3; intento += 1) {
     try {
@@ -405,8 +503,22 @@ async function principal() {
     return;
   }
 
+  const previos = await leerJson(salida, []);
   const { productos, avisos } = armarCatalogo(texto, await fotosGuardadas());
+  if (process.env.PERMITIR_CAMBIO_GRANDE !== "si") {
+    const motivos = revisarCambio(previos, productos);
+    if (motivos.length > 0) {
+      throw new Error(
+        "Freno del catálogo: " + motivos.join(" ") +
+          " La página se queda como está. Si el cambio fue a propósito, corré Publicar demo a mano con la casilla de permitir un cambio grande.",
+      );
+    }
+  }
   await writeFile(salida, `${JSON.stringify(productos, null, 2)}\n`);
+
+  const rutaEnlaces = path.join(path.dirname(salida), "enlaces-viejos.json");
+  const enlaces = enlacesViejos(previos, productos, await leerJson(rutaEnlaces, {}));
+  await writeFile(rutaEnlaces, JSON.stringify(enlaces, null, 2) + "\n");
 
   const resumen = [
     `Catálogo: ${productos.length} productos, ${productos.filter((p) => p.stock > 0).length} con stock.`,

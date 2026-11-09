@@ -77,7 +77,9 @@ export function ElMezzanine() {
           <p className="max-w-lg text-[17px] leading-snug font-medium">
             Otros tienen bodega. Nosotros tenemos un mezzanine en el{" "}
             {LUGAR.nombre} y una carta con patas que lo cuida. De ahí sale cada
-            pedido de {TIENDA.nombre}, empacado por nosotros.
+            pedido de {TIENDA.nombre}, empacado por nosotros. Somos tienda en
+            línea: no hay local, pero podés retirar ahí con cita o te lo
+            mandamos a todo el país.
           </p>
           <Link href="/nosotros" className="boton boton-rojo w-full md:w-fit">
             Conocé el mezzanine
@@ -109,8 +111,9 @@ const PASOS = [
     texto: "Buscá en el catálogo y armá tu carrito con lo que te guste.",
   },
   {
-    titulo: "Pagás por SINPE",
-    texto: "Te damos el monto exacto y nos mandás el comprobante.",
+    titulo: "Pagás por SINPE o tarjeta",
+    texto:
+      "Por SINPE Móvil nos mandás el comprobante; con tarjeta queda confirmado de una vez.",
   },
   {
     titulo: "Te llega",

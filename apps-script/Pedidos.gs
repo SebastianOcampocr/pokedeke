@@ -14,6 +14,12 @@
  *    "Lo más visto", sin datos personales.
  * 7. Dos días después de marcar un pedido Entregado, le pide al cliente su
  *    opinión. Las opiniones marcadas para publicar salen en la portada.
+ * 8. Pokedeke Busca: anota en "Solicitudes" lo que la gente pide y no está en
+ *    la página, y avisa a la tienda una vez por hora si entró algo.
+ * 9. Anota en "Búsquedas" qué se busca en la página y qué no dio resultados,
+ *    sin datos de quién buscó.
+ * 10. Cada 10 minutos, si el catálogo cambió, le pide a GitHub rearmar la página.
+ * 11. Cada Domingo guarda una copia de respaldo de toda la hoja.
  *
  * Los precios y el stock siempre se leen de la hoja: lo que manda el navegador
  * nunca se usa para calcular cuánto se cobra.
@@ -59,6 +65,14 @@ const CONFIG = {
   // PAYPAL_CLIENT_ID, PAYPAL_SECRET y PAYPAL_MODO ("sandbox" o "live").
   colonesPorDolar: 500,
   maxPagosPaypalPorHora: 120,
+  maxSolicitudesPorHora: 40,
+  maxBusquedasPorHora: 1500,
+  // Tope de términos distintos en la pestaña Búsquedas, para que nadie la llene de basura.
+  maxTerminos: 3000,
+  // De dónde sale la página: publicarSiCambio le pide a GitHub rearmarla. La llave
+  // va en Propiedades del script, como GITHUB_TOKEN.
+  repositorio: "SebastianOcampocr/pokedeke",
+  flujo: "publicar-demo.yml",
   // Estos valores deben coincidir con lib/tienda.ts.
   // `despacho`: sale en los días de despacho (ver diaDeDespacho).
   envios: {
@@ -138,10 +152,12 @@ const HOJAS = {
   comentarios: "Comentarios",
   avisos: "Avisos de stock",
   masVistos: "Lo más visto",
+  solicitudes: "Solicitudes",
+  busquedas: "Búsquedas",
 };
 
 // Sube con cada cambio: la página y las pruebas leen esta marca con un GET.
-const VERSION = "2026-11-08-paypal-gracias";
+const VERSION = "2026-11-09-busca";
 const ENTREGADO = "Entregado";
 const PEDIDO_ESPECIAL = "Pedido especial";
 const PRIMERA_FILA = 5;
@@ -231,6 +247,8 @@ function doPost(e) {
       comentario: guardarComentario,
       aviso: guardarAviso,
       visto: anotarVisto,
+      solicitud: guardarSolicitud,
+      busqueda: anotarBusqueda,
       "paypal-crear": crearPagoPaypal,
       "paypal-capturar": capturarPagoPaypal,
     };
@@ -240,10 +258,20 @@ function doPost(e) {
       if (!hayCupo("carritos", CONFIG.maxCarritosPorHora)) return responder({ ok: false });
       return responder(conCandado(() => accion(datos)));
     }
-    if (datos.accion === "visto") {
+    if (datos.accion === "visto" || datos.accion === "busqueda") {
       // Si la hoja está ocupada, esta visita no se cuenta: no vale la pena esperar.
-      if (!hayCupo("vistas", CONFIG.maxVistasPorHora)) return responder({ ok: false });
+      const cupo =
+        datos.accion === "visto"
+          ? hayCupo("vistas", CONFIG.maxVistasPorHora)
+          : hayCupo("busquedas", CONFIG.maxBusquedasPorHora);
+      if (!cupo) return responder({ ok: false });
       return responder(siEstaLibre(() => accion(datos)));
+    }
+    if (datos.accion === "solicitud") {
+      if (!hayCupo("solicitudes", CONFIG.maxSolicitudesPorHora)) {
+        return responder({ ok: false, error: "Recibimos muchas solicitudes. Escribinos por WhatsApp." });
+      }
+      return responder(conCandado(() => accion(datos)));
     }
     if (datos.accion === "paypal-crear" || datos.accion === "paypal-capturar") {
       if (!hayCupo("paypal", CONFIG.maxPagosPaypalPorHora)) {
@@ -425,16 +453,38 @@ function filasDeCatalogo() {
     .filter((fila) => fila.ID && fila.Producto);
 }
 
+function esPokemon(juego) {
+  return String(juego).normalize("NFD").replace(/\p{M}/gu, "").toLowerCase().trim() === "pokemon";
+}
+
+/**
+ * Lo que GitHub necesita para armar la página, y nada más: solo lo publicado, y
+ * sin el precio sugerido de lo que ya tiene precio de venta (de ahí se podría
+ * sacar cuánto costó). Esta dirección la puede abrir cualquiera.
+ */
 function catalogoEnCsv() {
   const pestana = hoja(HOJAS.catalogo);
   const ultima = pestana.getLastRow();
-  return pestana
-    .getRange(4, 1, Math.max(ultima - 3, 1), 16)
-    .getDisplayValues()
-    .filter((fila, indice) => indice === 0 || fila[0])
-    .map((fila) =>
-      fila.map((celda) => '"' + String(celda).replace(/"/g, '""') + '"').join(","),
-    )
+  const filas = pestana.getRange(4, 1, Math.max(ultima - 3, 1), 16).getDisplayValues();
+  const titulos = filas[0].map((titulo) => String(titulo).trim());
+  const juego = titulos.indexOf("Juego");
+  const publicado = titulos.indexOf("Publicado (sí/no)");
+  const sugerido = titulos.indexOf("Precio sugerido (₡)");
+  const venta = titulos.indexOf("Precio de venta (₡)");
+  return filas
+    .filter((fila, indice) => {
+      if (indice === 0) return true;
+      if (!fila[0]) return false;
+      if (publicado !== -1 && /^no$/i.test(String(fila[publicado]).trim())) return false;
+      return juego === -1 || esPokemon(fila[juego]);
+    })
+    .map((fila, indice) => {
+      const copia = fila.slice();
+      if (indice > 0 && sugerido !== -1 && venta !== -1 && String(copia[venta]).trim()) {
+        copia[sugerido] = copia[venta];
+      }
+      return copia.map((celda) => '"' + String(celda).replace(/"/g, '""') + '"').join(",");
+    })
     .join("\n");
 }
 
@@ -1183,7 +1233,7 @@ function revisarAvisos() {
 }
 
 function avisarQueVolvio(correo, nombre, producto) {
-  const enlace = CONFIG.sitio + "producto/" + producto.slug;
+  const enlace = sitio() + "producto/" + producto.slug;
   const saludo = nombre ? "¡Hola " + nombre.split(" ")[0] + "!" : "¡Hola!";
   const parrafos = [
     saludo + " Nos pediste que te avisáramos: " + producto.nombre + " ya está otra vez en la página, a " + colones(producto.precio) + ".",
@@ -1210,7 +1260,7 @@ function avisarWhatsappsPendientes(lista) {
     const mensaje =
       "¡Hola" + (nombre ? " " + nombre.split(" ")[0] : "") + "! Te escribimos de " + CONFIG.nombreTienda +
       ": ya volvió " + producto.nombre + ", a " + colones(producto.precio) + ". Lo ves aquí: " +
-      CONFIG.sitio + "producto/" + producto.slug;
+      sitio() + "producto/" + producto.slug;
     return {
       texto: (nombre || contacto) + " · " + producto.nombre,
       enlace: "https://wa.me/506" + soloDigitos(contacto) + "?text=" + encodeURIComponent(mensaje),
@@ -1237,7 +1287,7 @@ function avisarWhatsappsPendientes(lista) {
 /* ---------- Lo más visto: cuántas veces se ve y se agrega cada producto ---------- */
 
 // Columnas de "Lo más visto", contando desde 1.
-const COL_VISTO = { producto: 1, vistas: 2, carrito: 3, ultima: 4, slug: 5 };
+const COL_VISTO = { producto: 1, vistas: 2, carrito: 3, ultima: 4, slug: 5, whatsapp: 6 };
 const CLAVE_NOMBRES = "nombres-productos";
 
 /** Nombre de cada producto publicado, guardado un rato para no leer el catálogo con cada visita. */
@@ -1257,13 +1307,26 @@ function nombresDeProductos() {
   return nombres;
 }
 
-/** La página manda una "vista" al abrir un producto y un "carrito" al agregarlo, una vez al día por navegador. */
+/** La columna de consultas por WhatsApp llegó después: si la pestaña no la tiene, se la pone. */
+function prepararColumnaWhatsapp(pestana) {
+  if (pestana.getMaxColumns() < COL_VISTO.whatsapp) pestana.insertColumnAfter(COL_VISTO.whatsapp - 1);
+  const titulo = pestana.getRange(PRIMERA_FILA - 1, COL_VISTO.whatsapp);
+  if (!titulo.getValue()) titulo.setValue("Consultas por WhatsApp");
+}
+
+/**
+ * La página manda una "vista" al abrir un producto, un "carrito" al agregarlo y
+ * un "whatsapp" al tocar el botón de preguntar o apartar por WhatsApp, una vez
+ * al día por navegador.
+ */
 function anotarVisto(datos) {
   const slug = texto(datos.slug, 200);
   const nombre = nombresDeProductos()[slug];
-  const columna = { vista: COL_VISTO.vistas, carrito: COL_VISTO.carrito }[datos.tipo];
+  const columnas = { vista: COL_VISTO.vistas, carrito: COL_VISTO.carrito, whatsapp: COL_VISTO.whatsapp };
+  const columna = Object.prototype.hasOwnProperty.call(columnas, datos.tipo) ? columnas[datos.tipo] : 0;
   const pestana = hoja(HOJAS.masVistos);
   if (!nombre || !columna || !pestana) return { ok: false };
+  if (columna === COL_VISTO.whatsapp) prepararColumnaWhatsapp(pestana);
 
   const ultima = pestana.getLastRow();
   const slugs =
@@ -1279,7 +1342,7 @@ function anotarVisto(datos) {
       columna === COL_VISTO.carrito ? 1 : 0,
       ahora,
       slug,
-    ]);
+    ].concat(columna === COL_VISTO.whatsapp ? [1] : []));
     return { ok: true };
   }
   const fila = PRIMERA_FILA + indice;
@@ -1305,6 +1368,152 @@ function listaMasVistos() {
     }))
     .sort((a, b) => puntos(b) - puntos(a))
     .slice(0, 40);
+}
+
+/* ---------- Pestañas que este script lleva solo ---------- */
+
+/** Si la pestaña no existe todavía, la crea con sus títulos en la fila 4. */
+function pestanaCon(nombre, ayuda, columnas) {
+  const existente = hoja(nombre);
+  if (existente) return existente;
+  const nueva = libro().insertSheet(nombre);
+  nueva.getRange(1, 1).setValue(nombre);
+  nueva.getRange(2, 1).setValue(ayuda);
+  nueva.getRange(PRIMERA_FILA - 1, 1, 1, columnas.length).setValues([columnas]);
+  nueva.setFrozenRows(PRIMERA_FILA - 1);
+  return nueva;
+}
+
+/* ---------- Pokedeke Busca ---------- */
+
+// Columnas de "Solicitudes", contando desde 1.
+const COL_SOLICITUD = { fecha: 1, producto: 2, cantidad: 3, detalle: 4, presupuesto: 5, origen: 6, estado: 7, notas: 8 };
+const TITULOS_SOLICITUD = ["Fecha", "Qué busca", "Cantidad", "Enlace o detalle", "Presupuesto", "De dónde llegó", "Estado", "Notas"];
+const AYUDA_SOLICITUDES =
+  "Lo que la gente pide en Pokedeke Busca. La conversación sigue por WhatsApp; aquí queda qué se pidió. Cambiá el Estado a mano: Nueva, En revisión, Cotizada, Conseguida o No se consiguió.";
+const SOLICITUD_NUEVA = "Nueva";
+const CLAVE_SOLICITUDES = "solicitudes-avisadas";
+const ORIGENES = {
+  portada: "Portada",
+  busca: "Página Pokedeke Busca",
+  catalogo: "Catálogo sin resultados",
+  buscador: "Buscador sin resultados",
+  agotado: "Producto agotado",
+  eeuu: "Catálogo de Estados Unidos",
+};
+
+/**
+ * "¿Buscás algo que no está aquí?": queda anotado aunque la persona no llegue a
+ * mandar el WhatsApp. No lleva nombre ni contacto: la conversación sigue por
+ * WhatsApp y aquí queda qué se está pidiendo. Nunca promete nada: la tienda
+ * revisa y confirma disponibilidad y precio.
+ */
+function guardarSolicitud(datos) {
+  const producto = texto(datos.producto, 150);
+  if (producto.length < 3) return { ok: false, error: "Decinos qué producto andás buscando." };
+  const cantidad = Math.min(Math.max(Math.floor(Number(datos.cantidad)) || 1, 1), 99);
+  const origen = Object.prototype.hasOwnProperty.call(ORIGENES, datos.origen) ? ORIGENES[datos.origen] : "Otro";
+  pestanaCon(HOJAS.solicitudes, AYUDA_SOLICITUDES, TITULOS_SOLICITUD).appendRow([
+    new Date(),
+    comoTexto(producto),
+    cantidad,
+    comoTexto(texto(datos.detalle, 300)),
+    comoTexto(texto(datos.presupuesto, 40)),
+    origen,
+    SOLICITUD_NUEVA,
+    "",
+  ]);
+  return { ok: true };
+}
+
+/** Una vez por hora: si entraron solicitudes, un solo correo a la tienda con todas. */
+function avisarSolicitudesNuevas() {
+  const pestana = hoja(HOJAS.solicitudes);
+  if (!pestana) return;
+  const propiedades = PropertiesService.getScriptProperties();
+  const ultima = pestana.getLastRow();
+  const avisadas = Math.max(Number(propiedades.getProperty(CLAVE_SOLICITUDES)) || 0, PRIMERA_FILA - 1);
+  if (ultima === avisadas) return;
+  propiedades.setProperty(CLAVE_SOLICITUDES, String(ultima));
+  // Si borraron filas, se empieza a contar desde donde quedó la pestaña.
+  if (ultima < avisadas) return;
+  const nuevas = pestana
+    .getRange(avisadas + 1, 1, ultima - avisadas, TITULOS_SOLICITUD.length)
+    .getValues()
+    .filter((fila) => fila[COL_SOLICITUD.producto - 1]);
+  if (nuevas.length === 0) return;
+
+  const lineas = nuevas.slice(0, 20).map((fila) => {
+    const extras = [
+      fila[COL_SOLICITUD.detalle - 1] ? "detalle: " + fila[COL_SOLICITUD.detalle - 1] : "",
+      fila[COL_SOLICITUD.presupuesto - 1] ? "presupuesto: " + fila[COL_SOLICITUD.presupuesto - 1] : "",
+      String(fila[COL_SOLICITUD.origen - 1]),
+    ].filter(Boolean);
+    return fila[COL_SOLICITUD.cantidad - 1] + " × " + fila[COL_SOLICITUD.producto - 1] + " (" + extras.join("; ") + ")";
+  });
+  const titulo =
+    nuevas.length === 1
+      ? "Hay 1 solicitud nueva en Pokedeke Busca"
+      : "Hay " + nuevas.length + " solicitudes nuevas en Pokedeke Busca";
+  const cierre = "Quien la mandó sigue por WhatsApp. Si no escribió, igual queda como señal de qué anda buscando la gente.";
+  avisar(
+    titulo + " · " + CONFIG.nombreTienda,
+    [titulo + ":", ""].concat(lineas).concat(["", cierre]),
+    null,
+    correoSencillo({
+      etiqueta: "Pokedeke Busca",
+      titulo,
+      parrafos: lineas.concat([cierre]),
+      botones: [botonDeCorreo("Abrir Solicitudes", libro().getUrl() + "#gid=" + pestana.getSheetId(), "#1437a8")],
+      pie: "Este correo sale como mucho una vez por hora, solo si entró algo.",
+    }),
+  );
+}
+
+/* ---------- Qué busca la gente ---------- */
+
+// Columnas de "Búsquedas", contando desde 1.
+const COL_BUSQUEDA = { termino: 1, veces: 2, sinResultado: 3, resultados: 4, ultima: 5 };
+const TITULOS_BUSQUEDA = ["Lo que buscaron", "Veces", "Veces sin resultados", "Productos que salieron la última vez", "Última vez"];
+const AYUDA_BUSQUEDAS =
+  "Lo que la gente escribe en el buscador y en el catálogo. Una fila por búsqueda, sin datos de quién buscó. Lo que tiene muchas veces sin resultados es lo que la gente quiere y no tenemos.";
+
+/** "Charizárd  EX " y "charizard ex" son la misma búsqueda. */
+function terminoDeBusqueda(valor) {
+  return texto(valor, 80)
+    .normalize("NFD")
+    .replace(/\p{M}/gu, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9#/&.' -]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, 60);
+}
+
+/**
+ * La página avisa qué se buscó y cuántos productos salieron, una vez al día por
+ * navegador y búsqueda.
+ */
+function anotarBusqueda(datos) {
+  const termino = terminoDeBusqueda(datos.texto);
+  if (termino.length < 3) return { ok: false };
+  const resultados = Math.min(Math.max(Math.floor(Number(datos.resultados)) || 0, 0), 9999);
+  const pestana = pestanaCon(HOJAS.busquedas, AYUDA_BUSQUEDAS, TITULOS_BUSQUEDA);
+  const cuantos = Math.max(pestana.getLastRow() - PRIMERA_FILA + 1, 0);
+  const terminos = cuantos ? pestana.getRange(PRIMERA_FILA, COL_BUSQUEDA.termino, cuantos, 1).getValues() : [];
+  const indice = terminos.findIndex(([valor]) => String(valor) === termino);
+  const ahora = new Date();
+  if (indice === -1) {
+    if (cuantos >= CONFIG.maxTerminos) return { ok: false };
+    pestana.appendRow([comoTexto(termino), 1, resultados === 0 ? 1 : 0, resultados, ahora]);
+    return { ok: true };
+  }
+  const fila = PRIMERA_FILA + indice;
+  const cuenta = pestana.getRange(fila, COL_BUSQUEDA.veces, 1, 2).getValues()[0];
+  pestana
+    .getRange(fila, COL_BUSQUEDA.veces, 1, 4)
+    .setValues([[(Number(cuenta[0]) || 0) + 1, (Number(cuenta[1]) || 0) + (resultados === 0 ? 1 : 0), resultados, ahora]]);
+  return { ok: true };
 }
 
 /* ---------- ¿Cómo te fue? ---------- */
@@ -1342,7 +1551,7 @@ function pedirOpinion(fila) {
   const numero = fila[COL.numero - 1];
   const primerNombre = String(fila[COL.cliente - 1]).split(" ")[0];
   const enlace =
-    CONFIG.sitio + "comentarios?pedido=" + encodeURIComponent(numero) +
+    sitio() + "comentarios?pedido=" + encodeURIComponent(numero) +
     "&clave=" + encodeURIComponent(fila[COL.clave - 1]);
   const nombres = leerDetalle(fila).lineas.map((linea) => linea.nombre);
   const queLlevaste = nombres.length === 1 ? nombres[0] : nombres.length + " productos";
@@ -1373,7 +1582,68 @@ function tareasCadaHora() {
   } catch (error) {
     console.error(error);
   }
+  try {
+    avisarSolicitudesNuevas();
+  } catch (error) {
+    console.error(error);
+  }
   pedirOpiniones();
+}
+
+/* ---------- Publicación y respaldo ---------- */
+
+const CLAVE_PUBLICADO = "catalogo-publicado";
+
+function huellaDe(contenido) {
+  return Utilities.base64EncodeWebSafe(
+    Utilities.computeDigest(Utilities.DigestAlgorithm.MD5, contenido, Utilities.Charset.UTF_8),
+  );
+}
+
+/**
+ * Corre sola cada 10 minutos, gracias a instalarAvisos(). Si el catálogo cambió
+ * desde la última vez, le pide a GitHub rearmar la página: así lo nuevo sale en
+ * minutos y no depende del reloj de GitHub. Ocupa la propiedad GITHUB_TOKEN (una
+ * llave que solo puede correr la publicación de este repositorio); sin ella no
+ * hace nada. Devuelve qué pasó, para verlo al correrla a mano.
+ */
+function publicarSiCambio() {
+  const propiedades = PropertiesService.getScriptProperties();
+  const llave = propiedades.getProperty("GITHUB_TOKEN");
+  if (!llave) return "Falta la propiedad GITHUB_TOKEN: no se pidió nada.";
+  const huella = huellaDe(catalogoEnCsv());
+  if (propiedades.getProperty(CLAVE_PUBLICADO) === huella) return "El catálogo no ha cambiado.";
+  const respuesta = UrlFetchApp.fetch(
+    "https://api.github.com/repos/" + CONFIG.repositorio + "/actions/workflows/" + CONFIG.flujo + "/dispatches",
+    {
+      method: "post",
+      contentType: "application/json",
+      headers: {
+        Authorization: "Bearer " + llave,
+        Accept: "application/vnd.github+json",
+        "X-GitHub-Api-Version": "2022-11-28",
+      },
+      payload: JSON.stringify({ ref: "main" }),
+      muteHttpExceptions: true,
+    },
+  );
+  const codigo = respuesta.getResponseCode();
+  if (codigo !== 204) {
+    console.error("GitHub respondió " + codigo + ": " + respuesta.getContentText().slice(0, 300));
+    return "GitHub respondió " + codigo + ": revisá la llave GITHUB_TOKEN.";
+  }
+  propiedades.setProperty(CLAVE_PUBLICADO, huella);
+  return "Listo: se pidió rearmar la página. Tarda unos 3 minutos.";
+}
+
+/**
+ * Corre sola cada Domingo, gracias a instalarAvisos(): deja en el Drive de la
+ * tienda una copia completa de la hoja, "Respaldo Pokedeke 2026-11-15". Las
+ * copias viejas se pueden borrar a mano.
+ */
+function respaldarHoja() {
+  const fecha = Utilities.formatDate(new Date(), libro().getSpreadsheetTimeZone(), "yyyy-MM-dd");
+  libro().copy("Respaldo " + CONFIG.nombreTienda + " " + fecha);
 }
 
 /* ---------- Pago con tarjeta por PayPal ---------- */
@@ -1722,7 +1992,7 @@ function correoConDiseno({ etiqueta, estado, colorEstado, saludo, numero, fecha,
 
 /** El toldo, el nombre y la tarjeta crema de todos los correos; `interior` va adentro de la tarjeta. */
 function marcoDeCorreo(interior) {
-  const imagenes = CONFIG.sitio + "correo/";
+  const imagenes = sitio() + "correo/";
   const patron = (archivo) => "background-image:url(" + imagenes + archivo + ");background-repeat:repeat;";
   return (
     '<div style="margin:0;padding:0;background-color:#ffce1f;font-family:Arial,Helvetica,sans-serif;color:#141414;">' +
@@ -1764,15 +2034,26 @@ function botonesDelDueno(numero, whatsapp, cliente) {
 function botonesDelCliente(numero) {
   const mensaje = "¡Hola! Les escribo por mi pedido " + numero + ".";
   return [
-    botonDeCorreo("Ver mi pedido", CONFIG.sitio + "pedido?numero=" + numero, "#1437a8"),
+    botonDeCorreo("Ver mi pedido", sitio() + "pedido?numero=" + numero, "#1437a8"),
     botonDeCorreo("Escribinos por WhatsApp", "https://wa.me/" + CONFIG.whatsapp + "?text=" + encodeURIComponent(mensaje), "#127a43"),
   ];
 }
 
 /** Devuelve si salió. */
+/** La hoja de prueba lleva la propiedad MODO_PRUEBA = si: sus correos lo dicen en el asunto. */
+function esPrueba() {
+  return PropertiesService.getScriptProperties().getProperty("MODO_PRUEBA") === "si";
+}
+
+/** La página a la que apuntan los correos. La hoja de prueba la cambia con la propiedad SITIO. */
+function sitio() {
+  return PropertiesService.getScriptProperties().getProperty("SITIO") || CONFIG.sitio;
+}
+
 function mandarCorreo(opciones) {
   try {
-    MailApp.sendEmail({ name: CONFIG.nombreTienda, ...opciones });
+    const asunto = (esPrueba() ? "[PRUEBA] " : "") + opciones.subject;
+    MailApp.sendEmail({ name: CONFIG.nombreTienda, ...opciones, subject: asunto });
     return true;
   } catch (error) {
     // Un correo que falla no debe perder el pedido: ya quedó en la hoja.
@@ -2025,11 +2306,14 @@ function avisarConseguido(fila) {
  * desde un onEdit común: ocupa estos activadores instalados.
  */
 function instalarAvisos() {
+  const propios = ["alEditarHoja", "tareasCadaHora", "publicarSiCambio", "respaldarHoja"];
   ScriptApp.getProjectTriggers()
-    .filter((activador) => ["alEditarHoja", "tareasCadaHora"].includes(activador.getHandlerFunction()))
+    .filter((activador) => propios.includes(activador.getHandlerFunction()))
     .forEach((activador) => ScriptApp.deleteTrigger(activador));
   ScriptApp.newTrigger("alEditarHoja").forSpreadsheet(libro()).onEdit().create();
   ScriptApp.newTrigger("tareasCadaHora").timeBased().everyHours(1).create();
+  ScriptApp.newTrigger("publicarSiCambio").timeBased().everyMinutes(10).create();
+  ScriptApp.newTrigger("respaldarHoja").timeBased().onWeekDay(ScriptApp.WeekDay.SUNDAY).atHour(3).create();
 }
 
 /** Corre con cada edición de la hoja, gracias a instalarAvisos(). */

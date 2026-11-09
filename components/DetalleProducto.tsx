@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useLayoutEffect, useState, ViewTransition } from "react";
+import { contarVisita } from "@/lib/api-pedidos";
 import { agregarAlCarrito } from "@/lib/carrito";
 import { colones } from "@/lib/formato";
 import {
@@ -160,11 +161,22 @@ export function AccionesProducto({ producto: guardado }: { producto: Producto })
       ) : null}
 
       {agotado ? (
-        <BotonAvisame
-          nombreProducto={producto.nombre}
-          slug={producto.slug}
-          className="min-h-14 text-[17px]"
-        />
+        <>
+          <BotonAvisame
+            nombreProducto={producto.nombre}
+            slug={producto.slug}
+            className="min-h-14 text-[17px]"
+          />
+          <Link
+            href={
+              "/busca?origen=agotado&producto=" +
+              encodeURIComponent(producto.nombre)
+            }
+            className="min-h-11 content-center font-bold underline underline-offset-2"
+          >
+            ¿Lo ocupás ya? Pedinos que lo busquemos
+          </Link>
+        </>
       ) : (
         <>
           {producto.stock > 1 ? (
@@ -213,6 +225,7 @@ export function AccionesProducto({ producto: guardado }: { producto: Producto })
         target="_blank"
         rel="noreferrer"
         className="boton boton-blanco"
+        onClick={() => contarVisita(producto.slug, "whatsapp")}
       >
         <IconoChat tamano={22} />
         Preguntar por WhatsApp

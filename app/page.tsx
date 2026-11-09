@@ -4,7 +4,7 @@ import type { CSSProperties, ReactNode } from "react";
 import { BotonGrupo, Cinta } from "@/components/Estructura";
 import { FotoProducto } from "@/components/FotoProducto";
 import { Deke } from "@/components/Deke";
-import { EncargoEEUU } from "@/components/EncargoEEUU";
+import { Busca } from "@/components/Busca";
 import { Letrero } from "@/components/Letrero";
 import { Opiniones } from "@/components/Opiniones";
 import { ComoFunciona, ElMezzanine, QueBuscas } from "@/components/Marca";
@@ -203,7 +203,7 @@ export default function Inicio() {
           email: TIENDA.correo,
           telephone: `+${TIENDA.whatsapp}`,
           currenciesAccepted: "CRC",
-          paymentAccepted: "SINPE Móvil",
+          paymentAccepted: "SINPE Móvil, tarjeta de débito o crédito (PayPal)",
           areaServed: { "@type": "Country", name: "Costa Rica" },
           address: { "@type": "PostalAddress", addressLocality: "San José", addressCountry: "CR" },
         }}
@@ -236,7 +236,7 @@ export default function Inicio() {
             style={{ animationDelay: "200ms" }}
           >
             Desde cartas de ₡500 hasta cajas que no se consiguen en Costa Rica.
-            Pagás por SINPE Móvil y te lo mandamos a todo el país.
+            Pagás por SINPE Móvil o con tarjeta y te lo mandamos a todo el país.
           </p>
           <div className="aparecer" style={{ animationDelay: "280ms" }}>
             <BotonGrupo className="w-full md:w-fit" />
@@ -275,6 +275,7 @@ export default function Inicio() {
           {hayCartas ? <BandaSobre /> : null}
           <SoloAqui />
           <QueBuscas />
+          <Busca origen="portada" />
           <Seccion
             titulo="Recién llegado"
             enlace="/catalogo"
@@ -301,7 +302,16 @@ export default function Inicio() {
             productos={especiales}
             texto="Lo que casi no se consigue en Costa Rica, lo importamos para vos. Apartalo pagando el 100%: si al final no lo podemos traer, te devolvemos todo."
           >
-            <EncargoEEUU />
+            <p className="font-medium">
+              ¿Buscás otra cosa?{" "}
+              <Link
+                href="/busca"
+                className="font-bold text-azul underline underline-offset-2"
+              >
+                Pedinos que la busquemos
+              </Link>
+              .
+            </p>
           </Seccion>
           <Seccion
             titulo="Preventas"
