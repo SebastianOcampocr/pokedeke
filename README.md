@@ -61,7 +61,7 @@ Lo que conviene saber:
 - Si cancelás un pedido que ya estaba en Ventas, borrá esas filas de Ventas a mano.
 - Las ventas de WhatsApp o en persona se siguen anotando en Ventas.
 - El costo de envío no se anota en Ventas, como dice "Cómo usarlo".
-- Los correos salen de la cuenta que hizo la implementación del script, y siempre debe ser pokedekestore@gmail.com. Si el script corre con otra cuenta, el cliente no recibe correos.
+- Los correos salen de la cuenta que hizo la implementación del script, y siempre debe ser sac@pokedeke.store. Si el script corre con otra cuenta, el cliente no recibe correos.
 - Pasar a Ventas y el correo de pago confirmado dependen de un activador. Se instala una sola vez: con la cuenta de la tienda, en Apps Script, elegí la función `instalarAvisos` y tocá **Ejecutar**. Sin eso, marcar Pagado no hace nada.
 
 ### Ofertas por cantidad
