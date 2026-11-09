@@ -1,5 +1,6 @@
-# Publica la demo en GitHub Pages con cada cambio en main y cada vez que el
-# catálogo de la hoja de Google cambia.
+# Publica pokedeke.store (Cloudflare Pages) con cada cambio en main y cada vez
+# que el catálogo de la hoja de Google cambia. La dirección vieja de GitHub Pages
+# solo redirige: ver redirigir-github-pages.yml.
 name: Publicar demo
 
 on:
@@ -56,42 +57,6 @@ jobs:
             echo "publicar=si" >> "$GITHUB_OUTPUT"
           fi
 
-  publicar:
-    needs: revisar
-    if: needs.revisar.outputs.publicar == 'si' && vars.AWS_BUCKET == ''
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pages: write
-      id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.despliegue.outputs.page_url }}
-    steps:
-      - uses: actions/checkout@v7
-        with:
-          ref: main
-      - uses: actions/setup-node@v7
-        with:
-          node-version: 24
-          cache: npm
-      - run: npm ci
-      - name: Traer lo más visto
-        run: node scripts/traer-extras.mjs --solo vistos
-        env:
-          PEDIDOS_URL: ${{ vars.PEDIDOS_URL }}
-      - run: npm run build
-        env:
-          NEXT_PUBLIC_RUTA_BASE: /${{ github.event.repository.name }}
-          # El stock en vivo funciona siempre; los pedidos reales, con la tienda abierta.
-          NEXT_PUBLIC_PEDIDOS_URL: ${{ vars.PEDIDOS_URL }}
-          NEXT_PUBLIC_TIENDA_ABIERTA: ${{ vars.TIENDA_ABIERTA }}
-      - uses: actions/upload-pages-artifact@v5
-        with:
-          path: out
-      - id: despliegue
-        uses: actions/deploy-pages@v5
-
   # Con AWS_BUCKET definido, la página se publica en AWS en vez de GitHub Pages.
   publicar-aws:
     needs: revisar
@@ -137,7 +102,7 @@ jobs:
 
   # Mientras AWS no verifique la cuenta, el dominio propio va en Cloudflare Pages.
   # Se enciende con la variable CLOUDFLARE_CUENTA (el Account ID) y el secreto
-  # CLOUDFLARE_TOKEN (permiso "Cloudflare Pages: Edit"). GitHub Pages sigue igual.
+  # CLOUDFLARE_TOKEN (permiso "Cloudflare Pages: Edit").
   publicar-cloudflare:
     needs: revisar
     if: needs.revisar.outputs.publicar == 'si' && vars.CLOUDFLARE_CUENTA != ''

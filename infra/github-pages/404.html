@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="es-CR">
+  <head>
+    <meta charset="utf-8">
+    <title>Pokedeke</title>
+    <meta name="robots" content="noindex">
+    <link rel="canonical" href="https://pokedeke.store/">
+    <script>
+      // /pokedeke/producto/x pasa a https://pokedeke.store/producto/x
+      location.replace(
+        "https://pokedeke.store" +
+          location.pathname.replace(/^\/pokedeke/, "") +
+          location.search +
+          location.hash,
+      );
+    </script>
+    <meta http-equiv="refresh" content="1; url=https://pokedeke.store/">
+  </head>
+  <body>
+    <p>Pokedeke ahora está en <a href="https://pokedeke.store/">pokedeke.store</a>.</p>
+  </body>
+</html>
