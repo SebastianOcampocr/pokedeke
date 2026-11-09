@@ -163,6 +163,39 @@ export const anotarInteresado = (
   producto: string,
 ) => enviar<object>({ accion: "interesado", nombre, contacto, producto });
 
+/** Lo que la página necesita para el pago con tarjeta. Sin llaves en la hoja, no hay botón. */
+export type ConfigPaypal = {
+  clientId: string;
+  modo: "sandbox" | "live";
+  colonesPorDolar: number;
+};
+
+let configPaypalGuardada: Promise<ConfigPaypal | null> | null = null;
+
+export function configPaypal() {
+  if (!TIENDA_ABIERTA || !PEDIDOS_URL) return Promise.resolve(null);
+  configPaypalGuardada ??= fetch(`${PEDIDOS_URL}?accion=paypal`)
+    .then((respuesta) => respuesta.json())
+    .then((datos) =>
+      datos?.ok && datos.clientId
+        ? ({
+            clientId: String(datos.clientId),
+            modo: datos.modo === "live" ? "live" : "sandbox",
+            colonesPorDolar: Number(datos.colonesPorDolar) || 500,
+          } as ConfigPaypal)
+        : null,
+    )
+    .catch(() => null);
+  return configPaypalGuardada;
+}
+
+/** El monto lo pone la hoja: aquí solo van el número y la clave del pedido. */
+export const crearPagoPaypal = (numero: string, clave: string) =>
+  enviar<{ id: string; dolares: string }>({ accion: "paypal-crear", numero, clave });
+
+export const capturarPagoPaypal = (numero: string, clave: string, orden: string) =>
+  enviar<{ numero: string }>({ accion: "paypal-capturar", numero, clave, orden });
+
 export async function consultarPedido(
   numero: string,
   whatsapp: string,

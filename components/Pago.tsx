@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useState } from "react";
 import ubicaciones from "@/datos/ubicaciones-cr.json";
 import { useHidratado } from "@/lib/almacen";
 import { crearPedido, mandarComprobante } from "@/lib/api-pedidos";
@@ -43,6 +43,7 @@ import {
   llegadaDeEspeciales,
 } from "./PedidoEspecial";
 import { IconoCheque } from "./Iconos";
+import { PagoConTarjeta, useConfigPaypal } from "./PagoConTarjeta";
 import { CarritoVacio, Linea } from "./VistaCarrito";
 
 const METODO_PAGO = "SINPE Móvil";
@@ -175,6 +176,7 @@ function Confirmacion({
 }) {
   const [referencia, setReferencia] = useState("");
   const [enviado, setEnviado] = useState(false);
+  const [pagadoConTarjeta, setPagadoConTarjeta] = useState(false);
   const [enviando, setEnviando] = useState(false);
   const [error, setError] = useState("");
   const opcionEnvio = ENVIOS.find((opcion) => opcion.nombre === pedido.envio);
@@ -184,6 +186,12 @@ function Confirmacion({
     lanzarConfeti();
     sonarCompra();
   }, []);
+
+  const marcarPagadoConTarjeta = useCallback(() => {
+    actualizarPedido(pedido.numero, { estado: "Pagado", referencia: "PayPal" });
+    setPagadoConTarjeta(true);
+    lanzarConfeti();
+  }, [pedido.numero]);
 
   async function avisarPago(evento: React.FormEvent<HTMLFormElement>) {
     evento.preventDefault();
@@ -223,7 +231,18 @@ function Confirmacion({
         </div>
       </div>
 
-      <div className="marco flex flex-col gap-2 p-5">
+      {pagadoConTarjeta ? (
+        <p
+          role="status"
+          className="marco flex items-center gap-3 bg-white p-5 font-bold text-verde-oscuro"
+        >
+          <IconoCheque />
+          ¡Listo! Recibimos tu pago con tarjeta y tu pedido ya está confirmado.
+          Te mandamos la confirmación por correo.
+        </p>
+      ) : null}
+
+      <div className={`marco flex flex-col gap-2 p-5 ${pagadoConTarjeta ? "hidden" : ""}`}>
         <p className="font-bold">
           {precioAparte ? "Tus productos suman:" : "Hacé el SINPE Móvil por:"}
         </p>
@@ -265,7 +284,7 @@ function Confirmacion({
         )}
       </div>
 
-      {enviado ? (
+      {pagadoConTarjeta ? null : enviado ? (
         <p
           role="status"
           className="marco flex items-center gap-3 bg-white p-4 font-bold text-verde-oscuro"
@@ -300,6 +319,16 @@ function Confirmacion({
         </form>
       )}
 
+      {/* Con envío por confirmar el total todavía no es final: ese se paga por SINPE. */}
+      {TIENDA_ABIERTA && !precioAparte && !enviado && !pagadoConTarjeta && pedido.clave ? (
+        <PagoConTarjeta
+          numero={pedido.numero}
+          clave={pedido.clave}
+          total={pedido.total}
+          alPagar={marcarPagadoConTarjeta}
+        />
+      ) : null}
+
       <Link
         href={`/pedido?numero=${pedido.numero}`}
         className="boton boton-amarillo"
@@ -320,6 +349,7 @@ function Confirmacion({
 
 export function Pago() {
   const hidratado = useHidratado();
+  const paypal = useConfigPaypal();
   const { lineas, cupon } = useCarrito();
   const pedidos = usePedidos();
   const [envioId, setEnvioId] = useState(ENVIOS[0].id);
@@ -679,6 +709,11 @@ export function Pago() {
         {error ? (
           <p role="alert" className="font-bold text-rojo">
             {error}
+          </p>
+        ) : null}
+        {paypal && !otraTienda ? (
+          <p className="text-sm leading-snug font-bold">
+            En el siguiente paso pagás por SINPE Móvil o con tarjeta (PayPal).
           </p>
         ) : null}
         <button type="submit" className="boton boton-rojo" disabled={enviando}>

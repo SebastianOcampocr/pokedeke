@@ -42,7 +42,7 @@ const PREGUNTAS = [
   {
     pregunta: "¿Cómo pago?",
     respuesta:
-      "Por SINPE Móvil o transferencia. Al terminar la compra te damos el monto exacto y nos mandás el comprobante.",
+      "Por SINPE Móvil o transferencia: al terminar la compra te damos el monto exacto y nos mandás el comprobante. Si al pagar ves la opción, también podés pagar con tarjeta de débito o crédito por medio de PayPal, en dólares, y el pedido queda confirmado de una vez.",
   },
   {
     pregunta: "¿Cuánto tiempo me apartan el producto?",

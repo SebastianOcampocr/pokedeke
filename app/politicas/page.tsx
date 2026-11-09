@@ -148,7 +148,15 @@ export default function PaginaPoliticas() {
               Los precios están en colones y vale el monto que ves al confirmar
               tu pedido. Algunos productos con mucha demanda y poca
               disponibilidad cuestan más; hacemos lo posible por conseguirlos al
-              mejor precio. El producto queda apartado por 24 horas desde que hacés
+              mejor precio.
+            </p>
+            <p>
+              Podés pagar por SINPE Móvil o, si al pagar ves la opción, con
+              tarjeta de débito o crédito por medio de PayPal. PayPal cobra en
+              dólares, al tipo de cambio que se muestra al pagar; tu banco puede
+              usar su propio tipo de cambio. Un pago con tarjeta confirma el
+              pedido de una vez. Si hay que devolverte plata de un pago con
+              tarjeta, se devuelve por PayPal a la misma tarjeta o cuenta. El producto queda apartado por 24 horas desde que hacés
               el pedido; si no se recibe el pago en ese plazo, el apartado se
               libera. El pedido se confirma cuando verificamos que el SINPE
               entró.
@@ -159,7 +167,9 @@ export default function PaginaPoliticas() {
             </h2>
             <p>
               Usamos tu nombre, WhatsApp, correo y dirección solo para procesar
-              tu pedido y coordinar la entrega. Los guardamos en nuestras
+              tu pedido y coordinar la entrega. Si pagás con tarjeta, los datos
+              de la tarjeta los recibe y procesa PayPal: nosotros solo vemos que
+              el pago se hizo. Los guardamos en nuestras
               herramientas de trabajo y los compartimos únicamente con Correos
               de Costa Rica cuando hace falta para el envío. No los vendemos.
             </p>

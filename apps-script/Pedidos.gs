@@ -53,6 +53,12 @@ const CONFIG = {
   // Las opiniones se piden de día, entre estas horas (hora de Costa Rica).
   horasParaEscribir: [9, 19],
   maxLineasPorPedido: 100,
+  // Pago con tarjeta por PayPal: PayPal no cobra en colones, así que el total se
+  // pasa a dólares con este tipo de cambio. Debe ser el mismo que muestra la página
+  // (la página lo lee de aquí). Las llaves van en Propiedades del script:
+  // PAYPAL_CLIENT_ID, PAYPAL_SECRET y PAYPAL_MODO ("sandbox" o "live").
+  colonesPorDolar: 500,
+  maxPagosPaypalPorHora: 120,
   // Estos valores deben coincidir con lib/tienda.ts.
   // `despacho`: sale en los días de despacho (ver diaDeDespacho).
   envios: {
@@ -135,7 +141,7 @@ const HOJAS = {
 };
 
 // Sube con cada cambio: la página y las pruebas leen esta marca con un GET.
-const VERSION = "2026-11-08-avisos";
+const VERSION = "2026-11-08-paypal";
 const ENTREGADO = "Entregado";
 const PEDIDO_ESPECIAL = "Pedido especial";
 const PRIMERA_FILA = 5;
@@ -199,6 +205,9 @@ function doGet(e) {
   if (parametros.accion === "estado") {
     return responder(consultarPedido(parametros));
   }
+  if (parametros.accion === "paypal") {
+    return responder(configPaypalPublica());
+  }
   if (parametros.accion === "extras") {
     return responder({ ok: true, opiniones: opinionesPublicadas(), masVistos: listaMasVistos() });
   }
@@ -219,6 +228,8 @@ function doPost(e) {
       comentario: guardarComentario,
       aviso: guardarAviso,
       visto: anotarVisto,
+      "paypal-crear": crearPagoPaypal,
+      "paypal-capturar": capturarPagoPaypal,
     };
     const accion = acciones[datos.accion];
     if (!accion) return responder({ ok: false, error: "Acción desconocida." });
@@ -230,6 +241,13 @@ function doPost(e) {
       // Si la hoja está ocupada, esta visita no se cuenta: no vale la pena esperar.
       if (!hayCupo("vistas", CONFIG.maxVistasPorHora)) return responder({ ok: false });
       return responder(siEstaLibre(() => accion(datos)));
+    }
+    if (datos.accion === "paypal-crear" || datos.accion === "paypal-capturar") {
+      if (!hayCupo("paypal", CONFIG.maxPagosPaypalPorHora)) {
+        return responder({ ok: false, error: "Hay muchos pagos en este momento. Intentá en un rato." });
+      }
+      // Crear no escribe en la hoja; capturar sí, y pasa la venta a Ventas.
+      return responder(datos.accion === "paypal-crear" ? accion(datos) : conCandado(() => accion(datos)));
     }
     if (datos.accion === "aviso") {
       if (!hayCupo("avisos", CONFIG.maxAvisosPorHora)) {
@@ -1346,6 +1364,214 @@ function tareasCadaHora() {
   pedirOpiniones();
 }
 
+/* ---------- Pago con tarjeta por PayPal ---------- */
+
+/** Las llaves viven en Propiedades del script: nunca en este archivo ni en la página. */
+function llavesPaypal() {
+  const propiedades = PropertiesService.getScriptProperties();
+  const clientId = propiedades.getProperty("PAYPAL_CLIENT_ID") || "";
+  const secreto = propiedades.getProperty("PAYPAL_SECRET") || "";
+  const modo = propiedades.getProperty("PAYPAL_MODO") === "live" ? "live" : "sandbox";
+  return { clientId, secreto, modo, listo: Boolean(clientId && secreto) };
+}
+
+/** Lo que la página necesita para mostrar el botón. El Client ID es público. */
+function configPaypalPublica() {
+  const llaves = llavesPaypal();
+  if (!llaves.listo) return { ok: false };
+  return { ok: true, clientId: llaves.clientId, modo: llaves.modo, colonesPorDolar: CONFIG.colonesPorDolar };
+}
+
+/** ₡120 000 a ₡500 son 240.00. Siempre con dos decimales, como lo pide PayPal. */
+function montoEnDolares(colonesTotal) {
+  return (Math.round((Number(colonesTotal) / CONFIG.colonesPorDolar) * 100) / 100).toFixed(2);
+}
+
+function apiPaypal(metodo, ruta, cuerpo, idempotencia) {
+  const llaves = llavesPaypal();
+  const base = llaves.modo === "live" ? "https://api-m.paypal.com" : "https://api-m.sandbox.paypal.com";
+  const memoria = CacheService.getScriptCache();
+  const claveToken = "paypal-token-" + llaves.modo;
+  let token = memoria.get(claveToken);
+  if (!token) {
+    const respuesta = UrlFetchApp.fetch(base + "/v1/oauth2/token", {
+      method: "post",
+      payload: { grant_type: "client_credentials" },
+      headers: { Authorization: "Basic " + Utilities.base64Encode(llaves.clientId + ":" + llaves.secreto) },
+      muteHttpExceptions: true,
+    });
+    const datos = JSON.parse(respuesta.getContentText() || "{}");
+    if (!datos.access_token) throw new Error("PayPal no dio permiso: revisá PAYPAL_CLIENT_ID, PAYPAL_SECRET y PAYPAL_MODO.");
+    token = datos.access_token;
+    memoria.put(claveToken, token, Math.max(Math.min(Number(datos.expires_in) || 3600, 21600) - 300, 60));
+  }
+  const encabezados = { Authorization: "Bearer " + token };
+  if (idempotencia) encabezados["PayPal-Request-Id"] = idempotencia;
+  const respuesta = UrlFetchApp.fetch(base + ruta, {
+    method: metodo,
+    contentType: "application/json",
+    payload: cuerpo ? JSON.stringify(cuerpo) : undefined,
+    headers: encabezados,
+    muteHttpExceptions: true,
+  });
+  return { estado: respuesta.getResponseCode(), datos: JSON.parse(respuesta.getContentText() || "{}") };
+}
+
+/** El pedido tiene que existir, ser de quien tiene la clave y estar pendiente con el monto ya fijo. */
+function pedidoParaPagar(datos) {
+  const hallado = buscarFilaDePedido(datos.numero);
+  if (!hallado || hallado.fila[COL.clave - 1] !== texto(datos.clave, 60)) {
+    return { error: "No hallamos ese pedido." };
+  }
+  if (envioAparte(hallado.fila)) {
+    return { error: "Este pedido lleva un envío que se confirma por WhatsApp: pagalo por SINPE cuando te pasemos el total." };
+  }
+  return { hallado };
+}
+
+/** La página pide crear el cobro; el monto sale de la hoja, nunca del navegador. */
+function crearPagoPaypal(datos) {
+  if (!llavesPaypal().listo) return { ok: false, error: "El pago con tarjeta todavía no está activo." };
+  const { hallado, error } = pedidoParaPagar(datos);
+  if (error) return { ok: false, error };
+  const fila = hallado.fila;
+  if (fila[COL.estado - 1] !== PENDIENTE) return { ok: false, error: "Ese pedido ya no está pendiente de pago." };
+  const limite = Date.now() - CONFIG.horasApartado * 3600 * 1000;
+  if (new Date(fila[COL.fecha - 1]).getTime() < limite) {
+    return { ok: false, error: "El apartado de este pedido ya venció. Hacé el pedido otra vez." };
+  }
+  const numero = fila[COL.numero - 1];
+  const dolares = montoEnDolares(fila[COL.total - 1]);
+  const respuesta = apiPaypal(
+    "post",
+    "/v2/checkout/orders",
+    {
+      intent: "CAPTURE",
+      purchase_units: [
+        {
+          reference_id: numero,
+          custom_id: numero,
+          description: "Pedido " + numero + " · " + CONFIG.nombreTienda,
+          amount: { currency_code: "USD", value: dolares },
+        },
+      ],
+      application_context: {
+        brand_name: CONFIG.nombreTienda,
+        shipping_preference: "NO_SHIPPING",
+        user_action: "PAY_NOW",
+      },
+    },
+    "crear-" + numero + "-" + dolares,
+  );
+  if (respuesta.estado >= 300 || !respuesta.datos.id) {
+    console.error(JSON.stringify(respuesta.datos));
+    return { ok: false, error: "PayPal no respondió. Intentá otra vez o pagá por SINPE." };
+  }
+  return { ok: true, id: respuesta.datos.id, dolares };
+}
+
+/**
+ * La persona aprobó el pago en PayPal: aquí se cobra de verdad. Solo si PayPal
+ * confirma el monto completo, el pedido pasa a Pagado y a Ventas, como si se
+ * hubiera cambiado el Estado a mano.
+ */
+function capturarPagoPaypal(datos) {
+  if (!llavesPaypal().listo) return { ok: false, error: "El pago con tarjeta todavía no está activo." };
+  const { hallado, error } = pedidoParaPagar(datos);
+  if (error) return { ok: false, error };
+  const numeroFila = hallado.numeroFila;
+  const fila = hallado.fila;
+  const numero = fila[COL.numero - 1];
+  // Si ya quedó pagado (por ejemplo, la página reintentó), no se cobra dos veces.
+  if (String(fila[COL.comprobante - 1]).indexOf("PayPal") === 0 && fila[COL.estado - 1] !== PENDIENTE) {
+    return { ok: true, numero };
+  }
+  const orden = texto(datos.orden, 40);
+  if (!/^[A-Z0-9]{8,30}$/.test(orden)) return { ok: false, error: "Pago no válido." };
+
+  const respuesta = apiPaypal("post", "/v2/checkout/orders/" + orden + "/capture", {}, "capturar-" + orden);
+  const unidad = (respuesta.datos.purchase_units || [])[0] || {};
+  const captura = ((unidad.payments || {}).captures || [])[0] || {};
+  const esperado = montoEnDolares(fila[COL.total - 1]);
+  const calza =
+    respuesta.estado < 300 &&
+    captura.status === "COMPLETED" &&
+    captura.custom_id === numero &&
+    captura.amount && captura.amount.currency_code === "USD" && captura.amount.value === esperado;
+  if (!calza) {
+    console.error(JSON.stringify(respuesta.datos));
+    const pendiente = captura.status === "PENDING";
+    avisar(
+      (pendiente ? "Pago con PayPal en revisión: " : "Revisá un pago con PayPal: ") + numero,
+      [
+        "PayPal no confirmó el pago completo del pedido " + numero + ".",
+        "Estado de PayPal: " + (captura.status || respuesta.datos.name || "sin respuesta"),
+        "Monto esperado: $" + esperado + (captura.amount ? " · cobrado: " + captura.amount.currency_code + " " + captura.amount.value : ""),
+        "Orden de PayPal: " + orden,
+        "",
+        "Revisalo en tu cuenta de PayPal antes de cambiar el Estado.",
+      ],
+    );
+    return {
+      ok: false,
+      error: pendiente
+        ? "PayPal está revisando tu pago. Te escribimos apenas se confirme."
+        : "No se pudo completar el cobro. No se te cobró nada: probá otra vez o pagá por SINPE.",
+    };
+  }
+
+  const desglose = captura.seller_receivable_breakdown || {};
+  const comision = desglose.paypal_fee ? desglose.paypal_fee.value : "";
+  const neto = desglose.net_amount ? desglose.net_amount.value : "";
+  const pestana = hoja(HOJAS.pedidos);
+  pestana.getRange(numeroFila, COL.comprobante).setValue(comoTexto("PayPal " + captura.id));
+  pestana.getRange(numeroFila, COL.metodoPago).setValue("PayPal (tarjeta)");
+  pestana
+    .getRange(numeroFila, COL.notas)
+    .setValue(
+      comoTexto(
+        "Pagado con PayPal: $" + esperado + (comision ? " · comisión $" + comision + " · te queda $" + neto : "") + " · orden " + orden,
+      ),
+    );
+  pestana.getRange(numeroFila, COL.estado).setValue(PAGADO);
+  const resultado = pasarAVentas(numeroFila, PAGADO);
+  olvidarStock();
+  if (!resultado.fila) {
+    // La plata ya entró: el pedido queda Pagado aunque falte pasarlo a Ventas.
+    pestana.getRange(numeroFila, COL.estado).setValue(PAGADO);
+    pestana.getRange(numeroFila, COL.notas).setValue(comoTexto("Pagado con PayPal ($" + esperado + "), pero no pasó a Ventas: " + resultado.aviso));
+  }
+  const filaFinal = pestana.getRange(numeroFila, 1, 1, TOTAL_COLUMNAS).getValues()[0];
+  confirmarPago(filaFinal);
+  avisar(
+    "Pago con tarjeta: " + numero + " · $" + esperado,
+    [
+      "Entró un pago con PayPal del pedido " + numero + ": $" + esperado + ".",
+      comision ? "Comisión de PayPal: $" + comision + " · te queda $" + neto + "." : "",
+      resultado.fila ? "Ya está en Pagado y pasó a Ventas. Al cliente le llegó la confirmación." : "OJO: quedó Pagado pero no pasó a Ventas: " + resultado.aviso,
+      "",
+      "Coordiná la entrega como siempre.",
+    ],
+  );
+  return { ok: true, numero };
+}
+
+/** Correr una vez desde el editor después de pegar las llaves: dice si PayPal responde. */
+function probarPaypal() {
+  const llaves = llavesPaypal();
+  if (!llaves.listo) {
+    console.log("Faltan las llaves: agregá PAYPAL_CLIENT_ID y PAYPAL_SECRET en Propiedades del script.");
+    return;
+  }
+  CacheService.getScriptCache().remove("paypal-token-" + llaves.modo);
+  const respuesta = apiPaypal("get", "/v1/identity/oauth2/userinfo?schema=paypalv1.1");
+  console.log(
+    respuesta.estado < 300
+      ? "PayPal conectado en modo " + llaves.modo + "."
+      : "PayPal respondió " + respuesta.estado + ": revisá las llaves y el modo.",
+  );
+}
+
 function consultarPedido(parametros) {
   const hallado = buscarFilaDePedido(parametros.numero);
   const whatsapp = normalizarWhatsapp(parametros.whatsapp);
@@ -1892,7 +2118,9 @@ function pasarAVentas(numeroFila, estadoAnterior) {
   const notas = [
     numero,
     fila[COL.envio - 1],
-    "SINPE " + (fila[COL.comprobante - 1] || "sin número"),
+    String(fila[COL.comprobante - 1]).indexOf("PayPal") === 0
+      ? fila[COL.comprobante - 1]
+      : "SINPE " + (fila[COL.comprobante - 1] || "sin número"),
     "WhatsApp " + fila[COL.whatsapp - 1],
     detalle.lineas.some((linea) => linea.preventa) ? "Adelanto de preventa" : "",
     detalle.lineas.some((linea) => linea.especial) ? "Pedido especial (" + entregaEspecial(detalle.lineas) + ")" : "",
