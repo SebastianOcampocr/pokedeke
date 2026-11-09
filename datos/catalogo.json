@@ -7752,7 +7752,7 @@
     "fotos": [
       "/productos/etb-prismatic-evolutions.webp"
     ],
-    "descripcion": "Elite Trainer Box de Scarlet & Violet: Prismatic Evolutions, en inglés, con Eevee en la caja. Muy difícil de conseguir en Costa Rica. Te la traemos de Estados Unidos: se entrega después del 6 de Diciembre.",
+    "descripcion": "Elite Trainer Box de Scarlet & Violet: Prismatic Evolutions, en inglés, con Eevee en la caja. Muy difícil de conseguir en Costa Rica. Te la traemos de Estados Unidos: se entrega después del 5 de Diciembre.",
     "llegada": "2026-12-06T12:00:00-06:00"
   },
   {
@@ -11472,7 +11472,9 @@
     "stock": 1,
     "vendidos": 0,
     "orden": 497,
-    "fotos": [],
+    "fotos": [
+      "https://tcgplayer-cdn.tcgplayer.com/product/610594_in_1000x1000.jpg"
+    ],
     "descripcion": "Dudunsparce de 140 HP, tipo Incoloro, con arte de Teeziro. Número 080/131 de Prismatic Evolutions, rara, en inglés. Trae la habilidad Run Away Draw y el ataque Land Crush.",
     "carta": {
       "coleccion": "Prismatic Evolutions",
@@ -11494,7 +11496,9 @@
     "stock": 1,
     "vendidos": 0,
     "orden": 498,
-    "fotos": [],
+    "fotos": [
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTjQ6_uqkFQB4VwiScZ35mJyfJ13ZlS8Mg6xs9BH0BvOQ&s=10"
+    ],
     "descripcion": "Cynthia's Garchomp ex es una poderosa carta Pokémon de tipo Lucha que representa al compañero insignia de Cynthia, una de las entrenadoras más destacadas del mundo Pokémon.",
     "carta": {
       "coleccion": "",
