@@ -51,9 +51,15 @@ export async function generateMetadata(
       title: `${producto.nombre} · ${colones(producto.precio)}`,
       description: producto.descripcion,
       url: `/producto/${producto.slug}`,
-      ...(producto.fotos[0] && !/^https?:/.test(producto.fotos[0])
-        ? { images: [producto.fotos[0]] }
-        : {}),
+      type: "website",
+      siteName: TIENDA.nombre,
+      locale: "es_CR",
+      // Sin foto propia (o con una de otro sitio) sale la imagen de la tienda.
+      images: [
+        producto.fotos[0] && !/^https?:/.test(producto.fotos[0])
+          ? producto.fotos[0]
+          : "/compartir.jpg",
+      ],
     },
   };
 }

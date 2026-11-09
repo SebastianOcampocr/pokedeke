@@ -20,6 +20,13 @@ const rubik = Rubik({
   subsets: ["latin", "latin-ext"],
 });
 
+const IMAGEN_PARA_COMPARTIR = {
+  url: "/compartir.jpg",
+  width: 1200,
+  height: 630,
+  alt: "Pokedeke: cartas, sobres y cajas de Pokémon TCG en Costa Rica",
+};
+
 export const metadata: Metadata = {
   metadataBase: new URL(SITIO),
   title: {
@@ -27,14 +34,17 @@ export const metadata: Metadata = {
     template: `%s · ${TIENDA.nombre}`,
   },
   description:
-    "Pokedeke es una tienda de Pokémon TCG en Costa Rica: cartas sueltas, sobres, ETB y cajas en colones, con envío a todo el país y pago por SINPE Móvil.",
+    "Pokedeke es una tienda de Pokémon TCG en Costa Rica: cartas sueltas, sobres, ETB y cajas en colones, con envío a todo el país y pago por SINPE Móvil o tarjeta.",
   applicationName: TIENDA.nombre,
   keywords: ["Pokedeke", "Pokedeke Store", "TCG Costa Rica", "Pokémon TCG Costa Rica", "cartas Pokémon Costa Rica"],
   openGraph: {
     type: "website",
     siteName: TIENDA.nombre,
     locale: "es_CR",
+    // Lo que sale al compartir la página por WhatsApp o redes.
+    images: [IMAGEN_PARA_COMPARTIR],
   },
+  twitter: { card: "summary_large_image" },
   // La copia de GitHub Pages no se indexa: solo pokedeke.store.
   robots: INDEXAR ? { index: true, follow: true } : { index: false, follow: false },
 };
