@@ -7706,7 +7706,7 @@
     "categoria": "Colección premium / UPC",
     "categoriaCorta": "Premium",
     "idioma": "Inglés",
-    "precio": 174000,
+    "precio": 180000,
     "stock": 1,
     "etiqueta": "Pedido especial",
     "vendidos": 0,
@@ -7725,7 +7725,7 @@
     "categoria": "Colección premium / UPC",
     "categoriaCorta": "Premium",
     "idioma": "Inglés",
-    "precio": 165000,
+    "precio": 172500,
     "stock": 1,
     "etiqueta": "Pedido especial",
     "vendidos": 0,
@@ -11459,5 +11459,49 @@
       "condicion": ""
     },
     "tipo": "Oscuro"
+  },
+  {
+    "id": "C497",
+    "slug": "dudunsparce-poke-ball-080-prismatic-evolutions",
+    "nombre": "Dudunsparce Poke Ball #080 (Prismatic Evolutions)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 650,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 497,
+    "fotos": [],
+    "descripcion": "Dudunsparce de 140 HP, tipo Incoloro, con arte de Teeziro. Número 080/131 de Prismatic Evolutions, rara, en inglés. Trae la habilidad Run Away Draw y el ataque Land Crush.",
+    "carta": {
+      "coleccion": "Prismatic Evolutions",
+      "numero": "080",
+      "rareza": "",
+      "condicion": ""
+    },
+    "tipo": "Incoloro"
+  },
+  {
+    "id": "C498",
+    "slug": "cynthia-s-garchomp-ex-104-destined-rivals",
+    "nombre": "Cynthia's Garchomp ex #104 Destined Rivals",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 500,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 498,
+    "fotos": [],
+    "descripcion": "Cynthia's Garchomp ex es una poderosa carta Pokémon de tipo Lucha que representa al compañero insignia de Cynthia, una de las entrenadoras más destacadas del mundo Pokémon.",
+    "carta": {
+      "coleccion": "",
+      "numero": "",
+      "rareza": "",
+      "condicion": ""
+    },
+    "tipo": "Lucha"
   }
 ]
