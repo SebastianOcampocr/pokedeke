@@ -47,7 +47,7 @@ El proceso lo hace `scripts/traer-catalogo.mjs`, que lee la pestaña desde el se
 
 GitHub Pages no tiene servidor, así que el servidor vive adentro de la hoja: es el archivo `apps-script/Pedidos.gs`, pegado en **Extensiones > Apps Script**.
 
-1. El cliente hace el pedido. Cae en la pestaña **Pedidos web**, llega un aviso a pokedekestore@gmail.com y el cliente recibe la confirmación en el correo que escribió.
+1. El cliente hace el pedido. Cae en la pestaña **Pedidos web**, llega un aviso a sac@pokedeke.store y el cliente recibe la confirmación en el correo que escribió.
 2. El cliente paga por SINPE y escribe el comprobante. Te llega otro aviso.
 3. Revisá que el SINPE haya entrado y cambiá el **Estado** a **Pagado**.
 4. La venta pasa sola a **Ventas**, con el cliente, y en Notas el pedido, el envío, el comprobante y el WhatsApp. El stock baja solo y el cliente recibe el correo de pago confirmado.
