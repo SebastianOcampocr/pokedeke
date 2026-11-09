@@ -11448,13 +11448,16 @@
     "stock": 1,
     "vendidos": 0,
     "orden": 496,
-    "fotos": [],
-    "descripcion": "Carta de la colección Perfect Order, número 050.",
+    "fotos": [
+      "/productos/gengar-050-perfect-order.webp"
+    ],
+    "descripcion": "Gengar de 130 HP, tipo Oscuro, con arte de Masako Tomii. Número 050/088 de Perfect Order, rara, en inglés. Trae la habilidad Infinite Shadow y el ataque Mind Jack.",
     "carta": {
       "coleccion": "Perfect Order",
       "numero": "050",
       "rareza": "",
       "condicion": ""
-    }
+    },
+    "tipo": "Oscuro"
   }
 ]
