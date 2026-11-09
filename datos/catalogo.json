@@ -11435,5 +11435,26 @@
       "condicion": "Near Mint (NM)"
     },
     "tipo": "Fuego"
+  },
+  {
+    "id": "C496",
+    "slug": "gengar-050-perfect-order",
+    "nombre": "Gengar #050 (Perfect Order)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 500,
+    "stock": 1,
+    "vendidos": 0,
+    "orden": 496,
+    "fotos": [],
+    "descripcion": "Carta de la colección Perfect Order, número 050.",
+    "carta": {
+      "coleccion": "Perfect Order",
+      "numero": "050",
+      "rareza": "",
+      "condicion": ""
+    }
   }
 ]
