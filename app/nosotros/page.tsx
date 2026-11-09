@@ -57,7 +57,7 @@ const PREGUNTAS = [
   {
     pregunta: "¿Cómo funciona lo que traen de Estados Unidos?",
     respuesta:
-      "Son productos que casi no se consiguen en Costa Rica y que importamos para vos. Lo apartás pagando el 100% y se entrega después de la fecha que dice el producto. Hacemos todo lo posible por traerlo; si por algo no podemos, te devolvemos el 100% por SINPE Móvil a la misma cuenta. Si buscás algo que no está, pedilo en la sección de Estados Unidos y te lo cotizamos por WhatsApp.",
+      "Son productos que casi no se consiguen en Costa Rica y que importamos para vos. Lo apartás pagando el 100% y se entrega después de la fecha que dice el producto. Hacemos todo lo posible por traerlo; si por algo no podemos, te devolvemos el 100% por el mismo medio: SINPE Móvil a la misma cuenta o PayPal a la misma tarjeta. Si buscás algo que no está, pedilo en la sección de Estados Unidos y te lo cotizamos por WhatsApp.",
   },
   {
     pregunta: "¿Por qué algunos productos cuestan más?",

@@ -120,8 +120,8 @@ export default function PaginaPoliticas() {
             </p>
             <ul>
               <li>
-                Se apartan pagando el 100% por SINPE Móvil. El pago se confirma
-                igual que cualquier pedido.
+                Se apartan pagando el 100%, por SINPE Móvil o con tarjeta por
+                PayPal. El pago se confirma igual que cualquier pedido.
               </li>
               <li>
                 Se entregan después de la fecha que dice cada producto. Si en tu
@@ -132,8 +132,8 @@ export default function PaginaPoliticas() {
                 Hacemos todo lo posible por traerlos, pero dependen de la
                 disponibilidad. Si por algo no podemos entregarte lo que
                 compraste, te avisamos por WhatsApp y te devolvemos el 100% de
-                lo que pagaste, por SINPE Móvil a la misma cuenta desde la que
-                pagaste.
+                lo que pagaste, por el mismo medio: SINPE Móvil a la misma
+                cuenta o PayPal a la misma tarjeta.
               </li>
               <li>
                 Si querés cancelarlo vos, avisanos dentro de 8 días hábiles

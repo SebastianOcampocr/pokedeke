@@ -141,12 +141,15 @@ const HOJAS = {
 };
 
 // Sube con cada cambio: la página y las pruebas leen esta marca con un GET.
-const VERSION = "2026-11-08-paypal";
+const VERSION = "2026-11-08-paypal-gracias";
 const ENTREGADO = "Entregado";
 const PEDIDO_ESPECIAL = "Pedido especial";
 const PRIMERA_FILA = 5;
 const PENDIENTE = "Pendiente de pago";
 const PAGADO = "Pagado";
+// Lo pone solo el pago con tarjeta: así se distingue de un SINPE confirmado a mano.
+const PAGADO_PAYPAL = "Pagado (PayPal)";
+const METODO_TARJETA = "Tarjeta (PayPal)";
 // Solo para pedidos especiales ya pagados: avisa al cliente que ya lo tenemos.
 const CONSEGUIDO = "Conseguido";
 const CLAVE_STOCK = "stock-vivo";
@@ -677,7 +680,9 @@ function crearPedido(datos) {
   fila[COL.subtotal - 1] = subtotal;
   fila[COL.descuento - 1] = descuento;
   fila[COL.costoEnvio - 1] = costoEnvio;
-  fila[COL.metodoPago - 1] = CONFIG.metodoPago;
+  // Eligió tarjeta en la página: el pago se confirma solo cuando PayPal cobra.
+  const conTarjeta = datos.metodo === "tarjeta" && !aparte && llavesPaypal().listo;
+  fila[COL.metodoPago - 1] = conTarjeta ? METODO_TARJETA : CONFIG.metodoPago;
   const cupon = descuento ? texto(datos.cupon, 30).toUpperCase() : "";
   fila[COL.detalle - 1] = comoTexto(JSON.stringify({ lineas, subtotal, descuento, cupon }));
   fila[COL.clave - 1] = clave;
@@ -708,7 +713,9 @@ function crearPedido(datos) {
   avisar(
     "Nuevo pedido " + numero + " · " + colones(total) + " · " + cliente,
     [
-      "Entró un pedido nuevo. Falta confirmar el SINPE.",
+      conTarjeta
+        ? "Entró un pedido nuevo. Eligió pagar con tarjeta (PayPal): si paga, pasa solo a " + PAGADO_PAYPAL + "."
+        : "Entró un pedido nuevo. Falta confirmar el SINPE.",
       "",
       "Pedido: " + numero,
       "Cliente: " + cliente,
@@ -751,12 +758,16 @@ function crearPedido(datos) {
       pasos: (aparte
         ? ["Escribile por WhatsApp con el costo del envío entre tiendas. El SINPE debe ser " + colones(total) + " más ese envío."]
         : []
-      ).concat([
+      ).concat(conTarjeta ? [
+        "Eligió pagar con tarjeta: cuando PayPal cobre, el pedido pasa solo a " + PAGADO_PAYPAL + " y a Ventas, y te llega otro correo.",
+        "Si en un rato no paga, escribile por WhatsApp: también puede pagar por SINPE.",
+      ] : [
         "Esperá el comprobante del cliente. Te llega en otro correo.",
         "Revisá en tu banco que entró el monto exacto, con " + numero + " en el detalle.",
         "Cambiá el Estado a Pagado en Pedidos web. La venta pasa sola a Ventas.",
+      ]).concat([
         especial
-          ? "Trae un pedido especial: entregalo " + especial + ". Si al final no se consigue, devolvele el 100% por SINPE a la misma cuenta."
+          ? "Trae un pedido especial: entregalo " + especial + ". Si al final no se consigue, devolvele el 100% por el mismo medio con que pagó (SINPE o PayPal)."
           : despacho
             ? "Si paga a tiempo, despachalo el " + despacho + ". Antes de enviarlo, tomale fotos al producto y al empaque y mandáselas por WhatsApp."
             : "Escribile por WhatsApp para coordinar la entrega.",
@@ -779,6 +790,7 @@ function crearPedido(datos) {
     precioAparte: aparte,
     despacho,
     especial,
+    conTarjeta,
   });
 
   return { ok: true, numero, clave, subtotal, descuento, costoEnvio, total, lineas };
@@ -1533,12 +1545,12 @@ function capturarPagoPaypal(datos) {
         "Pagado con PayPal: $" + esperado + (comision ? " · comisión $" + comision + " · te queda $" + neto : "") + " · orden " + orden,
       ),
     );
-  pestana.getRange(numeroFila, COL.estado).setValue(PAGADO);
-  const resultado = pasarAVentas(numeroFila, PAGADO);
+  pestana.getRange(numeroFila, COL.estado).setValue(PAGADO_PAYPAL);
+  const resultado = pasarAVentas(numeroFila, PAGADO_PAYPAL);
   olvidarStock();
   if (!resultado.fila) {
-    // La plata ya entró: el pedido queda Pagado aunque falte pasarlo a Ventas.
-    pestana.getRange(numeroFila, COL.estado).setValue(PAGADO);
+    // La plata ya entró: el pedido queda pagado aunque falte pasarlo a Ventas.
+    pestana.getRange(numeroFila, COL.estado).setValue(PAGADO_PAYPAL);
     pestana.getRange(numeroFila, COL.notas).setValue(comoTexto("Pagado con PayPal ($" + esperado + "), pero no pasó a Ventas: " + resultado.aviso));
   }
   const filaFinal = pestana.getRange(numeroFila, 1, 1, TOTAL_COLUMNAS).getValues()[0];
@@ -1548,7 +1560,7 @@ function capturarPagoPaypal(datos) {
     [
       "Entró un pago con PayPal del pedido " + numero + ": $" + esperado + ".",
       comision ? "Comisión de PayPal: $" + comision + " · te queda $" + neto + "." : "",
-      resultado.fila ? "Ya está en Pagado y pasó a Ventas. Al cliente le llegó la confirmación." : "OJO: quedó Pagado pero no pasó a Ventas: " + resultado.aviso,
+      resultado.fila ? "Ya está en " + PAGADO_PAYPAL + " y pasó a Ventas. Al cliente le llegó el correo de gracias." : "OJO: quedó " + PAGADO_PAYPAL + " pero no pasó a Ventas: " + resultado.aviso,
       "",
       "Coordiná la entrega como siempre.",
     ],
@@ -1794,9 +1806,15 @@ function avisar(asunto, lineas, responderA, html) {
 }
 
 /** Las respuestas del cliente llegan al correo de la tienda. */
-function confirmarAlCliente({ correo, numero, fecha, total, cliente, whatsapp, entrega, lineas, resumen, montos, precioAparte, despacho, especial }) {
+function confirmarAlCliente({ correo, numero, fecha, total, cliente, whatsapp, entrega, lineas, resumen, montos, precioAparte, despacho, especial, conTarjeta }) {
   const primerNombre = String(cliente).split(" ")[0];
-  const pasos = (precioAparte
+  const pasos = conTarjeta
+    ? [
+        "Pagá con tarjeta en la página, en el botón de PayPal: se cobra en dólares ($" + montoEnDolares(total) + ").",
+        "Si PayPal no te dejó o se te cerró la página, podés pagar por SINPE Móvil al " + CONFIG.sinpe + " con " + numero + " en el detalle, y respondé este correo con el comprobante.",
+        "Apenas entre el pago te llega otro correo.",
+      ]
+    : (precioAparte
     ? [
         "Esperá nuestro WhatsApp con el costo del envío entre tiendas.",
         "Hacé un solo SINPE Móvil por los productos más el envío, con " + numero + " en el detalle.",
@@ -1806,10 +1824,11 @@ function confirmarAlCliente({ correo, numero, fecha, total, cliente, whatsapp, e
     "Escribí el número de comprobante en la página. Si ya la cerraste, respondé este correo con ese número.",
     "Cuando confirmemos el pago te llega otro correo y te escribimos por WhatsApp.",
   ]);
+  const etiquetaPago = conTarjeta ? "Pagás con tarjeta (PayPal)" : "";
   if (especial) {
     pasos.push(
       "Tu pedido trae productos que importamos de Estados Unidos: se entrega " + especial +
-        ". Hacemos todo lo posible por traerlo; si por algo no podemos, te devolvemos el 100% por SINPE Móvil a la misma cuenta.",
+        ". Hacemos todo lo posible por traerlo; si por algo no podemos, te devolvemos el 100% por el mismo medio: SINPE Móvil a la misma cuenta o PayPal a la misma tarjeta.",
     );
   } else if (despacho) {
     pasos.push("Los envíos salen los Miércoles y Sábados: si pagás a tiempo, tu pedido sale el " + despacho + ".");
@@ -1840,7 +1859,9 @@ function confirmarAlCliente({ correo, numero, fecha, total, cliente, whatsapp, e
       fecha,
       total,
       rotuloTotal: precioAparte ? "Tus productos suman (más el envío)" : "Total a pagar",
-      caja: datosDePago(numero, fecha).filter(([rotulo]) => !rotulo.startsWith("Comprobante")),
+      caja: conTarjeta
+        ? [["Pagás con", etiquetaPago], ["Se cobra", "$" + montoEnDolares(total) + " (" + colones(total) + ")"], ["Apartado hasta", finDelApartado(fecha)]]
+        : datosDePago(numero, fecha).filter(([rotulo]) => !rotulo.startsWith("Comprobante")),
       tituloCliente: "Tus datos",
       cliente: [
         ["Nombre", cliente],
@@ -1864,7 +1885,7 @@ function pasosTrasElPago(fila, lineas) {
   if (especial) {
     return [
       "Tu producto de Estados Unidos queda pagado y apartado. Se entrega " + especial + ": cuando lo tengamos te llega un correo y te escribimos por WhatsApp para coordinar.",
-      "Si por algo no lo podemos traer, te devolvemos el 100% por SINPE Móvil a la misma cuenta.",
+      "Si por algo no lo podemos traer, te devolvemos el 100% por el mismo medio: SINPE Móvil a la misma cuenta o PayPal a la misma tarjeta.",
     ];
   }
   const pasos = esRetiro(fila)
@@ -1894,36 +1915,54 @@ function confirmarPago(fila) {
   const detalle = leerDetalle(fila);
   const pasos = pasosTrasElPago(fila, detalle.lineas);
   const aparte = envioAparte(fila);
+  // Pagó con tarjeta por PayPal: el correo le da las gracias y le dice cuánto se cobró en dólares.
+  const conPaypal = String(fila[COL.comprobante - 1]).indexOf("PayPal") === 0;
+  const dolares = montoEnDolares(total);
+  const saludo = conPaypal
+    ? "¡Gracias por tu compra, " + primerNombre + "! Recibimos tu pago con tarjeta por PayPal y tu pedido ya está confirmado."
+    : "¡Listo, " + primerNombre + "! Confirmamos tu pago. Gracias por comprar en " + CONFIG.nombreTienda + ".";
   mandarAlCliente({
     to: correo,
-    subject: "Pago confirmado de tu pedido " + numero + " · " + CONFIG.nombreTienda,
+    subject: conPaypal
+      ? "¡Gracias por tu compra con PayPal! " + numero + " · " + CONFIG.nombreTienda
+      : "Pago confirmado de tu pedido " + numero + " · " + CONFIG.nombreTienda,
     body: [
-      "¡Listo, " + primerNombre + "! Confirmamos tu pago del pedido " + numero + ".",
+      conPaypal ? saludo + " (pedido " + numero + ")" : "¡Listo, " + primerNombre + "! Confirmamos tu pago del pedido " + numero + ".",
       "",
-      aparte ? "Productos: " + colones(total) + ", más el envío que cuadramos por WhatsApp." : "Total pagado: " + colones(total),
+      conPaypal
+        ? "Se cobró: $" + dolares + " (" + colones(total) + "). En tu estado de cuenta sale como PayPal."
+        : aparte ? "Productos: " + colones(total) + ", más el envío que cuadramos por WhatsApp." : "Total pagado: " + colones(total),
       "",
       "Qué sigue:",
       ...pasos,
     ].join("\n"),
     htmlBody: correoConDiseno({
-      etiqueta: "Pago confirmado",
-      estado: PAGADO,
+      etiqueta: conPaypal ? "Gracias por tu compra" : "Pago confirmado",
+      estado: conPaypal ? PAGADO_PAYPAL : PAGADO,
       colorEstado: "#127a43",
-      saludo: "¡Listo, " + primerNombre + "! Confirmamos tu pago. Gracias por comprar en " + CONFIG.nombreTienda + ".",
+      saludo,
       numero,
       fecha: fila[COL.fecha - 1],
       total,
       rotuloTotal: aparte ? "Productos (el envío fue aparte)" : "Total pagado",
-      caja: [
-        ["Pagaste por", fila[COL.metodoPago - 1]],
-        ["Comprobante", fila[COL.comprobante - 1]],
-      ],
+      caja: conPaypal
+        ? [
+            ["Pagaste con", "Tarjeta (PayPal)"],
+            ["Se cobró", "$" + dolares + " (" + colones(total) + ")"],
+            ["Comprobante de PayPal", String(fila[COL.comprobante - 1]).replace(/^PayPal /, "")],
+          ]
+        : [
+            ["Pagaste por", fila[COL.metodoPago - 1]],
+            ["Comprobante", fila[COL.comprobante - 1]],
+          ],
       entrega: entregaDeFila(fila),
       lineas: detalle.lineas.map(({ quedan, ...linea }) => linea),
       resumen: resumenDeMontos(detalle.subtotal, detalle.descuento, detalle.cupon, fila[COL.costoEnvio - 1], total, aparte),
       pasos,
       botones: botonesDelCliente(numero),
-      pie: "Si tenés alguna duda, respondé este correo o escribinos. Tus datos son solo para este pedido.",
+      pie: conPaypal
+        ? "En tu estado de cuenta el cobro aparece como PayPal. Si tenés alguna duda, respondé este correo o escribinos."
+        : "Si tenés alguna duda, respondé este correo o escribinos. Tus datos son solo para este pedido.",
     }),
   });
 }
@@ -2025,7 +2064,7 @@ function alEditarHoja(e) {
     libro().toast(avisarConseguido(fila), CONFIG.nombreTienda, 8);
     return;
   }
-  if (e.value !== PAGADO) return;
+  if (e.value !== PAGADO && e.value !== PAGADO_PAYPAL) return;
 
   const resultado = conCandado(() => pasarAVentas(rango.getRow(), e.oldValue));
   olvidarStock();

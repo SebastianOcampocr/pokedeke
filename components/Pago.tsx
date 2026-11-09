@@ -193,7 +193,7 @@ function Confirmacion({
   }, []);
 
   const marcarPagadoConTarjeta = useCallback(() => {
-    actualizarPedido(pedido.numero, { estado: "Pagado", referencia: "PayPal" });
+    actualizarPedido(pedido.numero, { estado: "Pagado (PayPal)", referencia: "PayPal" });
     setPagadoConTarjeta(true);
     lanzarConfeti();
   }, [pedido.numero]);
@@ -294,7 +294,7 @@ function Confirmacion({
           <p className="text-sm leading-snug">
             Tu pedido trae productos de Estados Unidos: se entrega{" "}
             <strong>{cuandoSeEntrega(pedido.especial.llegada)}</strong>. Si por
-            algo no lo podemos traer, te devolvemos el 100% a la misma cuenta.
+            algo no lo podemos traer, te devolvemos el 100% por el mismo medio.
           </p>
         ) : opcionEnvio?.despacho ? (
           <p className="text-sm leading-snug">
@@ -484,6 +484,7 @@ export function Pago() {
         ...(envio.pideTienda ? { tienda: tiendaId } : {}),
         carrito: idDelCarrito(),
         cupon: cupon?.codigo ?? null,
+        metodo: pagaConTarjeta ? "tarjeta" : "sinpe",
         lineas: lineas.map(({ producto, cantidad }) => ({
           slug: producto.slug,
           cantidad,

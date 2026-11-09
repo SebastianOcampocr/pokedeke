@@ -27,7 +27,9 @@ function Seguimiento({ pedido }: { pedido: PedidoPublico }) {
     pedido.especial || pedido.estado === "Conseguido"
       ? PASOS
       : PASOS.filter((paso) => paso.estado !== "Conseguido");
-  const actual = pasos.findIndex((paso) => paso.estado === pedido.estado);
+  const conPaypal = pedido.estado === "Pagado (PayPal)";
+  const estado = conPaypal ? "Pagado" : pedido.estado;
+  const actual = pasos.findIndex((paso) => paso.estado === estado);
 
   return (
     <div className="marco shadow-dura flex flex-col gap-5 p-5">
@@ -74,7 +76,11 @@ function Seguimiento({ pedido }: { pedido: PedidoPublico }) {
                     {paso.estado}
                   </p>
                   {indice === actual ? (
-                    <p className="text-sm">{paso.texto}</p>
+                    <p className="text-sm">
+                      {conPaypal && paso.estado === "Pagado"
+                        ? "Recibimos tu pago con tarjeta por PayPal"
+                        : paso.texto}
+                    </p>
                   ) : null}
                 </div>
               </li>

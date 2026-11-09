@@ -12,6 +12,8 @@ export type PedidoNuevo = {
   direccion: string;
   /** Solo envío entre tiendas: el id de TIENDAS_DESTINO u "otra". */
   tienda?: string;
+  /** Lo que eligió en "Cómo pagás". */
+  metodo?: "sinpe" | "tarjeta";
   /** Número anónimo del carrito, para marcarlo como "Pidió" en la pestaña Carritos. */
   carrito?: string;
   cupon: string | null;

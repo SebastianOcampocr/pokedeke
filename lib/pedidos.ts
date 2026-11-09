@@ -5,6 +5,7 @@ import { crearAlmacen } from "./almacen";
 export const ESTADOS = [
   "Pendiente de pago",
   "Pagado",
+  "Pagado (PayPal)",
   "Conseguido",
   "Enviado",
   "Entregado",

@@ -21,7 +21,7 @@ const AVISOS: Partial<Record<Estado, string>> = {
   Entregado: "Correo de entrega enviado al cliente (simulado).",
 };
 
-const COBRADOS: Estado[] = ["Pagado", "Enviado", "Entregado"];
+const COBRADOS: Estado[] = ["Pagado", "Pagado (PayPal)", "Enviado", "Entregado"];
 
 function TarjetaPedido({ pedido }: { pedido: Pedido }) {
   const [aviso, setAviso] = useState("");
