@@ -39,7 +39,7 @@ function cargarSdk(clientId: string) {
       components: "buttons",
       "enable-funding": "card",
       "disable-funding": "paylater,venmo,credit",
-      locale: "es_XC",
+      locale: "es_MX",
     });
     const script = document.createElement("script");
     script.src = `https://www.paypal.com/sdk/js?${parametros}`;
