@@ -90,6 +90,10 @@ jobs:
           ARCHIVOS_ARMADOS: si
           NEXT_PUBLIC_PEDIDOS_URL: ${{ vars.PEDIDOS_URL }}
           NEXT_PUBLIC_TIENDA_ABIERTA: ${{ vars.TIENDA_ABIERTA }}
+          # Llave pública de Cloudflare Turnstile. Vacía: no se pide la comprobación.
+          NEXT_PUBLIC_TURNSTILE_SITEKEY: ${{ vars.TURNSTILE_SITEKEY }}
+          # Pedido especial con pago anticipado: solo con "si" (y la propiedad en el script).
+          NEXT_PUBLIC_PEDIDOS_ESPECIALES: ${{ vars.PEDIDOS_ESPECIALES }}
       - uses: aws-actions/configure-aws-credentials@v6
         with:
           aws-access-key-id: ${{ secrets.AWS_CLAVE_ID }}
@@ -135,6 +139,10 @@ jobs:
           ARCHIVOS_ARMADOS: si
           NEXT_PUBLIC_PEDIDOS_URL: ${{ vars.PEDIDOS_URL }}
           NEXT_PUBLIC_TIENDA_ABIERTA: ${{ vars.TIENDA_ABIERTA }}
+          # Llave pública de Cloudflare Turnstile. Vacía: no se pide la comprobación.
+          NEXT_PUBLIC_TURNSTILE_SITEKEY: ${{ vars.TURNSTILE_SITEKEY }}
+          # Pedido especial con pago anticipado: solo con "si" (y la propiedad en el script).
+          NEXT_PUBLIC_PEDIDOS_ESPECIALES: ${{ vars.PEDIDOS_ESPECIALES }}
       # Se corre dentro de out: en la raíz, wrangler detecta Next.js e intenta
       # convertir el proyecto en un Worker. El proyecto ya existe como Pages clásico.
       - name: Subir la página a Cloudflare
