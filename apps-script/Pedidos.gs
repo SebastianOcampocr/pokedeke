@@ -18,7 +18,7 @@
  *    la página, y avisa a la tienda una vez por hora si entró algo.
  * 9. Anota en "Búsquedas" qué se busca en la página y qué no dio resultados,
  *    sin datos de quién buscó.
- * 10. Cada 10 minutos, si el catálogo cambió, le pide a GitHub rearmar la página.
+ * 10. Cada 5 minutos, si el catálogo cambió, le pide a GitHub rearmar la página.
  * 11. Cada Domingo guarda una copia de respaldo de toda la hoja.
  * 12. Cada hora llena la pestaña "Demanda": qué mira, pide y busca la gente, con
  *     el stock de ese momento y una sugerencia.
@@ -164,7 +164,7 @@ const HOJAS = {
 };
 
 // Sube con cada cambio: la página y las pruebas leen esta marca con un GET.
-const VERSION = "2026-11-10-pedido-especial";
+const VERSION = "2026-11-10-cada-5-minutos";
 const ENTREGADO = "Entregado";
 const PEDIDO_ESPECIAL = "Pedido especial";
 // Estados del inventario. Los escribe la tienda en la columna "Estado en la página"
@@ -2297,7 +2297,7 @@ function huellaDe(contenido) {
 }
 
 /**
- * Corre sola cada 10 minutos, gracias a instalarAvisos(). Si el catálogo cambió
+ * Corre sola cada 5 minutos, gracias a instalarAvisos(). Si el catálogo cambió
  * desde la última vez, le pide a GitHub rearmar la página: así lo nuevo sale en
  * minutos y no depende del reloj de GitHub. Ocupa la propiedad GITHUB_TOKEN (una
  * llave que solo puede correr la publicación de este repositorio); sin ella no
@@ -3010,7 +3010,7 @@ function instalarAvisos() {
     .forEach((activador) => ScriptApp.deleteTrigger(activador));
   ScriptApp.newTrigger("alEditarHoja").forSpreadsheet(libro()).onEdit().create();
   ScriptApp.newTrigger("tareasCadaHora").timeBased().everyHours(1).create();
-  ScriptApp.newTrigger("publicarSiCambio").timeBased().everyMinutes(10).create();
+  ScriptApp.newTrigger("publicarSiCambio").timeBased().everyMinutes(5).create();
   ScriptApp.newTrigger("respaldarHoja").timeBased().onWeekDay(ScriptApp.WeekDay.SUNDAY).atHour(3).create();
 }
 
