@@ -22,6 +22,7 @@ import { Cantidad } from "./Cantidad";
 import { Deke } from "./Deke";
 import { FotoProducto } from "./FotoProducto";
 import { IconoBasurero } from "./Iconos";
+import { cuandoSeEntrega } from "./PedidoEspecial";
 
 export function CarritoVacio() {
   return (
@@ -230,7 +231,9 @@ export function VistaCarrito() {
                   {producto.nombre}
                 </Link>
                 <p className="text-sm text-gris">
-                  {precioNormal ? (
+                  {producto.estado === "Pedido especial" ? (
+                    `${colones(precio)} c/u · Pedido especial, se entrega ${cuandoSeEntrega(producto.entrega)}`
+                  ) : precioNormal ? (
                     <>
                       <s>{colones(precioNormal)}</s>{" "}
                       <strong className="text-verde-oscuro">

@@ -22,6 +22,9 @@ import { Revelar } from "./Revelar";
 export function Calcomania({ producto: guardado }: { producto: Producto }) {
   const producto = useProductoVivo(guardado);
   const estado = estadoDe(producto);
+  if (estado === "Pedido especial") {
+    return <span className="calcomania -rotate-2 bg-azul">De EE. UU.</span>;
+  }
   if (estado === "En camino" || estado === "Por consultar") {
     return <span className="calcomania -rotate-2 bg-azul">{estado}</span>;
   }
@@ -174,7 +177,21 @@ export function TarjetaProducto({
             {producto.nombre}
           </Link>
         </h3>
-        {estado === "Por consultar" ? (
+        {estado === "Pedido especial" ? (
+          <div className="mt-auto flex flex-wrap items-end justify-between gap-2">
+            <p className="mt-1 leading-tight">
+              <span className="block text-[13px] font-bold text-gris">
+                Pedido especial
+              </span>
+              <span className="text-[19px] font-extrabold text-azul">
+                {colones(producto.precio)}
+              </span>
+            </p>
+            <Link href={enlace} className="boton boton-amarillo boton-chico">
+              Ver condiciones
+            </Link>
+          </div>
+        ) : estado === "Por consultar" ? (
           <div className="mt-auto flex flex-wrap items-end justify-between gap-2">
             <p className="mt-1 leading-tight">
               <span className="block text-[13px] font-bold text-gris">

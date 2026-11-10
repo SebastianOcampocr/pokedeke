@@ -2,11 +2,11 @@
 
 import { useMemo, useSyncExternalStore } from "react";
 import type { Estado, Producto } from "./productos";
-import { PEDIDOS_URL } from "./tienda";
+import { PEDIDOS_ESPECIALES, PEDIDOS_URL } from "./tienda";
 
 type Inventario = Record<
   string,
-  { stock: number; precio: number; peso?: number; estado?: Estado }
+  { stock: number; precio: number; peso?: number; estado?: Estado; entrega?: string }
 >;
 
 /** Precio especial por llevar varias unidades. La anuncia la hoja, que es la que cobra. */
@@ -104,7 +104,7 @@ export function useOfertaDe(slug: string) {
 }
 
 /** Lo que ya no sale en la hoja se trata como agotado. */
-export function conDatosVivos(producto: Producto, vivo: Inventario | null) {
+export function conDatosVivos(producto: Producto, vivo: Inventario | null): Producto {
   if (!vivo) return producto;
   const dato = vivo[producto.slug];
   if (!dato) return { ...producto, stock: 0 };
@@ -112,12 +112,18 @@ export function conDatosVivos(producto: Producto, vivo: Inventario | null) {
   // la página sabe que no se vende sigue sin venderse.
   const estado = dato.estado ?? producto.estado;
   const seVende = Boolean(dato.estado) || !estado || estado === "Disponible";
+  // Si la página tiene el pago anticipado apagado, el pedido especial no se ofrece
+  // aunque la hoja lo tenga encendido.
+  if (estado === "Pedido especial" && !PEDIDOS_ESPECIALES) {
+    return { ...producto, estado: "Por consultar" as const, stock: 0, precio: dato.precio };
+  }
   return {
     ...producto,
     stock: seVende ? dato.stock : 0,
     precio: dato.precio,
     peso: dato.peso,
     estado,
+    entrega: dato.entrega ?? (estado === "Pedido especial" ? producto.entrega : undefined),
   };
 }
 

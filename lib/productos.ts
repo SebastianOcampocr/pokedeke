@@ -1,11 +1,17 @@
 import catalogo from "@/datos/catalogo.json";
+import { PEDIDOS_ESPECIALES } from "./tienda";
 
 /**
  * Lo manda la hoja. Disponible: está en el mezzanine y se puede comprar. En
  * camino: ya lo compramos y no ha llegado. Por consultar: no es nuestro, hay
  * que revisar si se consigue. Agotado: lo vendemos, pero hoy no hay.
  */
-export type Estado = "Disponible" | "En camino" | "Por consultar" | "Agotado";
+export type Estado =
+  | "Disponible"
+  | "En camino"
+  | "Por consultar"
+  | "Agotado"
+  | "Pedido especial";
 
 export type Producto = {
   id: string;
@@ -20,6 +26,8 @@ export type Producto = {
   /** Unidades que se pueden comprar hoy: 0 si no está Disponible. */
   stock: number;
   estado?: Estado;
+  /** Solo pedido especial: fecha máxima de entrega (yyyy-mm-dd). `stock` son los cupos. */
+  entrega?: string;
   /** Gramos, según la hoja. Llega con el stock en vivo. */
   peso?: number;
   etiqueta?: "Nuevo" | "Oferta";
@@ -64,7 +72,12 @@ export type TipoEnergia = (typeof TIPOS_ENERGIA)[number];
  * Todo el inventario sale de la pestaña "Catálogo web" de la hoja de Google.
  * scripts/traer-catalogo.mjs genera este archivo: no se edita a mano.
  */
-export const PRODUCTOS = catalogo as unknown as Producto[];
+export const PRODUCTOS = (catalogo as unknown as Producto[]).map((producto) =>
+  // Con el pago anticipado apagado, el pedido especial se muestra como Por consultar.
+  producto.estado === "Pedido especial" && !PEDIDOS_ESPECIALES
+    ? { ...producto, estado: "Por consultar" as const, stock: 0, entrega: undefined }
+    : producto,
+);
 
 export function buscarProducto(slug: string) {
   return PRODUCTOS.find((producto) => producto.slug === slug);
@@ -102,10 +115,37 @@ export function estaAgotado(producto: Producto) {
 
 /** Con unidades es Disponible; sin unidades, lo que diga la hoja. */
 export function estadoDe(producto: Producto): Estado {
+  if (producto.estado === "Pedido especial") return "Pedido especial";
   if (producto.stock > 0) return "Disponible";
   return producto.estado && producto.estado !== "Disponible"
     ? producto.estado
     : "Agotado";
+}
+
+/** Pedido especial con pago anticipado: no está en el mezzanine, se importa para quien paga. */
+export const esPedidoEspecial = (producto: Producto) =>
+  estadoDe(producto) === "Pedido especial";
+
+/**
+ * Las otras versiones del mismo producto (Day y Night de una UPC): mismo nombre
+ * salvo la última palabra. Para escoger la versión exacta en la ficha.
+ */
+const VERSION = /\s+(Day|Night)(\s+Edition)?$/i;
+export function versionesDe(producto: Producto) {
+  if (!VERSION.test(producto.nombre)) return [];
+  const base = producto.nombre.replace(VERSION, "");
+  return PRODUCTOS.filter(
+    (otro) => VERSION.test(otro.nombre) && otro.nombre.replace(VERSION, "") === base,
+  );
+}
+
+export function nombreDeVersion(producto: Producto) {
+  const version = producto.nombre.match(VERSION)?.[1]?.toLowerCase();
+  if (!version) return "";
+  const pokemon = /30th Celebration/i.test(producto.nombre)
+    ? version === "day" ? " (Espeon)" : " (Umbreon)"
+    : "";
+  return (version === "day" ? "Day Edition" : "Night Edition") + pokemon;
 }
 
 export const esPorConsultar = (producto: Producto) =>
@@ -161,12 +201,23 @@ export function novedadesVariadas(cantidad: number) {
  */
 export function destacados(cantidad: number) {
   const marcados = disponibles().filter((producto) => producto.destacado);
-  const lista = marcados.length > 0 ? marcados : disponibles();
-  return lista.sort((a, b) => b.precio - a.precio).slice(0, cantidad);
+  const lista = (marcados.length > 0 ? marcados : disponibles()).sort(
+    (a, b) => b.precio - a.precio,
+  );
+  // Variados: primero uno de cada categoría (del más caro de cada una), después el
+  // resto. Así cinco cartas carísimas no se comen la portada.
+  const vistas = new Set<string>();
+  const uno = lista.filter((producto) => {
+    if (vistas.has(producto.categoria)) return false;
+    vistas.add(producto.categoria);
+    return true;
+  });
+  return [...uno, ...lista.filter((producto) => !uno.includes(producto))].slice(0, cantidad);
 }
 
+/** Lo que está en el mezzanine y se puede comprar ya. El pedido especial no cuenta. */
 export const disponibles = () =>
-  PRODUCTOS.filter((producto) => !estaAgotado(producto));
+  PRODUCTOS.filter((producto) => !estaAgotado(producto) && !esPedidoEspecial(producto));
 
 export const conFoto = (producto: Producto) => producto.fotos.length > 0;
 

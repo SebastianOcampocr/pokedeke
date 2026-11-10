@@ -20,6 +20,15 @@ export const INDEXAR = !RUTA_BASE;
 /** Dirección del servidor de la hoja (apps-script/Pedidos.gs). */
 export const PEDIDOS_URL = process.env.NEXT_PUBLIC_PEDIDOS_URL ?? "";
 
+/**
+ * Pedidos especiales con pago anticipado: apagados hasta que la tienda los apruebe.
+ * La hoja además tiene que tenerlos encendidos (propiedad PEDIDOS_ESPECIALES).
+ */
+export const PEDIDOS_ESPECIALES =
+  process.env.NEXT_PUBLIC_PEDIDOS_ESPECIALES === "si" &&
+  process.env.NEXT_PUBLIC_TIENDA_ABIERTA === "si" &&
+  Boolean(process.env.NEXT_PUBLIC_PEDIDOS_URL);
+
 /** Sin esto la página es una demo: nadie debe pagar si el pedido no se anota. */
 export const TIENDA_ABIERTA =
   PEDIDOS_URL !== "" && process.env.NEXT_PUBLIC_TIENDA_ABIERTA === "si";

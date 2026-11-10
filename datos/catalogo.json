@@ -8035,8 +8035,9 @@
     "categoriaCorta": "Premium",
     "idioma": "Inglés",
     "precio": 180000,
-    "stock": 0,
-    "estado": "Por consultar",
+    "stock": 1,
+    "estado": "Pedido especial",
+    "entrega": "2026-12-20",
     "vendidos": 0,
     "orden": 329,
     "fotos": [
@@ -8053,8 +8054,9 @@
     "categoriaCorta": "Premium",
     "idioma": "Inglés",
     "precio": 172500,
-    "stock": 0,
-    "estado": "Por consultar",
+    "stock": 1,
+    "estado": "Pedido especial",
+    "entrega": "2026-12-20",
     "vendidos": 0,
     "orden": 330,
     "fotos": [

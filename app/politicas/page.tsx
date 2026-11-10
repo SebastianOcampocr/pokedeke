@@ -131,6 +131,18 @@ export default function PaginaPoliticas() {
                 tractos.
               </li>
               <li>
+                <strong>Pedido especial:</strong> solo para productos puntuales
+                que marquemos así, cuando ya confirmamos proveedor, precio,
+                versión y plazo. Pagás el 100% por adelantado y lo compramos al
+                proveedor con tu pago. La ficha y el pago te muestran la versión
+                exacta y la fecha máxima de entrega, y tenés que aceptar las
+                condiciones antes de pagar. Si no lo conseguimos, el proveedor
+                cancela o no llega a esa fecha, te devolvemos el 100% por el
+                mismo medio, sin rebajos. Podés cancelarlo dentro de los 8 días
+                hábiles desde que pagaste y te devolvemos todo. Para reclamos
+                escribinos por WhatsApp o a sac@pokedeke.store.
+              </li>
+              <li>
                 Los pedidos de productos de Estados Unidos que se pagaron antes
                 de este cambio mantienen sus condiciones: si no podemos
                 entregarlo, devolvemos el 100% por el mismo medio de pago.

@@ -121,9 +121,12 @@ async function ContenidoProducto({
             url: `${SITIO}/producto/${producto.slug}`,
             priceCurrency: "CRC",
             price: producto.precio,
-            availability: estaAgotado(producto)
-              ? "https://schema.org/OutOfStock"
-              : "https://schema.org/InStock",
+            availability:
+              producto.estado === "Pedido especial"
+                ? "https://schema.org/PreOrder"
+                : estaAgotado(producto)
+                  ? "https://schema.org/OutOfStock"
+                  : "https://schema.org/InStock",
             itemCondition: esUsada(producto)
               ? "https://schema.org/UsedCondition"
               : "https://schema.org/NewCondition",

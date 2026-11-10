@@ -5,6 +5,7 @@ const os = require("os");
 const path = require("path");
 let ok = 0;
 const prueba = (nombre, fn) => { fn(); ok += 1; console.log("✓", nombre); };
+const filas2 = (hoja) => filas(hoja, 3);
 const filas = (hoja, columnas) => { const o = []; for (let r = 5; r <= hoja.getLastRow(); r++) o.push(Array.from({ length: columnas }, (_, i) => hoja.leer(r, i + 1))); return o; };
 
 // [id, producto, categoría, stock, sugerido, venta, extra]
@@ -188,5 +189,110 @@ prueba("lo programado que se agotó o cambió de precio pasa a Error", () => {
   // Y sale en las alertas de Sistema.
   m.ctx.actualizarSistema();
   assert.match(filas(m.hojas.Sistema, 3).map((f) => f[1]).join("\n"), /Contenido, fila \d+ \(Prueba \d+\): .*cambió de precio/);
+});
+prueba("pedido especial: apagado se ve como Por consultar y no se compra", () => {
+  const h = nuevaHoja();
+  const cat = h.hojas["Catálogo web"];
+  // Caja de proveedor (fila 7) pasa a Pedido especial con precio de venta y entrega.
+  cat.escribir(7, 18, "Pedido especial");
+  cat.escribir(7, 9, 95000);
+  cat.escribir(7, 16, new Date(Date.now() + 30 * 86400000));
+  cat.escribir(7, 6, 2);
+  h.ctx.olvidarStock();
+  const vivo = JSON.parse(h.get({ accion: "stock" }).t).productos["caja-de-proveedor"];
+  assert.deepStrictEqual([vivo.estado, vivo.stock], ["Por consultar", 0]);
+  const r = h.post({ accion: "pedido", cliente: "Ana Pérez", whatsapp: "8888-1234", correo: "ana@ejemplo.cr", envio: "retiro-omni", aceptaCondiciones: "condiciones-2026-11-10", lineas: [{ slug: "caja-de-proveedor", cantidad: 1 }] });
+  assert.strictEqual(r.ok, false);
+});
+prueba("pedido especial encendido: cupos, condiciones, va solo y la plata queda como anticipo", () => {
+  const h = nuevaHoja();
+  const cat = h.hojas["Catálogo web"];
+  cat.escribir(7, 18, "Pedido especial");
+  cat.escribir(7, 9, 95000);
+  cat.escribir(7, 16, new Date(Date.now() + 30 * 86400000));
+  cat.escribir(7, 6, 2);
+  h.propiedades.PEDIDOS_ESPECIALES = "si";
+  h.ctx.olvidarStock();
+  const vivo = JSON.parse(h.get({ accion: "stock" }).t).productos["caja-de-proveedor"];
+  assert.deepStrictEqual([vivo.estado, vivo.stock, vivo.precio], ["Pedido especial", 2, 95000]);
+  assert.match(vivo.entrega, /^\d{4}-\d{2}-\d{2}$/);
+  const pedir = (extra) => h.post({ accion: "pedido", cliente: "Ana Pérez", whatsapp: "8888-1234", correo: "ana@ejemplo.cr", envio: "retiro-omni", lineas: [{ slug: "caja-de-proveedor", cantidad: 1 }], ...extra });
+  assert.match(pedir({}).error, /aceptar sus condiciones/);
+  assert.match(pedir({ aceptaCondiciones: "condiciones-2026-11-10", lineas: [{ slug: "caja-de-proveedor", cantidad: 1 }, { slug: "carta-lista", cantidad: 1 }] }).error, /pedido aparte/);
+  assert.match(pedir({ aceptaCondiciones: "condiciones-2026-11-10", lineas: [{ slug: "caja-de-proveedor", cantidad: 3 }] }).error, /Ya no quedan cupos/);
+  // El precio lo pone la hoja, no la página.
+  const r = pedir({ aceptaCondiciones: "condiciones-2026-11-10", total: 1, intento: "especial-1" });
+  assert.strictEqual(r.ok, true);
+  assert.strictEqual(r.total, 95000);
+  assert.strictEqual(r.lineas[0].especial, true);
+  // Repetido no hace dos pedidos.
+  const filas = h.hojas["Pedidos web"].getLastRow();
+  assert.strictEqual(pedir({ aceptaCondiciones: "condiciones-2026-11-10", intento: "especial-1" }).numero, r.numero);
+  assert.strictEqual(h.hojas["Pedidos web"].getLastRow(), filas);
+  const pe = h.hojas["Pedidos especiales"];
+  assert.ok(pe, "se creó la pestaña");
+  assert.deepStrictEqual([pe.leer(5, 1), pe.leer(5, 6), pe.leer(5, 11)], [r.numero, 95000, "Esperando pago"]);
+  assert.match(String(h.hojas["Pedidos web"].leer(filas, 18)), /Aceptó las condiciones/);
+  const alCliente = h.correos.filter((c) => c.to === "ana@ejemplo.cr").pop();
+  assert.match(alCliente.body, /te devolvemos el 100%/);
+  // Ocupa su cupo: queda 1.
+  h.ctx.olvidarStock();
+  assert.strictEqual(JSON.parse(h.get({ accion: "stock" }).t).productos["caja-de-proveedor"].stock, 1);
+  // Se paga: no pasa a Ventas, queda como anticipo y sigue ocupando el cupo.
+  const ventasAntes = h.hojas.Ventas.getLastRow();
+  h.hojas["Pedidos web"].escribir(filas, 3, "Pagado");
+  h.ctx.alEditarHoja({ value: "Pagado", oldValue: "Pendiente de pago", range: h.hojas["Pedidos web"].getRange(filas, 3, 1, 1) });
+  assert.strictEqual(h.hojas.Ventas.getLastRow(), ventasAntes, "no es venta todavía");
+  assert.match(String(h.hojas["Pedidos web"].leer(filas, 19)), /^Anticipo/);
+  assert.deepStrictEqual([pe.leer(5, 7), pe.leer(5, 11)], [95000, "Por comprar al proveedor"]);
+  h.ctx.olvidarStock();
+  assert.strictEqual(JSON.parse(h.get({ accion: "stock" }).t).productos["caja-de-proveedor"].stock, 1);
+  h.ctx.pagina.datos = { fecha: "2026-11-10T15:00:00.000Z", productos: 8 };
+  h.ctx.actualizarSistema();
+  const sistema = filas2(h.hojas.Sistema);
+  assert.strictEqual(sistema.find((f) => f[0] === "Anticipos de clientes (no es ganancia)")[1], 95000);
+  // No se consigue: la devolución queda pendiente y le llega a la tienda cómo hacerla.
+  pe.escribir(5, 11, "No se consiguió");
+  h.ctx.alEditarHoja({ value: "No se consiguió", range: pe.getRange(5, 11, 1, 1) });
+  assert.strictEqual(pe.leer(5, 13), "Pendiente de devolver");
+  assert.match(h.correos.pop().subject, /Devolver ₡95 000 del pedido especial/);
+  // Recién cuando se confirma, se le avisa al cliente.
+  pe.escribir(5, 13, "Devuelto (confirmado)");
+  h.ctx.alEditarHoja({ value: "Devuelto (confirmado)", range: pe.getRange(5, 13, 1, 1) });
+  assert.match(h.correos.pop().subject, /Te devolvimos tu pago/);
+});
+prueba("pedido especial entregado: recién ahí pasa a Ventas", () => {
+  const h = nuevaHoja();
+  const cat = h.hojas["Catálogo web"];
+  cat.escribir(7, 18, "Pedido especial");
+  cat.escribir(7, 9, 95000);
+  cat.escribir(7, 16, new Date(Date.now() + 30 * 86400000));
+  h.propiedades.PEDIDOS_ESPECIALES = "si";
+  h.ctx.olvidarStock();
+  const r = h.post({ accion: "pedido", cliente: "Ana Pérez", whatsapp: "8888-1234", correo: "ana@ejemplo.cr", envio: "retiro-omni", aceptaCondiciones: "condiciones-2026-11-10", lineas: [{ slug: "caja-de-proveedor", cantidad: 1 }] });
+  assert.strictEqual(r.ok, true);
+  const ped = h.hojas["Pedidos web"];
+  const f = ped.getLastRow();
+  ped.escribir(f, 3, "Pagado");
+  h.ctx.alEditarHoja({ value: "Pagado", oldValue: "Pendiente de pago", range: ped.getRange(f, 3, 1, 1) });
+  const ventasAntes = h.hojas.Ventas.getLastRow();
+  ped.escribir(f, 3, "Entregado");
+  h.ctx.alEditarHoja({ value: "Entregado", oldValue: "Pagado", range: ped.getRange(f, 3, 1, 1) });
+  assert.match(String(ped.leer(f, 19)), /^Fila/);
+  assert.ok(h.hojas.Ventas.getLastRow() > ventasAntes, "pasó a Ventas");
+  assert.strictEqual(h.hojas["Pedidos especiales"].leer(5, 11), "Entregado");
+});
+prueba("sin precio de venta o con la fecha vencida, el pedido especial no se vende", () => {
+  const h = nuevaHoja();
+  const cat = h.hojas["Catálogo web"];
+  cat.escribir(7, 18, "Pedido especial");
+  cat.escribir(7, 16, new Date(Date.now() + 30 * 86400000));
+  h.propiedades.PEDIDOS_ESPECIALES = "si";
+  h.ctx.olvidarStock();
+  assert.strictEqual(JSON.parse(h.get({ accion: "stock" }).t).productos["caja-de-proveedor"].estado, "Por consultar");
+  cat.escribir(7, 9, 95000);
+  cat.escribir(7, 16, new Date(Date.now() - 86400000));
+  h.ctx.olvidarStock();
+  assert.strictEqual(JSON.parse(h.get({ accion: "stock" }).t).productos["caja-de-proveedor"].estado, "Por consultar");
 });
 console.log("\n" + ok + " pruebas bien.");

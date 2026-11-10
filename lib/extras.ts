@@ -37,6 +37,7 @@ export function masVistos(cantidad: number, aparte: string[] = []) {
       (producto): producto is Producto =>
         Boolean(producto) &&
         !estaAgotado(producto!) &&
+        producto!.estado !== "Pedido especial" &&
         !aparte.includes(producto!.slug),
     )
     .slice(0, cantidad);

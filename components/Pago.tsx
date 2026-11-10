@@ -37,7 +37,12 @@ import {
 } from "@/lib/tienda";
 import { Deke } from "./Deke";
 import { prepararVerificacion } from "@/lib/verificacion";
-import { cuandoSeEntrega } from "./PedidoEspecial";
+import {
+  CONDICIONES_ESPECIAL,
+  CondicionesEspeciales,
+  cuandoSeEntrega,
+} from "./PedidoEspecial";
+import { nombreDeVersion } from "@/lib/productos";
 import { IconoCheque } from "./Iconos";
 import { enDolares, PagoConTarjeta, useConfigPaypal } from "./PagoConTarjeta";
 import { CarritoVacio, Linea } from "./VistaCarrito";
@@ -396,6 +401,7 @@ export function Pago() {
   const [precioCambio, setPrecioCambio] = useState(false);
   const [enviando, setEnviando] = useState(false);
   const [error, setError] = useState("");
+  const [aceptaEspecial, setAceptaEspecial] = useState(false);
 
   // Next deja viva esta página al navegar: sin esto, la siguiente compra
   // mostraría la confirmación del pedido anterior en vez del formulario.
@@ -406,6 +412,10 @@ export function Pago() {
   }
   if (!hidratado) return <p>Cargando…</p>;
   if (lineas.length === 0) return <CarritoVacio />;
+
+  // Pedido especial con pago anticipado: va solo y con las condiciones aceptadas.
+  const especial = lineas.find(({ producto }) => producto.estado === "Pedido especial");
+  const mezclado = Boolean(especial) && lineas.length > 1;
 
   const envio = ENVIOS.find((opcion) => opcion.id === envioId) ?? ENVIOS[0];
   const { subtotal } = calcularTotales(lineas, cupon, 0);
@@ -480,6 +490,7 @@ export function Pago() {
       estado: "Pendiente de pago",
       guia: "",
       envioPorWhatsApp: otraTienda,
+      ...(especial ? { especial: { llegada: especial.producto.entrega } } : {}),
     };
 
     if (TIENDA_ABIERTA) {
@@ -501,6 +512,7 @@ export function Pago() {
           cantidad,
         })),
         sitio: texto("sitio"),
+        ...(especial ? { aceptaCondiciones: CONDICIONES_ESPECIAL } : {}),
         // Si este mismo pedido se manda dos veces, la hoja devuelve el primero.
         intento: intento.current + "-" + huellaDe([pedido.telefono, pedido.envio, pedido.direccion, lineas.map(({ producto, cantidad }) => producto.slug + ":" + cantidad)]),
       });
@@ -747,8 +759,39 @@ export function Pago() {
             {error}
           </p>
         ) : null}
-        <button type="submit" className="boton boton-rojo" disabled={enviando}>
-          {enviando ? "Enviando tu pedido…" : "Hacer el pedido"}
+        {especial ? (
+          <div className="marco flex flex-col gap-3 bg-crema p-4">
+            <p className="font-display text-lg leading-tight text-azul">
+              🌎 Pedido especial: {nombreDeVersion(especial.producto) || especial.producto.nombre}
+            </p>
+            <CondicionesEspeciales
+              version={nombreDeVersion(especial.producto) || especial.producto.nombre}
+              entrega={especial.producto.entrega}
+            />
+            <label className="flex items-start gap-2 font-bold">
+              <input
+                type="checkbox"
+                className="mt-1 size-5 shrink-0"
+                checked={aceptaEspecial}
+                onChange={(evento) => setAceptaEspecial(evento.target.checked)}
+                required
+              />
+              Leí y acepto las condiciones del pedido especial.
+            </label>
+          </div>
+        ) : null}
+        {mezclado ? (
+          <p role="alert" className="font-bold text-rojo">
+            El pedido especial va en un pedido aparte: dejá solo ese producto en el
+            carrito.
+          </p>
+        ) : null}
+        <button
+          type="submit"
+          className="boton boton-rojo"
+          disabled={enviando || mezclado || (Boolean(especial) && !aceptaEspecial)}
+        >
+          {enviando ? "Enviando tu pedido…" : especial ? "Hacer el pedido especial" : "Hacer el pedido"}
         </button>
         <p className="text-sm leading-snug text-gris">
           Tenés {TIENDA.plazoPagoHoras} horas para pagar. Al seguir

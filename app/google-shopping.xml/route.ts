@@ -41,7 +41,7 @@ function titulo(producto: Producto) {
 
 function disponibilidad(producto: Producto) {
   // En camino y por consultar no se pueden comprar: para Google van como agotados.
-  if (estaAgotado(producto)) return { estado: "out_of_stock" };
+  if (estaAgotado(producto) || producto.estado === "Pedido especial") return { estado: "out_of_stock" };
   return { estado: "in_stock" };
 }
 

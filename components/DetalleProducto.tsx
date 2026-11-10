@@ -5,13 +5,18 @@ import { useLayoutEffect, useState, ViewTransition } from "react";
 import { contarVisita } from "@/lib/api-pedidos";
 import { agregarAlCarrito } from "@/lib/carrito";
 import { colones } from "@/lib/formato";
+import { useRouter } from "next/navigation";
+import { useCarrito } from "@/lib/carrito";
 import {
   enlaceBusca,
   esCarta,
   estaAgotado,
   estadoDe,
+  nombreDeVersion,
+  versionesDe,
   type Producto,
 } from "@/lib/productos";
+import { CondicionesEspeciales, cuandoSeEntrega } from "./PedidoEspecial";
 import { enlaceCompartir, enlaceWhatsApp, TIENDA } from "@/lib/tienda";
 import { useOfertaDe, useProductoVivo } from "@/lib/vivo";
 import { volarAlCarrito } from "@/lib/volar";
@@ -119,6 +124,11 @@ export function PrecioYStock({ producto: guardado }: { producto: Producto }) {
       {estado === "Por consultar" ? (
         <p className="mt-1 text-sm font-bold text-gris">Precio de referencia</p>
       ) : null}
+      {estado === "Pedido especial" ? (
+        <p className="mt-1 w-fit rounded-md border-2 border-tinta bg-azul px-2.5 py-1 text-sm font-bold text-white">
+          🌎 Pedido especial desde Estados Unidos
+        </p>
+      ) : null}
       <p className="mt-1 flex flex-wrap items-baseline gap-x-3 text-4xl font-extrabold">
         {colones(producto.precio)}
         {producto.precioAntes ? (
@@ -129,7 +139,13 @@ export function PrecioYStock({ producto: guardado }: { producto: Producto }) {
         {estado === "Agotado" && "Agotado por ahora"}
         {estado === "En camino" && "En camino"}
         {estado === "Por consultar" && "Por consultar"}
-        {!agotado && (producto.stock === 1 ? "Queda 1" : `Quedan ${producto.stock}`)}
+        {estado === "Pedido especial" &&
+          (agotado
+            ? "Ya no quedan cupos para este pedido especial"
+            : producto.stock === 1
+              ? "Queda 1 cupo para importar"
+              : `Quedan ${producto.stock} cupos para importar`)}
+        {!agotado && estado !== "Pedido especial" && (producto.stock === 1 ? "Queda 1" : `Quedan ${producto.stock}`)}
       </p>
       {estado === "En camino" ? (
         <p className="mb-3 rounded-md bg-crema p-3 text-[15px] leading-snug font-medium">
@@ -170,6 +186,10 @@ export function AccionesProducto({ producto: guardado }: { producto: Producto })
     },
     [],
   );
+
+  if (estado === "Pedido especial") {
+    return <AccionesEspeciales producto={producto} />;
+  }
 
   return (
     <div className="flex flex-col gap-3">
@@ -258,6 +278,89 @@ export function AccionesProducto({ producto: guardado }: { producto: Producto })
           Mi lista
         </label>
       </div>
+    </div>
+  );
+}
+
+/**
+ * Pedido especial con pago anticipado: se ve claro que no está en el mezzanine,
+ * se escoge la versión exacta y se leen las condiciones antes de ir a pagar. En
+ * el pago se vuelven a mostrar y hay que aceptarlas.
+ */
+function AccionesEspeciales({ producto }: { producto: Producto }) {
+  const router = useRouter();
+  const { lineas } = useCarrito();
+  const versiones = versionesDe(producto);
+  const version = nombreDeVersion(producto) || producto.nombre;
+  const otros = lineas.filter((linea) => linea.producto.slug !== producto.slug);
+  const sinCupos = producto.stock <= 0;
+
+  return (
+    <div className="flex flex-col gap-3">
+      {versiones.length > 1 ? (
+        <div>
+          <p className="rotulo-campo">Escogé la versión</p>
+          <div className="flex flex-wrap gap-2">
+            {versiones.map((otra) => (
+              <Link
+                key={otra.slug}
+                href={`/producto/${otra.slug}`}
+                aria-current={otra.slug === producto.slug ? "page" : undefined}
+                className={`chip ${otra.slug === producto.slug ? "bg-azul text-white" : ""}`}
+              >
+                {nombreDeVersion(otra)}
+              </Link>
+            ))}
+          </div>
+        </div>
+      ) : null}
+      <div className="marco flex flex-col gap-2 bg-crema p-4">
+        <p className="font-bold">📦 Producto importado bajo pedido</p>
+        <p className="font-bold">💳 Pago anticipado del 100%</p>
+        <p className="font-bold">
+          🚚 Entrega {cuandoSeEntrega(producto.entrega)}
+        </p>
+        <p className="font-bold">✅ Si no podemos cumplir, te devolvemos el 100% de lo pagado</p>
+        <details className="mt-1">
+          <summary className="cursor-pointer font-bold text-azul underline underline-offset-2">
+            Leer todas las condiciones
+          </summary>
+          <CondicionesEspeciales version={version} entrega={producto.entrega} className="mt-2" />
+        </details>
+      </div>
+      {otros.length > 0 ? (
+        <p role="alert" className="rounded-md bg-crema p-3 text-[15px] leading-snug font-bold">
+          El pedido especial va en un pedido aparte. Terminá o vaciá primero lo que
+          tenés en el carrito.
+        </p>
+      ) : null}
+      {sinCupos ? (
+        <Link href={enlaceBusca(producto)} className="boton boton-rojo">
+          Consultar disponibilidad
+        </Link>
+      ) : (
+        <button
+          type="button"
+          className="boton boton-rojo"
+          disabled={otros.length > 0}
+          onClick={() => {
+            agregarAlCarrito(producto, 1);
+            router.push("/pago");
+          }}
+        >
+          Solicitar importación
+        </button>
+      )}
+      <a
+        href={enlaceWhatsApp(`¡Hola! Tengo una pregunta del pedido especial de ${producto.nombre}.`)}
+        target="_blank"
+        rel="noreferrer"
+        className="boton boton-blanco"
+        onClick={() => contarVisita(producto.slug, "whatsapp")}
+      >
+        <IconoChat tamano={22} />
+        Preguntar por WhatsApp
+      </a>
     </div>
   );
 }

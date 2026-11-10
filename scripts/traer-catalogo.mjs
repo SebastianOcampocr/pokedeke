@@ -66,8 +66,18 @@ export const ESTADOS = {
   porConsultar: "Por consultar",
   agotado: "Agotado",
   noPublicado: "No publicado",
+  pedidoEspecial: "Pedido especial",
 };
 const COLUMNA_ESTADO = "Estado en la página";
+const COLUMNAS_ENTREGA = ["Entrega máxima (pedido especial)", "Llega (preventas)"];
+
+/** La fecha máxima de entrega de un pedido especial (dd/mm/yyyy), como la entiende la página. */
+function entregaDe(lote) {
+  const texto = COLUMNAS_ENTREGA.map((columna) => lote[columna]).find((celda) => String(celda ?? "").trim());
+  const partes = String(texto ?? "").trim().match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  if (!partes) return "";
+  return partes[3] + "-" + partes[2].padStart(2, "0") + "-" + partes[1].padStart(2, "0");
+}
 
 /**
  * El estado de una fila de "Catálogo web". Vacío o Disponible se vende si hay
@@ -345,10 +355,23 @@ export function armarCatalogo(textoCsv, fotos) {
     if (estado === ESTADOS.noPublicado) return;
 
     const clave = aSlug(nombre);
-    const grupo = grupos.get(clave) ?? { clave, nombre, lotes: [], orden: 0, stock: 0, estados: new Set() };
+    const grupo = grupos.get(clave) ?? { clave, nombre, lotes: [], orden: 0, stock: 0, cupos: 0, estados: new Set() };
     // Solo cuenta lo que está en el mezzanine: lo demás no es para vender hoy.
     if (estado === ESTADOS.disponible) grupo.stock += Math.max(aEntero(lote["En stock"]), 0);
-    grupo.estados.add(estado);
+    // Pedido especial: "En stock" son los cupos para importar. Sin Precio de venta o sin
+    // fecha de entrega futura no se vende: queda Por consultar. Igual que Pedidos.gs.
+    let estadoFinal = estado;
+    if (estado === ESTADOS.pedidoEspecial) {
+      const entrega = entregaDe(lote);
+      if (aMonto(lote["Precio de venta (₡)"]) > 0 && entrega && entrega > new Date().toISOString().slice(0, 10)) {
+        grupo.cupos += Math.max(aEntero(lote["En stock"]), 0);
+        grupo.entrega = entrega;
+        grupo.precioEspecial = aMonto(lote["Precio de venta (₡)"]);
+      } else {
+        estadoFinal = ESTADOS.porConsultar;
+      }
+    }
+    grupo.estados.add(estadoFinal);
     grupo.lotes.push(lote);
     grupo.orden = indice + 1;
     grupos.set(clave, grupo);
@@ -371,10 +394,13 @@ export function armarCatalogo(textoCsv, fotos) {
     const categoria = ultimo("Categoría") || "Otro";
     const carta = CARTAS.includes(categoria) ? datosDeCarta(grupo.nombre) : undefined;
     const etiqueta = ETIQUETAS.find((opcion) => opcion === ultimo("Etiqueta"));
+    const especial = grupo.stock === 0 && grupo.cupos > 0;
     const estado =
       grupo.stock > 0
         ? ESTADOS.disponible
-        : grupo.estados.has(ESTADOS.enCamino)
+        : especial
+          ? ESTADOS.pedidoEspecial
+          : grupo.estados.has(ESTADOS.enCamino)
           ? ESTADOS.enCamino
           : grupo.estados.has(ESTADOS.porConsultar)
             ? ESTADOS.porConsultar
@@ -403,10 +429,12 @@ export function armarCatalogo(textoCsv, fotos) {
         categoria,
         categoriaCorta: CORTAS[categoria] ?? categoria,
         idioma: ultimo("Idioma"),
-        precio,
-        // Lo que se puede comprar hoy: 0 si está en camino, por consultar o agotado.
-        stock: grupo.stock,
+        precio: especial ? grupo.precioEspecial : precio,
+        // Lo que se puede comprar hoy: 0 si está en camino, por consultar o agotado. En un
+        // pedido especial, los cupos para importar.
+        stock: especial ? grupo.cupos : grupo.stock,
         estado,
+        ...(especial ? { entrega: grupo.entrega } : {}),
         ...(etiqueta ? { etiqueta } : {}),
         ...(esSi(ultimo("Destacado (sí/no)")) ? { destacado: true } : {}),
         vendidos: grupo.lotes.reduce(
