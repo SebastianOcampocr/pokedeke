@@ -62,7 +62,12 @@ export function Busca({
         evento.preventDefault();
         // Solo los robots llenan este campo.
         if (new FormData(evento.currentTarget).get("sitio")) return;
-        anotarSolicitud({
+        // La pestaña nueva se abre ya (si se abre después, el navegador la bloquea),
+        // pero WhatsApp carga cuando la solicitud salió: en el celular, al abrirse
+        // WhatsApp la página se pausa y la solicitud se perdía.
+        const ventana = window.open("about:blank", "_blank");
+        const enlace = enlaceWhatsApp(mensaje);
+        void anotarSolicitud({
           producto: producto.trim(),
           cantidad,
           detalle: detalle.trim(),
@@ -70,8 +75,14 @@ export function Busca({
           origen,
           // Si cambiaron lo que buscan, ya no es ese producto.
           ...(slug && producto.trim() === productoInicial.trim() ? { slug } : {}),
+        }).finally(() => {
+          if (ventana) {
+            ventana.opener = null;
+            ventana.location.href = enlace;
+          } else {
+            window.location.href = enlace;
+          }
         });
-        window.open(enlaceWhatsApp(mensaje), "_blank", "noopener");
         setEnviado(true);
       }}
     >

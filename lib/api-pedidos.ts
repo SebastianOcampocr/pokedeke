@@ -266,10 +266,12 @@ export function anotarSolicitud(datos: {
   origen: OrigenBusca;
   /** Si sale de la ficha de un producto: así cuenta en su demanda. */
   slug?: string;
-}) {
-  if (!TIENDA_ABIERTA || !PEDIDOS_URL) return;
-  // La prueba ya se viene pidiendo desde que tocaron el formulario.
-  void tomarVerificacion().then((verificacion) =>
+}): Promise<void> {
+  if (!TIENDA_ABIERTA || !PEDIDOS_URL) return Promise.resolve();
+  // La prueba ya se viene pidiendo desde que tocaron el formulario. Si Cloudflare
+  // tarda más de 5 segundos, se manda sin ella: mejor eso que perder la solicitud.
+  const sinPrueba = new Promise<string>((listo) => setTimeout(() => listo(""), 5000));
+  return Promise.race([tomarVerificacion(), sinPrueba]).then((verificacion) =>
     avisarSinEsperar({
       accion: "solicitud",
       ...datos,
