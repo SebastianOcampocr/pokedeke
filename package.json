@@ -4,9 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "prebuild": "node scripts/hacer-miniaturas.mjs",
+    "prebuild": "node scripts/hacer-miniaturas.mjs && node scripts/hacer-redirecciones.mjs",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "test": "node --test pruebas/*.test.mjs && node pruebas/simulador.cjs apps-script/Pedidos.gs && node pruebas/paypal.cjs && node pruebas/busca.cjs && node pruebas/estados.cjs"
   },
   "dependencies": {
     "@vercel/analytics": "^2.0.1",

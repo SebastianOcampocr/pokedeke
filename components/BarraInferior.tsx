@@ -2,9 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { hayPedidosEspeciales } from "@/lib/productos";
 import {
-  IconoAvion,
   IconoCartas,
   IconoCorazon,
   IconoEstante,
@@ -17,16 +15,8 @@ const IZQUIERDA = [
   { href: "/catalogo", texto: "Catálogo", Icono: IconoCartas },
 ];
 
-// Mientras haya productos de Estados Unidos, ocupan el lugar de "Mi lista",
-// que igual queda en el corazón de arriba.
 const DERECHA = [
-  hayPedidosEspeciales()
-    ? {
-        href: "/catalogo?etiqueta=Pedido%20especial",
-        texto: "De EE. UU.",
-        Icono: IconoAvion,
-      }
-    : { href: "/favoritos", texto: "Mi lista", Icono: IconoCorazon },
+  { href: "/favoritos", texto: "Mi lista", Icono: IconoCorazon },
   { href: "/nosotros", texto: "Mezzanine", Icono: IconoEstante },
 ];
 

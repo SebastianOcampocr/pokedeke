@@ -9,6 +9,7 @@
     "idioma": "",
     "precio": 2000,
     "stock": 0,
+    "estado": "Agotado",
     "vendidos": 1,
     "orden": 1,
     "fotos": [
@@ -33,6 +34,7 @@
     "idioma": "",
     "precio": 7300,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 2,
     "fotos": [
@@ -57,6 +59,7 @@
     "idioma": "",
     "precio": 1500,
     "stock": 3,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 3,
     "fotos": [
@@ -81,6 +84,7 @@
     "idioma": "",
     "precio": 1000,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 4,
     "fotos": [
@@ -105,6 +109,7 @@
     "idioma": "",
     "precio": 1500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 5,
     "fotos": [
@@ -129,6 +134,7 @@
     "idioma": "",
     "precio": 3400,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 6,
     "fotos": [
@@ -153,6 +159,7 @@
     "idioma": "Chino",
     "precio": 1600,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 7,
     "fotos": [
@@ -177,6 +184,7 @@
     "idioma": "",
     "precio": 5500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 8,
     "fotos": [
@@ -201,6 +209,7 @@
     "idioma": "",
     "precio": 12000,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 9,
     "fotos": [
@@ -225,6 +234,7 @@
     "idioma": "",
     "precio": 20200,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 10,
     "fotos": [
@@ -249,6 +259,7 @@
     "idioma": "Chino",
     "precio": 1500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 11,
     "fotos": [
@@ -273,6 +284,7 @@
     "idioma": "Chino",
     "precio": 1000,
     "stock": 0,
+    "estado": "Agotado",
     "vendidos": 1,
     "orden": 12,
     "fotos": [
@@ -297,6 +309,7 @@
     "idioma": "Inglés",
     "precio": 3800,
     "stock": 25,
+    "estado": "Disponible",
     "vendidos": 3,
     "orden": 13,
     "fotos": [
@@ -314,6 +327,7 @@
     "idioma": "",
     "precio": 2000,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 14,
     "fotos": [
@@ -331,6 +345,7 @@
     "idioma": "",
     "precio": 2000,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 15,
     "fotos": [
@@ -348,6 +363,7 @@
     "idioma": "",
     "precio": 100,
     "stock": 23,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 17,
     "fotos": [
@@ -366,6 +382,7 @@
     "idioma": "",
     "precio": 100,
     "stock": 22,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 18,
     "fotos": [
@@ -384,6 +401,7 @@
     "idioma": "",
     "precio": 100,
     "stock": 21,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 19,
     "fotos": [
@@ -402,6 +420,7 @@
     "idioma": "",
     "precio": 100,
     "stock": 18,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 20,
     "fotos": [
@@ -420,6 +439,7 @@
     "idioma": "",
     "precio": 100,
     "stock": 22,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 21,
     "fotos": [
@@ -438,6 +458,7 @@
     "idioma": "",
     "precio": 100,
     "stock": 13,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 22,
     "fotos": [
@@ -456,6 +477,7 @@
     "idioma": "",
     "precio": 100,
     "stock": 23,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 23,
     "fotos": [
@@ -474,6 +496,7 @@
     "idioma": "",
     "precio": 100,
     "stock": 13,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 24,
     "fotos": [
@@ -492,6 +515,7 @@
     "idioma": "",
     "precio": 250,
     "stock": 50,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 25,
     "fotos": [
@@ -509,6 +533,7 @@
     "idioma": "Inglés",
     "precio": 800,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 26,
     "fotos": [
@@ -533,6 +558,7 @@
     "idioma": "Inglés",
     "precio": 800,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 27,
     "fotos": [
@@ -557,6 +583,7 @@
     "idioma": "Inglés",
     "precio": 800,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 28,
     "fotos": [
@@ -581,6 +608,7 @@
     "idioma": "Inglés",
     "precio": 800,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 29,
     "fotos": [
@@ -605,6 +633,7 @@
     "idioma": "Inglés",
     "precio": 800,
     "stock": 3,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 30,
     "fotos": [
@@ -629,6 +658,7 @@
     "idioma": "Inglés",
     "precio": 800,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 31,
     "fotos": [
@@ -653,6 +683,7 @@
     "idioma": "Inglés",
     "precio": 800,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 32,
     "fotos": [
@@ -677,6 +708,7 @@
     "idioma": "Inglés",
     "precio": 800,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 33,
     "fotos": [
@@ -701,6 +733,7 @@
     "idioma": "Inglés",
     "precio": 800,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 34,
     "fotos": [
@@ -725,6 +758,7 @@
     "idioma": "Inglés",
     "precio": 800,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 35,
     "fotos": [
@@ -749,6 +783,7 @@
     "idioma": "Inglés",
     "precio": 800,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 36,
     "fotos": [
@@ -773,6 +808,7 @@
     "idioma": "Inglés",
     "precio": 800,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 37,
     "fotos": [
@@ -797,6 +833,7 @@
     "idioma": "Inglés",
     "precio": 800,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 38,
     "fotos": [
@@ -821,6 +858,7 @@
     "idioma": "Inglés",
     "precio": 1000,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 39,
     "fotos": [
@@ -845,6 +883,7 @@
     "idioma": "Inglés",
     "precio": 1000,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 40,
     "fotos": [
@@ -869,6 +908,7 @@
     "idioma": "Inglés",
     "precio": 1000,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 41,
     "fotos": [
@@ -893,6 +933,7 @@
     "idioma": "Inglés",
     "precio": 1000,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 42,
     "fotos": [
@@ -917,6 +958,7 @@
     "idioma": "Inglés",
     "precio": 800,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 43,
     "fotos": [
@@ -941,6 +983,7 @@
     "idioma": "Inglés",
     "precio": 800,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 44,
     "fotos": [
@@ -965,6 +1008,7 @@
     "idioma": "Inglés",
     "precio": 800,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 45,
     "fotos": [
@@ -989,6 +1033,7 @@
     "idioma": "Inglés",
     "precio": 800,
     "stock": 3,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 46,
     "fotos": [
@@ -1013,6 +1058,7 @@
     "idioma": "Inglés",
     "precio": 800,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 47,
     "fotos": [
@@ -1037,6 +1083,7 @@
     "idioma": "Inglés",
     "precio": 800,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 48,
     "fotos": [
@@ -1061,6 +1108,7 @@
     "idioma": "Inglés",
     "precio": 800,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 49,
     "fotos": [
@@ -1085,6 +1133,7 @@
     "idioma": "Inglés",
     "precio": 800,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 50,
     "fotos": [
@@ -1109,6 +1158,7 @@
     "idioma": "Inglés",
     "precio": 800,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 51,
     "fotos": [
@@ -1133,6 +1183,7 @@
     "idioma": "Inglés",
     "precio": 800,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 52,
     "fotos": [
@@ -1157,6 +1208,7 @@
     "idioma": "Inglés",
     "precio": 800,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 53,
     "fotos": [
@@ -1181,6 +1233,7 @@
     "idioma": "Inglés",
     "precio": 800,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 54,
     "fotos": [
@@ -1205,6 +1258,7 @@
     "idioma": "Inglés",
     "precio": 800,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 55,
     "fotos": [
@@ -1229,6 +1283,7 @@
     "idioma": "Inglés",
     "precio": 800,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 56,
     "fotos": [
@@ -1253,6 +1308,7 @@
     "idioma": "Inglés",
     "precio": 800,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 57,
     "fotos": [
@@ -1277,6 +1333,7 @@
     "idioma": "Inglés",
     "precio": 800,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 58,
     "fotos": [
@@ -1301,6 +1358,7 @@
     "idioma": "Inglés",
     "precio": 800,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 59,
     "fotos": [
@@ -1325,6 +1383,7 @@
     "idioma": "Inglés",
     "precio": 800,
     "stock": 3,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 60,
     "fotos": [
@@ -1349,6 +1408,7 @@
     "idioma": "Inglés",
     "precio": 800,
     "stock": 3,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 61,
     "fotos": [
@@ -1373,6 +1433,7 @@
     "idioma": "Inglés",
     "precio": 800,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 62,
     "fotos": [
@@ -1397,6 +1458,7 @@
     "idioma": "Inglés",
     "precio": 800,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 63,
     "fotos": [
@@ -1421,6 +1483,7 @@
     "idioma": "Inglés",
     "precio": 800,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 64,
     "fotos": [
@@ -1445,6 +1508,7 @@
     "idioma": "Inglés",
     "precio": 800,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 65,
     "fotos": [
@@ -1469,6 +1533,7 @@
     "idioma": "Inglés",
     "precio": 800,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 66,
     "fotos": [
@@ -1493,6 +1558,7 @@
     "idioma": "Inglés",
     "precio": 800,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 67,
     "fotos": [
@@ -1517,6 +1583,7 @@
     "idioma": "Inglés",
     "precio": 800,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 68,
     "fotos": [
@@ -1541,6 +1608,7 @@
     "idioma": "Inglés",
     "precio": 800,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 69,
     "fotos": [
@@ -1565,6 +1633,7 @@
     "idioma": "Inglés",
     "precio": 800,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 70,
     "fotos": [
@@ -1589,6 +1658,7 @@
     "idioma": "Inglés",
     "precio": 800,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 71,
     "fotos": [
@@ -1613,6 +1683,7 @@
     "idioma": "Inglés",
     "precio": 800,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 72,
     "fotos": [
@@ -1637,6 +1708,7 @@
     "idioma": "Inglés",
     "precio": 800,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 73,
     "fotos": [
@@ -1661,6 +1733,7 @@
     "idioma": "Inglés",
     "precio": 800,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 74,
     "fotos": [
@@ -1685,6 +1758,7 @@
     "idioma": "Inglés",
     "precio": 800,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 75,
     "fotos": [
@@ -1709,6 +1783,7 @@
     "idioma": "Inglés",
     "precio": 800,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 76,
     "fotos": [
@@ -1733,6 +1808,7 @@
     "idioma": "Inglés",
     "precio": 800,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 77,
     "fotos": [
@@ -1757,6 +1833,7 @@
     "idioma": "Inglés",
     "precio": 800,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 78,
     "fotos": [
@@ -1781,6 +1858,7 @@
     "idioma": "Inglés",
     "precio": 800,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 79,
     "fotos": [
@@ -1805,6 +1883,7 @@
     "idioma": "Inglés",
     "precio": 800,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 80,
     "fotos": [
@@ -1829,6 +1908,7 @@
     "idioma": "Inglés",
     "precio": 800,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 81,
     "fotos": [
@@ -1853,6 +1933,7 @@
     "idioma": "Inglés",
     "precio": 800,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 82,
     "fotos": [
@@ -1877,6 +1958,7 @@
     "idioma": "Inglés",
     "precio": 800,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 83,
     "fotos": [
@@ -1901,6 +1983,7 @@
     "idioma": "Inglés",
     "precio": 800,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 84,
     "fotos": [
@@ -1925,6 +2008,7 @@
     "idioma": "Inglés",
     "precio": 800,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 85,
     "fotos": [
@@ -1949,6 +2033,7 @@
     "idioma": "Inglés",
     "precio": 800,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 86,
     "fotos": [
@@ -1973,6 +2058,7 @@
     "idioma": "Inglés",
     "precio": 800,
     "stock": 3,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 87,
     "fotos": [
@@ -1997,6 +2083,7 @@
     "idioma": "Inglés",
     "precio": 800,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 88,
     "fotos": [
@@ -2021,6 +2108,7 @@
     "idioma": "Inglés",
     "precio": 800,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 89,
     "fotos": [
@@ -2045,6 +2133,7 @@
     "idioma": "Inglés",
     "precio": 800,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 90,
     "fotos": [
@@ -2069,6 +2158,7 @@
     "idioma": "Inglés",
     "precio": 800,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 91,
     "fotos": [
@@ -2092,6 +2182,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 92,
     "fotos": [
@@ -2116,6 +2207,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 93,
     "fotos": [
@@ -2140,6 +2232,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 94,
     "fotos": [
@@ -2164,6 +2257,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 95,
     "fotos": [
@@ -2188,6 +2282,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 96,
     "fotos": [
@@ -2212,6 +2307,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 97,
     "fotos": [
@@ -2236,6 +2332,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 98,
     "fotos": [
@@ -2260,6 +2357,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 99,
     "fotos": [
@@ -2284,6 +2382,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 100,
     "fotos": [
@@ -2308,6 +2407,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 101,
     "fotos": [
@@ -2332,6 +2432,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 102,
     "fotos": [
@@ -2356,6 +2457,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 103,
     "fotos": [
@@ -2380,6 +2482,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 104,
     "fotos": [
@@ -2404,6 +2507,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 105,
     "fotos": [
@@ -2428,6 +2532,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 106,
     "fotos": [
@@ -2452,6 +2557,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 107,
     "fotos": [
@@ -2476,6 +2582,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 108,
     "fotos": [
@@ -2500,6 +2607,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 109,
     "fotos": [
@@ -2524,6 +2632,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 110,
     "fotos": [
@@ -2548,6 +2657,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 111,
     "fotos": [
@@ -2572,6 +2682,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 112,
     "fotos": [
@@ -2596,6 +2707,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 113,
     "fotos": [
@@ -2620,6 +2732,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 114,
     "fotos": [
@@ -2644,6 +2757,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 115,
     "fotos": [
@@ -2668,6 +2782,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 116,
     "fotos": [
@@ -2692,6 +2807,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 117,
     "fotos": [
@@ -2716,6 +2832,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 118,
     "fotos": [
@@ -2740,6 +2857,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 119,
     "fotos": [
@@ -2764,6 +2882,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 120,
     "fotos": [
@@ -2788,6 +2907,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 3,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 121,
     "fotos": [
@@ -2812,6 +2932,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 122,
     "fotos": [
@@ -2836,6 +2957,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 123,
     "fotos": [
@@ -2860,6 +2982,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 3,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 124,
     "fotos": [
@@ -2884,6 +3007,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 125,
     "fotos": [
@@ -2908,6 +3032,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 126,
     "fotos": [
@@ -2932,6 +3057,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 127,
     "fotos": [
@@ -2956,6 +3082,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 3,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 128,
     "fotos": [
@@ -2980,6 +3107,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 129,
     "fotos": [
@@ -3004,6 +3132,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 3,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 130,
     "fotos": [
@@ -3028,6 +3157,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 131,
     "fotos": [
@@ -3052,6 +3182,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 132,
     "fotos": [
@@ -3075,6 +3206,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 133,
     "fotos": [
@@ -3098,6 +3230,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 134,
     "fotos": [
@@ -3121,6 +3254,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 135,
     "fotos": [
@@ -3144,6 +3278,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 136,
     "fotos": [
@@ -3167,6 +3302,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 137,
     "fotos": [
@@ -3190,6 +3326,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 138,
     "fotos": [
@@ -3214,6 +3351,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 4,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 139,
     "fotos": [
@@ -3238,6 +3376,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 140,
     "fotos": [
@@ -3262,6 +3401,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 141,
     "fotos": [
@@ -3286,6 +3426,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 3,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 142,
     "fotos": [
@@ -3310,6 +3451,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 3,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 143,
     "fotos": [
@@ -3334,6 +3476,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 144,
     "fotos": [
@@ -3358,6 +3501,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 3,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 145,
     "fotos": [
@@ -3382,6 +3526,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 3,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 146,
     "fotos": [
@@ -3406,6 +3551,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 147,
     "fotos": [
@@ -3430,6 +3576,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 148,
     "fotos": [
@@ -3454,6 +3601,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 149,
     "fotos": [
@@ -3478,6 +3626,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 3,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 150,
     "fotos": [
@@ -3502,6 +3651,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 3,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 151,
     "fotos": [
@@ -3526,6 +3676,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 3,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 152,
     "fotos": [
@@ -3550,6 +3701,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 153,
     "fotos": [
@@ -3574,6 +3726,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 154,
     "fotos": [
@@ -3598,6 +3751,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 155,
     "fotos": [
@@ -3622,6 +3776,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 3,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 156,
     "fotos": [
@@ -3646,6 +3801,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 3,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 157,
     "fotos": [
@@ -3670,6 +3826,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 158,
     "fotos": [
@@ -3694,6 +3851,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 159,
     "fotos": [
@@ -3718,6 +3876,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 160,
     "fotos": [
@@ -3742,6 +3901,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 161,
     "fotos": [
@@ -3766,6 +3926,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 3,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 162,
     "fotos": [
@@ -3789,6 +3950,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 3,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 163,
     "fotos": [
@@ -3812,6 +3974,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 164,
     "fotos": [
@@ -3835,6 +3998,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 165,
     "fotos": [
@@ -3859,6 +4023,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 166,
     "fotos": [
@@ -3883,6 +4048,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 4,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 167,
     "fotos": [
@@ -3907,6 +4073,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 4,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 168,
     "fotos": [
@@ -3931,6 +4098,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 169,
     "fotos": [
@@ -3955,6 +4123,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 3,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 170,
     "fotos": [
@@ -3979,6 +4148,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 171,
     "fotos": [
@@ -4003,6 +4173,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 172,
     "fotos": [
@@ -4027,6 +4198,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 173,
     "fotos": [
@@ -4051,6 +4223,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 174,
     "fotos": [
@@ -4075,6 +4248,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 6,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 175,
     "fotos": [
@@ -4099,6 +4273,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 176,
     "fotos": [
@@ -4123,6 +4298,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 3,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 177,
     "fotos": [
@@ -4147,6 +4323,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 3,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 178,
     "fotos": [
@@ -4171,6 +4348,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 179,
     "fotos": [
@@ -4195,6 +4373,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 180,
     "fotos": [
@@ -4219,6 +4398,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 4,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 181,
     "fotos": [
@@ -4243,6 +4423,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 182,
     "fotos": [
@@ -4267,6 +4448,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 183,
     "fotos": [
@@ -4290,6 +4472,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 184,
     "fotos": [
@@ -4313,6 +4496,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 185,
     "fotos": [
@@ -4336,6 +4520,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 186,
     "fotos": [
@@ -4359,6 +4544,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 187,
     "fotos": [
@@ -4383,6 +4569,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 188,
     "fotos": [
@@ -4407,6 +4594,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 189,
     "fotos": [
@@ -4431,6 +4619,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 190,
     "fotos": [
@@ -4454,6 +4643,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 191,
     "fotos": [
@@ -4477,6 +4667,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 192,
     "fotos": [
@@ -4501,6 +4692,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 193,
     "fotos": [
@@ -4525,6 +4717,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 194,
     "fotos": [
@@ -4549,6 +4742,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 195,
     "fotos": [
@@ -4572,6 +4766,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 196,
     "fotos": [
@@ -4596,6 +4791,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 197,
     "fotos": [
@@ -4620,6 +4816,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 3,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 198,
     "fotos": [
@@ -4644,6 +4841,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 199,
     "fotos": [
@@ -4668,6 +4866,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 200,
     "fotos": [
@@ -4692,6 +4891,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 3,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 201,
     "fotos": [
@@ -4716,6 +4916,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 202,
     "fotos": [
@@ -4740,6 +4941,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 3,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 203,
     "fotos": [
@@ -4764,6 +4966,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 204,
     "fotos": [
@@ -4788,6 +4991,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 205,
     "fotos": [
@@ -4812,6 +5016,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 3,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 206,
     "fotos": [
@@ -4836,6 +5041,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 3,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 207,
     "fotos": [
@@ -4860,6 +5066,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 208,
     "fotos": [
@@ -4884,6 +5091,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 3,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 209,
     "fotos": [
@@ -4908,6 +5116,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 4,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 210,
     "fotos": [
@@ -4932,6 +5141,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 211,
     "fotos": [
@@ -4956,6 +5166,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 3,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 212,
     "fotos": [
@@ -4980,6 +5191,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 4,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 213,
     "fotos": [
@@ -5003,6 +5215,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 214,
     "fotos": [
@@ -5026,6 +5239,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 215,
     "fotos": [
@@ -5049,6 +5263,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 216,
     "fotos": [
@@ -5072,6 +5287,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 217,
     "fotos": [
@@ -5095,6 +5311,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 218,
     "fotos": [
@@ -5118,6 +5335,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 219,
     "fotos": [
@@ -5141,6 +5359,7 @@
     "idioma": "Chino",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 220,
     "fotos": [
@@ -5165,6 +5384,7 @@
     "idioma": "Chino",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 221,
     "fotos": [
@@ -5189,6 +5409,7 @@
     "idioma": "Chino",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 222,
     "fotos": [
@@ -5213,6 +5434,7 @@
     "idioma": "Chino",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 223,
     "fotos": [
@@ -5237,6 +5459,7 @@
     "idioma": "Chino",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 224,
     "fotos": [
@@ -5261,6 +5484,7 @@
     "idioma": "Chino",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 225,
     "fotos": [
@@ -5285,6 +5509,7 @@
     "idioma": "Chino",
     "precio": 500,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 228,
     "fotos": [
@@ -5309,6 +5534,7 @@
     "idioma": "Inglés",
     "precio": 11800,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 230,
     "fotos": [
@@ -5333,6 +5559,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 231,
     "fotos": [
@@ -5357,6 +5584,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 232,
     "fotos": [
@@ -5381,6 +5609,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 233,
     "fotos": [
@@ -5405,6 +5634,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 234,
     "fotos": [
@@ -5429,6 +5659,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 235,
     "fotos": [
@@ -5453,6 +5684,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 236,
     "fotos": [
@@ -5477,6 +5709,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 237,
     "fotos": [
@@ -5501,6 +5734,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 238,
     "fotos": [
@@ -5525,6 +5759,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 239,
     "fotos": [
@@ -5549,6 +5784,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 240,
     "fotos": [
@@ -5573,6 +5809,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 241,
     "fotos": [
@@ -5597,6 +5834,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 242,
     "fotos": [
@@ -5621,6 +5859,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 243,
     "fotos": [
@@ -5645,6 +5884,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 244,
     "fotos": [
@@ -5669,6 +5909,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 245,
     "fotos": [
@@ -5693,6 +5934,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 246,
     "fotos": [
@@ -5717,6 +5959,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 247,
     "fotos": [
@@ -5741,6 +5984,7 @@
     "idioma": "Inglés",
     "precio": 800,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 248,
     "fotos": [
@@ -5764,6 +6008,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 249,
     "fotos": [
@@ -5787,6 +6032,7 @@
     "idioma": "Inglés",
     "precio": 6100,
     "stock": 0,
+    "estado": "Agotado",
     "vendidos": 1,
     "orden": 250,
     "fotos": [
@@ -5811,6 +6057,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 4,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 251,
     "fotos": [
@@ -5835,6 +6082,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 252,
     "fotos": [
@@ -5859,6 +6107,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 253,
     "fotos": [
@@ -5883,6 +6132,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 3,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 254,
     "fotos": [
@@ -5907,6 +6157,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 255,
     "fotos": [
@@ -5931,6 +6182,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 3,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 256,
     "fotos": [
@@ -5955,6 +6207,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 257,
     "fotos": [
@@ -5979,6 +6232,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 258,
     "fotos": [
@@ -6003,6 +6257,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 259,
     "fotos": [
@@ -6027,6 +6282,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 260,
     "fotos": [
@@ -6051,6 +6307,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 261,
     "fotos": [
@@ -6075,6 +6332,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 262,
     "fotos": [
@@ -6099,6 +6357,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 263,
     "fotos": [
@@ -6123,6 +6382,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 264,
     "fotos": [
@@ -6147,6 +6407,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 265,
     "fotos": [
@@ -6171,6 +6432,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 266,
     "fotos": [
@@ -6195,6 +6457,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 267,
     "fotos": [
@@ -6219,6 +6482,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 268,
     "fotos": [
@@ -6243,6 +6507,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 269,
     "fotos": [
@@ -6267,6 +6532,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 270,
     "fotos": [
@@ -6291,6 +6557,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 271,
     "fotos": [
@@ -6315,6 +6582,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 272,
     "fotos": [
@@ -6339,6 +6607,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 273,
     "fotos": [
@@ -6362,6 +6631,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 274,
     "fotos": [
@@ -6385,6 +6655,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 275,
     "fotos": [
@@ -6408,6 +6679,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 276,
     "fotos": [
@@ -6431,6 +6703,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 277,
     "fotos": [
@@ -6454,6 +6727,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 278,
     "fotos": [
@@ -6477,6 +6751,7 @@
     "idioma": "Inglés",
     "precio": 1000,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 279,
     "fotos": [
@@ -6501,6 +6776,7 @@
     "idioma": "Inglés",
     "precio": 2700,
     "stock": 0,
+    "estado": "Agotado",
     "vendidos": 1,
     "orden": 280,
     "fotos": [
@@ -6525,6 +6801,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 281,
     "fotos": [
@@ -6549,6 +6826,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 282,
     "fotos": [
@@ -6573,6 +6851,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 283,
     "fotos": [
@@ -6597,6 +6876,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 3,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 284,
     "fotos": [
@@ -6621,6 +6901,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 285,
     "fotos": [
@@ -6645,6 +6926,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 286,
     "fotos": [
@@ -6669,6 +6951,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 287,
     "fotos": [
@@ -6693,6 +6976,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 288,
     "fotos": [
@@ -6717,6 +7001,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 289,
     "fotos": [
@@ -6741,6 +7026,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 290,
     "fotos": [
@@ -6765,6 +7051,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 291,
     "fotos": [
@@ -6789,6 +7076,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 292,
     "fotos": [
@@ -6813,6 +7101,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 293,
     "fotos": [
@@ -6837,6 +7126,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 294,
     "fotos": [
@@ -6861,6 +7151,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 3,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 295,
     "fotos": [
@@ -6885,6 +7176,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 296,
     "fotos": [
@@ -6909,6 +7201,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 297,
     "fotos": [
@@ -6932,6 +7225,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 298,
     "fotos": [
@@ -6956,6 +7250,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 299,
     "fotos": [
@@ -6980,6 +7275,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 300,
     "fotos": [
@@ -7004,6 +7300,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 301,
     "fotos": [
@@ -7028,6 +7325,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 302,
     "fotos": [
@@ -7052,6 +7350,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 303,
     "fotos": [
@@ -7076,6 +7375,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 304,
     "fotos": [
@@ -7100,6 +7400,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 305,
     "fotos": [
@@ -7124,6 +7425,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 306,
     "fotos": [
@@ -7148,6 +7450,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 307,
     "fotos": [
@@ -7171,6 +7474,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 3,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 308,
     "fotos": [
@@ -7195,6 +7499,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 309,
     "fotos": [
@@ -7219,6 +7524,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 310,
     "fotos": [
@@ -7243,6 +7549,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 311,
     "fotos": [
@@ -7267,6 +7574,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 312,
     "fotos": [
@@ -7291,6 +7599,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 3,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 313,
     "fotos": [
@@ -7315,6 +7624,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 3,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 314,
     "fotos": [
@@ -7339,6 +7649,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 315,
     "fotos": [
@@ -7363,6 +7674,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 316,
     "fotos": [
@@ -7387,6 +7699,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 317,
     "fotos": [
@@ -7411,6 +7724,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 318,
     "fotos": [
@@ -7435,6 +7749,7 @@
     "idioma": "Inglés",
     "precio": 700,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 319,
     "fotos": [
@@ -7459,6 +7774,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 320,
     "fotos": [
@@ -7483,6 +7799,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 3,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 321,
     "fotos": [
@@ -7507,6 +7824,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 3,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 322,
     "fotos": [
@@ -7531,6 +7849,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 323,
     "fotos": [
@@ -7555,6 +7874,7 @@
     "idioma": "Inglés",
     "precio": 45000,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 324,
     "fotos": [
@@ -7572,6 +7892,7 @@
     "idioma": "Inglés",
     "precio": 52000,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 325,
     "fotos": [
@@ -7589,6 +7910,7 @@
     "idioma": "Inglés",
     "precio": 48500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 326,
     "fotos": [
@@ -7606,6 +7928,7 @@
     "idioma": "Inglés",
     "precio": 22000,
     "stock": 4,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 327,
     "fotos": [
@@ -7623,6 +7946,7 @@
     "idioma": "Inglés",
     "precio": 40000,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 328,
     "fotos": [
@@ -7640,6 +7964,7 @@
     "idioma": "Inglés",
     "precio": 14900,
     "stock": 7,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 329,
     "fotos": [
@@ -7657,6 +7982,7 @@
     "idioma": "Inglés",
     "precio": 16000,
     "stock": 3,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 330,
     "fotos": [
@@ -7674,6 +8000,7 @@
     "idioma": "Inglés",
     "precio": 24000,
     "stock": 3,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 331,
     "fotos": [
@@ -7691,6 +8018,7 @@
     "idioma": "Inglés",
     "precio": 24000,
     "stock": 3,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 332,
     "fotos": [
@@ -7707,15 +8035,14 @@
     "categoriaCorta": "Premium",
     "idioma": "Inglés",
     "precio": 180000,
-    "stock": 1,
-    "etiqueta": "Pedido especial",
+    "stock": 0,
+    "estado": "Por consultar",
     "vendidos": 0,
     "orden": 334,
     "fotos": [
       "/productos/ultra-premium-collection-30th-celebration-night.webp"
     ],
-    "descripcion": "Ultra-Premium Collection de 30th Celebration, versión Night (con Umbreon en la caja), en inglés. Su precio oficial es $179,99, pero se agotó apenas salió y hoy en Estados Unidos se vende en unos $400. Te la traemos de Estados Unidos: se entrega después del 5 de Diciembre.",
-    "llegada": "2026-12-05T12:00:00-06:00"
+    "descripcion": "Ultra-Premium Collection de 30th Celebration, versión Night (con Umbreon en la caja), en inglés. Su precio oficial es $179,99, pero se agotó apenas salió y hoy en Estados Unidos se vende en unos $400. Te la traemos de Estados Unidos: se entrega después del 5 de Diciembre."
   },
   {
     "id": "C335",
@@ -7726,15 +8053,14 @@
     "categoriaCorta": "Premium",
     "idioma": "Inglés",
     "precio": 172500,
-    "stock": 1,
-    "etiqueta": "Pedido especial",
+    "stock": 0,
+    "estado": "Por consultar",
     "vendidos": 0,
     "orden": 335,
     "fotos": [
       "/productos/ultra-premium-collection-30th-celebration-day.webp"
     ],
-    "descripcion": "Ultra-Premium Collection de 30th Celebration, versión Day (con Espeon en la caja), en inglés. Su precio oficial es $179,99, pero se agotó apenas salió y hoy en Estados Unidos se vende en unos $380. Te la traemos de Estados Unidos: se entrega después del 5 de Diciembre.",
-    "llegada": "2026-12-05T12:00:00-06:00"
+    "descripcion": "Ultra-Premium Collection de 30th Celebration, versión Day (con Espeon en la caja), en inglés. Su precio oficial es $179,99, pero se agotó apenas salió y hoy en Estados Unidos se vende en unos $380. Te la traemos de Estados Unidos: se entrega después del 5 de Diciembre."
   },
   {
     "id": "C336",
@@ -7745,15 +8071,14 @@
     "categoriaCorta": "ETB",
     "idioma": "Inglés",
     "precio": 82000,
-    "stock": 1,
-    "etiqueta": "Pedido especial",
+    "stock": 0,
+    "estado": "Por consultar",
     "vendidos": 0,
     "orden": 336,
     "fotos": [
       "/productos/etb-prismatic-evolutions.webp"
     ],
-    "descripcion": "Elite Trainer Box de Scarlet & Violet: Prismatic Evolutions, en inglés, con Eevee en la caja. Muy difícil de conseguir en Costa Rica. Te la traemos de Estados Unidos: se entrega después del 5 de Diciembre.",
-    "llegada": "2026-12-06T12:00:00-06:00"
+    "descripcion": "Elite Trainer Box de Scarlet & Violet: Prismatic Evolutions, en inglés, con Eevee en la caja. Muy difícil de conseguir en Costa Rica. Te la traemos de Estados Unidos: se entrega después del 5 de Diciembre."
   },
   {
     "id": "C337",
@@ -7764,15 +8089,14 @@
     "categoriaCorta": "ETB",
     "idioma": "Inglés",
     "precio": 103500,
-    "stock": 1,
-    "etiqueta": "Pedido especial",
+    "stock": 0,
+    "estado": "Por consultar",
     "vendidos": 0,
     "orden": 337,
     "fotos": [
       "/productos/etb-y-booster-bundle-30th-celebration.webp"
     ],
-    "descripcion": "Paquete de 30th Celebration con una Elite Trainer Box y un Booster Bundle, en inglés. Te lo traemos de Estados Unidos: se entrega después del 5 de Diciembre.",
-    "llegada": "2026-12-05T12:00:00-06:00"
+    "descripcion": "Paquete de 30th Celebration con una Elite Trainer Box y un Booster Bundle, en inglés. Te lo traemos de Estados Unidos: se entrega después del 5 de Diciembre."
   },
   {
     "id": "C338",
@@ -7783,15 +8107,14 @@
     "categoriaCorta": "ETB",
     "idioma": "Inglés",
     "precio": 119000,
-    "stock": 2,
-    "etiqueta": "Pedido especial",
+    "stock": 0,
+    "estado": "Por consultar",
     "vendidos": 0,
     "orden": 338,
     "fotos": [
       "/productos/etb-pokemon-center-chaos-rising.webp"
     ],
-    "descripcion": "Elite Trainer Box exclusiva de Pokémon Center de Mega Evolution: Chaos Rising, en inglés. Trae más sobres que la ETB normal y una carta promo con el sello de Pokémon Center. Solo se vende en la tienda oficial de Estados Unidos. Te la traemos: se entrega después del 5 de Diciembre y está sujeta a disponibilidad; si no la conseguimos, te devolvemos el 100%.",
-    "llegada": "2026-12-05T12:00:00-06:00"
+    "descripcion": "Elite Trainer Box exclusiva de Pokémon Center de Mega Evolution: Chaos Rising, en inglés. Trae más sobres que la ETB normal y una carta promo con el sello de Pokémon Center. Solo se vende en la tienda oficial de Estados Unidos. Te la traemos: se entrega después del 5 de Diciembre y está sujeta a disponibilidad; si no la conseguimos, te devolvemos el 100%."
   },
   {
     "id": "C339",
@@ -7803,6 +8126,7 @@
     "idioma": "Inglés",
     "precio": 800,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 339,
     "fotos": [
@@ -7827,6 +8151,7 @@
     "idioma": "Inglés",
     "precio": 800,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 340,
     "fotos": [
@@ -7851,6 +8176,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 341,
     "fotos": [
@@ -7875,6 +8201,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 342,
     "fotos": [
@@ -7899,6 +8226,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 343,
     "fotos": [
@@ -7923,6 +8251,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 344,
     "fotos": [
@@ -7947,6 +8276,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 345,
     "fotos": [
@@ -7971,6 +8301,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 346,
     "fotos": [
@@ -7994,6 +8325,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 347,
     "fotos": [
@@ -8018,6 +8350,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 348,
     "fotos": [
@@ -8042,6 +8375,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 349,
     "fotos": [
@@ -8066,6 +8400,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 350,
     "fotos": [
@@ -8090,6 +8425,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 351,
     "fotos": [
@@ -8114,6 +8450,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 352,
     "fotos": [
@@ -8138,6 +8475,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 353,
     "fotos": [
@@ -8162,6 +8500,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 354,
     "fotos": [
@@ -8186,6 +8525,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 355,
     "fotos": [
@@ -8210,6 +8550,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 356,
     "fotos": [
@@ -8234,6 +8575,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 357,
     "fotos": [
@@ -8258,6 +8600,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 358,
     "fotos": [
@@ -8282,6 +8625,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 359,
     "fotos": [
@@ -8306,6 +8650,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 360,
     "fotos": [
@@ -8330,6 +8675,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 361,
     "fotos": [
@@ -8354,6 +8700,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 362,
     "fotos": [
@@ -8378,6 +8725,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 363,
     "fotos": [
@@ -8401,6 +8749,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 364,
     "fotos": [
@@ -8424,6 +8773,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 365,
     "fotos": [
@@ -8448,6 +8798,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 366,
     "fotos": [
@@ -8472,6 +8823,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 367,
     "fotos": [
@@ -8496,6 +8848,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 368,
     "fotos": [
@@ -8520,6 +8873,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 369,
     "fotos": [
@@ -8544,6 +8898,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 370,
     "fotos": [
@@ -8568,6 +8923,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 371,
     "fotos": [
@@ -8592,6 +8948,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 372,
     "fotos": [
@@ -8615,6 +8972,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 373,
     "fotos": [
@@ -8638,6 +8996,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 374,
     "fotos": [
@@ -8661,6 +9020,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 375,
     "fotos": [
@@ -8685,6 +9045,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 376,
     "fotos": [
@@ -8709,6 +9070,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 377,
     "fotos": [
@@ -8733,6 +9095,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 378,
     "fotos": [
@@ -8757,6 +9120,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 379,
     "fotos": [
@@ -8781,6 +9145,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 380,
     "fotos": [
@@ -8805,6 +9170,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 381,
     "fotos": [
@@ -8829,6 +9195,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 382,
     "fotos": [
@@ -8853,6 +9220,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 383,
     "fotos": [
@@ -8877,6 +9245,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 384,
     "fotos": [
@@ -8901,6 +9270,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 385,
     "fotos": [
@@ -8925,6 +9295,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 386,
     "fotos": [
@@ -8949,6 +9320,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 387,
     "fotos": [
@@ -8973,6 +9345,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 388,
     "fotos": [
@@ -8997,6 +9370,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 389,
     "fotos": [
@@ -9021,6 +9395,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 390,
     "fotos": [
@@ -9045,6 +9420,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 391,
     "fotos": [
@@ -9069,6 +9445,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 392,
     "fotos": [
@@ -9093,6 +9470,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 4,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 393,
     "fotos": [
@@ -9117,6 +9495,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 394,
     "fotos": [
@@ -9141,6 +9520,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 5,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 395,
     "fotos": [
@@ -9165,6 +9545,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 3,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 396,
     "fotos": [
@@ -9189,6 +9570,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 397,
     "fotos": [
@@ -9213,6 +9595,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 4,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 398,
     "fotos": [
@@ -9236,6 +9619,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 399,
     "fotos": [
@@ -9259,6 +9643,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 400,
     "fotos": [
@@ -9282,6 +9667,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 401,
     "fotos": [
@@ -9305,6 +9691,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 402,
     "fotos": [
@@ -9328,6 +9715,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 403,
     "fotos": [
@@ -9352,6 +9740,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 3,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 404,
     "fotos": [
@@ -9375,6 +9764,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 405,
     "fotos": [
@@ -9398,6 +9788,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 3,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 406,
     "fotos": [
@@ -9421,6 +9812,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 407,
     "fotos": [
@@ -9444,6 +9836,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 4,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 408,
     "fotos": [
@@ -9467,6 +9860,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 409,
     "fotos": [
@@ -9490,6 +9884,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 3,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 410,
     "fotos": [
@@ -9513,6 +9908,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 411,
     "fotos": [
@@ -9536,6 +9932,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 412,
     "fotos": [
@@ -9559,6 +9956,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 2,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 413,
     "fotos": [
@@ -9582,6 +9980,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 3,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 414,
     "fotos": [
@@ -9605,6 +10004,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 415,
     "fotos": [
@@ -9628,6 +10028,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 416,
     "fotos": [
@@ -9651,6 +10052,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 417,
     "fotos": [
@@ -9674,6 +10076,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 418,
     "fotos": [
@@ -9697,6 +10100,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 419,
     "fotos": [
@@ -9721,6 +10125,7 @@
     "idioma": "Chino",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 420,
     "fotos": [
@@ -9745,6 +10150,7 @@
     "idioma": "Chino",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 421,
     "fotos": [
@@ -9769,6 +10175,7 @@
     "idioma": "Chino",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 422,
     "fotos": [
@@ -9793,6 +10200,7 @@
     "idioma": "Chino",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 423,
     "fotos": [
@@ -9817,6 +10225,7 @@
     "idioma": "Chino",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 424,
     "fotos": [
@@ -9841,6 +10250,7 @@
     "idioma": "Chino",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 425,
     "fotos": [
@@ -9865,6 +10275,7 @@
     "idioma": "Chino",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 426,
     "fotos": [
@@ -9889,6 +10300,7 @@
     "idioma": "Chino",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 427,
     "fotos": [
@@ -9913,6 +10325,7 @@
     "idioma": "Chino",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 428,
     "fotos": [
@@ -9937,6 +10350,7 @@
     "idioma": "Chino",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 429,
     "fotos": [
@@ -9961,6 +10375,7 @@
     "idioma": "Chino",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 430,
     "fotos": [
@@ -9985,6 +10400,7 @@
     "idioma": "Chino",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 431,
     "fotos": [
@@ -10009,6 +10425,7 @@
     "idioma": "Chino",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 432,
     "fotos": [
@@ -10033,6 +10450,7 @@
     "idioma": "Chino",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 433,
     "fotos": [
@@ -10057,6 +10475,7 @@
     "idioma": "Chino",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 434,
     "fotos": [
@@ -10081,6 +10500,7 @@
     "idioma": "Chino",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 435,
     "fotos": [
@@ -10105,6 +10525,7 @@
     "idioma": "Chino",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 436,
     "fotos": [
@@ -10129,6 +10550,7 @@
     "idioma": "Chino",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 437,
     "fotos": [
@@ -10153,6 +10575,7 @@
     "idioma": "Chino",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 438,
     "fotos": [
@@ -10177,6 +10600,7 @@
     "idioma": "Chino",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 439,
     "fotos": [
@@ -10201,6 +10625,7 @@
     "idioma": "Chino",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 440,
     "fotos": [
@@ -10225,6 +10650,7 @@
     "idioma": "Chino",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 441,
     "fotos": [
@@ -10249,6 +10675,7 @@
     "idioma": "Chino",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 442,
     "fotos": [
@@ -10273,6 +10700,7 @@
     "idioma": "Chino",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 443,
     "fotos": [
@@ -10297,6 +10725,7 @@
     "idioma": "Chino",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 444,
     "fotos": [
@@ -10321,6 +10750,7 @@
     "idioma": "Chino",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 445,
     "fotos": [
@@ -10345,6 +10775,7 @@
     "idioma": "Chino",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 446,
     "fotos": [
@@ -10369,6 +10800,7 @@
     "idioma": "Chino",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 447,
     "fotos": [
@@ -10393,6 +10825,7 @@
     "idioma": "Chino",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 448,
     "fotos": [
@@ -10417,6 +10850,7 @@
     "idioma": "Chino",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 449,
     "fotos": [
@@ -10441,6 +10875,7 @@
     "idioma": "Chino",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 450,
     "fotos": [
@@ -10465,6 +10900,7 @@
     "idioma": "Chino",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 451,
     "fotos": [
@@ -10489,6 +10925,7 @@
     "idioma": "Chino",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 452,
     "fotos": [
@@ -10513,6 +10950,7 @@
     "idioma": "Chino",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 453,
     "fotos": [
@@ -10537,6 +10975,7 @@
     "idioma": "Chino",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 454,
     "fotos": [
@@ -10561,6 +11000,7 @@
     "idioma": "Chino",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 455,
     "fotos": [
@@ -10585,6 +11025,7 @@
     "idioma": "Chino",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 456,
     "fotos": [
@@ -10609,6 +11050,7 @@
     "idioma": "Chino",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 457,
     "fotos": [
@@ -10633,6 +11075,7 @@
     "idioma": "Chino",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 458,
     "fotos": [
@@ -10657,6 +11100,7 @@
     "idioma": "Chino",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 459,
     "fotos": [
@@ -10681,6 +11125,7 @@
     "idioma": "Chino",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 460,
     "fotos": [
@@ -10705,6 +11150,7 @@
     "idioma": "Chino",
     "precio": 1400,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 461,
     "fotos": [
@@ -10729,6 +11175,7 @@
     "idioma": "Chino",
     "precio": 1400,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 462,
     "fotos": [
@@ -10753,6 +11200,7 @@
     "idioma": "Chino",
     "precio": 1400,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 463,
     "fotos": [
@@ -10777,6 +11225,7 @@
     "idioma": "Chino",
     "precio": 2600,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 464,
     "fotos": [
@@ -10801,6 +11250,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 465,
     "fotos": [
@@ -10825,6 +11275,7 @@
     "idioma": "Inglés",
     "precio": 47000,
     "stock": 1,
+    "estado": "Disponible",
     "destacado": true,
     "vendidos": 0,
     "orden": 466,
@@ -10843,6 +11294,7 @@
     "idioma": "Inglés",
     "precio": 85000,
     "stock": 1,
+    "estado": "Disponible",
     "destacado": true,
     "vendidos": 0,
     "orden": 467,
@@ -10861,6 +11313,7 @@
     "idioma": "Inglés",
     "precio": 12700,
     "stock": 3,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 468,
     "fotos": [
@@ -10878,6 +11331,7 @@
     "idioma": "Inglés",
     "precio": 46000,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 469,
     "fotos": [
@@ -10895,6 +11349,7 @@
     "idioma": "Inglés",
     "precio": 22500,
     "stock": 3,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 470,
     "fotos": [
@@ -10912,6 +11367,7 @@
     "idioma": "Inglés",
     "precio": 28700,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 471,
     "fotos": [
@@ -10929,6 +11385,7 @@
     "idioma": "Inglés",
     "precio": 19500,
     "stock": 3,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 472,
     "fotos": [
@@ -10946,6 +11403,7 @@
     "idioma": "Inglés",
     "precio": 24100,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 473,
     "fotos": [
@@ -10963,6 +11421,7 @@
     "idioma": "Inglés",
     "precio": 18300,
     "stock": 3,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 474,
     "fotos": [
@@ -10980,6 +11439,7 @@
     "idioma": "Inglés",
     "precio": 6400,
     "stock": 5,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 475,
     "fotos": [
@@ -10997,6 +11457,7 @@
     "idioma": "Otro",
     "precio": 16100,
     "stock": 4,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 476,
     "fotos": [
@@ -11014,6 +11475,7 @@
     "idioma": "Otro",
     "precio": 2300,
     "stock": 4,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 477,
     "fotos": [
@@ -11031,6 +11493,7 @@
     "idioma": "Inglés",
     "precio": 35600,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 478,
     "fotos": [
@@ -11048,6 +11511,7 @@
     "idioma": "Inglés",
     "precio": 183000,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 479,
     "fotos": [
@@ -11072,6 +11536,7 @@
     "idioma": "Inglés",
     "precio": 106800,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 480,
     "fotos": [
@@ -11096,6 +11561,7 @@
     "idioma": "Inglés",
     "precio": 98800,
     "stock": 1,
+    "estado": "Disponible",
     "destacado": true,
     "vendidos": 0,
     "orden": 481,
@@ -11121,6 +11587,7 @@
     "idioma": "Inglés",
     "precio": 80800,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 482,
     "fotos": [
@@ -11145,6 +11612,7 @@
     "idioma": "Inglés",
     "precio": 67500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 483,
     "fotos": [
@@ -11169,6 +11637,7 @@
     "idioma": "Inglés",
     "precio": 57300,
     "stock": 1,
+    "estado": "Disponible",
     "destacado": true,
     "vendidos": 0,
     "orden": 484,
@@ -11194,6 +11663,7 @@
     "idioma": "Inglés",
     "precio": 48600,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 485,
     "fotos": [
@@ -11218,6 +11688,7 @@
     "idioma": "Inglés",
     "precio": 44900,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 486,
     "fotos": [
@@ -11242,6 +11713,7 @@
     "idioma": "Inglés",
     "precio": 41100,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 487,
     "fotos": [
@@ -11266,6 +11738,7 @@
     "idioma": "Inglés",
     "precio": 42600,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 488,
     "fotos": [
@@ -11290,6 +11763,7 @@
     "idioma": "Inglés",
     "precio": 39600,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 489,
     "fotos": [
@@ -11314,6 +11788,7 @@
     "idioma": "Inglés",
     "precio": 35100,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 490,
     "fotos": [
@@ -11338,6 +11813,7 @@
     "idioma": "Inglés",
     "precio": 172400,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 491,
     "fotos": [
@@ -11355,6 +11831,7 @@
     "idioma": "Inglés",
     "precio": 86200,
     "stock": 2,
+    "estado": "Disponible",
     "destacado": true,
     "vendidos": 0,
     "orden": 492,
@@ -11373,6 +11850,7 @@
     "idioma": "Inglés",
     "precio": 690200,
     "stock": 1,
+    "estado": "Disponible",
     "destacado": true,
     "vendidos": 0,
     "orden": 493,
@@ -11398,6 +11876,7 @@
     "idioma": "Inglés",
     "precio": 152500,
     "stock": 1,
+    "estado": "Disponible",
     "destacado": true,
     "vendidos": 0,
     "orden": 494,
@@ -11423,6 +11902,7 @@
     "idioma": "Inglés",
     "precio": 141800,
     "stock": 1,
+    "estado": "Disponible",
     "destacado": true,
     "vendidos": 0,
     "orden": 495,
@@ -11448,6 +11928,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 496,
     "fotos": [
@@ -11472,6 +11953,7 @@
     "idioma": "Inglés",
     "precio": 650,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 497,
     "fotos": [
@@ -11496,6 +11978,7 @@
     "idioma": "Inglés",
     "precio": 500,
     "stock": 1,
+    "estado": "Disponible",
     "vendidos": 0,
     "orden": 498,
     "fotos": [
@@ -11520,6 +12003,7 @@
     "idioma": "Inglés",
     "precio": 31500,
     "stock": 4,
+    "estado": "Disponible",
     "destacado": true,
     "vendidos": 0,
     "orden": 500,

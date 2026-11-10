@@ -8,7 +8,6 @@ export const TIENDA = {
   // Servicio al cliente: llega a la cuenta de la tienda por Cloudflare Email Routing.
   correo: "sac@pokedeke.store",
   plazoPagoHoras: 24,
-  adelantoPreventa: 0.5,
 };
 
 /** Subcarpeta donde vive la página. En la compu va vacía. */
@@ -21,11 +20,26 @@ export const INDEXAR = !RUTA_BASE;
 /** Dirección del servidor de la hoja (apps-script/Pedidos.gs). */
 export const PEDIDOS_URL = process.env.NEXT_PUBLIC_PEDIDOS_URL ?? "";
 
+/**
+ * Pedidos especiales con pago anticipado: apagados hasta que la tienda los apruebe.
+ * La hoja además tiene que tenerlos encendidos (propiedad PEDIDOS_ESPECIALES).
+ */
+export const PEDIDOS_ESPECIALES =
+  process.env.NEXT_PUBLIC_PEDIDOS_ESPECIALES === "si" &&
+  process.env.NEXT_PUBLIC_TIENDA_ABIERTA === "si" &&
+  Boolean(process.env.NEXT_PUBLIC_PEDIDOS_URL);
+
 /** Sin esto la página es una demo: nadie debe pagar si el pedido no se anota. */
 export const TIENDA_ABIERTA =
   PEDIDOS_URL !== "" && process.env.NEXT_PUBLIC_TIENDA_ABIERTA === "si";
 
 export const LEMA = "Del mezzanine a tu colección";
+
+/**
+ * Lo más caro que sale en Destacados y arriba en la portada. Las cartas de cientos
+ * de miles de colones siguen en el catálogo, pero de entrada asustan.
+ */
+export const TOPE_DESTACADOS = 60000;
 
 export const LUGAR = {
   nombre: "Edificio Omni",
@@ -255,6 +269,12 @@ export function enlaceWhatsApp(texto: string) {
 export function enlaceCompartir(texto: string) {
   return `https://wa.me/?text=${encodeURIComponent(texto)}`;
 }
+
+/** El Instagram de la tienda. */
+export const INSTAGRAM = {
+  usuario: "pokedek.cr",
+  enlace: "https://www.instagram.com/pokedek.cr/",
+};
 
 /** Invitación al grupo de WhatsApp de la tienda (sin los datos de rastreo del enlace). */
 export const ENLACE_GRUPO = "https://chat.whatsapp.com/LFK9vTc7v2q8l3YIqDm6Yc";

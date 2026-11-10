@@ -3,8 +3,9 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { contarBusqueda } from "@/lib/api-pedidos";
 import { colones } from "@/lib/formato";
-import { coincide, disponibles, estaAgotado, PRODUCTOS } from "@/lib/productos";
+import { coincide, disponibles, estaAgotado, estadoDe, PRODUCTOS } from "@/lib/productos";
 import { conDatosVivos, useInventarioVivo } from "@/lib/vivo";
 import { Deke } from "./Deke";
 import { FotoProducto } from "./FotoProducto";
@@ -53,6 +54,17 @@ export function Buscador() {
     window.addEventListener("keydown", alTeclear);
     return () => window.removeEventListener("keydown", alTeclear);
   }, []);
+
+  // Qué se busca y si hay: dos segundos sin escribir cuentan como búsqueda terminada.
+  const cuantos = resultados.length;
+  useEffect(() => {
+    if (texto.trim().length < 3) return;
+    const reloj = window.setTimeout(
+      () => contarBusqueda(texto, cuantos, "buscador"),
+      2000,
+    );
+    return () => window.clearTimeout(reloj);
+  }, [texto, cuantos]);
 
   function cerrar() {
     dialogo.current?.close();
@@ -138,7 +150,7 @@ export function Buscador() {
                         </span>
                         <span className="block text-[13px] text-gris">
                           {estaAgotado(producto)
-                            ? "Agotado"
+                            ? estadoDe(producto)
                             : producto.categoriaCorta}
                         </span>
                       </span>
@@ -150,11 +162,24 @@ export function Buscador() {
                 ))}
               </ul>
             ) : (
-              <div className="flex items-center gap-3 p-4">
-                <Deke animo="triste" className="h-20 shrink-0" />
-                <p className="font-bold">
-                  Deke revisó todo el mezzanine y no halló nada con esa palabra.
-                </p>
+              <div className="flex flex-col gap-3 p-4">
+                <div className="flex items-center gap-3">
+                  <Deke animo="triste" className="h-20 shrink-0" />
+                  <p className="font-bold">
+                    Deke revisó todo el mezzanine y no halló nada con esa
+                    palabra. Si no lo tenemos, lo buscamos por vos.
+                  </p>
+                </div>
+                <Link
+                  href={
+                    "/busca?origen=buscador&producto=" +
+                    encodeURIComponent(texto.trim().slice(0, 150))
+                  }
+                  onClick={cerrar}
+                  className="boton boton-verde"
+                >
+                  Buscar con Pokedeke
+                </Link>
               </div>
             )}
             {resultados.length > MAXIMO ? (

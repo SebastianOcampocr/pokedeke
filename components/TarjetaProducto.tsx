@@ -2,12 +2,12 @@
 
 import Link from "next/link";
 import { ViewTransition } from "react";
-import { colones, fechaCorta } from "@/lib/formato";
+import { colones } from "@/lib/formato";
 import {
+  enlaceBusca,
   esCarta,
-  esPedidoEspecial,
   estaAgotado,
-  seAparta,
+  estadoDe,
   siglaDeCondicion,
   type Producto,
 } from "@/lib/productos";
@@ -21,9 +21,16 @@ import { Revelar } from "./Revelar";
 
 export function Calcomania({ producto: guardado }: { producto: Producto }) {
   const producto = useProductoVivo(guardado);
+  const estado = estadoDe(producto);
+  if (estado === "Pedido especial") {
+    return <span className="calcomania -rotate-2 bg-azul">De EE. UU.</span>;
+  }
+  if (estado === "En camino" || estado === "Por consultar") {
+    return <span className="calcomania -rotate-2 bg-azul">{estado}</span>;
+  }
   if (estaAgotado(producto)) return null;
 
-  if (producto.precioAntes && !seAparta(producto)) {
+  if (producto.precioAntes) {
     const rebaja = Math.round((1 - producto.precio / producto.precioAntes) * 100);
     return (
       <span className="estrella">
@@ -31,7 +38,7 @@ export function Calcomania({ producto: guardado }: { producto: Producto }) {
       </span>
     );
   }
-  if (!seAparta(producto) && producto.stock <= 3) {
+  if (producto.stock <= 3) {
     return (
       <span className="calcomania rotate-3 bg-rojo">
         {producto.stock === 1 ? "¡Queda 1!" : `¡Quedan ${producto.stock}!`}
@@ -39,11 +46,8 @@ export function Calcomania({ producto: guardado }: { producto: Producto }) {
     );
   }
   if (producto.etiqueta) {
-    const fondo = seAparta(producto) ? "bg-azul" : "bg-rojo";
     return (
-      <span className={`calcomania -rotate-2 ${fondo}`}>
-        {esPedidoEspecial(producto) ? "De EE. UU." : producto.etiqueta}
-      </span>
+      <span className="calcomania -rotate-2 bg-rojo">{producto.etiqueta}</span>
     );
   }
   return null;
@@ -116,16 +120,16 @@ export function TarjetaProducto({
   viaja?: boolean;
 }) {
   const producto = useProductoVivo(guardado);
-  const agotado = estaAgotado(producto);
+  const estado = estadoDe(producto);
+  // Agotado se apaga; en camino y por consultar se ven normales, pero no se compran.
+  const agotado = estado === "Agotado";
   const enlace = `/producto/${producto.slug}`;
   const detalle = [
+    // En camino y por consultar ya lo dice la calcomanía.
     agotado ? "Agotado" : null,
     producto.categoriaCorta,
     producto.idioma === "Otro" ? null : producto.idioma || null,
     siglaDeCondicion(producto) || null,
-    producto.llegada
-      ? `${esPedidoEspecial(producto) ? "Entrega después del" : "Llega el"} ${fechaCorta(producto.llegada)}`
-      : null,
   ]
     .filter(Boolean)
     .join(" · ");
@@ -173,10 +177,39 @@ export function TarjetaProducto({
             {producto.nombre}
           </Link>
         </h3>
-        {agotado ? (
+        {estado === "Pedido especial" ? (
+          <div className="mt-auto flex flex-wrap items-end justify-between gap-2">
+            <p className="mt-1 leading-tight">
+              <span className="block text-[13px] font-bold text-gris">
+                Pedido especial
+              </span>
+              <span className="text-[19px] font-extrabold text-azul">
+                {colones(producto.precio)}
+              </span>
+            </p>
+            <Link href={enlace} className="boton boton-amarillo boton-chico">
+              Ver condiciones
+            </Link>
+          </div>
+        ) : estado === "Por consultar" ? (
+          <div className="mt-auto flex flex-wrap items-end justify-between gap-2">
+            <p className="mt-1 leading-tight">
+              <span className="block text-[13px] font-bold text-gris">
+                Precio de referencia
+              </span>
+              <span className="text-[19px] font-extrabold text-azul">
+                {colones(producto.precio)}
+              </span>
+            </p>
+            <Link href={enlaceBusca(producto)} className="boton boton-amarillo boton-chico">
+              Consultar
+            </Link>
+          </div>
+        ) : estado !== "Disponible" ? (
           <BotonAvisame
             nombreProducto={producto.nombre}
             slug={producto.slug}
+            enCamino={estado === "En camino"}
             className="mt-2"
           />
         ) : (

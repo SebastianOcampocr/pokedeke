@@ -4,30 +4,33 @@ import type { CSSProperties, ReactNode } from "react";
 import { BotonGrupo, Cinta } from "@/components/Estructura";
 import { FotoProducto } from "@/components/FotoProducto";
 import { Deke } from "@/components/Deke";
-import { EncargoEEUU } from "@/components/EncargoEEUU";
+import { Busca } from "@/components/Busca";
 import { Letrero } from "@/components/Letrero";
 import { Opiniones } from "@/components/Opiniones";
 import { ComoFunciona, ElMezzanine, QueBuscas } from "@/components/Marca";
 import { Proximamente } from "@/components/Proximamente";
 import { Revelar } from "@/components/Revelar";
-import { SeViene } from "@/components/SeViene";
 import { SobreDibujo } from "@/components/SobreDibujo";
 import { SoloAqui } from "@/components/SoloAqui";
 import { RejillaProductos } from "@/components/TarjetaProducto";
 import { Vitrina } from "@/components/Vitrina";
 import {
+  alcanza,
   cartasSueltas,
   categoriasConProducto,
   conFoto,
   destacados as elegirDestacados,
   disponibles,
-  esPedidoEspecial,
-  esPreventa,
+  enCamino,
   novedadesVariadas,
+  paraPresupuesto,
+  porConsultar,
+  PRESUPUESTOS,
+  selladosDisponibles,
   type Producto,
 } from "@/lib/productos";
 import { masVistos } from "@/lib/extras";
-import { LEMA, SITIO, TIENDA } from "@/lib/tienda";
+import { INSTAGRAM, LEMA, SITIO, TIENDA } from "@/lib/tienda";
 import { DatosEstructurados } from "@/components/DatosEstructurados";
 
 export const metadata: Metadata = { alternates: { canonical: "/" } };
@@ -168,9 +171,12 @@ function BandaSobre() {
 }
 
 export default function Inicio() {
-  const destacados = elegirDestacados(8);
-  const preventas = disponibles().filter(esPreventa).slice(0, 4);
-  const especiales = disponibles().filter(esPedidoEspecial).slice(0, 4);
+  // Cuatro y no ocho: lo caro se ve, pero no ocupa toda la portada.
+  const destacados = elegirDestacados(4);
+  const porLlegar = enCamino().slice(0, 4);
+  const consultables = porConsultar()
+    .sort((a, b) => b.orden - a.orden)
+    .slice(0, 4);
   const recientes = novedadesVariadas(4);
   // Sin repetir lo que ya sale más arriba.
   const vistos = masVistos(
@@ -178,6 +184,25 @@ export default function Inicio() {
     [...destacados, ...recientes].map((producto) => producto.slug),
   );
   const hayCartas = cartasSueltas().length > 0;
+
+  // Por presupuesto: solo lo que hoy se puede comprar, sin repetir lo de arriba.
+  // Una sección con menos de tres productos no sale.
+  const yaSalio = new Set(
+    [...destacados, ...recientes, ...vistos].map((producto) => producto.slug),
+  );
+  const sinRepetir = (lista: Producto[]) => {
+    const libres = lista.filter((producto) => !yaSalio.has(producto.slug)).slice(0, 4);
+    if (libres.length < 3) return [];
+    libres.forEach((producto) => yaSalio.add(producto.slug));
+    return libres;
+  };
+  const joyitas = sinRepetir(paraPresupuesto("joyitas", 12));
+  const regalos = sinRepetir(paraPresupuesto("regalos", 12));
+  const sellados = sinRepetir(selladosDisponibles().slice(0, 12));
+  const presupuestos = PRESUPUESTOS.filter(
+    (presupuesto) =>
+      disponibles().filter((producto) => alcanza(presupuesto, producto)).length >= 3,
+  );
 
   return (
     <>
@@ -200,10 +225,11 @@ export default function Inicio() {
           description: "Tienda de Pokémon TCG en Costa Rica: cartas sueltas, sobres, ETB y cajas en colones.",
           url: SITIO,
           logo: `${SITIO}/icono-512.png`,
+          sameAs: [INSTAGRAM.enlace],
           email: TIENDA.correo,
           telephone: `+${TIENDA.whatsapp}`,
           currenciesAccepted: "CRC",
-          paymentAccepted: "SINPE Móvil",
+          paymentAccepted: "SINPE Móvil, tarjeta de débito o crédito (PayPal)",
           areaServed: { "@type": "Country", name: "Costa Rica" },
           address: { "@type": "PostalAddress", addressLocality: "San José", addressCountry: "CR" },
         }}
@@ -236,7 +262,7 @@ export default function Inicio() {
             style={{ animationDelay: "200ms" }}
           >
             Desde cartas de ₡500 hasta cajas que no se consiguen en Costa Rica.
-            Pagás por SINPE Móvil y te lo mandamos a todo el país.
+            Pagás por SINPE Móvil o con tarjeta y te lo mandamos a todo el país.
           </p>
           <div className="aparecer" style={{ animationDelay: "280ms" }}>
             <BotonGrupo className="w-full md:w-fit" />
@@ -272,13 +298,49 @@ export default function Inicio() {
             enlace="/catalogo"
             productos={destacados}
           />
+          {presupuestos.length > 1 ? (
+            <section className="flex flex-col gap-3">
+              <Revelar efecto="sello">
+                <h2 className="font-display text-[22px] text-rojo md:text-3xl">
+                  ¿Cuánto querés gastar?
+                </h2>
+              </Revelar>
+              <nav
+                aria-label="Elegí un presupuesto"
+                className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 md:mx-0 md:flex-wrap md:overflow-visible md:px-0"
+              >
+                {presupuestos.map((presupuesto) => (
+                  <Link
+                    key={presupuesto.id}
+                    href={`/catalogo?precio=${presupuesto.id}`}
+                    className="chip"
+                  >
+                    {presupuesto.corto}
+                  </Link>
+                ))}
+              </nav>
+            </section>
+          ) : null}
+          <Seccion
+            titulo="Joyitas hasta ₡5 000"
+            enlace="/catalogo?precio=joyitas"
+            productos={joyitas}
+            texto="Para empezar la colección o darse un gusto sin gastar mucho."
+          />
           {hayCartas ? <BandaSobre /> : null}
           <SoloAqui />
           <QueBuscas />
+          <Busca origen="portada" />
           <Seccion
             titulo="Recién llegado"
             enlace="/catalogo"
             productos={recientes}
+          />
+          <Seccion
+            titulo="Regalos de ₡10 000 a ₡25 000"
+            enlace="/catalogo?precio=regalos"
+            productos={regalos}
+            texto="Ideas para regalar que ya están en el mezzanine."
           />
           <Seccion
             titulo="Lo más visto"
@@ -294,20 +356,35 @@ export default function Inicio() {
 
       <div className="bg-white">
         <div className="mx-auto flex max-w-6xl flex-col gap-10 px-4 py-8 md:py-10">
-          <SeViene />
           <Seccion
-            titulo="Te lo traemos de Estados Unidos"
-            enlace="/catalogo?etiqueta=Pedido%20especial"
-            productos={especiales}
-            texto="Lo que casi no se consigue en Costa Rica, lo importamos para vos. Apartalo pagando el 100%: si al final no lo podemos traer, te devolvemos todo."
-          >
-            <EncargoEEUU />
-          </Seccion>
-          <Seccion
-            titulo="Preventas"
-            enlace="/catalogo?etiqueta=Preventa"
-            productos={preventas}
+            titulo="Sellados disponibles"
+            enlace="/catalogo?grupo=sellado&estado=Disponible"
+            productos={sellados}
+            texto="Cajas, bundles y sobres cerrados de fábrica, listos para enviar."
           />
+          <Seccion
+            titulo="En camino"
+            enlace="/catalogo?estado=En%20camino"
+            productos={porLlegar}
+            texto="Ya los compramos y vienen para el mezzanine. Todavía no se pueden comprar: pedí que te avisemos cuando lleguen."
+          />
+          <Seccion
+            titulo="Lo consultamos por vos"
+            enlace="/catalogo?estado=Por%20consultar"
+            productos={consultables}
+            texto="No están en el mezzanine: son productos que podemos buscar, aquí o en Estados Unidos. Revisamos si se consiguen y te confirmamos disponibilidad y precio antes de que pagués nada."
+          >
+            <p className="font-medium">
+              ¿Buscás otra cosa?{" "}
+              <Link
+                href="/busca"
+                className="font-bold text-azul underline underline-offset-2"
+              >
+                Pedinos que la busquemos
+              </Link>
+              .
+            </p>
+          </Seccion>
           <Opiniones />
           <ComoFunciona />
           <Proximamente />

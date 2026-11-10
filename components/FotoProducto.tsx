@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { estaAgotado, type Producto } from "@/lib/productos";
+import { estadoDe, type Producto } from "@/lib/productos";
 import { RUTA_BASE } from "@/lib/tienda";
 import { Deke } from "./Deke";
 
@@ -24,7 +24,8 @@ export function FotoProducto({
   prioridad?: boolean;
   className?: string;
 }) {
-  const apagada = estaAgotado(producto) ? "opacity-60 grayscale" : "";
+  // Solo lo agotado se apaga: lo que viene en camino o se consulta se ve normal.
+  const apagada = estadoDe(producto) === "Agotado" ? "opacity-60 grayscale" : "";
   const foto = producto.fotos[indice] ?? producto.fotos[0];
 
   if (!foto) {

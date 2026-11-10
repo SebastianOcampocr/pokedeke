@@ -7,19 +7,17 @@ import {
   Galeria,
   PrecioYStock,
 } from "@/components/DetalleProducto";
-import { Cuenta } from "@/components/Cuenta";
 import { DatosEstructurados } from "@/components/DatosEstructurados";
-import { AvisoPedidoEspecial } from "@/components/PedidoEspecial";
 import { IconoTipo } from "@/components/IconoTipo";
 import { Calcomania, RejillaProductos } from "@/components/TarjetaProducto";
 import { VistosRecientes } from "@/components/VistosRecientes";
-import { colones, fechaCorta } from "@/lib/formato";
+import { colones } from "@/lib/formato";
 import {
   buscarProducto,
-  esPedidoEspecial,
   esUsada,
   estaAgotado,
   PRODUCTOS,
+  relacionados as elegirRelacionados,
 } from "@/lib/productos";
 import {
   DIAS_DE_DESPACHO,
@@ -51,9 +49,15 @@ export async function generateMetadata(
       title: `${producto.nombre} · ${colones(producto.precio)}`,
       description: producto.descripcion,
       url: `/producto/${producto.slug}`,
-      ...(producto.fotos[0] && !/^https?:/.test(producto.fotos[0])
-        ? { images: [producto.fotos[0]] }
-        : {}),
+      type: "website",
+      siteName: TIENDA.nombre,
+      locale: "es_CR",
+      // Sin foto propia (o con una de otro sitio) sale la imagen de la tienda.
+      images: [
+        producto.fotos[0] && !/^https?:/.test(producto.fotos[0])
+          ? producto.fotos[0]
+          : "/compartir.jpg",
+      ],
     },
   };
 }
@@ -96,16 +100,7 @@ async function ContenidoProducto({
         { rotulo: "Condición", valor: producto.carta.condicion },
       ].filter(({ valor }) => valor)
     : [];
-  const relacionados = PRODUCTOS.filter(
-    (otro) => otro.slug !== producto.slug && !estaAgotado(otro),
-  )
-    .sort(
-      (a, b) =>
-        Number(b.categoria === producto.categoria) -
-          Number(a.categoria === producto.categoria) ||
-        b.vendidos - a.vendidos,
-    )
-    .slice(0, 4);
+  const relacionados = elegirRelacionados(producto, 4);
 
   return (
     <>
@@ -126,11 +121,12 @@ async function ContenidoProducto({
             url: `${SITIO}/producto/${producto.slug}`,
             priceCurrency: "CRC",
             price: producto.precio,
-            availability: estaAgotado(producto)
-              ? "https://schema.org/OutOfStock"
-              : esPedidoEspecial(producto)
+            availability:
+              producto.estado === "Pedido especial"
                 ? "https://schema.org/PreOrder"
-                : "https://schema.org/InStock",
+                : estaAgotado(producto)
+                  ? "https://schema.org/OutOfStock"
+                  : "https://schema.org/InStock",
             itemCondition: esUsada(producto)
               ? "https://schema.org/UsedCondition"
               : "https://schema.org/NewCondition",
@@ -165,16 +161,6 @@ async function ContenidoProducto({
             {producto.nombre}
           </h1>
           <PrecioYStock producto={producto} />
-          {esPedidoEspecial(producto) ? (
-            <AvisoPedidoEspecial llegada={producto.llegada} className="mb-3" />
-          ) : producto.llegada ? (
-            <div className="marco mb-3 flex w-fit flex-col gap-2 bg-crema p-3">
-              <p className="font-bold">
-                Llega al mezzanine el {fechaCorta(producto.llegada)}
-              </p>
-              <Cuenta llegada={producto.llegada} />
-            </div>
-          ) : null}
           <AccionesProducto producto={producto} />
         </div>
       </section>

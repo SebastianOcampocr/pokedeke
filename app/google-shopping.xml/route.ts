@@ -1,7 +1,5 @@
 import {
-  esPedidoEspecial,
   esUsada,
-  esPreventa,
   estaAgotado,
   PRODUCTOS,
   type Producto,
@@ -42,17 +40,15 @@ function titulo(producto: Producto) {
 }
 
 function disponibilidad(producto: Producto) {
-  if (estaAgotado(producto)) return { estado: "out_of_stock" };
-  if ((esPreventa(producto) || esPedidoEspecial(producto)) && producto.llegada) {
-    return { estado: "preorder", fecha: producto.llegada };
-  }
+  // En camino y por consultar no se pueden comprar: para Google van como agotados.
+  if (estaAgotado(producto) || producto.estado === "Pedido especial") return { estado: "out_of_stock" };
   return { estado: "in_stock" };
 }
 
 function item(producto: Producto) {
   const imagen = foto(producto);
   if (!imagen) return "";
-  const { estado, fecha } = disponibilidad(producto);
+  const { estado } = disponibilidad(producto);
   const campos: [string, string][] = [
     ["g:id", producto.id],
     ["g:title", titulo(producto)],
@@ -66,7 +62,6 @@ function item(producto: Producto) {
         /^https?:\/\//.test(otra) ? otra : `${SITIO}${otra}`,
       ]),
     ["g:availability", estado],
-    ...(fecha ? [["g:availability_date", fecha] as [string, string]] : []),
     ...(producto.precioAntes && producto.precioAntes > producto.precio
       ? [
           ["g:price", monto(producto.precioAntes)] as [string, string],

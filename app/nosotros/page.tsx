@@ -31,6 +31,10 @@ const PROMESAS = [
 
 const PREGUNTAS = [
   {
+    pregunta: "¿Tienen tienda física?",
+    respuesta: `Todavía no: somos una tienda en línea. Entregamos en persona en el ${LUGAR.nombre}, ${LUGAR.zona}, con cita por WhatsApp, y enviamos a todo el país. Tener un local es el plan para más adelante.`,
+  },
+  {
     pregunta: "¿Dónde retiro mi pedido?",
     respuesta: `En el ${LUGAR.nombre}, ${LUGAR.zona}. No es una tienda abierta al público: cuadramos día y hora por WhatsApp y te lo entregamos ahí. El retiro es gratis.`,
   },
@@ -45,19 +49,19 @@ const PREGUNTAS = [
       "Por SINPE Móvil o transferencia: al terminar la compra te damos el monto exacto y nos mandás el comprobante. Si al pagar ves la opción, también podés pagar con tarjeta de débito o crédito por medio de PayPal, en dólares, y el pedido queda confirmado de una vez.",
   },
   {
-    pregunta: "¿Cuánto tiempo me apartan el producto?",
+    pregunta: "¿Cuánto tiempo tengo para pagar?",
     respuesta:
-      "24 horas desde que hacés el pedido. Si no entra el pago en ese plazo, el producto vuelve a quedar disponible.",
+      "24 horas desde que hacés el pedido. Si no entra el pago en ese plazo, el pedido se cancela y el producto vuelve a quedar disponible.",
   },
   {
-    pregunta: "¿Cómo funcionan las preventas?",
+    pregunta: "¿Qué significa Disponible, En camino y Por consultar?",
     respuesta:
-      "Apartás con un adelanto del 50% y pagás el resto cuando llegue el producto.",
+      "Disponible es lo que tenemos en el mezzanine: lo comprás y te lo mandamos. En camino es algo que ya compramos y todavía no nos llega: no se puede comprar aún, pero podés pedir que te avisemos. Por consultar es algo que no tenemos y que podemos buscar, aquí o en Estados Unidos: nos consultás, revisamos y te confirmamos disponibilidad y precio antes de que pagués nada.",
   },
   {
-    pregunta: "¿Cómo funciona lo que traen de Estados Unidos?",
+    pregunta: "¿Hacen apartados o preventas?",
     respuesta:
-      "Son productos que casi no se consiguen en Costa Rica y que importamos para vos. Lo apartás pagando el 100% y se entrega después de la fecha que dice el producto. Hacemos todo lo posible por traerlo; si por algo no podemos, te devolvemos el 100% por el mismo medio: SINPE Móvil a la misma cuenta o PayPal a la misma tarjeta. Si buscás algo que no está, pedilo en la sección de Estados Unidos y te lo cotizamos por WhatsApp.",
+      "No: ni apartados, ni adelantos, ni pagos en tractos. La única excepción son los pedidos especiales que marcamos en algunos productos de Estados Unidos: pagás el 100% por adelantado, ves la fecha máxima de entrega y, si no lo podemos cumplir, te devolvemos todo. Si buscás algo que no está en la página, pedilo en Pokedeke Busca y revisamos si lo podemos conseguir.",
   },
   {
     pregunta: "¿Por qué algunos productos cuestan más?",

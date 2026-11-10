@@ -1,11 +1,10 @@
 import Link from "next/link";
 import {
   categoriasConProducto,
-  hayPedidosEspeciales,
-  hayPreventas,
 } from "@/lib/productos";
 import {
   ENLACE_GRUPO,
+  INSTAGRAM,
   LEMA,
   LUGAR,
   TIENDA,
@@ -23,17 +22,7 @@ const ENLACES = [
   { href: "/catalogo", texto: "Catálogo" },
   { href: "/sobre", texto: "Sobre del día" },
   { href: "/caja-compartida", texto: "Caja compartida" },
-  ...(hayPreventas()
-    ? [{ href: "/catalogo?etiqueta=Preventa", texto: "Preventas" }]
-    : []),
-  ...(hayPedidosEspeciales()
-    ? [
-        {
-          href: "/catalogo?etiqueta=Pedido%20especial",
-          texto: "De Estados Unidos",
-        },
-      ]
-    : []),
+  { href: "/busca", texto: "Lo buscamos" },
   { href: "/guia", texto: "Guía" },
   { href: "/nosotros", texto: "El Mezzanine" },
 ];
@@ -111,6 +100,17 @@ export function PiePagina() {
               {TIENDA.correo}
             </a>
           </p>
+          <p className="text-[15px]">
+            Instagram:{" "}
+            <a
+              href={INSTAGRAM.enlace}
+              target="_blank"
+              rel="noreferrer"
+              className="font-bold underline underline-offset-2"
+            >
+              @{INSTAGRAM.usuario}
+            </a>
+          </p>
         </div>
         <nav aria-label="Ayuda" className="grid grid-cols-2 gap-x-8">
           <Link href="/nosotros" className="min-h-11 content-center underline-offset-4 hover:underline">
@@ -133,6 +133,9 @@ export function PiePagina() {
               Vendenos tus cartas
             </Link>
           ) : null}
+          <Link href="/busca" className="min-h-11 content-center underline-offset-4 hover:underline">
+            Pokedeke Busca
+          </Link>
           <Link href="/guia" className="min-h-11 content-center underline-offset-4 hover:underline">
             Guía de Deke
           </Link>
@@ -212,8 +215,9 @@ const CINTA = [
   "Correos a todo el país",
   "Envío entre tiendas",
   "Envío gratis desde ₡50 000",
-  "Apartá en tractos",
   "Pagá con SINPE Móvil",
+  "Pagá con tarjeta",
+  "Si no está, lo buscamos",
 ];
 
 function TiraCinta() {

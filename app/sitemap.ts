@@ -8,6 +8,7 @@ export const dynamic = "force-static";
 const PAGINAS = [
   { ruta: "", prioridad: 1 },
   { ruta: "/catalogo", prioridad: 0.9 },
+  { ruta: "/busca", prioridad: 0.7 },
   { ruta: "/nosotros", prioridad: 0.6 },
   { ruta: "/sobre", prioridad: 0.5 },
   { ruta: "/caja-compartida", prioridad: 0.4 },

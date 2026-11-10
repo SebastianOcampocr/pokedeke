@@ -10,7 +10,7 @@ import {
   type Estado,
   type Pedido,
 } from "@/lib/pedidos";
-import { estaAgotado, PRODUCTOS, seAparta } from "@/lib/productos";
+import { estaAgotado, PRODUCTOS } from "@/lib/productos";
 import { RUTA_BASE, TIENDA_ABIERTA } from "@/lib/tienda";
 import { IconoCheque } from "./Iconos";
 
@@ -196,7 +196,6 @@ function Numeros({ pedidos }: { pedidos: Pedido[] }) {
   const pocoStock = PRODUCTOS.filter(
     (producto) =>
       !estaAgotado(producto) &&
-      !seAparta(producto) &&
       !producto.carta &&
       producto.stock <= 3,
   )
@@ -313,7 +312,12 @@ export function Panel() {
       <div className="flex flex-col gap-6">
         <p className="marco max-w-2xl bg-crema p-4 font-medium">
           Los pedidos se manejan en la pestaña Pedidos web de la hoja. Aquí
-          queda el texto para los grupos.
+          queda el texto para los grupos. Las imágenes y textos para redes
+          están en el{" "}
+          <a href={RUTA_BASE + "/estudio"} className="font-bold underline">
+            Estudio de contenido
+          </a>
+          .
         </p>
         <TextoWhatsApp />
       </div>

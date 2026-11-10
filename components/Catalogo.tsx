@@ -1,27 +1,33 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { useMemo, useState } from "react";
-import { EncargoEEUU } from "./EncargoEEUU";
+import { useEffect, useMemo, useState } from "react";
+import { contarBusqueda } from "@/lib/api-pedidos";
+import { Busca } from "./Busca";
 import Link from "next/link";
 import {
   categoriasConProducto,
   coincide,
-  hayPedidosEspeciales,
-  PEDIDO_ESPECIAL,
+  enCamino,
+  esSellado,
+  estadoDe,
+  porConsultar,
+  PRESUPUESTOS,
   PRODUCTOS,
   valoresUnicos,
 } from "@/lib/productos";
-import { enlaceWhatsApp } from "@/lib/tienda";
 import { useAgotadosAlFinal } from "@/lib/vivo";
 import { Revelar } from "./Revelar";
 import { TarjetaProducto } from "./TarjetaProducto";
 
 const RANGOS = [
   { id: "", texto: "Cualquier precio", min: 0, max: Infinity },
-  { id: "bajo", texto: "Hasta ₡10 000", min: 0, max: 10000 },
-  { id: "medio", texto: "De ₡10 000 a ₡50 000", min: 10000, max: 50000 },
-  { id: "alto", texto: "Más de ₡50 000", min: 50000, max: Infinity },
+  ...PRESUPUESTOS.map(({ id, corto, min, max }) => ({ id, texto: corto, min, max })),
+];
+
+const GRUPOS = [
+  { id: "sellado", texto: "Solo sellados" },
+  { id: "cartas", texto: "Solo cartas" },
 ];
 
 const ORDENES = [
@@ -32,7 +38,14 @@ const ORDENES = [
 ];
 
 const POR_TANDA = 24;
-const ETIQUETAS_DE_FILTRO = ["Preventa", PEDIDO_ESPECIAL];
+// Solo salen los filtros de estado que hoy tienen productos.
+const ESTADOS_DE_FILTRO = [
+  { estado: "Disponible", texto: "Disponible ya" },
+  ...(enCamino().length > 0 ? [{ estado: "En camino", texto: "En camino" }] : []),
+  ...(porConsultar().length > 0
+    ? [{ estado: "Por consultar", texto: "Por consultar" }]
+    : []),
+];
 const SUELTAS = "Carta suelta (single)";
 
 const CATEGORIAS_RAPIDAS = categoriasConProducto();
@@ -84,21 +97,33 @@ export function Catalogo({
   categoriaInicial = "",
   etiquetaInicial = "",
   busquedaInicial = "",
+  precioInicial = "",
+  grupoInicial = "",
 }: {
   categoriaInicial?: string;
   etiquetaInicial?: string;
   busquedaInicial?: string;
+  precioInicial?: string;
+  grupoInicial?: string;
 }) {
   const [busqueda, setBusqueda] = useState(busquedaInicial);
   const [juego, setJuego] = useState("");
   const [categoria, setCategoria] = useState(categoriaInicial);
   const [idioma, setIdioma] = useState("");
-  const [rango, setRango] = useState("");
+  const [rango, setRango] = useState(
+    RANGOS.some((opcion) => opcion.id === precioInicial) ? precioInicial : "",
+  );
+  // "sellado" o "cartas": junta varias categorías.
+  const [grupo, setGrupo] = useState(
+    GRUPOS.some((opcion) => opcion.id === grupoInicial) ? grupoInicial : "",
+  );
   const [rareza, setRareza] = useState("");
   const [orden, setOrden] = useState("nuevo");
-  // "Preventa" o "Pedido especial": muestra solo lo que se aparta de esa forma.
+  // "Disponible", "En camino" o "Por consultar": muestra solo lo que está así.
   const [etiqueta, setEtiqueta] = useState(
-    ETIQUETAS_DE_FILTRO.includes(etiquetaInicial) ? etiquetaInicial : "",
+    ESTADOS_DE_FILTRO.some(({ estado }) => estado === etiquetaInicial)
+      ? etiquetaInicial
+      : "",
   );
   const [filtrosAbiertos, setFiltrosAbiertos] = useState(false);
   const [tanda, setTanda] = useState({ clave: "", cantidad: POR_TANDA });
@@ -111,7 +136,9 @@ export function Catalogo({
         (!categoria || producto.categoria === categoria) &&
         (!idioma || producto.idioma === idioma) &&
         (!rareza || producto.carta?.rareza === rareza) &&
-        (!etiqueta || producto.etiqueta === etiqueta) &&
+        (!etiqueta || estadoDe(producto) === etiqueta) &&
+        (!grupo ||
+          (grupo === "sellado" ? esSellado(producto) : Boolean(producto.carta))) &&
         producto.precio >= limites.min &&
         producto.precio <= limites.max &&
         coincide(producto, busqueda),
@@ -122,8 +149,21 @@ export function Catalogo({
       if (orden === "vendidos") return b.vendidos - a.vendidos;
       return b.orden - a.orden;
     });
-  }, [busqueda, juego, categoria, idioma, rango, rareza, orden, etiqueta]);
+  }, [busqueda, juego, categoria, idioma, rango, rareza, orden, etiqueta, grupo]);
   const resultados = useAgotadosAlFinal(encontrados);
+
+  // Qué se busca y si hay: dos segundos sin escribir cuentan como búsqueda terminada.
+  // Se cuenta contra todo el catálogo, sin los demás filtros.
+  useEffect(() => {
+    if (busqueda.trim().length < 3) return;
+    const reloj = window.setTimeout(() => {
+      const cuantos = PRODUCTOS.filter((producto) =>
+        coincide(producto, busqueda),
+      ).length;
+      contarBusqueda(busqueda, cuantos, "catalogo");
+    }, 2000);
+    return () => window.clearTimeout(reloj);
+  }, [busqueda]);
 
   const hayFiltros = Boolean(
     busqueda ||
@@ -132,11 +172,12 @@ export function Catalogo({
       idioma ||
       rango ||
       rareza ||
-      etiqueta,
+      etiqueta ||
+      grupo,
   );
 
   // Al cambiar cualquier filtro se vuelve a la primera tanda.
-  const clave = [busqueda, juego, categoria, idioma, rango, rareza, orden, etiqueta].join("|");
+  const clave = [busqueda, juego, categoria, idioma, rango, rareza, orden, etiqueta, grupo].join("|");
   const cantidad = tanda.clave === clave ? tanda.cantidad : POR_TANDA;
   const visibles = resultados.slice(0, cantidad);
   const restantes = resultados.length - visibles.length;
@@ -147,6 +188,7 @@ export function Catalogo({
     setCategoria("");
     setIdioma("");
     setRango("");
+    setGrupo("");
     setRareza("");
     setEtiqueta("");
   }
@@ -231,36 +273,42 @@ export function Catalogo({
             opciones={ORDENES}
           />
           <div className="flex flex-wrap gap-2">
-            <button
-              type="button"
-              className="chip w-fit"
-              aria-pressed={etiqueta === "Preventa"}
-              onClick={() =>
-                setEtiqueta((actual) => (actual === "Preventa" ? "" : "Preventa"))
-              }
-            >
-              Solo preventas
-            </button>
-            {hayPedidosEspeciales() ? (
+            {GRUPOS.map(({ id, texto }) => (
               <button
+                key={id}
                 type="button"
                 className="chip w-fit"
-                aria-pressed={etiqueta === PEDIDO_ESPECIAL}
+                aria-pressed={grupo === id}
+                onClick={() => setGrupo((actual) => (actual === id ? "" : id))}
+              >
+                {texto}
+              </button>
+            ))}
+            {ESTADOS_DE_FILTRO.map(({ estado, texto }) => (
+              <button
+                key={estado}
+                type="button"
+                className="chip w-fit"
+                aria-pressed={etiqueta === estado}
                 onClick={() =>
-                  setEtiqueta((actual) =>
-                    actual === PEDIDO_ESPECIAL ? "" : PEDIDO_ESPECIAL,
-                  )
+                  setEtiqueta((actual) => (actual === estado ? "" : estado))
                 }
               >
-                De Estados Unidos
+                {texto}
               </button>
-            ) : null}
+            ))}
           </div>
         </div>
       </aside>
 
       <section aria-label="Resultados" className="min-w-0">
-        {etiqueta === PEDIDO_ESPECIAL ? <EncargoEEUU className="mb-5" /> : null}
+        {etiqueta === "Por consultar" ? (
+          <p className="mb-4 rounded-md bg-crema p-3 leading-snug font-medium">
+            Estos productos no están en el mezzanine: revisamos si los podemos
+            conseguir y te confirmamos disponibilidad y precio antes de que
+            pagués nada. Los precios son de referencia y pueden cambiar.
+          </p>
+        ) : null}
         <nav
           aria-label="Categorías"
           className="-mx-4 mb-3 flex gap-2 overflow-x-auto px-4 pb-1 md:mx-0 md:flex-wrap md:overflow-visible md:px-0"
@@ -330,20 +378,22 @@ export function Catalogo({
             ) : null}
           </>
         ) : (
-          <div className="marco bg-crema p-6">
-            <p className="font-display text-xl text-azul">No hallamos nada</p>
-            <p className="mt-2">
-              Probá con otra palabra o{" "}
-              <a
-                href={enlaceWhatsApp("¡Hola! Estoy buscando un producto.")}
-                target="_blank"
-                rel="noreferrer"
-                className="font-bold underline underline-offset-2"
-              >
-                escribinos por WhatsApp
-              </a>
-              : tal vez lo tenemos en camino.
-            </p>
+          <div className="flex flex-col gap-5">
+            <div className="marco bg-crema p-6">
+              <p className="font-display text-xl text-azul">No hallamos nada</p>
+              <p className="mt-2">
+                Probá con otra palabra o quitá algún filtro. Y si de verdad no
+                está, lo buscamos por vos.
+              </p>
+            </div>
+            {(
+              <Busca
+                key={busqueda}
+                origen="catalogo"
+                productoInicial={busqueda.trim().slice(0, 150)}
+                titulo="¿No encontraste lo que buscás?"
+              />
+            )}
           </div>
         )}
       </section>
@@ -358,8 +408,10 @@ export function CatalogoDesdeEnlace() {
     <Catalogo
       key={parametros.toString()}
       categoriaInicial={parametros.get("categoria") ?? ""}
-      etiquetaInicial={parametros.get("etiqueta") ?? ""}
+      etiquetaInicial={parametros.get("estado") ?? ""}
       busquedaInicial={parametros.get("q") ?? ""}
+      precioInicial={parametros.get("precio") ?? ""}
+      grupoInicial={parametros.get("grupo") ?? ""}
     />
   );
 }

@@ -1,3 +1,4 @@
+import { tomarVerificacion } from "./verificacion";
 import { PEDIDOS_URL, TIENDA_ABIERTA } from "./tienda";
 
 /** Lo que el servidor de la hoja responde siempre: `ok` y, si falló, `error`. */
@@ -20,6 +21,8 @@ export type PedidoNuevo = {
   lineas: { slug: string; cantidad: number }[];
   /** Campo escondido: si viene lleno, lo mandó un robot. */
   sitio: string;
+  /** Identifica este intento de compra: repetido, la hoja no anota otro pedido. */
+  intento?: string;
 };
 
 export type PedidoCreado = {
@@ -45,13 +48,21 @@ export type PedidoPublico = {
 
 const SIN_CONEXION = "No pudimos conectar. Revisá tu internet e intentá otra vez.";
 
+/** Lo que la hoja solo acepta con la comprobación de Cloudflare. Igual que CON_VERIFICACION en Pedidos.gs. */
+const CON_VERIFICACION = ["pedido", "solicitud", "comentario", "aviso", "interesado"];
+
 /** Sin encabezados especiales: así el navegador no pide permiso previo a Google. */
-async function enviar<T>(datos: object): Promise<Respuesta<T>> {
+async function enviar<T>(
+  datos: { accion: string } & Record<string, unknown>,
+): Promise<Respuesta<T>> {
   try {
+    const verificacion = CON_VERIFICACION.includes(datos.accion)
+      ? await tomarVerificacion()
+      : "";
     const respuesta = await fetch(PEDIDOS_URL, {
       method: "POST",
       headers: { "Content-Type": "text/plain;charset=utf-8" },
-      body: JSON.stringify(datos),
+      body: JSON.stringify(verificacion ? { ...datos, verificacion } : datos),
     });
     return (await respuesta.json()) as Respuesta<T>;
   } catch {
@@ -111,11 +122,14 @@ const ROBOT = /bot|crawl|spider|slurp|lighthouse|headless|preview/i;
 const CONTADOS = "pokedeke-contados";
 
 /**
- * Anónimo: cuenta que alguien abrió un producto ("vista") o lo agregó al
- * carrito, para la pestaña Lo más visto. Una vez al día por navegador y
+ * Anónimo: cuenta que alguien abrió un producto ("vista"), lo agregó al
+ * carrito o tocó el botón de WhatsApp, para la pestaña Lo más visto. Una vez al día por navegador y
  * producto, para que recargar no infle la cuenta. Si falla, no pasa nada.
  */
-export function contarVisita(slug: string, tipo: "vista" | "carrito") {
+export function contarVisita(
+  slug: string,
+  tipo: "vista" | "carrito" | "whatsapp",
+) {
   if (!TIENDA_ABIERTA || !PEDIDOS_URL) return;
   if (navigator.webdriver || ROBOT.test(navigator.userAgent)) return;
   const hoy = new Date().toISOString().slice(0, 10);
@@ -209,4 +223,104 @@ export async function consultarPedido(
   } catch {
     return { ok: false, error: SIN_CONEXION };
   }
+}
+
+/** De dónde llega una solicitud de Pokedeke Busca. Debe coincidir con ORIGENES en apps-script/Pedidos.gs. */
+export type OrigenBusca =
+  | "portada"
+  | "busca"
+  | "catalogo"
+  | "buscador"
+  | "agotado"
+  | "consultar"
+  | "camino"
+  | "eeuu";
+
+/** Manda algo a la hoja sin esperar respuesta: llega aunque la persona cambie de página. */
+function avisarSinEsperar(datos: object) {
+  const cuerpo = JSON.stringify(datos);
+  if (typeof navigator.sendBeacon === "function") {
+    navigator.sendBeacon(
+      PEDIDOS_URL,
+      new Blob([cuerpo], { type: "text/plain;charset=utf-8" }),
+    );
+    return;
+  }
+  void fetch(PEDIDOS_URL, {
+    method: "POST",
+    headers: { "Content-Type": "text/plain;charset=utf-8" },
+    body: cuerpo,
+    keepalive: true,
+  }).catch(() => undefined);
+}
+
+/**
+ * Pokedeke Busca: lo que la persona pide queda en la pestaña Solicitudes aunque
+ * no llegue a mandar el WhatsApp. No lleva nombre ni contacto.
+ */
+export function anotarSolicitud(datos: {
+  producto: string;
+  cantidad: number;
+  detalle: string;
+  presupuesto: string;
+  origen: OrigenBusca;
+  /** Si sale de la ficha de un producto: así cuenta en su demanda. */
+  slug?: string;
+}) {
+  if (!TIENDA_ABIERTA || !PEDIDOS_URL) return;
+  // La prueba ya se viene pidiendo desde que tocaron el formulario.
+  void tomarVerificacion().then((verificacion) =>
+    avisarSinEsperar({
+      accion: "solicitud",
+      ...datos,
+      ...(verificacion ? { verificacion } : {}),
+    }),
+  );
+}
+
+/** Lo que ya se buscó hoy en este navegador. */
+const BUSCADOS = "pokedeke-buscados";
+
+/** "Charizárd  EX " y "charizard ex" son la misma búsqueda. Limpia igual que terminoDeBusqueda en Pedidos.gs. */
+export function terminoDeBusqueda(texto: string) {
+  return texto
+    .normalize("NFD")
+    .replace(/\p{M}/gu, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9#/&.' -]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, 60);
+}
+
+/**
+ * Anónimo: qué se buscó y cuántos productos salieron, para la pestaña Búsquedas.
+ * Una vez al día por navegador y búsqueda. Lo que no da resultados es lo que la
+ * gente quiere y no tenemos.
+ */
+export function contarBusqueda(
+  texto: string,
+  resultados: number,
+  origen: "buscador" | "catalogo",
+) {
+  if (!TIENDA_ABIERTA || !PEDIDOS_URL) return;
+  if (navigator.webdriver || ROBOT.test(navigator.userAgent)) return;
+  const termino = terminoDeBusqueda(texto);
+  if (termino.length < 3) return;
+  const hoy = new Date().toISOString().slice(0, 10);
+  try {
+    const guardado = JSON.parse(localStorage.getItem(BUSCADOS) ?? "null") as {
+      dia: string;
+      terminos: string[];
+    } | null;
+    const terminos = guardado?.dia === hoy ? guardado.terminos : [];
+    if (terminos.includes(termino)) return;
+    localStorage.setItem(
+      BUSCADOS,
+      JSON.stringify({ dia: hoy, terminos: [...terminos, termino].slice(-200) }),
+    );
+  } catch {
+    // Sin almacenamiento se cuenta igual.
+  }
+  avisarSinEsperar({ accion: "busqueda", texto: termino, resultados, origen });
 }

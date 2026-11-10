@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 const SECCIONES = [
   { id: "envios", titulo: "Envíos" },
   { id: "cambios", titulo: "Cambios y devoluciones" },
-  { id: "pedidos-especiales", titulo: "Productos de Estados Unidos" },
+  { id: "pedidos-especiales", titulo: "En camino y por consultar" },
   { id: "terminos", titulo: "Términos" },
   { id: "privacidad", titulo: "Privacidad" },
 ];
@@ -103,41 +103,49 @@ export default function PaginaPoliticas() {
                 No hacemos devoluciones ni ajustes por cambios en el precio de
                 mercado de una carta después de la compra.
               </li>
-              <li>
-                Si una preventa se cancela o se atrasa más de 30 días, te
-                devolvemos todo el adelanto. Si querés cancelarla vos, avisanos
-                dentro de 8 días hábiles desde que pagaste el adelanto.
-              </li>
             </ul>
 
             <h2 id="pedidos-especiales" className="scroll-mt-20">
-              Productos de Estados Unidos
+              Productos en camino y por consultar
             </h2>
             <p>
-              Algunos productos que casi no se consiguen en Costa Rica los
-              importamos de Estados Unidos. Se marcan con “Te lo traemos de
-              Estados Unidos” y funcionan así:
+              Solo se puede comprar lo que dice “Disponible”: es lo que
+              tenemos en el mezzanine. Lo demás se muestra para que sepás qué
+              podemos conseguir:
             </p>
             <ul>
               <li>
-                Se apartan pagando el 100%, por SINPE Móvil o con tarjeta por
-                PayPal. El pago se confirma igual que cualquier pedido.
+                <strong>En camino:</strong> ya lo compramos y viene para el
+                mezzanine. No se puede comprar todavía ni damos fecha; podés
+                pedir que te avisemos cuando llegue.
               </li>
               <li>
-                Se entregan después de la fecha que dice cada producto. Si en tu
-                pedido hay otros productos, todo se entrega junto, salvo que lo
-                coordinemos distinto por WhatsApp.
+                <strong>Por consultar:</strong> no lo tenemos. Revisamos si lo
+                podemos conseguir, aquí o en Estados Unidos, y te confirmamos
+                disponibilidad y precio por WhatsApp. El precio que se ve es de
+                referencia y puede cambiar. No se paga nada hasta que te
+                confirmemos.
               </li>
               <li>
-                Hacemos todo lo posible por traerlos, pero dependen de la
-                disponibilidad. Si por algo no podemos entregarte lo que
-                compraste, te avisamos por WhatsApp y te devolvemos el 100% de
-                lo que pagaste, por el mismo medio: SINPE Móvil a la misma
-                cuenta o PayPal a la misma tarjeta.
+                No hacemos apartados, preventas con adelanto ni pagos en
+                tractos.
               </li>
               <li>
-                Si querés cancelarlo vos, avisanos dentro de 8 días hábiles
-                desde que pagaste y te devolvemos todo.
+                <strong>Pedido especial:</strong> solo para productos puntuales
+                que marquemos así, cuando ya confirmamos proveedor, precio,
+                versión y plazo. Pagás el 100% por adelantado y lo compramos al
+                proveedor con tu pago. La ficha y el pago te muestran la versión
+                exacta y la fecha máxima de entrega, y tenés que aceptar las
+                condiciones antes de pagar. Si no lo conseguimos, el proveedor
+                cancela o no llega a esa fecha, te devolvemos el 100% por el
+                mismo medio, sin rebajos. Podés cancelarlo dentro de los 8 días
+                hábiles desde que pagaste y te devolvemos todo. Para reclamos
+                escribinos por WhatsApp o a sac@pokedeke.store.
+              </li>
+              <li>
+                Los pedidos de productos de Estados Unidos que se pagaron antes
+                de este cambio mantienen sus condiciones: si no podemos
+                entregarlo, devolvemos el 100% por el mismo medio de pago.
               </li>
             </ul>
 
@@ -156,9 +164,9 @@ export default function PaginaPoliticas() {
               dólares, al tipo de cambio que se muestra al pagar; tu banco puede
               usar su propio tipo de cambio. Un pago con tarjeta confirma el
               pedido de una vez. Si hay que devolverte plata de un pago con
-              tarjeta, se devuelve por PayPal a la misma tarjeta o cuenta. El producto queda apartado por 24 horas desde que hacés
-              el pedido; si no se recibe el pago en ese plazo, el apartado se
-              libera. El pedido se confirma cuando verificamos que el SINPE
+              tarjeta, se devuelve por PayPal a la misma tarjeta o cuenta. Tenés 24 horas para pagar desde que hacés
+              el pedido; si no se recibe el pago en ese plazo, el pedido se
+              cancela y las unidades vuelven a estar disponibles. El pedido se confirma cuando verificamos que el SINPE
               entró.
             </p>
 

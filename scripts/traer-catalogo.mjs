@@ -4,7 +4,11 @@
  *
  * Lee esa pestaña desde el servidor de la hoja (variable PEDIDOS_URL) o desde un
  * archivo local con `--archivo ruta.csv`. Si Google no responde, deja el catálogo como
- * está. Si la pestaña cambió de forma, falla y tampoco lo toca.
+ * está. Si la pestaña cambió de forma, trae errores de fórmula o de golpe le falta
+ * mucho de lo que había (el freno), falla y tampoco lo toca.
+ *
+ * También lleva datos/enlaces-viejos.json: si un producto cambia de nombre en la
+ * hoja, su dirección vieja manda a la nueva.
  */
 import { readFileSync } from "node:fs";
 import { appendFile, readdir, readFile, writeFile } from "node:fs/promises";
@@ -50,7 +54,48 @@ const DESCRIPCIONES = {
   "Colección premium / UPC": "Colección especial para quien quiere la pieza grande.",
 };
 
-const ETIQUETAS = ["Nuevo", "Preventa", "Pedido especial", "Oferta"];
+const COLUMNAS_DE_NUMEROS = ["En stock", "Vendidas", "Precio sugerido (₡)", "Precio de venta (₡)"];
+
+// "Preventa" y "Pedido especial" ya no se usan: lo que las tenga sale como Por consultar.
+const ETIQUETAS = ["Nuevo", "Oferta"];
+const ETIQUETAS_VIEJAS = ["Preventa", "Pedido especial"];
+
+export const ESTADOS = {
+  disponible: "Disponible",
+  enCamino: "En camino",
+  porConsultar: "Por consultar",
+  agotado: "Agotado",
+  noPublicado: "No publicado",
+  pedidoEspecial: "Pedido especial",
+};
+const COLUMNA_ESTADO = "Estado en la página";
+const COLUMNAS_ENTREGA = ["Entrega máxima (pedido especial)", "Llega (preventas)"];
+
+/** La fecha máxima de entrega de un pedido especial (dd/mm/yyyy), como la entiende la página. */
+function entregaDe(lote) {
+  const texto = COLUMNAS_ENTREGA.map((columna) => lote[columna]).find((celda) => String(celda ?? "").trim());
+  const partes = String(texto ?? "").trim().match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  if (!partes) return "";
+  return partes[3] + "-" + partes[2].padStart(2, "0") + "-" + partes[1].padStart(2, "0");
+}
+
+/**
+ * El estado de una fila de "Catálogo web". Vacío o Disponible se vende si hay
+ * unidades; cualquier otra cosa no se vende aunque la hoja muestre stock. Debe
+ * decidir igual que estadoDelLote en apps-script/Pedidos.gs.
+ */
+export function estadoDelLote(lote) {
+  if (esNo(lote["Publicado (sí/no)"])) return ESTADOS.noPublicado;
+  const escrito = sinAcentos(String(lote[COLUMNA_ESTADO] ?? "")).trim();
+  if (!escrito) {
+    return ETIQUETAS_VIEJAS.includes(String(lote.Etiqueta ?? "").trim())
+      ? ESTADOS.porConsultar
+      : ESTADOS.disponible;
+  }
+  return (
+    Object.values(ESTADOS).find((estado) => sinAcentos(estado) === escrito) ?? ESTADOS.agotado
+  );
+}
 const CARTAS = ["Carta suelta (single)", "Carta gradada"];
 
 export function leerCsv(texto) {
@@ -108,14 +153,6 @@ function aEntero(texto) {
   return Number.parseInt(String(texto ?? "").replace(/[^\d-]/g, ""), 10) || 0;
 }
 
-/** De dd/mm/yyyy a la fecha que entiende el reloj de preventas. */
-function aFecha(texto) {
-  const partes = String(texto ?? "").trim().match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
-  if (!partes) return undefined;
-  const [, dia, mes, anio] = partes;
-  return `${anio}-${mes.padStart(2, "0")}-${dia.padStart(2, "0")}T12:00:00-06:00`;
-}
-
 const esSi = (texto) => /^s[ií]$/i.test(String(texto ?? "").trim());
 const esNo = (texto) => /^no$/i.test(String(texto ?? "").trim());
 
@@ -147,16 +184,26 @@ async function fotosGuardadas() {
   return { existentes, porClave };
 }
 
-function fotosDelProducto(nombre, celda, { existentes, porClave }, avisos) {
+/**
+ * Las fotos de la celda "Fotos (URL)". Una que empieza con "real:" es del
+ * artículo mismo (el frente o el reverso de esa carta): la página lo dice.
+ */
+function fotosDelProducto(nombre, celda, { existentes, porClave }, avisos, reales = []) {
   const propias = String(celda ?? "")
     .split(/[\s,;]+/)
     .filter(Boolean)
-    .flatMap((foto) => {
-      if (/^https?:\/\//.test(foto)) return [foto];
-      const archivo = foto.replace(/\.webp$/, "");
-      if (existentes.has(archivo)) return [`/productos/${archivo}.webp`];
-      avisos.push(`${nombre}: no existe la foto "${foto}".`);
-      return [];
+    .flatMap((escrita) => {
+      const esReal = /^real:/i.test(escrita);
+      const foto = escrita.replace(/^real:/i, "");
+      let ruta = "";
+      if (/^https?:\/\//.test(foto)) ruta = foto;
+      else if (existentes.has(foto.replace(/\.webp$/, ""))) ruta = "/productos/" + foto.replace(/\.webp$/, "") + ".webp";
+      if (!ruta) {
+        avisos.push(`${nombre}: no existe la foto "${foto}".`);
+        return [];
+      }
+      if (esReal) reales.push(ruta);
+      return [ruta];
     });
   if (propias.length > 0) return propias;
 
@@ -288,16 +335,43 @@ export function armarCatalogo(textoCsv, fotos) {
   if (lotes.length === 0) {
     throw new Error('"Catálogo web" vino sin productos.');
   }
+  // #REF!, #N/A y compañía: una fórmula rota no debe volverse "agotado" o "sin precio".
+  const rotas = lotes.filter((lote) =>
+    COLUMNAS_DE_NUMEROS.some((columna) => String(lote[columna] ?? "").trim().startsWith("#")),
+  );
+  if (rotas.length > 0) {
+    throw new Error(
+      '"Catálogo web" tiene ' + rotas.length + " filas con errores de fórmula (por ejemplo " +
+        rotas[0].Producto.trim() + "): no se publica hasta arreglarlas.",
+    );
+  }
 
   const avisos = [];
   const grupos = new Map();
   lotes.forEach((lote, indice) => {
     const nombre = lote.Producto.trim();
     if (sinAcentos(lote.Juego ?? "").trim() !== "pokemon") return;
-    if (esNo(lote["Publicado (sí/no)"])) return;
+    const estado = estadoDelLote(lote);
+    if (estado === ESTADOS.noPublicado) return;
 
     const clave = aSlug(nombre);
-    const grupo = grupos.get(clave) ?? { clave, nombre, lotes: [], orden: 0 };
+    const grupo = grupos.get(clave) ?? { clave, nombre, lotes: [], orden: 0, stock: 0, cupos: 0, estados: new Set() };
+    // Solo cuenta lo que está en el mezzanine: lo demás no es para vender hoy.
+    if (estado === ESTADOS.disponible) grupo.stock += Math.max(aEntero(lote["En stock"]), 0);
+    // Pedido especial: "En stock" son los cupos para importar. Sin Precio de venta o sin
+    // fecha de entrega futura no se vende: queda Por consultar. Igual que Pedidos.gs.
+    let estadoFinal = estado;
+    if (estado === ESTADOS.pedidoEspecial) {
+      const entrega = entregaDe(lote);
+      if (aMonto(lote["Precio de venta (₡)"]) > 0 && entrega && entrega > new Date().toISOString().slice(0, 10)) {
+        grupo.cupos += Math.max(aEntero(lote["En stock"]), 0);
+        grupo.entrega = entrega;
+        grupo.precioEspecial = aMonto(lote["Precio de venta (₡)"]);
+      } else {
+        estadoFinal = ESTADOS.porConsultar;
+      }
+    }
+    grupo.estados.add(estadoFinal);
     grupo.lotes.push(lote);
     grupo.orden = indice + 1;
     grupos.set(clave, grupo);
@@ -320,12 +394,24 @@ export function armarCatalogo(textoCsv, fotos) {
     const categoria = ultimo("Categoría") || "Otro";
     const carta = CARTAS.includes(categoria) ? datosDeCarta(grupo.nombre) : undefined;
     const etiqueta = ETIQUETAS.find((opcion) => opcion === ultimo("Etiqueta"));
-    const llegada = aFecha(ultimo("Llega (preventas)"));
+    const especial = grupo.stock === 0 && grupo.cupos > 0;
+    const estado =
+      grupo.stock > 0
+        ? ESTADOS.disponible
+        : especial
+          ? ESTADOS.pedidoEspecial
+          : grupo.estados.has(ESTADOS.enCamino)
+          ? ESTADOS.enCamino
+          : grupo.estados.has(ESTADOS.porConsultar)
+            ? ESTADOS.porConsultar
+            : ESTADOS.agotado;
+    const fotosReales = [];
     const fotosFinales = fotosDelProducto(
       grupo.nombre,
       ultimo("Fotos (URL)"),
       fotos,
       avisos,
+      fotosReales,
     );
     if (fotosFinales.length === 0) {
       avisos.push(`${grupo.nombre}: todavía no tiene foto.`);
@@ -343,11 +429,12 @@ export function armarCatalogo(textoCsv, fotos) {
         categoria,
         categoriaCorta: CORTAS[categoria] ?? categoria,
         idioma: ultimo("Idioma"),
-        precio,
-        stock: Math.max(
-          grupo.lotes.reduce((suma, lote) => suma + aEntero(lote["En stock"]), 0),
-          0,
-        ),
+        precio: especial ? grupo.precioEspecial : precio,
+        // Lo que se puede comprar hoy: 0 si está en camino, por consultar o agotado. En un
+        // pedido especial, los cupos para importar.
+        stock: especial ? grupo.cupos : grupo.stock,
+        estado,
+        ...(especial ? { entrega: grupo.entrega } : {}),
         ...(etiqueta ? { etiqueta } : {}),
         ...(esSi(ultimo("Destacado (sí/no)")) ? { destacado: true } : {}),
         vendidos: grupo.lotes.reduce(
@@ -356,8 +443,8 @@ export function armarCatalogo(textoCsv, fotos) {
         ),
         orden: grupo.orden,
         fotos: fotosFinales,
+        ...(fotosReales.length > 0 ? { fotosReales } : {}),
         descripcion,
-        ...(llegada ? { llegada } : {}),
         ...(carta ? { carta } : {}),
         ...(tipo ? { tipo } : {}),
       },
@@ -365,6 +452,92 @@ export function armarCatalogo(textoCsv, fotos) {
   });
 
   return { productos: completarTipos(productos), avisos };
+}
+
+const ejemplos = (productos) =>
+  productos
+    .slice(0, 3)
+    .map((producto) => producto.nombre ?? producto.slug)
+    .join(", ");
+
+/**
+ * El freno: si de golpe falta mucho de lo que había, es más probable una fórmula
+ * rota en la hoja que una decisión. Devuelve los motivos para no publicar; vacío
+ * si todo se ve normal. Con catálogos chiquitos no aplica.
+ */
+export function revisarCambio(previos, nuevos) {
+  if (previos.length < 20) return [];
+  const motivos = [];
+  const actuales = new Map(nuevos.map((producto) => [producto.slug, producto]));
+  const ids = new Set(nuevos.map((producto) => producto.id));
+
+  // Un producto que solo cambió de nombre sigue estando: se reconoce por su ID.
+  const perdidos = previos.filter(
+    (producto) => !actuales.has(producto.slug) && !ids.has(producto.id),
+  );
+  if (perdidos.length > Math.max(10, previos.length * 0.15)) {
+    motivos.push(
+      "Desaparecieron " + perdidos.length + " de " + previos.length +
+        " productos (por ejemplo " + ejemplos(perdidos) + ").",
+    );
+  }
+
+  const conStock = previos.filter((producto) => producto.stock > 0);
+  // Pasar algo a "En camino" o "Por consultar" es una decisión, no un error de la hoja.
+  const agotados = conStock.filter((producto) => {
+    const actual = actuales.get(producto.slug);
+    return actual?.stock === 0 && (actual.estado ?? ESTADOS.agotado) === ESTADOS.agotado;
+  });
+  if (conStock.length >= 20 && agotados.length > conStock.length * 0.5) {
+    motivos.push(
+      "Se agotaron de golpe " + agotados.length + " de " + conStock.length +
+        " productos (por ejemplo " + ejemplos(agotados) + ").",
+    );
+  }
+
+  const regalados = previos.filter((producto) => {
+    const actual = actuales.get(producto.slug);
+    return actual && producto.precio >= 1000 && actual.precio < producto.precio * 0.2;
+  });
+  if (regalados.length > Math.max(5, previos.length * 0.05)) {
+    motivos.push(
+      regalados.length + " productos bajaron de precio más de un 80% de golpe (por ejemplo " +
+        ejemplos(regalados) + ").",
+    );
+  }
+  return motivos;
+}
+
+/**
+ * Si un producto cambió de nombre en la hoja, cambia su dirección: aquí queda
+ * la vieja apuntando a la nueva, para que los enlaces compartidos y los de
+ * Google sigan sirviendo. El producto se reconoce por su ID.
+ */
+export function enlacesViejos(previos, nuevos, guardados = {}) {
+  const porId = new Map(nuevos.map((producto) => [producto.id, producto.slug]));
+  const vigentes = new Set(nuevos.map((producto) => producto.slug));
+  const enlaces = { ...guardados };
+  for (const previo of previos) {
+    const nuevo = porId.get(previo.id);
+    if (nuevo && nuevo !== previo.slug) enlaces[previo.slug] = nuevo;
+  }
+  // Cadena A → B → C: A va directo a C.
+  for (const [viejo, destino] of Object.entries(enlaces)) {
+    if (!vigentes.has(destino) && enlaces[destino]) enlaces[viejo] = enlaces[destino];
+  }
+  // Una dirección que volvió a existir ya no se redirige, y una sin destino tampoco.
+  for (const viejo of Object.keys(enlaces)) {
+    if (vigentes.has(viejo) || !vigentes.has(enlaces[viejo])) delete enlaces[viejo];
+  }
+  return Object.fromEntries(Object.entries(enlaces).sort());
+}
+
+async function leerJson(ruta, siFalta) {
+  try {
+    return JSON.parse(await readFile(ruta, "utf8"));
+  } catch {
+    return siFalta;
+  }
 }
 
 async function descargar(url) {
@@ -405,8 +578,22 @@ async function principal() {
     return;
   }
 
+  const previos = await leerJson(salida, []);
   const { productos, avisos } = armarCatalogo(texto, await fotosGuardadas());
+  if (process.env.PERMITIR_CAMBIO_GRANDE !== "si") {
+    const motivos = revisarCambio(previos, productos);
+    if (motivos.length > 0) {
+      throw new Error(
+        "Freno del catálogo: " + motivos.join(" ") +
+          " La página se queda como está. Si el cambio fue a propósito, corré Publicar demo a mano con la casilla de permitir un cambio grande.",
+      );
+    }
+  }
   await writeFile(salida, `${JSON.stringify(productos, null, 2)}\n`);
+
+  const rutaEnlaces = path.join(path.dirname(salida), "enlaces-viejos.json");
+  const enlaces = enlacesViejos(previos, productos, await leerJson(rutaEnlaces, {}));
+  await writeFile(rutaEnlaces, JSON.stringify(enlaces, null, 2) + "\n");
 
   const resumen = [
     `Catálogo: ${productos.length} productos, ${productos.filter((p) => p.stock > 0).length} con stock.`,

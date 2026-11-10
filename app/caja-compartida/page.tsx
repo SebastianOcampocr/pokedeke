@@ -18,7 +18,7 @@ const PASOS = [
   {
     titulo: "Se llena la caja",
     texto:
-      "Cuando se apartan los 36, o llega la fecha, cerramos la caja. Si no se llena, te devolvemos la plata.",
+      "Cuando se venden los 36, o llega la fecha, cerramos la caja. Si no se llena, te devolvemos la plata.",
   },
   {
     titulo: "La abrimos en vivo",
@@ -51,7 +51,7 @@ const PREGUNTAS = [
   {
     pregunta: "¿Puedo comprar varios sobres?",
     respuesta:
-      "Claro. Entre más sobres, más cartas. Podés apartar los que queden libres.",
+      "Claro. Entre más sobres, más cartas. Podés comprar los que queden libres.",
   },
 ];
 
