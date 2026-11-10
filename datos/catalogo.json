@@ -11527,20 +11527,5 @@
       "https://m.media-amazon.com/images/I/71ilu-FwFyL.jpg"
     ],
     "descripcion": "Booster Bundle de 30th Celebration, en inglés, con Pikachu en la caja. Trae 6 sobres de 30th Celebration."
-  },
-  {
-    "id": "C501",
-    "slug": "sylveon-ex-promo-jumbo-100",
-    "nombre": "Sylveon Ex PROMO Jumbo #100",
-    "juego": "Pokémon",
-    "categoria": "Tin o caja de colección",
-    "categoriaCorta": "Tin",
-    "idioma": "Inglés",
-    "precio": 2000,
-    "stock": 0,
-    "vendidos": 1,
-    "orden": 501,
-    "fotos": [],
-    "descripcion": "Lata o caja de colección con sobres."
   }
 ]
