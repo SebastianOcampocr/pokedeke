@@ -1379,7 +1379,8 @@ function listaMasVistos() {
 function pestanaCon(nombre, ayuda, columnas) {
   const existente = hoja(nombre);
   if (existente) return existente;
-  const nueva = libro().insertSheet(nombre);
+  // De última, para no mover las pestañas de siempre.
+  const nueva = libro().insertSheet(nombre, libro().getNumSheets());
   nueva.getRange(1, 1).setValue(nombre);
   nueva.getRange(2, 1).setValue(ayuda);
   nueva.getRange(PRIMERA_FILA - 1, 1, 1, columnas.length).setValues([columnas]);

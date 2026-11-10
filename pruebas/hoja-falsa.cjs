@@ -49,7 +49,7 @@ function nuevaHoja() {
   const ventas = [[""], [""], [""], ["Fecha"], [new Date(), "C001 · x", 1, 1500]];
   const hojas = { "Catálogo web": new Hoja("Catálogo web", cat), Compras: new Hoja("Compras", comp), Ventas: new Hoja("Ventas", ventas, 40), "Pedidos web": new Hoja("Pedidos web", [["t"], [""], [""], ["Número"]]), Interesados: new Hoja("Interesados", [["t"], [""], [""], ["F"]]), Carritos: new Hoja("Carritos", [["Carritos"], [""], ["Abiertos"], ["Carrito"]]), Comentarios: new Hoja("Comentarios", [["Comentarios"], [""], [""], ["Fecha"]]), "Avisos de stock": new Hoja("Avisos de stock", [["Avisos"], [""], [""], ["Fecha"]]), "Lo más visto": new Hoja("Lo más visto", [["Lo más visto"], [""], [""], ["Producto"]]) };
   const copias = [];
-  const libro = { insertSheet: (n) => (hojas[n] = new Hoja(n, [])), copy: (n) => { copias.push(n); }, getSheetByName: (n) => hojas[n], getSpreadsheetTimeZone: () => "America/Costa_Rica", toast() {}, getUrl: () => "https://docs.google.com/spreadsheets/d/x/edit" };
+  const libro = { getNumSheets: () => Object.keys(hojas).length, insertSheet: (n, lugar) => { if (lugar !== Object.keys(hojas).length) throw new Error("la pestaña nueva debe ir de última"); return (hojas[n] = new Hoja(n, [])); }, copy: (n) => { copias.push(n); }, getSheetByName: (n) => hojas[n], getSpreadsheetTimeZone: () => "America/Costa_Rica", toast() {}, getUrl: () => "https://docs.google.com/spreadsheets/d/x/edit" };
   const salida = (t) => ({ t, setMimeType() { return this; } });
   const cache = {};
   const propiedades = {};
