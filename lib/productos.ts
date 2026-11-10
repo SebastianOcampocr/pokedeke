@@ -1,5 +1,5 @@
 import catalogo from "@/datos/catalogo.json";
-import { PEDIDOS_ESPECIALES } from "./tienda";
+import { PEDIDOS_ESPECIALES, TOPE_DESTACADOS } from "./tienda";
 
 /**
  * Lo manda la hoja. Disponible: está en el mezzanine y se puede comprar. En
@@ -200,10 +200,16 @@ export function novedadesVariadas(cantidad: number) {
  * lo de mayor precio.
  */
 export function destacados(cantidad: number) {
-  const marcados = disponibles().filter((producto) => producto.destacado);
-  const lista = (marcados.length > 0 ? marcados : disponibles()).sort(
-    (a, b) => b.precio - a.precio,
+  const alcanzables = disponibles().filter(
+    (producto) => producto.precio <= TOPE_DESTACADOS,
   );
+  const marcados = alcanzables.filter((producto) => producto.destacado);
+  // Si lo marcado no alcanza, se completa con lo que más se vende dentro del tope.
+  const relleno = alcanzables
+    .filter((producto) => !producto.destacado && conFoto(producto))
+    .sort((a, b) => b.vendidos - a.vendidos || b.precio - a.precio)
+    .slice(0, Math.max(cantidad - marcados.length, 0));
+  const lista = [...marcados, ...relleno].sort((a, b) => b.precio - a.precio);
   // Variados: primero uno de cada categoría (del más caro de cada una), después el
   // resto. Así cinco cartas carísimas no se comen la portada.
   const vistas = new Set<string>();

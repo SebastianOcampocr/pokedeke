@@ -35,6 +35,12 @@ export const TIENDA_ABIERTA =
 
 export const LEMA = "Del mezzanine a tu colección";
 
+/**
+ * Lo más caro que sale en Destacados y arriba en la portada. Las cartas de cientos
+ * de miles de colones siguen en el catálogo, pero de entrada asustan.
+ */
+export const TOPE_DESTACADOS = 60000;
+
 export const LUGAR = {
   nombre: "Edificio Omni",
   zona: "San José centro",
