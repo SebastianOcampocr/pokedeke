@@ -15,13 +15,18 @@ import { SoloAqui } from "@/components/SoloAqui";
 import { RejillaProductos } from "@/components/TarjetaProducto";
 import { Vitrina } from "@/components/Vitrina";
 import {
+  alcanza,
   cartasSueltas,
   categoriasConProducto,
   conFoto,
   destacados as elegirDestacados,
+  disponibles,
   enCamino,
   novedadesVariadas,
+  paraPresupuesto,
   porConsultar,
+  PRESUPUESTOS,
+  selladosDisponibles,
   type Producto,
 } from "@/lib/productos";
 import { masVistos } from "@/lib/extras";
@@ -166,7 +171,8 @@ function BandaSobre() {
 }
 
 export default function Inicio() {
-  const destacados = elegirDestacados(8);
+  // Cuatro y no ocho: lo caro se ve, pero no ocupa toda la portada.
+  const destacados = elegirDestacados(4);
   const porLlegar = enCamino().slice(0, 4);
   const consultables = porConsultar()
     .sort((a, b) => b.orden - a.orden)
@@ -178,6 +184,25 @@ export default function Inicio() {
     [...destacados, ...recientes].map((producto) => producto.slug),
   );
   const hayCartas = cartasSueltas().length > 0;
+
+  // Por presupuesto: solo lo que hoy se puede comprar, sin repetir lo de arriba.
+  // Una sección con menos de tres productos no sale.
+  const yaSalio = new Set(
+    [...destacados, ...recientes, ...vistos].map((producto) => producto.slug),
+  );
+  const sinRepetir = (lista: Producto[]) => {
+    const libres = lista.filter((producto) => !yaSalio.has(producto.slug)).slice(0, 4);
+    if (libres.length < 3) return [];
+    libres.forEach((producto) => yaSalio.add(producto.slug));
+    return libres;
+  };
+  const joyitas = sinRepetir(paraPresupuesto("joyitas", 12));
+  const regalos = sinRepetir(paraPresupuesto("regalos", 12));
+  const sellados = sinRepetir(selladosDisponibles().slice(0, 12));
+  const presupuestos = PRESUPUESTOS.filter(
+    (presupuesto) =>
+      disponibles().filter((producto) => alcanza(presupuesto, producto)).length >= 3,
+  );
 
   return (
     <>
@@ -273,6 +298,35 @@ export default function Inicio() {
             enlace="/catalogo"
             productos={destacados}
           />
+          {presupuestos.length > 1 ? (
+            <section className="flex flex-col gap-3">
+              <Revelar efecto="sello">
+                <h2 className="font-display text-[22px] text-rojo md:text-3xl">
+                  ¿Cuánto querés gastar?
+                </h2>
+              </Revelar>
+              <nav
+                aria-label="Elegí un presupuesto"
+                className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 md:mx-0 md:flex-wrap md:overflow-visible md:px-0"
+              >
+                {presupuestos.map((presupuesto) => (
+                  <Link
+                    key={presupuesto.id}
+                    href={`/catalogo?precio=${presupuesto.id}`}
+                    className="chip"
+                  >
+                    {presupuesto.corto}
+                  </Link>
+                ))}
+              </nav>
+            </section>
+          ) : null}
+          <Seccion
+            titulo="Joyitas hasta ₡5 000"
+            enlace="/catalogo?precio=joyitas"
+            productos={joyitas}
+            texto="Para empezar la colección o darse un gusto sin gastar mucho."
+          />
           {hayCartas ? <BandaSobre /> : null}
           <SoloAqui />
           <QueBuscas />
@@ -281,6 +335,12 @@ export default function Inicio() {
             titulo="Recién llegado"
             enlace="/catalogo"
             productos={recientes}
+          />
+          <Seccion
+            titulo="Regalos de ₡10 000 a ₡25 000"
+            enlace="/catalogo?precio=regalos"
+            productos={regalos}
+            texto="Ideas para regalar que ya están en el mezzanine."
           />
           <Seccion
             titulo="Lo más visto"
@@ -296,6 +356,12 @@ export default function Inicio() {
 
       <div className="bg-white">
         <div className="mx-auto flex max-w-6xl flex-col gap-10 px-4 py-8 md:py-10">
+          <Seccion
+            titulo="Sellados disponibles"
+            enlace="/catalogo?grupo=sellado&estado=Disponible"
+            productos={sellados}
+            texto="Cajas, bundles y sobres cerrados de fábrica, listos para enviar."
+          />
           <Seccion
             titulo="En camino"
             enlace="/catalogo?estado=En%20camino"

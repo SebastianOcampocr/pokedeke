@@ -21,10 +21,12 @@ import {
   captionDe,
   hashtagsDe,
   planDeLaSemana,
+  filaParaContenido,
   PREGUNTAS,
   reelDe,
   whatsappDe,
 } from "@/lib/textos-contenido";
+import { Carrusel } from "./Carrusel";
 import { conDatosVivos, useInventarioVivo } from "@/lib/vivo";
 
 const SEMANA = 7 * 24 * 60 * 60 * 1000;
@@ -140,6 +142,9 @@ export function Estudio() {
   }
 
   const listo = esPregunta || Boolean(producto);
+  // Lo de "Lo buscamos" es por consultar: no anuncia que hay. Lo demás tiene que poder comprarse.
+  const anunciaQueHay = !esPregunta && tipo !== "eeuu";
+  const noHay = Boolean(producto && anunciaQueHay && estaAgotado(producto));
   const caption = listo ? captionDe(tipo, version, producto, motivo, pregunta) : "";
   const hashtags = hashtagsDe(esPregunta ? undefined : producto);
   const reel = reelDe(tipo, version, producto);
@@ -338,7 +343,7 @@ export function Estudio() {
                   type="button"
                   className="boton boton-rojo"
                   onClick={descargar}
-                  disabled={!fotoLista && !esPregunta}
+                  disabled={(!fotoLista && !esPregunta) || noHay}
                 >
                   Descargar imagen ({medida.ancho} × {medida.alto})
                 </button>
@@ -377,6 +382,24 @@ export function Estudio() {
               Revisá precio y stock antes de publicar: aquí salen como están en
               la hoja en este momento.
             </p>
+          </Bloque>
+
+          <Bloque titulo="Para la pestaña Contenido">
+            <p className="text-[15px] leading-snug">
+              Copiá esta fila y pegala en la primera fila libre de la pestaña
+              Contenido. Lleva el precio de hoy: la hoja avisa si se agota o
+              cambia de precio antes de publicarlo.
+            </p>
+            <Copiar
+              texto={filaParaContenido(
+                TIPOS_DE_CONTENIDO.find((opcion) => opcion.id === tipo)?.nombre ?? tipo,
+                esPregunta ? pregunta : (producto?.nombre ?? ""),
+                // Lo que es por consultar no se anuncia como disponible: no se vigila su stock.
+                producto && anunciaQueHay ? [producto] : [],
+                caption,
+              )}
+              rotulo="Copiar la fila"
+            />
           </Bloque>
 
           <div className="flex flex-col gap-5">
@@ -419,6 +442,8 @@ export function Estudio() {
           ) : null}
         </section>
       ) : null}
+
+      <Carrusel Copiar={Copiar} />
     </div>
   );
 }

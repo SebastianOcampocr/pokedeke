@@ -159,6 +159,7 @@ const HOJAS = {
   busquedas: "Búsquedas",
   demanda: "Demanda",
   sistema: "Sistema",
+  contenido: "Contenido",
 };
 
 // Sube con cada cambio: la página y las pruebas leen esta marca con un GET.
@@ -1633,7 +1634,7 @@ function anotarBusqueda(datos) {
 
 /* ---------- Demanda: qué quiere la gente ---------- */
 
-const TITULOS_DEMANDA = ["Prioridad", "Qué", "Estado", "Stock", "Vendidas", "Vistas", "Al carrito", "WhatsApp", "Avisame", "Búsquedas sin resultado", "Solicitudes (Busca)", "Última señal", "Sugerencia"];
+const TITULOS_DEMANDA = ["Prioridad", "Qué", "Estado", "Stock", "Vendidas", "Vistas", "Al carrito", "WhatsApp", "Avisame", "Búsquedas sin resultado", "Solicitudes (Busca)", "Última señal", "Sugerencia", "Enlace"];
 const AYUDA_DEMANDA =
   "Se llena sola cada hora con lo que pasa en la página. Es una pista para decidir qué revisar y qué publicar, no una orden: con pocos datos puede equivocarse. Una vista o una búsqueda no es una venta: lo vendido de verdad está en la columna Vendidas. No escribás aquí: se borra y se vuelve a llenar.";
 // Puntos: una vista vale 1; agregarlo al carrito, 3; preguntar por WhatsApp, 4; pedir aviso o
@@ -1736,7 +1737,7 @@ function actualizarDemanda() {
               : "Tiene interés: buen candidato para una publicación.";
     filas.push({
       puntos,
-      celdas: [prioridadDe(puntos), comoTexto(productos[slug].nombre), estado, stock, productos[slug].vendidas, senal.vistas, senal.carrito, senal.whatsapp, senal.avisos, "", senal.solicitudes || "", senal.ultima || "", sugerencia],
+      celdas: [prioridadDe(puntos), comoTexto(productos[slug].nombre), estado, stock, productos[slug].vendidas, senal.vistas, senal.carrito, senal.whatsapp, senal.avisos, "", senal.solicitudes || "", senal.ultima || "", sugerencia, sitio() + "producto/" + slug],
     });
   });
 
@@ -1772,7 +1773,7 @@ function actualizarDemanda() {
     filas.push({
       puntos,
       celdas: [prioridadDe(puntos), comoTexto(senal.nombre), "No está en la página", "", "", "", "", "", "", senal.sin || "", senal.solicitudes || "", senal.ultima || "",
-        senal.solicitudes ? "Lo pidieron en Busca: revisar si se puede conseguir." : "Lo buscan y no está: revisar si se puede conseguir."],
+        senal.solicitudes ? "Lo pidieron en Busca: revisar si se puede conseguir." : "Lo buscan y no está: revisar si se puede conseguir.", ""],
     });
   });
   filas.sort((a, b) => b.puntos - a.puntos);
@@ -1784,7 +1785,7 @@ function actualizarDemanda() {
     .slice(0, 10)
     .map((slug) => ({
       puntos: 0,
-      celdas: ["Sin movimiento", comoTexto(productos[slug].nombre), ESTADOS.disponible, stockDe(slug), productos[slug].vendidas, 0, 0, 0, 0, "", "", "", "Tiene stock y nadie lo ha mirado: darle visibilidad con contenido."],
+      celdas: ["Sin movimiento", comoTexto(productos[slug].nombre), ESTADOS.disponible, stockDe(slug), productos[slug].vendidas, 0, 0, 0, 0, "", "", "", "Tiene stock y nadie lo ha mirado: darle visibilidad con contenido.", sitio() + "producto/" + slug],
     }));
 
   const todas = filas.concat(quietos).map((fila) => fila.celdas);
@@ -1798,6 +1799,75 @@ function actualizarDemanda() {
   const ahora = Utilities.formatDate(new Date(), libro().getSpreadsheetTimeZone(), "dd/MM/yyyy HH:mm");
   pestana.getRange(3, 1).setValue("Actualizado: " + ahora + ". Con señales: " + filas.length + ".");
   return todas.length;
+}
+
+/* ---------- Contenido: lo que se va a publicar en redes ---------- */
+
+// Columnas de "Contenido", contando desde 1. Es también el calendario: se ordena por Fecha.
+const COL_CONTENIDO = { fecha: 1, tipo: 2, que: 3, productos: 4, texto: 5, estado: 6, revision: 7, enlace: 8, notas: 9 };
+const TITULOS_CONTENIDO = ["Para cuándo", "Tipo", "Qué se publica", "Productos y precio al crearlo", "Texto", "Estado", "Revisión de inventario", "Enlace de la publicación", "Notas"];
+const AYUDA_CONTENIDO =
+  "Lo que se va a publicar. Pegá aquí la fila que te da el Estudio y cambiá el Estado: Borrador, Revisión, Aprobado, Programado, Publicado. Cada hora (y al aprobar) se revisa que lo anunciado siga disponible y al mismo precio; si no, pasa a Error y no se debe publicar.";
+const ESTADOS_CONTENIDO = ["Borrador", "Revisión", "Aprobado", "Programado", "Publicado", "Error"];
+const CONTENIDO_A_REVISAR = ["Revisión", "Aprobado", "Programado"];
+
+/** "etb-x=35600; carta-y=1500" → [{ slug, precio }]. */
+function productosDeContenido(celda) {
+  return String(celda || "")
+    .split(/[;\n]+/)
+    .map((parte) => parte.trim().match(/^([a-z0-9-]+)\s*=\s*(\d+)$/))
+    .filter(Boolean)
+    .map((partes) => ({ slug: partes[1], precio: Number(partes[2]) }));
+}
+
+/** Lo que cambió desde que se hizo la publicación. Vacío si todo sigue igual. */
+function problemasDeContenido(lista, productos, reservado) {
+  const problemas = [];
+  lista.forEach(({ slug, precio }) => {
+    const producto = productos[slug];
+    if (!producto) return problemas.push(slug + " ya no está en la página");
+    const libres = producto.stock - (reservado[slug] || 0);
+    if (producto.estado !== ESTADOS.disponible || libres <= 0) {
+      problemas.push(producto.nombre + " ya no está disponible (" + (producto.estado === ESTADOS.disponible ? "agotado" : producto.estado.toLowerCase()) + ")");
+    } else if (producto.precio !== precio) {
+      problemas.push(producto.nombre + " cambió de precio: " + colones(precio) + " → " + colones(producto.precio));
+    }
+  });
+  return problemas;
+}
+
+/**
+ * Revisa lo que está en Revisión, Aprobado o Programado. Si algo anunciado se
+ * agotó o cambió de precio, lo anota; lo Aprobado o Programado pasa a Error para
+ * que nadie publique disponibilidad falsa. Con `soloFila`, revisa solo esa fila.
+ */
+function revisarContenido(soloFila) {
+  const pestana = hoja(HOJAS.contenido);
+  if (!pestana || pestana.getLastRow() < PRIMERA_FILA) return 0;
+  const productos = productosPorSlug();
+  const reservado = apartados(filasDePedidos());
+  const desde = soloFila || PRIMERA_FILA;
+  const cuantas = soloFila ? 1 : pestana.getLastRow() - PRIMERA_FILA + 1;
+  const filas = pestana.getRange(desde, 1, cuantas, TITULOS_CONTENIDO.length).getValues();
+  const ahora = fechaYHora(Date.now());
+  let errores = 0;
+  filas.forEach((fila, indice) => {
+    const estado = String(fila[COL_CONTENIDO.estado - 1]).trim();
+    if (!CONTENIDO_A_REVISAR.includes(estado)) return;
+    const lista = productosDeContenido(fila[COL_CONTENIDO.productos - 1]);
+    if (lista.length === 0) return;
+    const problemas = problemasDeContenido(lista, productos, reservado);
+    const numero = desde + indice;
+    if (problemas.length === 0) {
+      pestana.getRange(numero, COL_CONTENIDO.revision).setValue("Todo sigue igual · " + ahora);
+      return;
+    }
+    errores += 1;
+    const nota = comoTexto(problemas.join(". ") + ". Revisado " + ahora + (estado === "Revisión" ? "" : ". Estaba " + estado + "."));
+    pestana.getRange(numero, COL_CONTENIDO.revision).setValue(nota);
+    if (estado !== "Revisión") pestana.getRange(numero, COL_CONTENIDO.estado).setValue("Error");
+  });
+  return errores;
 }
 
 /* ---------- Sistema: cómo está el inventario y la sincronización ---------- */
@@ -1865,6 +1935,17 @@ function actualizarSistema() {
       }
     });
   });
+
+  const contenido = hoja(HOJAS.contenido);
+  if (contenido && contenido.getLastRow() >= PRIMERA_FILA) {
+    contenido
+      .getRange(PRIMERA_FILA, 1, contenido.getLastRow() - PRIMERA_FILA + 1, TITULOS_CONTENIDO.length)
+      .getValues()
+      .forEach((fila, indice) => {
+        if (String(fila[COL_CONTENIDO.estado - 1]).trim() !== "Error") return;
+        alertas.push("Contenido, fila " + (indice + PRIMERA_FILA) + " (" + fila[COL_CONTENIDO.que - 1] + "): " + fila[COL_CONTENIDO.revision - 1]);
+      });
+  }
 
   const propiedades = PropertiesService.getScriptProperties();
   const pagina = paginaArmada();
@@ -1969,6 +2050,11 @@ function tareasCadaHora() {
   }
   try {
     actualizarDemanda();
+  } catch (error) {
+    console.error(error);
+  }
+  try {
+    revisarContenido();
   } catch (error) {
     console.error(error);
   }
@@ -2727,6 +2813,17 @@ function alEditarHoja(e) {
         console.error(error);
       }
     }
+  }
+  if (pestana === HOJAS.contenido && rango.getColumn() === COL_CONTENIDO.estado && rango.getNumRows() === 1 && rango.getRow() >= PRIMERA_FILA) {
+    if (CONTENIDO_A_REVISAR.includes(String(e.value))) {
+      const errores = revisarContenido(rango.getRow());
+      libro().toast(
+        errores ? "Ojo: algo de esta publicación cambió. Mirá la columna Revisión de inventario." : "Revisado: lo anunciado sigue disponible y al mismo precio.",
+        CONFIG.nombreTienda,
+        8,
+      );
+    }
+    return;
   }
   if (pestana !== HOJAS.pedidos) return;
   if (rango.getColumn() !== COL.estado || rango.getRow() < PRIMERA_FILA) return;

@@ -2,10 +2,15 @@ import { masVistos } from "./extras";
 import { colones } from "./formato";
 import type { TipoDeContenido } from "./plantillas";
 import {
+  cartasSueltas,
   destacados,
   disponibles,
+  expansionDe,
   novedadesVariadas,
+  paraPresupuesto,
   porConsultar,
+  PRESUPUESTOS,
+  selladosDisponibles,
   type Producto,
 } from "./productos";
 import { LUGAR, SITIO } from "./tienda";
@@ -235,4 +240,114 @@ export function planDeLaSemana(semana: number): Sugerencia[] {
       : null,
   ];
   return plan.filter((sugerencia): sugerencia is Sugerencia => sugerencia !== null);
+}
+
+/* ---------- Carruseles ---------- */
+
+export const TIPOS_DE_CARRUSEL = [
+  { id: "presupuesto", nombre: "Por presupuesto" },
+  { id: "baratas", nombre: "Cinco cartas económicas" },
+  { id: "novedades", nombre: "Novedades de la semana" },
+  { id: "expansion", nombre: "De una expansión" },
+  { id: "regalos", nombre: "Ideas para regalar" },
+  { id: "sellados", nombre: "Sellados disponibles" },
+] as const;
+export type TipoDeCarrusel = (typeof TIPOS_DE_CARRUSEL)[number]["id"];
+
+/** Los presupuestos que el Estudio ofrece para "¿Tenés ₡10 000?". */
+export const TOPES = PRESUPUESTOS.filter((presupuesto) => Number.isFinite(presupuesto.max));
+
+export type Carrusel = {
+  rotulo: string;
+  titulo: string;
+  subtitulo: string;
+  productos: Producto[];
+  /** Lo que se escribe en la pestaña Contenido, columna "Qué se publica". */
+  que: string;
+};
+
+/** Las expansiones con al menos tres productos que hoy se pueden comprar. */
+export function expansionesConProductos() {
+  const grupos = new Map<string, { nombre: string; productos: Producto[] }>();
+  for (const producto of disponibles()) {
+    const clave = expansionDe(producto);
+    if (clave.length < 4) continue;
+    const grupo = grupos.get(clave) ?? { nombre: producto.carta?.coleccion || clave, productos: [] };
+    if (producto.carta?.coleccion) grupo.nombre = producto.carta.coleccion;
+    grupo.productos.push(producto);
+    grupos.set(clave, grupo);
+  }
+  return [...grupos.entries()]
+    .filter(([, grupo]) => grupo.productos.length >= 3)
+    .sort((a, b) => b[1].productos.length - a[1].productos.length)
+    .map(([clave, grupo]) => ({ clave, nombre: grupo.nombre, productos: grupo.productos }));
+}
+
+const conFotoPropia = (producto: Producto) =>
+  Boolean(producto.fotos[0]) && !/^https?:/.test(producto.fotos[0]);
+
+/**
+ * Los productos de cada carrusel salen del catálogo de hoy: solo lo que se puede
+ * comprar y con foto propia (las de otros sitios no se pueden poner en la imagen).
+ */
+export function armarCarrusel(tipo: TipoDeCarrusel, opcion: string): Carrusel | null {
+  const cinco = (lista: Producto[]) => lista.filter(conFotoPropia).slice(0, 5);
+  if (tipo === "presupuesto") {
+    const tope = TOPES.find((presupuesto) => presupuesto.id === opcion) ?? TOPES[1];
+    const productos = cinco(paraPresupuesto(tope.id, 20));
+    return {
+      rotulo: "POR PRESUPUESTO",
+      titulo: "¿Tenés " + colones(tope.max) + "? Mirá estas opciones",
+      subtitulo: "Deslizá para verlas",
+      productos,
+      que: "¿Tenés " + colones(tope.max) + "?",
+    };
+  }
+  if (tipo === "baratas") {
+    const productos = cinco(cartasSueltas().filter((carta) => carta.stock > 0));
+    return { rotulo: "ECONÓMICAS", titulo: "Cinco cartas que no te vacían la billetera", subtitulo: "Deslizá para verlas", productos, que: "Cinco cartas económicas" };
+  }
+  if (tipo === "novedades") {
+    return { rotulo: "RECIÉN LLEGADO", titulo: "Lo nuevo de la semana en el mezzanine", subtitulo: "Deslizá para verlo", productos: cinco(novedadesVariadas(20)), que: "Novedades de la semana" };
+  }
+  if (tipo === "expansion") {
+    const expansiones = expansionesConProductos();
+    const elegida = expansiones.find((expansion) => expansion.clave === opcion) ?? expansiones[0];
+    if (!elegida) return null;
+    return {
+      rotulo: "EXPANSIÓN",
+      titulo: elegida.nombre + ": lo que tenemos",
+      subtitulo: "Deslizá para verlo",
+      productos: cinco(elegida.productos.sort((a, b) => b.precio - a.precio)),
+      que: "Expansión " + elegida.nombre,
+    };
+  }
+  if (tipo === "regalos") {
+    return { rotulo: "PARA REGALAR", titulo: "Ideas para regalar de ₡10 000 a ₡25 000", subtitulo: "Deslizá para verlas", productos: cinco(paraPresupuesto("regalos", 20)), que: "Ideas para regalar" };
+  }
+  return { rotulo: "SELLADOS", titulo: "Sellados listos para enviar", subtitulo: "Deslizá para verlos", productos: cinco(selladosDisponibles()), que: "Sellados disponibles" };
+}
+
+/** El texto del carrusel: un renglón por producto con su precio de hoy. */
+export function captionDeCarrusel(carrusel: Carrusel, version: number) {
+  const lista = carrusel.productos
+    .map((producto, indice) => indice + 1 + ". " + producto.nombre + " · " + colones(producto.precio))
+    .join("\n");
+  return [carrusel.titulo, lista, CIERRES[version % CIERRES.length]].join("\n\n");
+}
+
+/**
+ * La fila para pegar en la pestaña Contenido (separada por tabulaciones: al
+ * pegarla en la hoja, cada dato cae en su columna). Lleva el precio de cada
+ * producto en este momento: la hoja revisa después si cambió.
+ */
+export function filaParaContenido(tipo: string, que: string, productos: Producto[], texto: string) {
+  return [
+    "",
+    tipo,
+    que,
+    productos.map((producto) => producto.slug + "=" + producto.precio).join("; "),
+    texto.replace(/\s+/g, " ").slice(0, 400),
+    "Borrador",
+  ].join("\t");
 }

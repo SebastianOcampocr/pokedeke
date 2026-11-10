@@ -136,6 +136,8 @@ export type Publicacion = {
   motivo?: string;
   /** Solo "pregunta". */
   pregunta?: string;
+  /** La primera lámina de un carrusel: un título grande en vez de un producto. */
+  portada?: { rotulo: string; titulo: string; subtitulo: string };
 };
 
 /**
@@ -144,7 +146,7 @@ export type Publicacion = {
  */
 export async function dibujarPlantilla(
   lienzo: HTMLCanvasElement,
-  { formato, tipo, producto, motivo, pregunta }: Publicacion,
+  { formato, tipo, producto, motivo, pregunta, portada }: Publicacion,
 ) {
   const estilos = getComputedStyle(document.documentElement);
   const titulos = estilos.getPropertyValue("--font-bungee") || "sans-serif";
@@ -199,7 +201,9 @@ export async function dibujarPlantilla(
   ctx.restore();
 
   const rotulo =
-    TIPOS_DE_CONTENIDO.find((opcion) => opcion.id === tipo)?.rotulo ?? "";
+    portada?.rotulo ??
+    TIPOS_DE_CONTENIDO.find((opcion) => opcion.id === tipo)?.rotulo ??
+    "";
   ctx.save();
   ctx.font = deTitulo(34);
   const anchoRotulo = ctx.measureText(rotulo).width + 40;
@@ -234,9 +238,9 @@ export async function dibujarPlantilla(
   const altoZona = yPie - 44 - yZona;
   const anchoZona = ancho - margen * 2;
 
-  if (tipo === "pregunta" || !producto) {
-    // Una pregunta grande en una tarjeta crema.
-    const texto = pregunta || "¿Qué carta andás buscando?";
+  if (portada || tipo === "pregunta" || !producto) {
+    // Una pregunta (o el título del carrusel) grande en una tarjeta crema.
+    const texto = portada?.titulo || pregunta || "¿Qué carta andás buscando?";
     const altoTarjeta = Math.min(altoZona, 640);
     const yTarjeta = yZona + (altoZona - altoTarjeta) / 2;
     marco(ctx, margen, yTarjeta, anchoZona, altoTarjeta, CREMA);
@@ -257,7 +261,7 @@ export async function dibujarPlantilla(
     ctx.fillStyle = TINTA;
     ctx.font = deTexto(36);
     ctx.fillText(
-      "Contanos en los comentarios",
+      portada?.subtitulo ?? "Contanos en los comentarios",
       ancho / 2,
       yTarjeta + altoTarjeta - 64,
     );

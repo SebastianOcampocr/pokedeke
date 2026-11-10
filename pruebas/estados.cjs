@@ -125,8 +125,9 @@ prueba("Demanda dice el estado, lo vendido y cuenta la solicitud en su producto"
   m.ctx.actualizarDemanda();
   const hoja = m.hojas.Demanda;
   assert.deepStrictEqual([hoja.leer(4, 3), hoja.leer(4, 5)], ["Estado", "Vendidas"]);
-  const datos = filas(hoja, 13);
+  const datos = filas(hoja, 14);
   const proveedor = datos.find((f) => f[1] === "Caja de proveedor");
+  assert.match(proveedor[13], /\/producto\/caja-de-proveedor$/);
   assert.deepStrictEqual([proveedor[0], proveedor[2], proveedor[3], proveedor[10]], ["Media", "Por consultar", 0, 1]);
   assert.match(proveedor[12], /revisar si se puede conseguir/);
   assert.strictEqual(datos.filter((f) => f[1] === "Caja de proveedor").length, 1, "no sale además como algo que no está");
@@ -160,5 +161,32 @@ prueba("la pestaña Sistema cuenta por estado y junta las alertas", () => {
   m.ctx.pagina.datos = { fecha: "2026-11-09T15:00:00.000Z", productos: 8 };
   m.ctx.actualizarSistema();
   assert.doesNotMatch(filas(m.hojas.Sistema, 3).map((f) => f[1]).join("\n"), /La página muestra/);
+});
+prueba("lo programado que se agotó o cambió de precio pasa a Error", () => {
+  const nueva = new (m.hojas["Catálogo web"].constructor)("Contenido", [["Contenido"], [""], [""], ["Para cuándo", "Tipo", "Qué se publica", "Productos y precio al crearlo", "Texto", "Estado", "Revisión de inventario", "Enlace de la publicación", "Notas"]]);
+  m.hojas.Contenido = nueva;
+  const fila = (estado, productos) => { const r = nueva.getLastRow() + 1; ["", "Carrusel", "Prueba " + r, productos, "", estado].forEach((v, j) => nueva.escribir(r, j + 1, v)); return r; };
+  const bien = fila("Programado", "dos-lotes=20000");
+  const caro = fila("Aprobado", "dos-lotes=15000");
+  const agotada = fila("Programado", "carta-lista=5000; dos-lotes=20000");
+  const camino = fila("Revisión", "caja-en-camino=40000");
+  const borrador = fila("Borrador", "carta-lista=5000");
+  assert.strictEqual(m.ctx.revisarContenido(), 3);
+  assert.strictEqual(nueva.leer(bien, 6), "Programado");
+  assert.match(nueva.leer(bien, 7), /^Todo sigue igual/);
+  assert.strictEqual(nueva.leer(caro, 6), "Error");
+  assert.match(nueva.leer(caro, 7), /cambió de precio: ₡15 000 → ₡20 000/);
+  assert.strictEqual(nueva.leer(agotada, 6), "Error");
+  assert.match(nueva.leer(agotada, 7), /Carta lista ya no está disponible \(agotado\)/);
+  assert.strictEqual(nueva.leer(camino, 6), "Revisión", "en Revisión solo se anota");
+  assert.match(nueva.leer(camino, 7), /en camino/);
+  assert.strictEqual(nueva.leer(borrador, 7), "", "el borrador no se revisa");
+  // Al aprobar una fila se revisa de una vez.
+  nueva.escribir(borrador, 6, "Aprobado");
+  m.ctx.alEditarHoja({ value: "Aprobado", range: nueva.getRange(borrador, 6, 1, 1) });
+  assert.strictEqual(nueva.leer(borrador, 6), "Error");
+  // Y sale en las alertas de Sistema.
+  m.ctx.actualizarSistema();
+  assert.match(filas(m.hojas.Sistema, 3).map((f) => f[1]).join("\n"), /Contenido, fila \d+ \(Prueba \d+\): .*cambió de precio/);
 });
 console.log("\n" + ok + " pruebas bien.");

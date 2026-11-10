@@ -17,6 +17,7 @@ import {
   esUsada,
   estaAgotado,
   PRODUCTOS,
+  relacionados as elegirRelacionados,
 } from "@/lib/productos";
 import {
   DIAS_DE_DESPACHO,
@@ -99,16 +100,7 @@ async function ContenidoProducto({
         { rotulo: "Condición", valor: producto.carta.condicion },
       ].filter(({ valor }) => valor)
     : [];
-  const relacionados = PRODUCTOS.filter(
-    (otro) => otro.slug !== producto.slug && !estaAgotado(otro),
-  )
-    .sort(
-      (a, b) =>
-        Number(b.categoria === producto.categoria) -
-          Number(a.categoria === producto.categoria) ||
-        b.vendidos - a.vendidos,
-    )
-    .slice(0, 4);
+  const relacionados = elegirRelacionados(producto, 4);
 
   return (
     <>

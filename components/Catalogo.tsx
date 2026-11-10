@@ -9,8 +9,10 @@ import {
   categoriasConProducto,
   coincide,
   enCamino,
+  esSellado,
   estadoDe,
   porConsultar,
+  PRESUPUESTOS,
   PRODUCTOS,
   valoresUnicos,
 } from "@/lib/productos";
@@ -20,9 +22,12 @@ import { TarjetaProducto } from "./TarjetaProducto";
 
 const RANGOS = [
   { id: "", texto: "Cualquier precio", min: 0, max: Infinity },
-  { id: "bajo", texto: "Hasta ₡10 000", min: 0, max: 10000 },
-  { id: "medio", texto: "De ₡10 000 a ₡50 000", min: 10000, max: 50000 },
-  { id: "alto", texto: "Más de ₡50 000", min: 50000, max: Infinity },
+  ...PRESUPUESTOS.map(({ id, corto, min, max }) => ({ id, texto: corto, min, max })),
+];
+
+const GRUPOS = [
+  { id: "sellado", texto: "Solo sellados" },
+  { id: "cartas", texto: "Solo cartas" },
 ];
 
 const ORDENES = [
@@ -92,16 +97,26 @@ export function Catalogo({
   categoriaInicial = "",
   etiquetaInicial = "",
   busquedaInicial = "",
+  precioInicial = "",
+  grupoInicial = "",
 }: {
   categoriaInicial?: string;
   etiquetaInicial?: string;
   busquedaInicial?: string;
+  precioInicial?: string;
+  grupoInicial?: string;
 }) {
   const [busqueda, setBusqueda] = useState(busquedaInicial);
   const [juego, setJuego] = useState("");
   const [categoria, setCategoria] = useState(categoriaInicial);
   const [idioma, setIdioma] = useState("");
-  const [rango, setRango] = useState("");
+  const [rango, setRango] = useState(
+    RANGOS.some((opcion) => opcion.id === precioInicial) ? precioInicial : "",
+  );
+  // "sellado" o "cartas": junta varias categorías.
+  const [grupo, setGrupo] = useState(
+    GRUPOS.some((opcion) => opcion.id === grupoInicial) ? grupoInicial : "",
+  );
   const [rareza, setRareza] = useState("");
   const [orden, setOrden] = useState("nuevo");
   // "Disponible", "En camino" o "Por consultar": muestra solo lo que está así.
@@ -122,6 +137,8 @@ export function Catalogo({
         (!idioma || producto.idioma === idioma) &&
         (!rareza || producto.carta?.rareza === rareza) &&
         (!etiqueta || estadoDe(producto) === etiqueta) &&
+        (!grupo ||
+          (grupo === "sellado" ? esSellado(producto) : Boolean(producto.carta))) &&
         producto.precio >= limites.min &&
         producto.precio <= limites.max &&
         coincide(producto, busqueda),
@@ -132,7 +149,7 @@ export function Catalogo({
       if (orden === "vendidos") return b.vendidos - a.vendidos;
       return b.orden - a.orden;
     });
-  }, [busqueda, juego, categoria, idioma, rango, rareza, orden, etiqueta]);
+  }, [busqueda, juego, categoria, idioma, rango, rareza, orden, etiqueta, grupo]);
   const resultados = useAgotadosAlFinal(encontrados);
 
   // Qué se busca y si hay: dos segundos sin escribir cuentan como búsqueda terminada.
@@ -155,11 +172,12 @@ export function Catalogo({
       idioma ||
       rango ||
       rareza ||
-      etiqueta,
+      etiqueta ||
+      grupo,
   );
 
   // Al cambiar cualquier filtro se vuelve a la primera tanda.
-  const clave = [busqueda, juego, categoria, idioma, rango, rareza, orden, etiqueta].join("|");
+  const clave = [busqueda, juego, categoria, idioma, rango, rareza, orden, etiqueta, grupo].join("|");
   const cantidad = tanda.clave === clave ? tanda.cantidad : POR_TANDA;
   const visibles = resultados.slice(0, cantidad);
   const restantes = resultados.length - visibles.length;
@@ -170,6 +188,7 @@ export function Catalogo({
     setCategoria("");
     setIdioma("");
     setRango("");
+    setGrupo("");
     setRareza("");
     setEtiqueta("");
   }
@@ -254,6 +273,17 @@ export function Catalogo({
             opciones={ORDENES}
           />
           <div className="flex flex-wrap gap-2">
+            {GRUPOS.map(({ id, texto }) => (
+              <button
+                key={id}
+                type="button"
+                className="chip w-fit"
+                aria-pressed={grupo === id}
+                onClick={() => setGrupo((actual) => (actual === id ? "" : id))}
+              >
+                {texto}
+              </button>
+            ))}
             {ESTADOS_DE_FILTRO.map(({ estado, texto }) => (
               <button
                 key={estado}
@@ -380,6 +410,8 @@ export function CatalogoDesdeEnlace() {
       categoriaInicial={parametros.get("categoria") ?? ""}
       etiquetaInicial={parametros.get("estado") ?? ""}
       busquedaInicial={parametros.get("q") ?? ""}
+      precioInicial={parametros.get("precio") ?? ""}
+      grupoInicial={parametros.get("grupo") ?? ""}
     />
   );
 }

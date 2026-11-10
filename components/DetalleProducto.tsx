@@ -27,6 +27,9 @@ export function Galeria({ producto }: { producto: Producto }) {
   // porque es lo primero que el navegador mide para saber si la página es rápida.
   const [cambiada, setCambiada] = useState(false);
   const carta = esCarta(producto) && !estaAgotado(producto);
+  const esReal = Boolean(
+    producto.fotosReales?.includes(producto.fotos[vista] ?? ""),
+  );
 
   return (
     <div className="flex flex-col gap-3 overflow-x-clip">
@@ -63,6 +66,16 @@ export function Galeria({ producto }: { producto: Producto }) {
           </div>
         </div>
       </ViewTransition>
+      {esReal ? (
+        <p className="px-3 text-sm font-bold text-verde-oscuro">
+          Foto real de este artículo
+        </p>
+      ) : esCarta(producto) ? (
+        <p className="px-3 text-sm text-gris">
+          Imagen de referencia. Si querés ver la carta real, pedinos fotos por
+          WhatsApp.
+        </p>
+      ) : null}
       {producto.fotos.length > 1 ? (
         <div className="flex gap-2 px-3 pb-3">
           {producto.fotos.map((foto, indice) => (

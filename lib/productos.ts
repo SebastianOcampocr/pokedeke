@@ -29,6 +29,8 @@ export type Producto = {
   orden: number;
   fotos: string[];
   descripcion: string;
+  /** Fotos que son del artículo mismo, no de referencia. En la hoja van con "real:" adelante. */
+  fotosReales?: string[];
   /** Si existe, el carrito lleva aquí en vez de a la página del producto. */
   enlace?: string;
   /** Solo cartas sueltas y gradadas. */
@@ -167,6 +169,128 @@ export const disponibles = () =>
   PRODUCTOS.filter((producto) => !estaAgotado(producto));
 
 export const conFoto = (producto: Producto) => producto.fotos.length > 0;
+
+const SELLADOS = [
+  "ETB",
+  "Booster box",
+  "Booster bundle",
+  "Booster pack",
+  "Blister / sleeved booster",
+  "Tin o caja de colección",
+  "Colección premium / UPC",
+  "Mazos",
+];
+
+/** Lo que viene cerrado de fábrica. */
+export const esSellado = (producto: Producto) =>
+  SELLADOS.includes(producto.categoria);
+
+/** Los rangos de precio de la portada, del catálogo y del Estudio. */
+export const PRESUPUESTOS = [
+  { id: "joyitas", titulo: "Joyitas hasta ₡5 000", corto: "Hasta ₡5 000", min: 0, max: 5000 },
+  { id: "diez", titulo: "Hasta ₡10 000", corto: "Hasta ₡10 000", min: 0, max: 10000 },
+  { id: "regalos", titulo: "Regalos de ₡10 000 a ₡25 000", corto: "De ₡10 000 a ₡25 000", min: 10000, max: 25000 },
+  { id: "medio", titulo: "De ₡25 000 a ₡50 000", corto: "De ₡25 000 a ₡50 000", min: 25000, max: 50000 },
+  { id: "premium", titulo: "Premium: más de ₡50 000", corto: "Más de ₡50 000", min: 50000, max: Infinity },
+];
+
+export type Presupuesto = (typeof PRESUPUESTOS)[number];
+
+export const alcanza = (presupuesto: Presupuesto, producto: Producto) =>
+  producto.precio >= presupuesto.min && producto.precio <= presupuesto.max;
+
+/**
+ * Lo mejor que hoy se puede comprar con un presupuesto: primero lo destacado y
+ * lo más vendido, después lo que más se acerca al tope. Sin repetir categoría
+ * mientras alcance, para que no salgan cuatro cartas iguales.
+ */
+export function paraPresupuesto(id: string, cantidad: number) {
+  const presupuesto = PRESUPUESTOS.find((opcion) => opcion.id === id);
+  if (!presupuesto) return [];
+  const candidatos = disponibles()
+    .filter((producto) => alcanza(presupuesto, producto) && conFoto(producto))
+    .sort(
+      (a, b) =>
+        Number(Boolean(b.destacado)) - Number(Boolean(a.destacado)) ||
+        b.vendidos - a.vendidos ||
+        b.precio - a.precio,
+    );
+  const vistas = new Set<string>();
+  const variados = candidatos.filter((producto) => {
+    if (vistas.has(producto.categoria)) return false;
+    vistas.add(producto.categoria);
+    return true;
+  });
+  const resto = candidatos.filter((producto) => !variados.includes(producto));
+  return [...variados, ...resto].slice(0, cantidad);
+}
+
+/** Sellados que hoy se pueden comprar, lo más vendido y lo más nuevo primero. */
+export const selladosDisponibles = () =>
+  disponibles()
+    .filter(esSellado)
+    .sort((a, b) => b.vendidos - a.vendidos || b.orden - a.orden);
+
+const VARIANTES_DE_CARTA =
+  /\s+(Reverse Holo|Poké Ball|Poke Ball|Master Ball|Friend Ball|Energy Symbol|Quick Ball)$/i;
+const PALABRAS_DE_SELLADO =
+  /\b(etb|elite trainer box|booster|bundle|box|sobres?|blister|tin|mini tin|pok[eé]mon center|colecci[oó]n|collection|premium|ultra|super|caja|mazo|deck|display|y)\b/gi;
+
+/** "Pikachu ex Poké Ball #047 (Set)" → "pikachu ex". Vacío si no es una carta. */
+export function pokemonDe(producto: Producto) {
+  if (!producto.carta) return "";
+  return sinAcentos(
+    producto.nombre.replace(/\s*#.*$/, "").replace(VARIANTES_DE_CARTA, ""),
+  ).trim();
+}
+
+/**
+ * La expansión: en las cartas es su colección; en lo sellado, lo que queda del
+ * nombre al quitarle el tipo de producto ("ETB Prismatic Evolutions").
+ */
+export function expansionDe(producto: Producto) {
+  if (producto.carta) return sinAcentos(producto.carta.coleccion).trim();
+  if (!esSellado(producto)) return "";
+  return sinAcentos(producto.nombre)
+    .replace(PALABRAS_DE_SELLADO, " ")
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
+}
+
+const mismaExpansion = (a: string, b: string) =>
+  a.length >= 4 && b.length >= 4 && (a === b || a.includes(b) || b.includes(a));
+
+/**
+ * "También te puede gustar": reglas sencillas con lo que ya dice el catálogo. Pesa
+ * más el mismo Pokémon y la misma expansión; después la categoría, el tipo de
+ * energía y un precio parecido. Solo lo que se puede comprar. Si el producto es
+ * una carta y hay sellado de su expansión (o al revés), entra al menos uno.
+ */
+export function relacionados(producto: Producto, cantidad: number) {
+  const pokemon = pokemonDe(producto);
+  const expansion = expansionDe(producto);
+  const puntos = (otro: Producto) =>
+    (pokemon && pokemonDe(otro) === pokemon ? 5 : 0) +
+    (mismaExpansion(expansion, expansionDe(otro)) ? 4 : 0) +
+    (otro.categoria === producto.categoria ? 2 : 0) +
+    (producto.tipo && otro.tipo === producto.tipo ? 1 : 0) +
+    (otro.precio >= producto.precio * 0.5 && otro.precio <= producto.precio * 2 ? 1 : 0);
+  const candidatos = disponibles()
+    .filter((otro) => otro.slug !== producto.slug)
+    .map((otro) => ({ otro, puntos: puntos(otro) }))
+    .sort((a, b) => b.puntos - a.puntos || b.otro.vendidos - a.otro.vendidos);
+  const elegidos = candidatos.slice(0, cantidad).map(({ otro }) => otro);
+  const delOtroLado = candidatos.find(
+    ({ otro }) =>
+      esSellado(otro) !== esSellado(producto) &&
+      (esSellado(otro) || Boolean(otro.carta)) &&
+      mismaExpansion(expansion, expansionDe(otro)),
+  )?.otro;
+  if (delOtroLado && !elegidos.includes(delOtroLado) && elegidos.length === cantidad) {
+    elegidos[cantidad - 1] = delOtroLado;
+  }
+  return elegidos;
+}
 
 /**
  * Las cartas usadas traen su condición ("Lightly Played (LP)"); sin condición es

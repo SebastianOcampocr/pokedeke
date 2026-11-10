@@ -174,16 +174,26 @@ async function fotosGuardadas() {
   return { existentes, porClave };
 }
 
-function fotosDelProducto(nombre, celda, { existentes, porClave }, avisos) {
+/**
+ * Las fotos de la celda "Fotos (URL)". Una que empieza con "real:" es del
+ * artículo mismo (el frente o el reverso de esa carta): la página lo dice.
+ */
+function fotosDelProducto(nombre, celda, { existentes, porClave }, avisos, reales = []) {
   const propias = String(celda ?? "")
     .split(/[\s,;]+/)
     .filter(Boolean)
-    .flatMap((foto) => {
-      if (/^https?:\/\//.test(foto)) return [foto];
-      const archivo = foto.replace(/\.webp$/, "");
-      if (existentes.has(archivo)) return [`/productos/${archivo}.webp`];
-      avisos.push(`${nombre}: no existe la foto "${foto}".`);
-      return [];
+    .flatMap((escrita) => {
+      const esReal = /^real:/i.test(escrita);
+      const foto = escrita.replace(/^real:/i, "");
+      let ruta = "";
+      if (/^https?:\/\//.test(foto)) ruta = foto;
+      else if (existentes.has(foto.replace(/\.webp$/, ""))) ruta = "/productos/" + foto.replace(/\.webp$/, "") + ".webp";
+      if (!ruta) {
+        avisos.push(`${nombre}: no existe la foto "${foto}".`);
+        return [];
+      }
+      if (esReal) reales.push(ruta);
+      return [ruta];
     });
   if (propias.length > 0) return propias;
 
@@ -369,11 +379,13 @@ export function armarCatalogo(textoCsv, fotos) {
           : grupo.estados.has(ESTADOS.porConsultar)
             ? ESTADOS.porConsultar
             : ESTADOS.agotado;
+    const fotosReales = [];
     const fotosFinales = fotosDelProducto(
       grupo.nombre,
       ultimo("Fotos (URL)"),
       fotos,
       avisos,
+      fotosReales,
     );
     if (fotosFinales.length === 0) {
       avisos.push(`${grupo.nombre}: todavía no tiene foto.`);
@@ -403,6 +415,7 @@ export function armarCatalogo(textoCsv, fotos) {
         ),
         orden: grupo.orden,
         fotos: fotosFinales,
+        ...(fotosReales.length > 0 ? { fotosReales } : {}),
         descripcion,
         ...(carta ? { carta } : {}),
         ...(tipo ? { tipo } : {}),
