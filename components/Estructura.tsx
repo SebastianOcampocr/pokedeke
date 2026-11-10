@@ -6,6 +6,7 @@ import {
 } from "@/lib/productos";
 import {
   ENLACE_GRUPO,
+  INSTAGRAM,
   LEMA,
   LUGAR,
   TIENDA,
@@ -110,6 +111,17 @@ export function PiePagina() {
             Servicio al cliente:{" "}
             <a href={`mailto:${TIENDA.correo}`} className="font-bold underline underline-offset-2">
               {TIENDA.correo}
+            </a>
+          </p>
+          <p className="text-[15px]">
+            Instagram:{" "}
+            <a
+              href={INSTAGRAM.enlace}
+              target="_blank"
+              rel="noreferrer"
+              className="font-bold underline underline-offset-2"
+            >
+              @{INSTAGRAM.usuario}
             </a>
           </p>
         </div>

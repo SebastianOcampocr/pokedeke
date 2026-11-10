@@ -20,6 +20,8 @@
  *    sin datos de quién buscó.
  * 10. Cada 10 minutos, si el catálogo cambió, le pide a GitHub rearmar la página.
  * 11. Cada Domingo guarda una copia de respaldo de toda la hoja.
+ * 12. Cada hora llena la pestaña "Demanda": qué mira, pide y busca la gente, con
+ *     el stock de ese momento y una sugerencia.
  *
  * Los precios y el stock siempre se leen de la hoja: lo que manda el navegador
  * nunca se usa para calcular cuánto se cobra.
@@ -154,10 +156,11 @@ const HOJAS = {
   masVistos: "Lo más visto",
   solicitudes: "Solicitudes",
   busquedas: "Búsquedas",
+  demanda: "Demanda",
 };
 
 // Sube con cada cambio: la página y las pruebas leen esta marca con un GET.
-const VERSION = "2026-11-09-busca";
+const VERSION = "2026-11-09-demanda";
 const ENTREGADO = "Entregado";
 const PEDIDO_ESPECIAL = "Pedido especial";
 const PRIMERA_FILA = 5;
@@ -1516,6 +1519,152 @@ function anotarBusqueda(datos) {
   return { ok: true };
 }
 
+/* ---------- Demanda: qué quiere la gente ---------- */
+
+const TITULOS_DEMANDA = ["Prioridad", "Qué", "Dónde está", "Stock", "Vistas", "Al carrito", "WhatsApp", "Avisame", "Búsquedas sin resultado", "Solicitudes (Busca)", "Última señal", "Sugerencia"];
+const AYUDA_DEMANDA =
+  "Se llena sola cada hora con lo que pasa en la página. Es una pista para decidir qué conseguir y qué publicar, no una orden: con pocos datos puede equivocarse. No escribás aquí: se borra y se vuelve a llenar.";
+// Puntos: una vista vale 1; agregarlo al carrito, 3; preguntar por WhatsApp, 4; pedir aviso o
+// pedirlo en Busca, 5; buscarlo sin encontrarlo, 1.
+const PUNTOS_ALTA = 10;
+const PUNTOS_MEDIA = 4;
+const SOLICITUDES_CERRADAS = ["Conseguida", "No se consiguió"];
+
+function prioridadDe(puntos) {
+  return puntos >= PUNTOS_ALTA ? "Alta" : puntos >= PUNTOS_MEDIA ? "Media" : "Baja";
+}
+
+function esFecha(valor) {
+  return Object.prototype.toString.call(valor) === "[object Date]";
+}
+
+function masReciente(actual, otra) {
+  if (!esFecha(otra)) return actual;
+  return !actual || otra.getTime() > actual.getTime() ? otra : actual;
+}
+
+/**
+ * Corre sola cada hora: junta en la pestaña Demanda lo que la gente mira, agrega
+ * al carrito, pregunta, espera, busca sin encontrar y pide en Busca, con el stock
+ * de este momento y una sugerencia. Solo sugiere: comprar o no lo decide la tienda.
+ */
+function actualizarDemanda() {
+  const productos = productosPorSlug();
+  const reservado = apartados(filasDePedidos());
+  const senales = {};
+  const de = (slug) => (senales[slug] = senales[slug] || { vistas: 0, carrito: 0, whatsapp: 0, avisos: 0, ultima: null });
+
+  const vistos = hoja(HOJAS.masVistos);
+  if (vistos && vistos.getLastRow() >= PRIMERA_FILA) {
+    const columnas = Math.min(vistos.getMaxColumns(), COL_VISTO.whatsapp);
+    vistos
+      .getRange(PRIMERA_FILA, 1, vistos.getLastRow() - PRIMERA_FILA + 1, columnas)
+      .getValues()
+      .forEach((fila) => {
+        const slug = String(fila[COL_VISTO.slug - 1]);
+        if (!slug) return;
+        const senal = de(slug);
+        senal.vistas += Number(fila[COL_VISTO.vistas - 1]) || 0;
+        senal.carrito += Number(fila[COL_VISTO.carrito - 1]) || 0;
+        senal.whatsapp += Number(fila[COL_VISTO.whatsapp - 1]) || 0;
+        senal.ultima = masReciente(senal.ultima, fila[COL_VISTO.ultima - 1]);
+      });
+  }
+  const avisos = hoja(HOJAS.avisos);
+  if (avisos) {
+    filasDeAvisos(avisos).forEach(({ valores }) => {
+      const slug = String(valores[COL_AVISO.slug - 1]);
+      if (!slug || valores[COL_AVISO.estado - 1] !== ESPERANDO) return;
+      const senal = de(slug);
+      senal.avisos += 1;
+      senal.ultima = masReciente(senal.ultima, valores[COL_AVISO.fecha - 1]);
+    });
+  }
+
+  const filas = [];
+  const stockDe = (slug) => Math.max(productos[slug].stock - (reservado[slug] || 0), 0);
+  Object.keys(senales).forEach((slug) => {
+    // Lo que ya no está publicado no se sugiere.
+    if (!productos[slug]) return;
+    const senal = senales[slug];
+    const puntos = senal.vistas + 3 * senal.carrito + 4 * senal.whatsapp + 5 * senal.avisos;
+    if (puntos === 0) return;
+    const stock = stockDe(slug);
+    const sugerencia =
+      stock === 0
+        ? "Se agotó y lo siguen buscando: considerar reponerlo."
+        : puntos >= PUNTOS_ALTA
+          ? "Hay interés y hay stock: darle prioridad en el contenido."
+          : "Tiene interés: buen candidato para una publicación.";
+    filas.push({
+      puntos,
+      celdas: [prioridadDe(puntos), comoTexto(productos[slug].nombre), "En la página", stock, senal.vistas, senal.carrito, senal.whatsapp, senal.avisos, "", "", senal.ultima || "", sugerencia],
+    });
+  });
+
+  // Lo que no está en la página: búsquedas que hoy siguen sin dar nada y solicitudes abiertas.
+  const fuera = {};
+  const deFuera = (termino, nombre) => (fuera[termino] = fuera[termino] || { nombre, sin: 0, solicitudes: 0, ultima: null });
+  const busquedas = hoja(HOJAS.busquedas);
+  if (busquedas && busquedas.getLastRow() >= PRIMERA_FILA) {
+    busquedas
+      .getRange(PRIMERA_FILA, 1, busquedas.getLastRow() - PRIMERA_FILA + 1, 5)
+      .getValues()
+      .forEach((fila) => {
+        const termino = String(fila[COL_BUSQUEDA.termino - 1]);
+        const sin = Number(fila[COL_BUSQUEDA.sinResultado - 1]) || 0;
+        if (!termino || sin === 0 || Number(fila[COL_BUSQUEDA.resultados - 1]) > 0) return;
+        const senal = deFuera(termino, termino);
+        senal.sin += sin;
+        senal.ultima = masReciente(senal.ultima, fila[COL_BUSQUEDA.ultima - 1]);
+      });
+  }
+  const solicitudes = hoja(HOJAS.solicitudes);
+  if (solicitudes && solicitudes.getLastRow() >= PRIMERA_FILA) {
+    solicitudes
+      .getRange(PRIMERA_FILA, 1, solicitudes.getLastRow() - PRIMERA_FILA + 1, TITULOS_SOLICITUD.length)
+      .getValues()
+      .forEach((fila) => {
+        const producto = String(fila[COL_SOLICITUD.producto - 1]);
+        const termino = terminoDeBusqueda(producto);
+        if (!termino || SOLICITUDES_CERRADAS.includes(String(fila[COL_SOLICITUD.estado - 1]))) return;
+        const senal = deFuera(termino, producto);
+        senal.nombre = producto;
+        senal.solicitudes += 1;
+        senal.ultima = masReciente(senal.ultima, fila[COL_SOLICITUD.fecha - 1]);
+      });
+  }
+  Object.keys(fuera).forEach((termino) => {
+    const senal = fuera[termino];
+    const puntos = senal.sin + 5 * senal.solicitudes;
+    filas.push({
+      puntos,
+      celdas: [prioridadDe(puntos), comoTexto(senal.nombre), "No lo tenemos", "", "", "", "", "", senal.sin || "", senal.solicitudes || "", senal.ultima || "",
+        senal.solicitudes ? "Lo pidieron en Busca: considerar conseguirlo." : "Lo buscan y no está: considerar conseguirlo."],
+    });
+  });
+  filas.sort((a, b) => b.puntos - a.puntos);
+
+  // Lo que tiene stock y nadie ha mirado: lo de más valor primero.
+  const quietos = Object.keys(productos)
+    .filter((slug) => !senales[slug] && !productos[slug].preventa && !productos[slug].especial && stockDe(slug) >= 3)
+    .sort((a, b) => productos[b].precio * stockDe(b) - productos[a].precio * stockDe(a))
+    .slice(0, 10)
+    .map((slug) => ({
+      puntos: 0,
+      celdas: ["Sin movimiento", comoTexto(productos[slug].nombre), "En la página", stockDe(slug), 0, 0, 0, 0, "", "", "", "Tiene stock y nadie lo ha mirado: darle visibilidad con contenido."],
+    }));
+
+  const todas = filas.concat(quietos).map((fila) => fila.celdas);
+  const pestana = pestanaCon(HOJAS.demanda, AYUDA_DEMANDA, TITULOS_DEMANDA);
+  const viejas = pestana.getLastRow() - PRIMERA_FILA + 1;
+  if (viejas > 0) pestana.getRange(PRIMERA_FILA, 1, viejas, TITULOS_DEMANDA.length).clearContent();
+  if (todas.length > 0) pestana.getRange(PRIMERA_FILA, 1, todas.length, TITULOS_DEMANDA.length).setValues(todas);
+  const ahora = Utilities.formatDate(new Date(), libro().getSpreadsheetTimeZone(), "dd/MM/yyyy HH:mm");
+  pestana.getRange(3, 1).setValue("Actualizado: " + ahora + ". Con señales: " + filas.length + ".");
+  return todas.length;
+}
+
 /* ---------- ¿Cómo te fue? ---------- */
 
 const PREFIJO_OPINION = "opinion:";
@@ -1584,6 +1733,11 @@ function tareasCadaHora() {
   }
   try {
     avisarSolicitudesNuevas();
+  } catch (error) {
+    console.error(error);
+  }
+  try {
+    actualizarDemanda();
   } catch (error) {
     console.error(error);
   }

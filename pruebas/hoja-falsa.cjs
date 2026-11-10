@@ -11,6 +11,7 @@ function nuevaHoja() {
     getDisplayValues() { return this.getValues().map((f) => f.map((v) => String(v))); }
     getValue() { return this.h.leer(this.r, this.c); }
     setValue(v) { this.h.escribir(this.r, this.c, v); }
+    clearContent() { for (let i = 0; i < this.nr; i++) for (let j = 0; j < this.nc; j++) this.h.celdas.delete(`${this.r + i},${this.c + j}`); this.h.ultima = Math.max(0, ...[...this.h.celdas.keys()].map((k) => +k.split(",")[0])); }
     setValues(m) { m.forEach((f, i) => f.forEach((v, j) => this.h.escribir(this.r + i, this.c + j, v))); }
   }
   class Hoja {

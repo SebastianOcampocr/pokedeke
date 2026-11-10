@@ -256,5 +256,11 @@ export function enlaceCompartir(texto: string) {
   return `https://wa.me/?text=${encodeURIComponent(texto)}`;
 }
 
+/** El Instagram de la tienda. */
+export const INSTAGRAM = {
+  usuario: "pokedek.cr",
+  enlace: "https://www.instagram.com/pokedek.cr/",
+};
+
 /** Invitación al grupo de WhatsApp de la tienda (sin los datos de rastreo del enlace). */
 export const ENLACE_GRUPO = "https://chat.whatsapp.com/LFK9vTc7v2q8l3YIqDm6Yc";

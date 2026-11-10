@@ -27,7 +27,7 @@ import {
   type Producto,
 } from "@/lib/productos";
 import { masVistos } from "@/lib/extras";
-import { LEMA, SITIO, TIENDA } from "@/lib/tienda";
+import { INSTAGRAM, LEMA, SITIO, TIENDA } from "@/lib/tienda";
 import { DatosEstructurados } from "@/components/DatosEstructurados";
 
 export const metadata: Metadata = { alternates: { canonical: "/" } };
@@ -200,6 +200,7 @@ export default function Inicio() {
           description: "Tienda de Pokémon TCG en Costa Rica: cartas sueltas, sobres, ETB y cajas en colones.",
           url: SITIO,
           logo: `${SITIO}/icono-512.png`,
+          sameAs: [INSTAGRAM.enlace],
           email: TIENDA.correo,
           telephone: `+${TIENDA.whatsapp}`,
           currenciesAccepted: "CRC",
