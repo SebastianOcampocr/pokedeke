@@ -7,16 +7,13 @@ import {
   Galeria,
   PrecioYStock,
 } from "@/components/DetalleProducto";
-import { Cuenta } from "@/components/Cuenta";
 import { DatosEstructurados } from "@/components/DatosEstructurados";
-import { AvisoPedidoEspecial } from "@/components/PedidoEspecial";
 import { IconoTipo } from "@/components/IconoTipo";
 import { Calcomania, RejillaProductos } from "@/components/TarjetaProducto";
 import { VistosRecientes } from "@/components/VistosRecientes";
-import { colones, fechaCorta } from "@/lib/formato";
+import { colones } from "@/lib/formato";
 import {
   buscarProducto,
-  esPedidoEspecial,
   esUsada,
   estaAgotado,
   PRODUCTOS,
@@ -134,9 +131,7 @@ async function ContenidoProducto({
             price: producto.precio,
             availability: estaAgotado(producto)
               ? "https://schema.org/OutOfStock"
-              : esPedidoEspecial(producto)
-                ? "https://schema.org/PreOrder"
-                : "https://schema.org/InStock",
+              : "https://schema.org/InStock",
             itemCondition: esUsada(producto)
               ? "https://schema.org/UsedCondition"
               : "https://schema.org/NewCondition",
@@ -171,16 +166,6 @@ async function ContenidoProducto({
             {producto.nombre}
           </h1>
           <PrecioYStock producto={producto} />
-          {esPedidoEspecial(producto) ? (
-            <AvisoPedidoEspecial llegada={producto.llegada} className="mb-3" />
-          ) : producto.llegada ? (
-            <div className="marco mb-3 flex w-fit flex-col gap-2 bg-crema p-3">
-              <p className="font-bold">
-                Llega al mezzanine el {fechaCorta(producto.llegada)}
-              </p>
-              <Cuenta llegada={producto.llegada} />
-            </div>
-          ) : null}
           <AccionesProducto producto={producto} />
         </div>
       </section>

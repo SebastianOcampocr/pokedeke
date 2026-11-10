@@ -2,7 +2,7 @@
 
 import { crearAlmacen } from "./almacen";
 import { avisarCarrito, contarVisita } from "./api-pedidos";
-import { buscarProducto, precioACobrar, type Producto } from "./productos";
+import { buscarProducto, type Producto } from "./productos";
 import { CUPONES, type Cupon } from "./tienda";
 import {
   conDatosVivos,
@@ -102,7 +102,7 @@ export function useCarrito() {
       {
         producto,
         cantidad: linea.cantidad,
-        precio: precioACobrar(producto),
+        precio: producto.precio,
       },
     ];
   });

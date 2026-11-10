@@ -27,4 +27,15 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const lineas = lineasDeRedireccion(enlaces);
   await writeFile(path.join(RAIZ, "public/_redirects"), lineas.join("\n") + (lineas.length ? "\n" : ""));
   console.log("Redirecciones de productos renombrados: " + lineas.length + ".");
+
+  // Con esto la hoja (pestaña Sistema) sabe cuándo se armó la página y con qué.
+  const catalogo = JSON.parse(await readFile(path.join(RAIZ, "datos/catalogo.json"), "utf8"));
+  await writeFile(
+    path.join(RAIZ, "public/sincronizado.json"),
+    JSON.stringify({
+      fecha: new Date().toISOString(),
+      productos: catalogo.length,
+      disponibles: catalogo.filter((producto) => producto.stock > 0).length,
+    }),
+  );
 }

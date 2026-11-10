@@ -12,7 +12,7 @@ import {
 import {
   buscarProducto,
   coincide,
-  esPedidoEspecial,
+  esPorConsultar,
   estaAgotado,
   PRODUCTOS,
 } from "@/lib/productos";
@@ -201,7 +201,7 @@ export function Estudio() {
                     className="chip"
                     aria-pressed={tipo === opcion.id}
                     disabled={
-                      opcion.id === "eeuu" && Boolean(producto) && !esPedidoEspecial(producto!)
+                      opcion.id === "eeuu" && Boolean(producto) && !esPorConsultar(producto!)
                     }
                     onClick={() => {
                       setTipo(opcion.id);
@@ -254,7 +254,7 @@ export function Estudio() {
                             setSlug(opcion.slug);
                             setBusqueda("");
                             setVersion(0);
-                            if (tipo === "eeuu" && !esPedidoEspecial(opcion)) {
+                            if (tipo === "eeuu" && !esPorConsultar(opcion)) {
                               setTipo("disponible");
                             }
                           }}

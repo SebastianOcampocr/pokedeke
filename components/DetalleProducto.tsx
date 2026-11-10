@@ -6,12 +6,10 @@ import { contarVisita } from "@/lib/api-pedidos";
 import { agregarAlCarrito } from "@/lib/carrito";
 import { colones } from "@/lib/formato";
 import {
+  enlaceBusca,
   esCarta,
-  esPedidoEspecial,
-  esPreventa,
   estaAgotado,
-  precioACobrar,
-  seAparta,
+  estadoDe,
   type Producto,
 } from "@/lib/productos";
 import { enlaceCompartir, enlaceWhatsApp, TIENDA } from "@/lib/tienda";
@@ -19,7 +17,6 @@ import { useOfertaDe, useProductoVivo } from "@/lib/vivo";
 import { volarAlCarrito } from "@/lib/volar";
 import { BotonAvisame } from "./BotonAvisame";
 import { BotonFavorito } from "./BotonFavorito";
-import { Tractos } from "./Tractos";
 import { Cantidad } from "./Cantidad";
 import { FotoProducto } from "./FotoProducto";
 import { IconoChat } from "./Iconos";
@@ -102,9 +99,13 @@ export function PrecioYStock({ producto: guardado }: { producto: Producto }) {
   const producto = useProductoVivo(guardado);
   const oferta = useOfertaDe(producto.slug);
   const agotado = estaAgotado(producto);
+  const estado = estadoDe(producto);
 
   return (
     <>
+      {estado === "Por consultar" ? (
+        <p className="mt-1 text-sm font-bold text-gris">Precio de referencia</p>
+      ) : null}
       <p className="mt-1 flex flex-wrap items-baseline gap-x-3 text-4xl font-extrabold">
         {colones(producto.precio)}
         {producto.precioAntes ? (
@@ -112,14 +113,24 @@ export function PrecioYStock({ producto: guardado }: { producto: Producto }) {
         ) : null}
       </p>
       <p aria-live="polite" className="mb-3 text-[15px] font-bold">
-        {agotado && "Agotado por ahora"}
-        {!agotado &&
-          seAparta(producto) &&
-          (producto.stock === 1 ? "Queda 1 cupo" : `Quedan ${producto.stock} cupos`)}
-        {!agotado &&
-          !seAparta(producto) &&
-          (producto.stock === 1 ? "Queda 1" : `Quedan ${producto.stock}`)}
+        {estado === "Agotado" && "Agotado por ahora"}
+        {estado === "En camino" && "En camino"}
+        {estado === "Por consultar" && "Por consultar"}
+        {!agotado && (producto.stock === 1 ? "Queda 1" : `Quedan ${producto.stock}`)}
       </p>
+      {estado === "En camino" ? (
+        <p className="mb-3 rounded-md bg-crema p-3 text-[15px] leading-snug font-medium">
+          Ya lo compramos y viene para el mezzanine. Todavía no se puede
+          comprar: pedí que te avisemos y te escribimos apenas llegue.
+        </p>
+      ) : null}
+      {estado === "Por consultar" ? (
+        <p className="mb-3 rounded-md bg-crema p-3 text-[15px] leading-snug font-medium">
+          No lo tenemos en el mezzanine. Revisamos si lo podemos conseguir y te
+          confirmamos disponibilidad y precio antes de que pagués nada. El
+          precio de referencia es una guía y puede cambiar.
+        </p>
+      ) : null}
       {oferta && !agotado ? (
         <p className="mb-3 rounded-md bg-crema p-3 text-[15px] leading-snug font-medium">
           <strong>Oferta:</strong> llevando {oferta.desde} o más{" "}
@@ -136,6 +147,7 @@ export function AccionesProducto({ producto: guardado }: { producto: Producto })
   const [cantidad, setCantidad] = useState(1);
   const [agregado, setAgregado] = useState(false);
   const agotado = estaAgotado(producto);
+  const estado = estadoDe(producto);
 
   // Al volver a esta página el aviso ya no aplica: quizá el carrito cambió.
   useLayoutEffect(
@@ -146,36 +158,28 @@ export function AccionesProducto({ producto: guardado }: { producto: Producto })
     [],
   );
 
-  const preventa = esPreventa(producto);
-  const especial = esPedidoEspecial(producto);
-  const porcentaje = Math.round(TIENDA.adelantoPreventa * 100);
-
   return (
     <div className="flex flex-col gap-3">
-      {preventa ? (
-        <p className="rounded-md bg-crema p-3 text-[15px] leading-snug font-medium">
-          Apartás con {porcentaje}%:{" "}
-          <strong>{colones(precioACobrar(producto))}</strong> hoy y el resto
-          cuando llegue.
-        </p>
-      ) : null}
-
-      {agotado ? (
+      {estado === "Por consultar" ? (
+        <Link href={enlaceBusca(producto)} className="boton boton-rojo">
+          Consultar disponibilidad
+        </Link>
+      ) : agotado ? (
         <>
           <BotonAvisame
             nombreProducto={producto.nombre}
             slug={producto.slug}
+            enCamino={estado === "En camino"}
             className="min-h-14 text-[17px]"
           />
-          <Link
-            href={
-              "/busca?origen=agotado&producto=" +
-              encodeURIComponent(producto.nombre)
-            }
-            className="min-h-11 content-center font-bold underline underline-offset-2"
-          >
-            ¿Lo ocupás ya? Pedinos que lo busquemos
-          </Link>
+          {estado === "Agotado" ? (
+            <Link
+              href={enlaceBusca(producto)}
+              className="min-h-11 content-center font-bold underline underline-offset-2"
+            >
+              ¿Lo ocupás ya? Pedinos que lo busquemos
+            </Link>
+          ) : null}
         </>
       ) : (
         <>
@@ -199,11 +203,7 @@ export function AccionesProducto({ producto: guardado }: { producto: Producto })
               volarAlCarrito();
             }}
           >
-            {preventa
-              ? "Apartar con adelanto"
-              : especial
-                ? "Apartar pagando el 100%"
-                : "Agregar al carrito"}
+            Agregar al carrito
           </button>
           {agregado ? (
             <p role="status" className="aparecer font-bold text-verde-oscuro">
@@ -215,8 +215,6 @@ export function AccionesProducto({ producto: guardado }: { producto: Producto })
           ) : null}
         </>
       )}
-
-      <Tractos producto={producto} />
 
       <a
         href={enlaceWhatsApp(

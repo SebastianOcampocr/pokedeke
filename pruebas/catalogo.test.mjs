@@ -24,6 +24,35 @@ test("la página arma el catálogo con lo que entrega la hoja", () => {
   assert.equal(etb.id, "C002");
 });
 
+test("la página y la hoja deciden igual el estado y las unidades de cada producto", () => {
+  const hoja = nuevaHoja();
+  const cat = hoja.hojas["Catálogo web"];
+  // Fila 5 Eevee (1 unidad), fila 7 el segundo lote del ETB (3 unidades), fila 12 Caja pesada.
+  cat.escribir(5, 18, "Por consultar");
+  cat.escribir(7, 18, "En camino");
+  cat.escribir(12, 18, "no publicado");
+  hoja.ctx.olvidarStock();
+  const { productos } = armarCatalogo(hoja.get({ accion: "catalogo" }).t, SIN_FOTOS);
+  const vivo = JSON.parse(hoja.get({ accion: "stock" }).t).productos;
+  assert.equal(productos.find((p) => p.slug === "caja-pesada"), undefined);
+  assert.equal(vivo["caja-pesada"], undefined);
+  for (const p of productos) {
+    assert.deepEqual([p.slug, p.stock, p.estado], [p.slug, vivo[p.slug].stock, vivo[p.slug].estado]);
+  }
+  const de = (slug) => productos.find((p) => p.slug === slug);
+  assert.deepEqual([de("eevee-ex-174-promo").stock, de("eevee-ex-174-promo").estado], [0, "Por consultar"]);
+  assert.deepEqual([de("etb-30th-celebration").stock, de("etb-30th-celebration").estado], [2, "Disponible"]);
+  // La etiqueta vieja de preventa ya no se vende ni se muestra como etiqueta.
+  assert.deepEqual([de("preventa-x").stock, de("preventa-x").estado, de("preventa-x").etiqueta], [0, "Por consultar", undefined]);
+  assert.deepEqual([de("sin-stock").stock, de("sin-stock").estado], [0, "Agotado"]);
+});
+
+test("pasar productos a En camino o Por consultar no dispara el freno", () => {
+  const previos = muchos(40);
+  const nuevos = previos.map((p, i) => (i < 30 ? { ...p, stock: 0, estado: "Por consultar" } : p));
+  assert.deepEqual(revisarCambio(previos, nuevos), []);
+});
+
 test("una celda con error de fórmula no se publica", () => {
   const csv = nuevaHoja().get({ accion: "catalogo" }).t.replace('"Caja pesada","ETB","Pokémon","","5"', '"Caja pesada","ETB","Pokémon","","#REF!"');
   assert.match(csv, /#REF!/);

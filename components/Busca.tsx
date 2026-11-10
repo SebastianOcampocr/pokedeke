@@ -6,6 +6,7 @@ import { useHidratado } from "@/lib/almacen";
 import { anotarSolicitud, type OrigenBusca } from "@/lib/api-pedidos";
 import { fechaLarga } from "@/lib/formato";
 import { ENCARGOS_EEUU, enlaceWhatsApp, TIENDA } from "@/lib/tienda";
+import { prepararVerificacion } from "@/lib/verificacion";
 import { IconoChat } from "./Iconos";
 
 /**
@@ -17,11 +18,14 @@ import { IconoChat } from "./Iconos";
 export function Busca({
   origen,
   productoInicial = "",
+  slug,
   titulo = "¿Buscás algo que no está aquí?",
   className = "",
 }: {
   origen: OrigenBusca;
   productoInicial?: string;
+  /** El producto del catálogo del que salió la consulta, si salió de uno. */
+  slug?: string;
   titulo?: string;
   className?: string;
 }) {
@@ -52,6 +56,7 @@ export function Busca({
 
   return (
     <form
+      onFocus={prepararVerificacion}
       className={"marco flex flex-col gap-3 bg-crema p-4 md:p-5 " + className}
       onSubmit={(evento) => {
         evento.preventDefault();
@@ -63,6 +68,8 @@ export function Busca({
           detalle: detalle.trim(),
           presupuesto: presupuesto.trim(),
           origen,
+          // Si cambiaron lo que buscan, ya no es ese producto.
+          ...(slug && producto.trim() === productoInicial.trim() ? { slug } : {}),
         });
         window.open(enlaceWhatsApp(mensaje), "_blank", "noopener");
         setEnviado(true);
@@ -183,7 +190,7 @@ export function Busca({
   );
 }
 
-const ORIGENES_DE_ENLACE = ["buscador", "agotado", "catalogo"];
+const ORIGENES_DE_ENLACE = ["buscador", "agotado", "catalogo", "consultar", "camino"];
 
 /** Lee lo que viene en el enlace, como /busca?producto=Charizard&origen=buscador. */
 export function BuscaDesdeEnlace() {
@@ -196,7 +203,10 @@ export function BuscaDesdeEnlace() {
         ORIGENES_DE_ENLACE.includes(origen) ? (origen as OrigenBusca) : "busca"
       }
       productoInicial={(parametros.get("producto") ?? "").slice(0, 150)}
-      titulo="Contanos qué buscás"
+      slug={(parametros.get("ref") ?? "").slice(0, 200) || undefined}
+      titulo={
+        origen === "consultar" ? "Consultar disponibilidad" : "Contanos qué buscás"
+      }
     />
   );
 }

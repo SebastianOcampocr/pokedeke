@@ -1,5 +1,11 @@
 import catalogo from "@/datos/catalogo.json";
-import { TIENDA } from "./tienda";
+
+/**
+ * Lo manda la hoja. Disponible: está en el mezzanine y se puede comprar. En
+ * camino: ya lo compramos y no ha llegado. Por consultar: no es nuestro, hay
+ * que revisar si se consigue. Agotado: lo vendemos, pero hoy no hay.
+ */
+export type Estado = "Disponible" | "En camino" | "Por consultar" | "Agotado";
 
 export type Producto = {
   id: string;
@@ -11,10 +17,12 @@ export type Producto = {
   idioma: string;
   precio: number;
   precioAntes?: number;
+  /** Unidades que se pueden comprar hoy: 0 si no está Disponible. */
   stock: number;
+  estado?: Estado;
   /** Gramos, según la hoja. Llega con el stock en vivo. */
   peso?: number;
-  etiqueta?: "Nuevo" | "Preventa" | "Pedido especial" | "Oferta";
+  etiqueta?: "Nuevo" | "Oferta";
   destacado?: boolean;
   parado?: boolean;
   vendidos: number;
@@ -23,11 +31,6 @@ export type Producto = {
   descripcion: string;
   /** Si existe, el carrito lleva aquí en vez de a la página del producto. */
   enlace?: string;
-  /**
-   * Preventas: fecha en que llega al mezzanine. Pedidos especiales: se entrega
-   * después de esta fecha.
-   */
-  llegada?: string;
   /** Solo cartas sueltas y gradadas. */
   carta?: {
     coleccion: string;
@@ -90,35 +93,39 @@ export function coincide(producto: Producto, busqueda: string) {
   return sinAcentos(campos).includes(texto);
 }
 
-export function esPreventa(producto: Producto) {
-  return producto.etiqueta === "Preventa";
-}
-
-export const PEDIDO_ESPECIAL = "Pedido especial";
-
-/**
- * Lo traemos de Estados Unidos: se paga completo para apartarlo y se entrega
- * después de su fecha. Es sujeto a disponibilidad: si no se consigue, se
- * devuelve el 100%.
- */
-export function esPedidoEspecial(producto: Producto) {
-  return producto.etiqueta === PEDIDO_ESPECIAL;
-}
-
-/** Lo que todavía no está en el mezzanine: se aparta y se entrega después. */
-export function seAparta(producto: Producto) {
-  return esPreventa(producto) || esPedidoEspecial(producto);
-}
-
+/** No se puede comprar ahora: agotado, en camino o por consultar. */
 export function estaAgotado(producto: Producto) {
   return producto.stock <= 0;
 }
 
-/** En preventa se cobra solo el adelanto; lo demás, al precio completo. */
-export function precioACobrar(producto: Producto) {
-  return esPreventa(producto)
-    ? Math.round(producto.precio * TIENDA.adelantoPreventa)
-    : producto.precio;
+/** Con unidades es Disponible; sin unidades, lo que diga la hoja. */
+export function estadoDe(producto: Producto): Estado {
+  if (producto.stock > 0) return "Disponible";
+  return producto.estado && producto.estado !== "Disponible"
+    ? producto.estado
+    : "Agotado";
+}
+
+export const esPorConsultar = (producto: Producto) =>
+  estadoDe(producto) === "Por consultar";
+export const estaEnCamino = (producto: Producto) =>
+  estadoDe(producto) === "En camino";
+
+export const porConsultar = () => PRODUCTOS.filter(esPorConsultar);
+export const enCamino = () => PRODUCTOS.filter(estaEnCamino);
+
+/** A dónde manda "Consultar disponibilidad": Pokedeke Busca con el producto ya puesto. */
+export function enlaceBusca(producto: Producto) {
+  const origen = esPorConsultar(producto)
+    ? "consultar"
+    : estaEnCamino(producto)
+      ? "camino"
+      : "agotado";
+  return (
+    "/busca?origen=" + origen +
+    "&producto=" + encodeURIComponent(producto.nombre) +
+    "&ref=" + encodeURIComponent(producto.slug)
+  );
 }
 
 export function valoresUnicos(campo: "juego" | "categoria" | "idioma") {
@@ -127,10 +134,7 @@ export function valoresUnicos(campo: "juego" | "categoria" | "idioma") {
     .sort((a, b) => a.localeCompare(b, "es"));
 }
 
-export const novedades = () =>
-  disponibles()
-    .filter((producto) => !seAparta(producto))
-    .sort((a, b) => b.orden - a.orden);
+export const novedades = () => disponibles().sort((a, b) => b.orden - a.orden);
 
 /** Lo más nuevo, sin repetir categoría mientras alcance. */
 export function novedadesVariadas(cantidad: number) {
@@ -198,6 +202,3 @@ export const categoriasConProducto = () =>
   NOMBRES_DE_CATEGORIA.filter(({ categoria }) =>
     disponibles().some((producto) => producto.categoria === categoria),
   );
-
-export const hayPreventas = () => disponibles().some(esPreventa);
-export const hayPedidosEspeciales = () => disponibles().some(esPedidoEspecial);

@@ -1,8 +1,6 @@
 import Link from "next/link";
 import {
   categoriasConProducto,
-  hayPedidosEspeciales,
-  hayPreventas,
 } from "@/lib/productos";
 import {
   ENLACE_GRUPO,
@@ -24,17 +22,6 @@ const ENLACES = [
   { href: "/catalogo", texto: "Catálogo" },
   { href: "/sobre", texto: "Sobre del día" },
   { href: "/caja-compartida", texto: "Caja compartida" },
-  ...(hayPreventas()
-    ? [{ href: "/catalogo?etiqueta=Preventa", texto: "Preventas" }]
-    : []),
-  ...(hayPedidosEspeciales()
-    ? [
-        {
-          href: "/catalogo?etiqueta=Pedido%20especial",
-          texto: "De Estados Unidos",
-        },
-      ]
-    : []),
   { href: "/busca", texto: "Lo buscamos" },
   { href: "/guia", texto: "Guía" },
   { href: "/nosotros", texto: "El Mezzanine" },
@@ -228,7 +215,6 @@ const CINTA = [
   "Correos a todo el país",
   "Envío entre tiendas",
   "Envío gratis desde ₡50 000",
-  "Apartá en tractos",
   "Pagá con SINPE Móvil",
   "Pagá con tarjeta",
   "Si no está, lo buscamos",

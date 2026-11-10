@@ -10,7 +10,6 @@ import { Opiniones } from "@/components/Opiniones";
 import { ComoFunciona, ElMezzanine, QueBuscas } from "@/components/Marca";
 import { Proximamente } from "@/components/Proximamente";
 import { Revelar } from "@/components/Revelar";
-import { SeViene } from "@/components/SeViene";
 import { SobreDibujo } from "@/components/SobreDibujo";
 import { SoloAqui } from "@/components/SoloAqui";
 import { RejillaProductos } from "@/components/TarjetaProducto";
@@ -20,10 +19,9 @@ import {
   categoriasConProducto,
   conFoto,
   destacados as elegirDestacados,
-  disponibles,
-  esPedidoEspecial,
-  esPreventa,
+  enCamino,
   novedadesVariadas,
+  porConsultar,
   type Producto,
 } from "@/lib/productos";
 import { masVistos } from "@/lib/extras";
@@ -169,8 +167,10 @@ function BandaSobre() {
 
 export default function Inicio() {
   const destacados = elegirDestacados(8);
-  const preventas = disponibles().filter(esPreventa).slice(0, 4);
-  const especiales = disponibles().filter(esPedidoEspecial).slice(0, 4);
+  const porLlegar = enCamino().slice(0, 4);
+  const consultables = porConsultar()
+    .sort((a, b) => b.orden - a.orden)
+    .slice(0, 4);
   const recientes = novedadesVariadas(4);
   // Sin repetir lo que ya sale más arriba.
   const vistos = masVistos(
@@ -296,12 +296,17 @@ export default function Inicio() {
 
       <div className="bg-white">
         <div className="mx-auto flex max-w-6xl flex-col gap-10 px-4 py-8 md:py-10">
-          <SeViene />
           <Seccion
-            titulo="Te lo traemos de Estados Unidos"
-            enlace="/catalogo?etiqueta=Pedido%20especial"
-            productos={especiales}
-            texto="Lo que casi no se consigue en Costa Rica, lo importamos para vos. Apartalo pagando el 100%: si al final no lo podemos traer, te devolvemos todo."
+            titulo="En camino"
+            enlace="/catalogo?estado=En%20camino"
+            productos={porLlegar}
+            texto="Ya los compramos y vienen para el mezzanine. Todavía no se pueden comprar: pedí que te avisemos cuando lleguen."
+          />
+          <Seccion
+            titulo="Lo consultamos por vos"
+            enlace="/catalogo?estado=Por%20consultar"
+            productos={consultables}
+            texto="No están en el mezzanine: son productos que podemos buscar, aquí o en Estados Unidos. Revisamos si se consiguen y te confirmamos disponibilidad y precio antes de que pagués nada."
           >
             <p className="font-medium">
               ¿Buscás otra cosa?{" "}
@@ -314,11 +319,6 @@ export default function Inicio() {
               .
             </p>
           </Seccion>
-          <Seccion
-            titulo="Preventas"
-            enlace="/catalogo?etiqueta=Preventa"
-            productos={preventas}
-          />
           <Opiniones />
           <ComoFunciona />
           <Proximamente />

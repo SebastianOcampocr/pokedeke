@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { agregarAlCarrito, useCarrito } from "@/lib/carrito";
-import { seAparta, type Producto } from "@/lib/productos";
+import type { Producto } from "@/lib/productos";
 import { sonar } from "@/lib/sonido";
 import { volarAlCarrito } from "@/lib/volar";
 import { IconoCheque, IconoMas } from "./Iconos";
@@ -18,7 +18,6 @@ export function AgregarRapido({ producto }: { producto: Producto }) {
   const enCarrito =
     lineas.find((linea) => linea.producto.slug === producto.slug)?.cantidad ?? 0;
   const lleno = enCarrito >= producto.stock;
-  const verbo = seAparta(producto) ? "Apartar" : "Agregar";
 
   return (
     <button
@@ -26,7 +25,7 @@ export function AgregarRapido({ producto }: { producto: Producto }) {
       aria-label={
         lleno
           ? `Ya tenés todos los ${producto.nombre} en el carrito`
-          : `${verbo} ${producto.nombre} al carrito`
+          : `Agregar ${producto.nombre} al carrito`
       }
       disabled={lleno && !listo}
       data-listo={listo ? "" : undefined}

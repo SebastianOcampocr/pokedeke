@@ -163,39 +163,41 @@ prueba("la pestaña Demanda junta las señales con el stock y sugiere", () => {
   const cuantas = m.ctx.actualizarDemanda();
   const hoja = m.hojas.Demanda;
   assert.strictEqual(hoja.leer(4, 1), "Prioridad");
-  const datos = filas(hoja, 12);
+  const datos = filas(hoja, 13);
   assert.strictEqual(datos.length, cuantas);
   const de = (nombre) => datos.find((f) => f[1] === nombre);
   // Eevee: 1 vista y 2 consultas por WhatsApp son 9 puntos, con stock.
-  assert.deepStrictEqual(de("Eevee ex #174 (Promo)").slice(0, 8), ["Media", "Eevee ex #174 (Promo)", "En la página", 1, 1, 0, 2, 0]);
-  assert.match(de("Eevee ex #174 (Promo)")[11], /buen candidato para una publicación/);
+  assert.deepStrictEqual(de("Eevee ex #174 (Promo)").slice(0, 9), ["Media", "Eevee ex #174 (Promo)", "Disponible", 1, 0, 1, 0, 2, 0]);
+  assert.match(de("Eevee ex #174 (Promo)")[12], /buen candidato para una publicación/);
   // Agotado con alguien esperando.
-  assert.deepStrictEqual(de("Sin stock").slice(2, 8), ["En la página", 0, 1, 0, 0, 1]);
-  assert.match(de("Sin stock")[11], /considerar reponerlo/);
+  assert.deepStrictEqual(de("Sin stock").slice(2, 9), ["Agotado", 0, 0, 1, 0, 0, 1]);
+  assert.match(de("Sin stock")[12], /revisar si conviene reponerlo/);
   // Lo que no está: lo pedido en Busca pesa más que lo solo buscado.
   const caja = de("Booster Box Phantasmal Flames");
-  assert.deepStrictEqual([caja[2], caja[9], caja[0]], ["No lo tenemos", 2, "Alta"]);
-  assert.match(caja[11], /Lo pidieron en Busca: considerar conseguirlo/);
+  assert.deepStrictEqual([caja[2], caja[10], caja[0]], ["No está en la página", 2, "Alta"]);
+  assert.match(caja[12], /Lo pidieron en Busca: revisar si se puede conseguir/);
   const etb = de("prismatic evolutions etb");
-  assert.deepStrictEqual([etb[0], etb[2], etb[8]], ["Baja", "No lo tenemos", 1]);
+  assert.deepStrictEqual([etb[0], etb[2], etb[9]], ["Baja", "No está en la página", 1]);
   assert.strictEqual(de("151"), undefined, "lo que sí dio resultados no cuenta como faltante");
   // Charizard ex 199 se pidió y además se buscó "charizard ex" sin suerte: son dos filas distintas, cada una con su señal.
-  assert.strictEqual(de("Charizard ex 199")[9], 1);
+  assert.strictEqual(de("Charizard ex 199")[10], 1);
   // Con stock y sin que nadie lo mire.
   const quieto = de("ETB 30th Celebration");
   assert.deepStrictEqual([quieto[0], quieto[3]], ["Sin movimiento", 5]);
-  assert.match(quieto[11], /darle visibilidad con contenido/);
+  assert.match(quieto[12], /darle visibilidad con contenido/);
+  // Lo que tiene la etiqueta vieja de preventa no cuenta como stock propio.
+  assert.strictEqual(de("Preventa X"), undefined);
   assert.strictEqual(de("Oculta"), undefined);
   assert.deepStrictEqual(hoja.formulas, []);
   assert.match(String(hoja.leer(3, 1)), /^Actualizado: /);
   // Volver a correr no duplica nada.
   assert.strictEqual(m.ctx.actualizarDemanda(), cuantas);
-  assert.strictEqual(filas(hoja, 12).length, cuantas);
+  assert.strictEqual(filas(hoja, 13).length, cuantas);
 });
 prueba("una solicitud cerrada deja de pedirse en Demanda", () => {
   const sol = m.hojas.Solicitudes;
   for (let r = 5; r <= sol.getLastRow(); r++) if (sol.leer(r, 2) === "Booster Box Phantasmal Flames") sol.escribir(r, 7, "Conseguida");
   m.ctx.actualizarDemanda();
-  assert.strictEqual(filas(m.hojas.Demanda, 12).find((f) => f[1] === "Booster Box Phantasmal Flames"), undefined);
+  assert.strictEqual(filas(m.hojas.Demanda, 13).find((f) => f[1] === "Booster Box Phantasmal Flames"), undefined);
 });
 console.log("\n" + ok + " pruebas bien.");

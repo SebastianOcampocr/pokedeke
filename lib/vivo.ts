@@ -1,12 +1,12 @@
 "use client";
 
 import { useMemo, useSyncExternalStore } from "react";
-import type { Producto } from "./productos";
+import type { Estado, Producto } from "./productos";
 import { PEDIDOS_URL } from "./tienda";
 
 type Inventario = Record<
   string,
-  { stock: number; precio: number; peso?: number }
+  { stock: number; precio: number; peso?: number; estado?: Estado }
 >;
 
 /** Precio especial por llevar varias unidades. La anuncia la hoja, que es la que cobra. */
@@ -108,11 +108,16 @@ export function conDatosVivos(producto: Producto, vivo: Inventario | null) {
   if (!vivo) return producto;
   const dato = vivo[producto.slug];
   if (!dato) return { ...producto, stock: 0 };
+  // Un servidor viejo no manda el estado: se queda el de la página, y lo que
+  // la página sabe que no se vende sigue sin venderse.
+  const estado = dato.estado ?? producto.estado;
+  const seVende = Boolean(dato.estado) || !estado || estado === "Disponible";
   return {
     ...producto,
-    stock: dato.stock,
+    stock: seVende ? dato.stock : 0,
     precio: dato.precio,
     peso: dato.peso,
+    estado,
   };
 }
 

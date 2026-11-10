@@ -1,5 +1,6 @@
 "use client";
 
+import { prepararVerificacion } from "@/lib/verificacion";
 import { useId, useMemo, useState, useSyncExternalStore } from "react";
 import { mandarComentario } from "@/lib/api-pedidos";
 import { enlaceWhatsApp, PEDIDOS_URL, TIENDA_ABIERTA } from "@/lib/tienda";
@@ -82,7 +83,11 @@ export function FormularioComentario() {
   }
 
   return (
-    <form className="marco flex flex-col gap-4 bg-white p-5" onSubmit={enviar}>
+    <form
+      className="marco flex flex-col gap-4 bg-white p-5"
+      onSubmit={enviar}
+      onFocus={prepararVerificacion}
+    >
       {delCorreo ? (
         <p className="rounded-md bg-crema p-3 font-bold">
           Tu opinión sobre el pedido {delCorreo.pedido}

@@ -18,7 +18,8 @@ export const TIPOS_DE_CONTENIDO = [
   { id: "disponible", nombre: "Disponible", rotulo: "DISPONIBLE" },
   { id: "nuevo", nombre: "Recién llegado", rotulo: "RECIÉN LLEGADO" },
   { id: "pick", nombre: "Pokedeke Pick", rotulo: "POKEDEKE PICK" },
-  { id: "eeuu", nombre: "De Estados Unidos", rotulo: "DE ESTADOS UNIDOS" },
+  // Para lo que está Por consultar: nunca dice que hay, invita a consultar.
+  { id: "eeuu", nombre: "Lo buscamos", rotulo: "LO BUSCAMOS POR VOS" },
   { id: "pregunta", nombre: "Pregunta a la comunidad", rotulo: "PREGUNTA" },
 ] as const;
 export type TipoDeContenido = (typeof TIPOS_DE_CONTENIDO)[number]["id"];
@@ -308,7 +309,7 @@ export async function dibujarPlantilla(
   // El precio, como calcomanía sobre la esquina de la foto.
   ctx.save();
   ctx.font = deTitulo(66);
-  const precio = colones(producto.precio);
+  const precio = tipo === "eeuu" ? "Consultanos" : colones(producto.precio);
   const anchoPrecio = ctx.measureText(precio).width + 52;
   ctx.translate(
     Math.min(xFoto + lado - anchoPrecio * 0.72, ancho - margen - anchoPrecio),

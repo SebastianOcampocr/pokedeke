@@ -21,6 +21,7 @@
 /build
 /public/miniaturas/
 /public/_redirects
+/public/sincronizado.json
 
 # misc
 .DS_Store

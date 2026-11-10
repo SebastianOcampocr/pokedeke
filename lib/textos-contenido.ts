@@ -1,11 +1,11 @@
 import { masVistos } from "./extras";
-import { colones, fechaLarga } from "./formato";
+import { colones } from "./formato";
 import type { TipoDeContenido } from "./plantillas";
 import {
   destacados,
   disponibles,
-  esPedidoEspecial,
   novedadesVariadas,
+  porConsultar,
   type Producto,
 } from "./productos";
 import { LUGAR, SITIO } from "./tienda";
@@ -81,8 +81,8 @@ export function hashtagsDe(producto?: Producto) {
 
 const enlaceDe = (producto: Producto) => SITIO + "/producto/" + producto.slug;
 
-function cuerpo(producto: Producto, conStock = true) {
-  return [detalle(producto), colones(producto.precio) + ". " + (conStock ? quedan(producto) : "")]
+function cuerpo(producto: Producto) {
+  return [detalle(producto), colones(producto.precio) + ". " + quedan(producto)]
     .map((linea) => linea.trim())
     .filter(Boolean)
     .join("\n\n");
@@ -126,7 +126,7 @@ export function captionDe(
       "Si nos preguntan qué escogeríamos hoy: " + nombre + ".",
     ],
     eeuu: [
-      "Te lo traemos de Estados Unidos: " + nombre + ".",
+      "¿Andás buscando " + nombre + "? Lo consultamos por vos.",
       "De los que casi no se consiguen en Costa Rica: " + nombre + ".",
     ],
   };
@@ -137,11 +137,13 @@ export function captionDe(
   }
   if (tipo === "eeuu") {
     partes.push(
-      "Se aparta pagando el 100% y, si al final no lo podemos traer, te devolvemos todo." +
-        (producto.llegada ? " Se entrega después del " + fechaLarga(producto.llegada) + "." : ""),
+      "No lo tenemos en el mezzanine, pero revisamos si lo podemos conseguir. Te confirmamos disponibilidad y precio antes de que pagués nada.",
+      detalle(producto),
+      "Pedilo en pokedeke.store/busca o escribinos por aquí.",
     );
+    return partes.filter(Boolean).join("\n\n");
   }
-  partes.push(cuerpo(producto, tipo !== "eeuu"), cierre);
+  partes.push(cuerpo(producto), cierre);
   return partes.filter(Boolean).join("\n\n");
 }
 
@@ -220,7 +222,7 @@ export function planDeLaSemana(semana: number): Sugerencia[] {
   const pick = tomar(elegir(destacados(8)));
   const nuevo = tomar(elegir(sinRepetir(novedadesVariadas(6))));
   const visto = tomar(elegir(sinRepetir(masVistos(8))));
-  const importado = tomar(elegir(sinRepetir(disponibles().filter(esPedidoEspecial))));
+  const importado = tomar(elegir(sinRepetir(porConsultar())));
   const plan: (Sugerencia | null)[] = [
     pick ? { dia: "Lunes", tipo: "pick", producto: pick, porQue: "Está marcado como destacado en la hoja." } : null,
     nuevo ? { dia: "Miércoles", tipo: "nuevo", producto: nuevo, porQue: "Es de lo último que entró." } : null,
@@ -229,7 +231,7 @@ export function planDeLaSemana(semana: number): Sugerencia[] {
       ? { dia: "Viernes", tipo: "disponible", producto: visto, porQue: "Es de lo más visto en la página y hay stock." }
       : null,
     importado
-      ? { dia: "Domingo", tipo: "eeuu", producto: importado, porQue: "Es de lo que se trae de Estados Unidos." }
+      ? { dia: "Domingo", tipo: "eeuu", producto: importado, porQue: "Está por consultar: sirve para medir si hay interés antes de conseguirlo." }
       : null,
   ];
   return plan.filter((sugerencia): sugerencia is Sugerencia => sugerencia !== null);

@@ -8,7 +8,6 @@ export const TIENDA = {
   // Servicio al cliente: llega a la cuenta de la tienda por Cloudflare Email Routing.
   correo: "sac@pokedeke.store",
   plazoPagoHoras: 24,
-  adelantoPreventa: 0.5,
 };
 
 /** Subcarpeta donde vive la página. En la compu va vacía. */

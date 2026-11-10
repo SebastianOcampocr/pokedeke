@@ -68,6 +68,7 @@ const CONFIG = {
   colonesPorDolar: 500,
   maxPagosPaypalPorHora: 120,
   maxSolicitudesPorHora: 40,
+  maxVerificacionesPorHora: 600,
   maxBusquedasPorHora: 1500,
   // Tope de términos distintos en la pestaña Búsquedas, para que nadie la llene de basura.
   maxTerminos: 3000,
@@ -157,12 +158,25 @@ const HOJAS = {
   solicitudes: "Solicitudes",
   busquedas: "Búsquedas",
   demanda: "Demanda",
+  sistema: "Sistema",
 };
 
 // Sube con cada cambio: la página y las pruebas leen esta marca con un GET.
-const VERSION = "2026-11-09-demanda";
+const VERSION = "2026-11-09-estados";
 const ENTREGADO = "Entregado";
 const PEDIDO_ESPECIAL = "Pedido especial";
+// Estados del inventario. Los escribe la tienda en la columna "Estado en la página"
+// de "Catálogo web"; vacío es Disponible. Solo Disponible se puede comprar.
+const ESTADOS = {
+  disponible: "Disponible",
+  enCamino: "En camino",
+  porConsultar: "Por consultar",
+  agotado: "Agotado",
+  noPublicado: "No publicado",
+};
+const COLUMNA_ESTADO = "Estado en la página";
+// Formularios que piden la comprobación de Cloudflare cuando hay TURNSTILE_SECRET.
+const CON_VERIFICACION = ["pedido", "solicitud", "comentario", "aviso", "interesado"];
 const PRIMERA_FILA = 5;
 const PENDIENTE = "Pendiente de pago";
 const PAGADO = "Pagado";
@@ -257,6 +271,13 @@ function doPost(e) {
     };
     const accion = acciones[datos.accion];
     if (!accion) return responder({ ok: false, error: "Acción desconocida." });
+    if (CON_VERIFICACION.includes(datos.accion) && !esHumano(datos.verificacion)) {
+      return responder({
+        ok: false,
+        verificar: true,
+        error: "No pudimos comprobar que sos una persona. Recargá la página e intentá otra vez, o escribinos por WhatsApp.",
+      });
+    }
     if (datos.accion === "carrito") {
       if (!hayCupo("carritos", CONFIG.maxCarritosPorHora)) return responder({ ok: false });
       return responder(conCandado(() => accion(datos)));
@@ -341,6 +362,35 @@ function siEstaLibre(tarea) {
   }
 }
 
+/**
+ * Con la propiedad TURNSTILE_SECRET, los formularios deben traer la prueba de
+ * Cloudflare Turnstile y aquí se le pregunta a Cloudflare si es buena. Sin la
+ * propiedad no se pide nada. Si Cloudflare no responde, no pasa: es preferible
+ * perder un rato de pedidos que llenar la hoja de pedidos falsos.
+ */
+function esHumano(prueba) {
+  const secreto = PropertiesService.getScriptProperties().getProperty("TURNSTILE_SECRET");
+  if (!secreto) return true;
+  if (!prueba || typeof prueba !== "string") return false;
+  if (!hayCupo("verificaciones", CONFIG.maxVerificacionesPorHora)) return false;
+  try {
+    const respuesta = UrlFetchApp.fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
+      method: "post",
+      payload: { secret: secreto, response: prueba.slice(0, 2100) },
+      muteHttpExceptions: true,
+    });
+    return JSON.parse(respuesta.getContentText()).success === true;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+}
+
+/** Sin tildes ni mayúsculas, para comparar lo que alguien escribió a mano. */
+function sinTildes(valor) {
+  return String(valor == null ? "" : valor).normalize("NFD").replace(/\p{M}/gu, "").toLowerCase().trim();
+}
+
 /** Frena a quien mande pedidos falsos sin parar. */
 function hayCupo(tipo, maximo) {
   const memoria = CacheService.getScriptCache();
@@ -371,6 +421,7 @@ function stockEnVivo(versionDeLaPagina) {
       stock: Math.max(producto.stock - (reservado[producto.slug] || 0), 0),
       precio: producto.precio,
       peso: producto.peso,
+      estado: producto.estado,
     };
   });
   const ofertas = ofertasVigentes(todos);
@@ -448,7 +499,7 @@ function colones(monto) {
 function filasDeCatalogo() {
   const pestana = hoja(HOJAS.catalogo);
   const ultima = pestana.getLastRow();
-  const crudo = pestana.getRange(4, 1, Math.max(ultima - 3, 1), 17).getValues();
+  const crudo = pestana.getRange(4, 1, Math.max(ultima - 3, 1), Math.max(pestana.getLastColumn(), 17)).getValues();
   const titulos = crudo[0].map((titulo) => String(titulo).trim());
   return crudo
     .slice(1)
@@ -468,17 +519,19 @@ function esPokemon(juego) {
 function catalogoEnCsv() {
   const pestana = hoja(HOJAS.catalogo);
   const ultima = pestana.getLastRow();
-  const filas = pestana.getRange(4, 1, Math.max(ultima - 3, 1), 16).getDisplayValues();
+  const filas = pestana.getRange(4, 1, Math.max(ultima - 3, 1), Math.max(pestana.getLastColumn(), 16)).getDisplayValues();
   const titulos = filas[0].map((titulo) => String(titulo).trim());
   const juego = titulos.indexOf("Juego");
   const publicado = titulos.indexOf("Publicado (sí/no)");
   const sugerido = titulos.indexOf("Precio sugerido (₡)");
   const venta = titulos.indexOf("Precio de venta (₡)");
+  const estado = titulos.indexOf(COLUMNA_ESTADO);
   return filas
     .filter((fila, indice) => {
       if (indice === 0) return true;
       if (!fila[0]) return false;
       if (publicado !== -1 && /^no$/i.test(String(fila[publicado]).trim())) return false;
+      if (estado !== -1 && sinTildes(fila[estado]) === sinTildes(ESTADOS.noPublicado)) return false;
       return juego === -1 || esPokemon(fila[juego]);
     })
     .map((fila, indice) => {
@@ -491,17 +544,38 @@ function catalogoEnCsv() {
     .join("\n");
 }
 
+/**
+ * El estado de una fila de "Catálogo web". Vacío o Disponible se vende si hay
+ * unidades. Cualquier otra cosa no se vende aunque la hoja muestre stock: así lo
+ * que es de un proveedor o viene de camino nunca pasa por inventario propio. Las
+ * etiquetas viejas "Preventa" y "Pedido especial" cuentan como Por consultar, y
+ * un estado que no se entiende, como Agotado. Debe decidir igual que
+ * estadoDelLote en scripts/traer-catalogo.mjs.
+ */
+function estadoDelLote(fila) {
+  if (/^no$/.test(sinTildes(fila["Publicado (sí/no)"]))) return ESTADOS.noPublicado;
+  const escrito = sinTildes(fila[COLUMNA_ESTADO]);
+  if (!escrito) {
+    const etiqueta = String(fila.Etiqueta || "").trim();
+    return etiqueta === "Preventa" || etiqueta === PEDIDO_ESPECIAL ? ESTADOS.porConsultar : ESTADOS.disponible;
+  }
+  return Object.values(ESTADOS).find((estado) => sinTildes(estado) === escrito) || ESTADOS.agotado;
+}
+
 /** Debe agrupar igual que scripts/traer-catalogo.mjs. */
 function productosPorSlug() {
   const grupos = {};
   filasDeCatalogo().forEach((fila) => {
-    const juego = String(fila.Juego).normalize("NFD").replace(/\p{M}/gu, "").toLowerCase();
-    if (juego.trim() !== "pokemon") return;
-    if (/^no$/i.test(String(fila["Publicado (sí/no)"]).trim())) return;
+    if (!esPokemon(fila.Juego)) return;
+    const estado = estadoDelLote(fila);
+    if (estado === ESTADOS.noPublicado) return;
 
     const slug = aSlug(fila.Producto);
-    const grupo = grupos[slug] || { slug, nombre: fila.Producto, stock: 0, lotes: [] };
-    grupo.stock += Math.max(Number(fila["En stock"]) || 0, 0);
+    const grupo = grupos[slug] || { slug, nombre: fila.Producto, stock: 0, vendidas: 0, lotes: [], estados: {} };
+    // Solo cuenta lo que está en el mezzanine: lo demás no es para vender hoy.
+    if (estado === ESTADOS.disponible) grupo.stock += Math.max(Number(fila["En stock"]) || 0, 0);
+    grupo.vendidas += Math.max(Number(fila.Vendidas) || 0, 0);
+    grupo.estados[estado] = true;
     grupo.lotes.push(fila);
     grupos[slug] = grupo;
   });
@@ -510,15 +584,19 @@ function productosPorSlug() {
     const recientes = grupo.lotes.slice().reverse();
     const ultimo = (columna) =>
       recientes.map((lote) => lote[columna]).find((valor) => valor !== "" && valor !== 0);
-    const preventa = ultimo("Etiqueta") === "Preventa";
     const precio = Number(ultimo("Precio de venta (₡)") || ultimo("Precio sugerido (₡)")) || 0;
     grupo.nombre = String(ultimo("Nombre para mostrar") || grupo.nombre);
-    grupo.preventa = preventa;
-    // Se paga completo y se entrega después de "Llega (preventas)".
-    grupo.especial = ultimo("Etiqueta") === PEDIDO_ESPECIAL;
-    grupo.llegada = ultimo("Llega (preventas)") || null;
+    grupo.estado =
+      grupo.stock > 0
+        ? ESTADOS.disponible
+        : grupo.estados[ESTADOS.enCamino]
+          ? ESTADOS.enCamino
+          : grupo.estados[ESTADOS.porConsultar]
+            ? ESTADOS.porConsultar
+            : ESTADOS.agotado;
     grupo.precio = precio;
-    grupo.precioCobrado = preventa ? Math.round(precio * CONFIG.adelantoPreventa) : precio;
+    // Ya no hay adelantos ni apartados: todo se cobra completo.
+    grupo.precioCobrado = precio;
     grupo.peso =
       Number(ultimo("Peso (g)")) ||
       CONFIG.pesos[ultimo("Categoría")] ||
@@ -527,7 +605,7 @@ function productosPorSlug() {
   return grupos;
 }
 
-/** Lo que sigue apartado por pedidos sin pagar que todavía están en plazo. */
+/** Unidades de pedidos sin pagar que siguen en plazo: no se le venden a otra persona mientras tanto. */
 function apartados(filasPedidos) {
   const limite = Date.now() - CONFIG.horasApartado * 3600 * 1000;
   const cuenta = {};
@@ -594,7 +672,7 @@ function ofertasVigentes(productos) {
         .filter(
           (producto) =>
             oferta.slug.test(producto.slug) &&
-            !producto.preventa &&
+            producto.estado === ESTADOS.disponible &&
             producto.precioCobrado > oferta.precio,
         )
         .map((producto) => producto.slug),
@@ -634,6 +712,14 @@ function esCorreo(valor) {
 }
 
 function crearPedido(datos) {
+  // Si la página manda dos veces el mismo intento (doble toque, mala señal), se
+  // devuelve el pedido que ya se anotó en vez de hacer otro.
+  const intento = texto(datos.intento, 60).replace(/[^\w-]/g, "");
+  const memoria = CacheService.getScriptCache();
+  if (intento) {
+    const anterior = memoria.get("intento-" + intento);
+    if (anterior) return JSON.parse(anterior);
+  }
   const cliente = texto(datos.cliente, 80);
   const whatsapp = normalizarWhatsapp(datos.whatsapp);
   const correo = texto(datos.correo, 120);
@@ -684,6 +770,9 @@ function crearPedido(datos) {
     if (!Number.isInteger(cantidad) || cantidad < 1) {
       return { ok: false, error: "Revisá las cantidades de tu carrito." };
     }
+    if (producto.estado !== ESTADOS.disponible && producto.estado !== ESTADOS.agotado) {
+      return { ok: false, agotado: slug, error: producto.nombre + " no se puede comprar por ahora (" + producto.estado.toLowerCase() + "). Quitalo del carrito para seguir." };
+    }
     if (cantidad > producto.stock - (reservado[slug] || 0)) {
       return { ok: false, agotado: slug, error: "Se acaba de agotar: " + producto.nombre + "." };
     }
@@ -693,8 +782,6 @@ function crearPedido(datos) {
       nombre: producto.nombre,
       cantidad,
       precio: producto.precioCobrado,
-      preventa: producto.preventa,
-      ...(producto.especial ? { especial: true, llega: fechaIso(producto.llegada) } : {}),
       quedan: producto.stock - (reservado[slug] || 0) - cantidad,
     });
   }
@@ -846,7 +933,15 @@ function crearPedido(datos) {
     conTarjeta,
   });
 
-  return { ok: true, numero, clave, subtotal, descuento, costoEnvio, total, lineas };
+  const respuesta = { ok: true, numero, clave, subtotal, descuento, costoEnvio, total, lineas };
+  if (intento) {
+    try {
+      memoria.put("intento-" + intento, JSON.stringify(respuesta), 6 * 3600);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  return respuesta;
 }
 
 function esRetiro(fila) {
@@ -1240,7 +1335,7 @@ function avisarQueVolvio(correo, nombre, producto) {
   const saludo = nombre ? "¡Hola " + nombre.split(" ")[0] + "!" : "¡Hola!";
   const parrafos = [
     saludo + " Nos pediste que te avisáramos: " + producto.nombre + " ya está otra vez en la página, a " + colones(producto.precio) + ".",
-    "Se aparta al hacer el pedido, así que si lo querés, no te durmás.",
+    "Quedan pocas unidades, así que si lo querés, no te durmás.",
   ];
   const pie = "Es un solo aviso: no te vamos a escribir más por esto. Tus datos son solo para este aviso.";
   return mandarAlCliente({
@@ -1391,10 +1486,12 @@ function pestanaCon(nombre, ayuda, columnas) {
 /* ---------- Pokedeke Busca ---------- */
 
 // Columnas de "Solicitudes", contando desde 1.
-const COL_SOLICITUD = { fecha: 1, producto: 2, cantidad: 3, detalle: 4, presupuesto: 5, origen: 6, estado: 7, notas: 8 };
-const TITULOS_SOLICITUD = ["Fecha", "Qué busca", "Cantidad", "Enlace o detalle", "Presupuesto", "De dónde llegó", "Estado", "Notas"];
+const COL_SOLICITUD = { fecha: 1, producto: 2, cantidad: 3, detalle: 4, presupuesto: 5, origen: 6, estado: 7, notas: 8, slug: 9 };
+const TITULOS_SOLICITUD = ["Fecha", "Qué busca", "Cantidad", "Enlace o detalle", "Presupuesto", "De dónde llegó", "Estado", "Notas", "Producto del catálogo"];
 const AYUDA_SOLICITUDES =
-  "Lo que la gente pide en Pokedeke Busca. La conversación sigue por WhatsApp; aquí queda qué se pidió. Cambiá el Estado a mano: Nueva, En revisión, Cotizada, Conseguida o No se consiguió.";
+  "Lo que la gente pide en Pokedeke Busca. La conversación sigue por WhatsApp; aquí queda qué se pidió. Cambiá el Estado a mano: Nueva, Revisando, Cotizada y al final Conseguida, No disponible o Cerrada. Nada se compra solo: cada solicitud la revisa una persona.";
+// En orden: así se ve en el menú de la columna Estado.
+const ESTADOS_SOLICITUD = ["Nueva", "Revisando", "Cotizada", "Conseguida", "No disponible", "Cerrada"];
 const SOLICITUD_NUEVA = "Nueva";
 const CLAVE_SOLICITUDES = "solicitudes-avisadas";
 const ORIGENES = {
@@ -1403,8 +1500,17 @@ const ORIGENES = {
   catalogo: "Catálogo sin resultados",
   buscador: "Buscador sin resultados",
   agotado: "Producto agotado",
+  consultar: "Producto por consultar",
+  camino: "Producto en camino",
   eeuu: "Catálogo de Estados Unidos",
 };
+
+/** La columna del producto llegó después: si la pestaña no la tiene, se la pone. */
+function prepararColumnaSolicitud(pestana) {
+  if (pestana.getMaxColumns() < COL_SOLICITUD.slug) pestana.insertColumnAfter(COL_SOLICITUD.slug - 1);
+  const titulo = pestana.getRange(PRIMERA_FILA - 1, COL_SOLICITUD.slug);
+  if (!titulo.getValue()) titulo.setValue(TITULOS_SOLICITUD[COL_SOLICITUD.slug - 1]);
+}
 
 /**
  * "¿Buscás algo que no está aquí?": queda anotado aunque la persona no llegue a
@@ -1417,7 +1523,11 @@ function guardarSolicitud(datos) {
   if (producto.length < 3) return { ok: false, error: "Decinos qué producto andás buscando." };
   const cantidad = Math.min(Math.max(Math.floor(Number(datos.cantidad)) || 1, 1), 99);
   const origen = Object.prototype.hasOwnProperty.call(ORIGENES, datos.origen) ? ORIGENES[datos.origen] : "Otro";
-  pestanaCon(HOJAS.solicitudes, AYUDA_SOLICITUDES, TITULOS_SOLICITUD).appendRow([
+  // Si viene de la ficha de un producto, queda con cuál: así cuenta en su demanda.
+  const slug = aSlug(texto(datos.slug, 200));
+  const pestana = pestanaCon(HOJAS.solicitudes, AYUDA_SOLICITUDES, TITULOS_SOLICITUD);
+  prepararColumnaSolicitud(pestana);
+  pestana.appendRow([
     new Date(),
     comoTexto(producto),
     cantidad,
@@ -1426,6 +1536,7 @@ function guardarSolicitud(datos) {
     origen,
     SOLICITUD_NUEVA,
     "",
+    slug && nombresDeProductos()[slug] ? slug : "",
   ]);
   return { ok: true };
 }
@@ -1442,7 +1553,7 @@ function avisarSolicitudesNuevas() {
   // Si borraron filas, se empieza a contar desde donde quedó la pestaña.
   if (ultima < avisadas) return;
   const nuevas = pestana
-    .getRange(avisadas + 1, 1, ultima - avisadas, TITULOS_SOLICITUD.length)
+    .getRange(avisadas + 1, 1, ultima - avisadas, COL_SOLICITUD.notas)
     .getValues()
     .filter((fila) => fila[COL_SOLICITUD.producto - 1]);
   if (nuevas.length === 0) return;
@@ -1522,14 +1633,14 @@ function anotarBusqueda(datos) {
 
 /* ---------- Demanda: qué quiere la gente ---------- */
 
-const TITULOS_DEMANDA = ["Prioridad", "Qué", "Dónde está", "Stock", "Vistas", "Al carrito", "WhatsApp", "Avisame", "Búsquedas sin resultado", "Solicitudes (Busca)", "Última señal", "Sugerencia"];
+const TITULOS_DEMANDA = ["Prioridad", "Qué", "Estado", "Stock", "Vendidas", "Vistas", "Al carrito", "WhatsApp", "Avisame", "Búsquedas sin resultado", "Solicitudes (Busca)", "Última señal", "Sugerencia"];
 const AYUDA_DEMANDA =
-  "Se llena sola cada hora con lo que pasa en la página. Es una pista para decidir qué conseguir y qué publicar, no una orden: con pocos datos puede equivocarse. No escribás aquí: se borra y se vuelve a llenar.";
+  "Se llena sola cada hora con lo que pasa en la página. Es una pista para decidir qué revisar y qué publicar, no una orden: con pocos datos puede equivocarse. Una vista o una búsqueda no es una venta: lo vendido de verdad está en la columna Vendidas. No escribás aquí: se borra y se vuelve a llenar.";
 // Puntos: una vista vale 1; agregarlo al carrito, 3; preguntar por WhatsApp, 4; pedir aviso o
 // pedirlo en Busca, 5; buscarlo sin encontrarlo, 1.
 const PUNTOS_ALTA = 10;
 const PUNTOS_MEDIA = 4;
-const SOLICITUDES_CERRADAS = ["Conseguida", "No se consiguió"];
+const SOLICITUDES_CERRADAS = ["Conseguida", "No disponible", "Cerrada", "No se consiguió"];
 
 function prioridadDe(puntos) {
   return puntos >= PUNTOS_ALTA ? "Alta" : puntos >= PUNTOS_MEDIA ? "Media" : "Baja";
@@ -1553,7 +1664,7 @@ function actualizarDemanda() {
   const productos = productosPorSlug();
   const reservado = apartados(filasDePedidos());
   const senales = {};
-  const de = (slug) => (senales[slug] = senales[slug] || { vistas: 0, carrito: 0, whatsapp: 0, avisos: 0, ultima: null });
+  const de = (slug) => (senales[slug] = senales[slug] || { vistas: 0, carrito: 0, whatsapp: 0, avisos: 0, solicitudes: 0, ultima: null });
 
   const vistos = hoja(HOJAS.masVistos);
   if (vistos && vistos.getLastRow() >= PRIMERA_FILA) {
@@ -1582,24 +1693,50 @@ function actualizarDemanda() {
     });
   }
 
+  // Las solicitudes abiertas: las que salieron de la ficha de un producto cuentan para ese producto.
+  const sueltas = [];
+  const solicitudes = hoja(HOJAS.solicitudes);
+  if (solicitudes && solicitudes.getLastRow() >= PRIMERA_FILA) {
+    const columnas = Math.min(solicitudes.getMaxColumns(), COL_SOLICITUD.slug);
+    solicitudes
+      .getRange(PRIMERA_FILA, 1, solicitudes.getLastRow() - PRIMERA_FILA + 1, columnas)
+      .getValues()
+      .forEach((fila) => {
+        if (SOLICITUDES_CERRADAS.includes(String(fila[COL_SOLICITUD.estado - 1]))) return;
+        const slug = String(fila[COL_SOLICITUD.slug - 1] || "");
+        if (!slug || !productos[slug]) {
+          sueltas.push(fila);
+          return;
+        }
+        const senal = de(slug);
+        senal.solicitudes += 1;
+        senal.ultima = masReciente(senal.ultima, fila[COL_SOLICITUD.fecha - 1]);
+      });
+  }
+
   const filas = [];
   const stockDe = (slug) => Math.max(productos[slug].stock - (reservado[slug] || 0), 0);
   Object.keys(senales).forEach((slug) => {
     // Lo que ya no está publicado no se sugiere.
     if (!productos[slug]) return;
     const senal = senales[slug];
-    const puntos = senal.vistas + 3 * senal.carrito + 4 * senal.whatsapp + 5 * senal.avisos;
+    const puntos = senal.vistas + 3 * senal.carrito + 4 * senal.whatsapp + 5 * senal.avisos + 5 * senal.solicitudes;
     if (puntos === 0) return;
     const stock = stockDe(slug);
+    const estado = stock > 0 ? ESTADOS.disponible : productos[slug].estado === ESTADOS.disponible ? ESTADOS.agotado : productos[slug].estado;
     const sugerencia =
-      stock === 0
-        ? "Se agotó y lo siguen buscando: considerar reponerlo."
-        : puntos >= PUNTOS_ALTA
-          ? "Hay interés y hay stock: darle prioridad en el contenido."
-          : "Tiene interés: buen candidato para una publicación.";
+      estado === ESTADOS.porConsultar
+        ? "Es por consultar y hay interés: revisar si se puede conseguir."
+        : estado === ESTADOS.enCamino
+          ? "Viene en camino y ya hay interés: avisar cuando llegue."
+          : estado === ESTADOS.agotado
+            ? "Se agotó y lo siguen buscando: revisar si conviene reponerlo."
+            : puntos >= PUNTOS_ALTA
+              ? "Hay interés y hay stock: darle prioridad en el contenido."
+              : "Tiene interés: buen candidato para una publicación.";
     filas.push({
       puntos,
-      celdas: [prioridadDe(puntos), comoTexto(productos[slug].nombre), "En la página", stock, senal.vistas, senal.carrito, senal.whatsapp, senal.avisos, "", "", senal.ultima || "", sugerencia],
+      celdas: [prioridadDe(puntos), comoTexto(productos[slug].nombre), estado, stock, productos[slug].vendidas, senal.vistas, senal.carrito, senal.whatsapp, senal.avisos, "", senal.solicitudes || "", senal.ultima || "", sugerencia],
     });
   });
 
@@ -1620,50 +1757,143 @@ function actualizarDemanda() {
         senal.ultima = masReciente(senal.ultima, fila[COL_BUSQUEDA.ultima - 1]);
       });
   }
-  const solicitudes = hoja(HOJAS.solicitudes);
-  if (solicitudes && solicitudes.getLastRow() >= PRIMERA_FILA) {
-    solicitudes
-      .getRange(PRIMERA_FILA, 1, solicitudes.getLastRow() - PRIMERA_FILA + 1, TITULOS_SOLICITUD.length)
-      .getValues()
-      .forEach((fila) => {
-        const producto = String(fila[COL_SOLICITUD.producto - 1]);
-        const termino = terminoDeBusqueda(producto);
-        if (!termino || SOLICITUDES_CERRADAS.includes(String(fila[COL_SOLICITUD.estado - 1]))) return;
-        const senal = deFuera(termino, producto);
-        senal.nombre = producto;
-        senal.solicitudes += 1;
-        senal.ultima = masReciente(senal.ultima, fila[COL_SOLICITUD.fecha - 1]);
-      });
-  }
+  sueltas.forEach((fila) => {
+    const producto = String(fila[COL_SOLICITUD.producto - 1]);
+    const termino = terminoDeBusqueda(producto);
+    if (!termino) return;
+    const senal = deFuera(termino, producto);
+    senal.nombre = producto;
+    senal.solicitudes += 1;
+    senal.ultima = masReciente(senal.ultima, fila[COL_SOLICITUD.fecha - 1]);
+  });
   Object.keys(fuera).forEach((termino) => {
     const senal = fuera[termino];
     const puntos = senal.sin + 5 * senal.solicitudes;
     filas.push({
       puntos,
-      celdas: [prioridadDe(puntos), comoTexto(senal.nombre), "No lo tenemos", "", "", "", "", "", senal.sin || "", senal.solicitudes || "", senal.ultima || "",
-        senal.solicitudes ? "Lo pidieron en Busca: considerar conseguirlo." : "Lo buscan y no está: considerar conseguirlo."],
+      celdas: [prioridadDe(puntos), comoTexto(senal.nombre), "No está en la página", "", "", "", "", "", "", senal.sin || "", senal.solicitudes || "", senal.ultima || "",
+        senal.solicitudes ? "Lo pidieron en Busca: revisar si se puede conseguir." : "Lo buscan y no está: revisar si se puede conseguir."],
     });
   });
   filas.sort((a, b) => b.puntos - a.puntos);
 
   // Lo que tiene stock y nadie ha mirado: lo de más valor primero.
   const quietos = Object.keys(productos)
-    .filter((slug) => !senales[slug] && !productos[slug].preventa && !productos[slug].especial && stockDe(slug) >= 3)
+    .filter((slug) => !senales[slug] && stockDe(slug) >= 3)
     .sort((a, b) => productos[b].precio * stockDe(b) - productos[a].precio * stockDe(a))
     .slice(0, 10)
     .map((slug) => ({
       puntos: 0,
-      celdas: ["Sin movimiento", comoTexto(productos[slug].nombre), "En la página", stockDe(slug), 0, 0, 0, 0, "", "", "", "Tiene stock y nadie lo ha mirado: darle visibilidad con contenido."],
+      celdas: ["Sin movimiento", comoTexto(productos[slug].nombre), ESTADOS.disponible, stockDe(slug), productos[slug].vendidas, 0, 0, 0, 0, "", "", "", "Tiene stock y nadie lo ha mirado: darle visibilidad con contenido."],
     }));
 
   const todas = filas.concat(quietos).map((fila) => fila.celdas);
   const pestana = pestanaCon(HOJAS.demanda, AYUDA_DEMANDA, TITULOS_DEMANDA);
+  // Los títulos se reescriben: la pestaña pudo nacer con una versión vieja de las columnas.
+  pestana.getRange(2, 1).setValue(AYUDA_DEMANDA);
+  pestana.getRange(PRIMERA_FILA - 1, 1, 1, TITULOS_DEMANDA.length).setValues([TITULOS_DEMANDA]);
   const viejas = pestana.getLastRow() - PRIMERA_FILA + 1;
   if (viejas > 0) pestana.getRange(PRIMERA_FILA, 1, viejas, TITULOS_DEMANDA.length).clearContent();
   if (todas.length > 0) pestana.getRange(PRIMERA_FILA, 1, todas.length, TITULOS_DEMANDA.length).setValues(todas);
   const ahora = Utilities.formatDate(new Date(), libro().getSpreadsheetTimeZone(), "dd/MM/yyyy HH:mm");
   pestana.getRange(3, 1).setValue("Actualizado: " + ahora + ". Con señales: " + filas.length + ".");
   return todas.length;
+}
+
+/* ---------- Sistema: cómo está el inventario y la sincronización ---------- */
+
+const TITULOS_SISTEMA = ["Qué", "Valor", "Detalle"];
+const AYUDA_SISTEMA =
+  "Se llena sola cada hora y cada vez que cambia el inventario. De aquí saca sus números la pestaña Inicio. No escribás aquí: se borra y se vuelve a llenar.";
+const CLAVE_FECHA_PUBLICADO = "catalogo-publicado-fecha";
+const CLAVE_FECHA_RESPALDO = "respaldo-fecha";
+
+function fechaYHora(valor) {
+  if (!valor) return "";
+  return Utilities.formatDate(new Date(Number(valor) || valor), libro().getSpreadsheetTimeZone(), "dd/MM/yyyy HH:mm");
+}
+
+/** Lo que dice la página armada de sí misma: cuándo se armó y con cuántos productos. */
+function paginaArmada() {
+  const memoria = CacheService.getScriptCache();
+  const guardado = memoria.get("pagina-armada");
+  if (guardado) return JSON.parse(guardado);
+  try {
+    const respuesta = UrlFetchApp.fetch(sitio() + "sincronizado.json", { muteHttpExceptions: true });
+    if (respuesta.getResponseCode() !== 200) return null;
+    const datos = JSON.parse(respuesta.getContentText());
+    if (!datos || !datos.fecha) return null;
+    // Se guarda 5 minutos: editar la hoja varias veces seguidas no vuelve a preguntar.
+    memoria.put("pagina-armada", JSON.stringify({ fecha: datos.fecha, productos: datos.productos }), 300);
+    return datos;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
+
+/**
+ * Cuenta el inventario por estado, anota cuándo se armó la página por última vez
+ * y junta las alertas. Solo usa lo que ya está en la hoja y en la página.
+ */
+function actualizarSistema() {
+  const productos = Object.values(productosPorSlug());
+  const reservado = apartados(filasDePedidos());
+  const cuenta = { [ESTADOS.disponible]: 0, [ESTADOS.enCamino]: 0, [ESTADOS.porConsultar]: 0, [ESTADOS.agotado]: 0 };
+  let unidades = 0;
+  const alertas = [];
+  productos.forEach((producto) => {
+    cuenta[producto.estado] += 1;
+    if (producto.estado === ESTADOS.disponible) {
+      unidades += Math.max(producto.stock - (reservado[producto.slug] || 0), 0);
+      if (!producto.precio) alertas.push(producto.nombre + " tiene unidades pero no tiene precio: no sale en la página.");
+    }
+  });
+
+  let sinPublicar = 0;
+  const validos = Object.values(ESTADOS).map(sinTildes);
+  filasDeCatalogo().forEach((fila, indice) => {
+    if (!esPokemon(fila.Juego)) return;
+    if (estadoDelLote(fila) === ESTADOS.noPublicado) sinPublicar += 1;
+    const escrito = sinTildes(fila[COLUMNA_ESTADO]);
+    if (escrito && !validos.includes(escrito)) {
+      alertas.push("Fila " + (indice + PRIMERA_FILA) + " de Catálogo web: el estado \"" + fila[COLUMNA_ESTADO] + "\" no se entiende y no se vende. Usá el menú de la celda.");
+    }
+    ["En stock", "Precio sugerido (₡)", "Precio de venta (₡)"].forEach((columna) => {
+      if (String(fila[columna]).charAt(0) === "#") {
+        alertas.push("Fila " + (indice + PRIMERA_FILA) + " de Catálogo web: la columna " + columna + " tiene un error de fórmula (" + fila[columna] + ").");
+      }
+    });
+  });
+
+  const propiedades = PropertiesService.getScriptProperties();
+  const pagina = paginaArmada();
+  const conPrecio = productos.filter((producto) => producto.precio > 0).length;
+  if (!pagina) {
+    alertas.push("No se pudo leer cuándo se armó la página por última vez.");
+  } else if (Number(pagina.productos) !== conPrecio) {
+    alertas.push("La página muestra " + pagina.productos + " productos y la hoja tiene " + conPrecio + ": falta que se vuelva a armar.");
+  }
+
+  const filas = [
+    ["Productos disponibles", cuenta[ESTADOS.disponible], unidades + " unidades en el mezzanine"],
+    ["Productos en camino", cuenta[ESTADOS.enCamino], "Comprados, todavía no llegan"],
+    ["Productos por consultar", cuenta[ESTADOS.porConsultar], "No son nuestros: se consultan"],
+    ["Productos agotados", cuenta[ESTADOS.agotado], ""],
+    ["Filas sin publicar", sinPublicar, ""],
+    ["Inventario revisado", fechaYHora(Date.now()), ""],
+    ["La página se armó", pagina ? fechaYHora(pagina.fecha) : "Sin dato", pagina ? pagina.productos + " productos en la página" : ""],
+    ["Publicación pedida a GitHub", fechaYHora(propiedades.getProperty(CLAVE_FECHA_PUBLICADO)) || "Sin dato", ""],
+    ["Último respaldo", fechaYHora(propiedades.getProperty(CLAVE_FECHA_RESPALDO)) || "Sin dato", ""],
+    ["Versión del servidor", VERSION, esPrueba() ? "Hoja de prueba" : ""],
+    ["Alertas", alertas.length, alertas.length ? "" : "Todo en orden"],
+  ].concat(alertas.slice(0, 30).map((alerta) => ["Alerta", comoTexto(alerta), ""]));
+
+  const pestana = pestanaCon(HOJAS.sistema, AYUDA_SISTEMA, TITULOS_SISTEMA);
+  const viejas = pestana.getLastRow() - PRIMERA_FILA + 1;
+  if (viejas > 0) pestana.getRange(PRIMERA_FILA, 1, viejas, TITULOS_SISTEMA.length).clearContent();
+  pestana.getRange(PRIMERA_FILA, 1, filas.length, TITULOS_SISTEMA.length).setValues(filas);
+  return alertas.length;
 }
 
 /* ---------- ¿Cómo te fue? ---------- */
@@ -1742,6 +1972,11 @@ function tareasCadaHora() {
   } catch (error) {
     console.error(error);
   }
+  try {
+    actualizarSistema();
+  } catch (error) {
+    console.error(error);
+  }
   pedirOpiniones();
 }
 
@@ -1788,6 +2023,7 @@ function publicarSiCambio() {
     return "GitHub respondió " + codigo + ": revisá la llave GITHUB_TOKEN.";
   }
   propiedades.setProperty(CLAVE_PUBLICADO, huella);
+  propiedades.setProperty(CLAVE_FECHA_PUBLICADO, String(Date.now()));
   return "Listo: se pidió rearmar la página. Tarda unos 3 minutos.";
 }
 
@@ -1799,6 +2035,7 @@ function publicarSiCambio() {
 function respaldarHoja() {
   const fecha = Utilities.formatDate(new Date(), libro().getSpreadsheetTimeZone(), "yyyy-MM-dd");
   libro().copy("Respaldo " + CONFIG.nombreTienda + " " + fecha);
+  PropertiesService.getScriptProperties().setProperty(CLAVE_FECHA_RESPALDO, String(Date.now()));
 }
 
 /* ---------- Pago con tarjeta por PayPal ---------- */
@@ -1875,7 +2112,7 @@ function crearPagoPaypal(datos) {
   if (fila[COL.estado - 1] !== PENDIENTE) return { ok: false, error: "Ese pedido ya no está pendiente de pago." };
   const limite = Date.now() - CONFIG.horasApartado * 3600 * 1000;
   if (new Date(fila[COL.fecha - 1]).getTime() < limite) {
-    return { ok: false, error: "El apartado de este pedido ya venció. Hacé el pedido otra vez." };
+    return { ok: false, error: "El plazo para pagar este pedido ya venció. Hacé el pedido otra vez." };
   }
   const numero = fila[COL.numero - 1];
   const dolares = montoEnDolares(fila[COL.total - 1]);
@@ -2046,7 +2283,7 @@ function botonDeCorreo(texto, enlace, fondo) {
   );
 }
 
-/** Hasta cuándo sigue apartado un pedido sin pagar. */
+/** Hasta cuándo se puede pagar un pedido. */
 function finDelApartado(fecha) {
   return fechaLegible(new Date(fecha).getTime() + CONFIG.horasApartado * 3600 * 1000);
 }
@@ -2056,7 +2293,7 @@ function datosDePago(numero, fecha, comprobante) {
     ["SINPE Móvil", CONFIG.sinpe],
     ["En el detalle", numero],
     ["Comprobante que escribió el cliente", comprobante],
-    ["Apartado hasta", finDelApartado(fecha)],
+    ["Pagá antes del", finDelApartado(fecha)],
   ];
 }
 
@@ -2281,7 +2518,7 @@ function confirmarAlCliente({ correo, numero, fecha, total, cliente, whatsapp, e
         ? "Tus productos suman " + colones(total) + ". El envío entre tiendas te lo confirmamos por WhatsApp y va en el mismo SINPE."
         : "Total a pagar: " + colones(total),
       "SINPE Móvil al " + CONFIG.sinpe + ", con " + numero + " en el detalle.",
-      "Tus productos quedan apartados " + CONFIG.horasApartado + " horas.",
+      "Tenés " + CONFIG.horasApartado + " horas para hacer el pago.",
       "",
       "Qué sigue:",
       ...pasos,
@@ -2289,14 +2526,14 @@ function confirmarAlCliente({ correo, numero, fecha, total, cliente, whatsapp, e
     htmlBody: correoConDiseno({
       etiqueta: "Pedido recibido",
       saludo:
-        "¡Gracias, " + primerNombre + "! Recibimos tu pedido y tus productos quedan apartados " +
-        CONFIG.horasApartado + " horas mientras hacés el pago.",
+        "¡Gracias, " + primerNombre + "! Recibimos tu pedido. Tenés " +
+        CONFIG.horasApartado + " horas para hacer el pago.",
       numero,
       fecha,
       total,
       rotuloTotal: precioAparte ? "Tus productos suman (más el envío)" : "Total a pagar",
       caja: conTarjeta
-        ? [["Pagás con", etiquetaPago], ["Se cobra", "$" + montoEnDolares(total) + " (" + colones(total) + ")"], ["Apartado hasta", finDelApartado(fecha)]]
+        ? [["Pagás con", etiquetaPago], ["Se cobra", "$" + montoEnDolares(total) + " (" + colones(total) + ")"], ["Pagá antes del", finDelApartado(fecha)]]
         : datosDePago(numero, fecha).filter(([rotulo]) => !rotulo.startsWith("Comprobante")),
       tituloCliente: "Tus datos",
       cliente: [
@@ -2482,6 +2719,13 @@ function alEditarHoja(e) {
       conCandado(() => revisarAvisos());
     } catch (error) {
       console.error(error);
+    }
+    if (pestana !== HOJAS.pedidos) {
+      try {
+        actualizarSistema();
+      } catch (error) {
+        console.error(error);
+      }
     }
   }
   if (pestana !== HOJAS.pedidos) return;

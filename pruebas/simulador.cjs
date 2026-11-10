@@ -13,6 +13,7 @@ function nuevaPestana(nombre, id, filas) {
     datos,
     getName: () => nombre,
     getSheetId: () => id,
+    getLastColumn: () => Math.max(...filas.map((fila) => fila.length)),
     getLastRow: () => {
       for (let i = datos.length - 1; i >= 0; i -= 1) {
         if ((datos[i] || []).some((v) => v !== "" && v !== undefined && v !== null)) return i + 1;

@@ -3,6 +3,7 @@
 import { useId, useLayoutEffect, useRef, useState } from "react";
 import { anotarInteresado, pedirAviso } from "@/lib/api-pedidos";
 import { TIENDA_ABIERTA } from "@/lib/tienda";
+import { prepararVerificacion } from "@/lib/verificacion";
 
 /**
  * Con `slug` es un producto agotado: la hoja le escribe sola a la persona
@@ -11,12 +12,16 @@ import { TIENDA_ABIERTA } from "@/lib/tienda";
 export function BotonAvisame({
   nombreProducto,
   slug,
+  enCamino = false,
   className = "",
 }: {
   nombreProducto: string;
   slug?: string;
+  /** Ya lo compramos y viene para el mezzanine: se avisa cuando llegue. */
+  enCamino?: boolean;
   className?: string;
 }) {
+  const verbo = enCamino ? "llegue" : "vuelva";
   const dialogo = useRef<HTMLDialogElement>(null);
   const id = useId();
   const [listo, setListo] = useState(false);
@@ -43,7 +48,7 @@ export function BotonAvisame({
         }}
         className={`boton boton-amarillo boton-chico ${className}`}
       >
-        {slug ? "Avisame cuando vuelva" : "Avisame cuando llegue"}
+        {slug ? "Avisame cuando " + verbo : "Avisame cuando llegue"}
       </button>
       <dialog
         ref={dialogo}
@@ -55,8 +60,8 @@ export function BotonAvisame({
             <p>
               {slug
                 ? porCorreo
-                  ? `Apenas vuelva ${nombreProducto} te llega un correo. Es un solo aviso.`
-                  : `Apenas vuelva ${nombreProducto} te escribimos por WhatsApp.`
+                  ? `Apenas ${verbo} ${nombreProducto} te llega un correo. Es un solo aviso.`
+                  : `Apenas ${verbo} ${nombreProducto} te escribimos por WhatsApp.`
                 : `Cuando llegue ${nombreProducto} te avisamos.`}
             </p>
             <button
@@ -69,6 +74,7 @@ export function BotonAvisame({
           </div>
         ) : (
           <form
+            onFocus={prepararVerificacion}
             className="flex flex-col gap-4"
             onSubmit={async (evento) => {
               evento.preventDefault();

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useEffect, useLayoutEffect, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import ubicaciones from "@/datos/ubicaciones-cr.json";
 import { useHidratado } from "@/lib/almacen";
 import { crearPedido, mandarComprobante } from "@/lib/api-pedidos";
@@ -10,7 +10,6 @@ import { lanzarConfeti } from "@/lib/confeti";
 import { prepararAudio, sonarCompra } from "@/lib/sonido";
 import { calcularTotales, colones } from "@/lib/formato";
 import { ganarLogro } from "@/lib/logros";
-import { esPedidoEspecial } from "@/lib/productos";
 import { refrescarInventario } from "@/lib/vivo";
 import {
   actualizarPedido,
@@ -37,11 +36,8 @@ import {
   TIENDA_ABIERTA,
 } from "@/lib/tienda";
 import { Deke } from "./Deke";
-import {
-  AvisoPedidoEspecial,
-  cuandoSeEntrega,
-  llegadaDeEspeciales,
-} from "./PedidoEspecial";
+import { prepararVerificacion } from "@/lib/verificacion";
+import { cuandoSeEntrega } from "./PedidoEspecial";
 import { IconoCheque } from "./Iconos";
 import { enDolares, PagoConTarjeta, useConfigPaypal } from "./PagoConTarjeta";
 import { CarritoVacio, Linea } from "./VistaCarrito";
@@ -227,8 +223,8 @@ function Confirmacion({
             Pedido {pedido.numero} recibido
           </p>
           <p className="leading-snug">
-            Gracias, {pedido.cliente.split(" ")[0]}. Tu producto queda apartado{" "}
-            {TIENDA.plazoPagoHoras} horas mientras hacés el pago.
+            Gracias, {pedido.cliente.split(" ")[0]}. Tenés{" "}
+            {TIENDA.plazoPagoHoras} horas para hacer el pago.
             {TIENDA_ABIERTA
               ? ` Te mandamos la confirmación a ${pedido.correo}.`
               : null}
@@ -364,7 +360,28 @@ function Confirmacion({
   );
 }
 
+/** Un número corto que cambia si cambia lo que se pide. */
+function huellaDe(partes: unknown) {
+  let suma = 5381;
+  for (const letra of JSON.stringify(partes)) {
+    suma = ((suma << 5) + suma + letra.charCodeAt(0)) >>> 0;
+  }
+  return suma.toString(36);
+}
+
+function nuevoIntento() {
+  return typeof crypto !== "undefined" && "randomUUID" in crypto
+    ? crypto.randomUUID().slice(0, 23)
+    : Math.random().toString(36).slice(2) + Date.now().toString(36);
+}
+
 export function Pago() {
+  // Identifica esta visita al pago: con la huella de lo pedido, la hoja reconoce un envío repetido.
+  const intento = useRef("");
+  useEffect(() => {
+    intento.current = nuevoIntento();
+    prepararVerificacion();
+  }, []);
   const hidratado = useHidratado();
   const paypal = useConfigPaypal();
   const [metodo, setMetodo] = useState<"sinpe" | "tarjeta">("sinpe");
@@ -409,11 +426,6 @@ export function Pago() {
     : costoDeEnvio(costoElegido ?? 0, subtotal);
   const totales = calcularTotales(lineas, cupon, costoFinal);
   const faltaCanton = costoElegido === null && subtotal < ENVIO_GRATIS_DESDE;
-  // Con un pedido especial, todo sale junto cuando llegue.
-  const especiales = lineas.filter(({ producto }) => esPedidoEspecial(producto));
-  const llegadaEspecial = llegadaDeEspeciales(
-    especiales.map(({ producto }) => producto.llegada),
-  );
 
   function precioDeOpcion({ pideDireccion, pideTienda }: OpcionEnvio) {
     if (pideTienda) return `Desde ${colones(ENVIO_TIENDAS_DESDE)}`;
@@ -468,7 +480,6 @@ export function Pago() {
       estado: "Pendiente de pago",
       guia: "",
       envioPorWhatsApp: otraTienda,
-      ...(especiales.length > 0 ? { especial: { llegada: llegadaEspecial } } : {}),
     };
 
     if (TIENDA_ABIERTA) {
@@ -490,6 +501,8 @@ export function Pago() {
           cantidad,
         })),
         sitio: texto("sitio"),
+        // Si este mismo pedido se manda dos veces, la hoja devuelve el primero.
+        intento: intento.current + "-" + huellaDe([pedido.telefono, pedido.envio, pedido.direccion, lineas.map(({ producto, cantidad }) => producto.slug + ":" + cantidad)]),
       });
       setEnviando(false);
       if (!respuesta.ok) {
@@ -524,6 +537,7 @@ export function Pago() {
   return (
     <form
       onSubmit={hacerPedido}
+      onFocus={prepararVerificacion}
       className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-start"
     >
       <div className="flex flex-col gap-8">
@@ -564,13 +578,7 @@ export function Pago() {
               alElegir={() => setEnvioId(opcion.id)}
             />
           ))}
-          {especiales.length > 0 ? (
-            <p className="text-sm leading-snug font-bold">
-              Tu pedido trae productos de Estados Unidos: todo se entrega junto{" "}
-              {cuandoSeEntrega(llegadaEspecial)}. Si querés lo demás antes,
-              hacé dos pedidos.
-            </p>
-          ) : envio.despacho ? (
+          {envio.despacho ? (
             <p className="text-sm leading-snug font-bold">
               Los envíos salen {DIAS_DE_DESPACHO}. Si pedís hoy, el tuyo sale
               el {fechaDeDespacho()}.
@@ -734,12 +742,6 @@ export function Pago() {
             </p>
           ) : null}
         </div>
-        {especiales.length > 0 ? (
-          <AvisoPedidoEspecial
-            llegada={llegadaEspecial}
-            titulo="Tu pedido trae productos de Estados Unidos"
-          />
-        ) : null}
         {error ? (
           <p role="alert" className="font-bold text-rojo">
             {error}
@@ -749,7 +751,7 @@ export function Pago() {
           {enviando ? "Enviando tu pedido…" : "Hacer el pedido"}
         </button>
         <p className="text-sm leading-snug text-gris">
-          Tu producto queda apartado {TIENDA.plazoPagoHoras} horas. Al seguir
+          Tenés {TIENDA.plazoPagoHoras} horas para pagar. Al seguir
           aceptás los{" "}
           <Link href="/politicas#terminos" className="underline">
             términos

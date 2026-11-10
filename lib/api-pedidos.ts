@@ -1,3 +1,4 @@
+import { tomarVerificacion } from "./verificacion";
 import { PEDIDOS_URL, TIENDA_ABIERTA } from "./tienda";
 
 /** Lo que el servidor de la hoja responde siempre: `ok` y, si falló, `error`. */
@@ -20,6 +21,8 @@ export type PedidoNuevo = {
   lineas: { slug: string; cantidad: number }[];
   /** Campo escondido: si viene lleno, lo mandó un robot. */
   sitio: string;
+  /** Identifica este intento de compra: repetido, la hoja no anota otro pedido. */
+  intento?: string;
 };
 
 export type PedidoCreado = {
@@ -45,13 +48,21 @@ export type PedidoPublico = {
 
 const SIN_CONEXION = "No pudimos conectar. Revisá tu internet e intentá otra vez.";
 
+/** Lo que la hoja solo acepta con la comprobación de Cloudflare. Igual que CON_VERIFICACION en Pedidos.gs. */
+const CON_VERIFICACION = ["pedido", "solicitud", "comentario", "aviso", "interesado"];
+
 /** Sin encabezados especiales: así el navegador no pide permiso previo a Google. */
-async function enviar<T>(datos: object): Promise<Respuesta<T>> {
+async function enviar<T>(
+  datos: { accion: string } & Record<string, unknown>,
+): Promise<Respuesta<T>> {
   try {
+    const verificacion = CON_VERIFICACION.includes(datos.accion)
+      ? await tomarVerificacion()
+      : "";
     const respuesta = await fetch(PEDIDOS_URL, {
       method: "POST",
       headers: { "Content-Type": "text/plain;charset=utf-8" },
-      body: JSON.stringify(datos),
+      body: JSON.stringify(verificacion ? { ...datos, verificacion } : datos),
     });
     return (await respuesta.json()) as Respuesta<T>;
   } catch {
@@ -221,6 +232,8 @@ export type OrigenBusca =
   | "catalogo"
   | "buscador"
   | "agotado"
+  | "consultar"
+  | "camino"
   | "eeuu";
 
 /** Manda algo a la hoja sin esperar respuesta: llega aunque la persona cambie de página. */
@@ -251,9 +264,18 @@ export function anotarSolicitud(datos: {
   detalle: string;
   presupuesto: string;
   origen: OrigenBusca;
+  /** Si sale de la ficha de un producto: así cuenta en su demanda. */
+  slug?: string;
 }) {
   if (!TIENDA_ABIERTA || !PEDIDOS_URL) return;
-  avisarSinEsperar({ accion: "solicitud", ...datos });
+  // La prueba ya se viene pidiendo desde que tocaron el formulario.
+  void tomarVerificacion().then((verificacion) =>
+    avisarSinEsperar({
+      accion: "solicitud",
+      ...datos,
+      ...(verificacion ? { verificacion } : {}),
+    }),
+  );
 }
 
 /** Lo que ya se buscó hoy en este navegador. */

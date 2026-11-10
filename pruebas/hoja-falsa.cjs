@@ -25,12 +25,13 @@ function nuevaHoja() {
       this.celdas.set(`${r},${c}`, v); this.ultima = Math.max(this.ultima, r); }
     valida(r, c, v) { if (c === 2) return Hoja.compras.includes(v); if (c === 5) return v === "Página web"; if (c === 1) return v instanceof Date; return true; }
     getMaxColumns() { return this.columnas || 26; } insertColumnAfter() { this.columnas = this.getMaxColumns() + 1; } setFrozenRows() {}
+    getLastColumn() { return Math.max(0, ...[...this.celdas.keys()].map((k) => +k.split(",")[1])); }
     getName() { return this.nombre; } getSheetId() { return 8; } getLastRow() { return this.ultima; } getMaxRows() { return this.max; }
     getRange(r, c, nr, nc) { return new Rango(this, r, c, nr, nc); }
     appendRow(f) { if (this.nombre === "Ventas" || this.nombre === "Compras") throw new Error("appendRow prohibido"); const r = this.ultima + 1; f.forEach((v, j) => this.escribir(r, j + 1, v)); }
   }
-  const T = ["ID", "Producto", "Categoría", "Juego", "Idioma", "En stock", "Vendidas", "Precio sugerido (₡)", "Precio de venta (₡)", "Nombre para mostrar", "Descripción", "Fotos (URL)", "Publicado (sí/no)", "Destacado (sí/no)", "Etiqueta", "Llega (preventas)", "Peso (g)"];
-  const fc = (id, p, cat, stock, sug, venta = "", extra = {}) => { const f = [id, p, cat, extra.juego || "Pokémon", "", stock, 0, sug, venta, "", "", "", extra.pub || "", "", extra.et || "", extra.llega ? new Date(extra.llega + "T12:00:00-06:00") : "", extra.peso || ""]; return f; };
+  const T = ["ID", "Producto", "Categoría", "Juego", "Idioma", "En stock", "Vendidas", "Precio sugerido (₡)", "Precio de venta (₡)", "Nombre para mostrar", "Descripción", "Fotos (URL)", "Publicado (sí/no)", "Destacado (sí/no)", "Etiqueta", "Llega (preventas)", "Peso (g)", "Estado en la página"];
+  const fc = (id, p, cat, stock, sug, venta = "", extra = {}) => { const f = [id, p, cat, extra.juego || "Pokémon", "", stock, 0, sug, venta, "", "", "", extra.pub || "", "", extra.et || "", extra.llega ? new Date(extra.llega + "T12:00:00-06:00") : "", extra.peso || "", extra.estado || ""]; return f; };
   const lista = process.env.HOJA_PRODUCTOS ? JSON.parse(fs.readFileSync(process.env.HOJA_PRODUCTOS, "utf8")) : null;
   const cat = lista ? [["Catálogo web"], [""], [""], T, ...lista.map(([id, n, c, st, sug, venta, extra]) => fc(id, n, c, st, sug, venta, extra || {}))] : [["Catálogo web"], [""], [""], T,
     fc("C001", "Eevee ex #174 (Promo)", "Carta suelta (single)", 1, 8000),
@@ -41,7 +42,7 @@ function nuevaHoja() {
     fc("C006", "Preventa X", "ETB", 5, 40000, "", { et: "Preventa" }),
     fc("C007", "One Piece Y", "ETB", 5, 40000, "", { juego: "One Piece" }),
     fc("C008", "Caja pesada", "ETB", 5, 1000, "", { peso: 1500 }),
-    ...Array.from({ length: 6 }, () => new Array(17).fill(""))];
+    ...Array.from({ length: 6 }, () => new Array(18).fill(""))];
   const comp = [[""], [""], [""], ["ID"]];
   (lista ? lista.map(([id, n, , st]) => [id, n, st]) : [["C001", "Eevee ex #174 (Promo)", 1], ["C002", "ETB 30th Celebration", 2], ["C003", "ETB 30th Celebration", 3], ["C004", "Oculta", 3], ["C005", "Sin stock", 0], ["C006", "Preventa X", 5], ["C007", "One Piece Y", 5], ["C008", "Caja pesada", 5]]).forEach(([id, n, st]) => {
     const f = new Array(22).fill(""); f[0] = id; f[2] = n; f[15] = st; f[21] = `${id} · ${n}`; comp.push(f); });
@@ -62,12 +63,18 @@ function nuevaHoja() {
     MailApp: { sendEmail: (o) => { if (ctx.fallarCorreo) throw new Error("x"); correos.push(o); } },
     Session: { getEffectiveUser: () => ({ getEmail: () => ctx.cuenta || "pokedekestore@gmail.com" }) },
     ScriptApp: { WeekDay: { SUNDAY: "SUNDAY" }, getProjectTriggers: () => activadores.slice(), deleteTrigger: (a) => activadores.splice(activadores.indexOf(a), 1), newTrigger: (f) => { const crear = { create: () => activadores.push({ getHandlerFunction: () => f }) }; return { forSpreadsheet: () => ({ onEdit: () => crear }), timeBased: () => ({ everyHours: () => crear, everyMinutes: () => crear, onWeekDay: () => ({ atHour: () => crear }) }) }; } },
-    UrlFetchApp: { fetch: (url, opciones) => (url.startsWith("https://api.github.com/") ? ctx.githubFalso(url, opciones || {}) : ctx.paypalFalso(url, opciones || {})) },
+    UrlFetchApp: { fetch: (url, opciones) => (url.startsWith("https://api.github.com/") ? ctx.githubFalso(url, opciones || {}) : url.startsWith("https://challenges.cloudflare.com/") ? ctx.turnstileFalso(url, opciones || {}) : url.endsWith("/sincronizado.json") ? ctx.paginaFalsa(url) : ctx.paypalFalso(url, opciones || {})) },
     PropertiesService: { getScriptProperties: () => ({ getProperty: (k) => (k in propiedades ? propiedades[k] : null), setProperty: (k, v) => { propiedades[k] = v; }, getProperties: () => ({ ...propiedades }), deleteProperty: (k) => { delete propiedades[k]; } }) },
   };
   // GitHub falso: anota cada vez que la hoja pide rearmar la página.
   ctx.github = { llamadas: [], codigo: 204 };
   ctx.githubFalso = (url, opciones) => { ctx.github.llamadas.push({ url, opciones }); return { getResponseCode: () => ctx.github.codigo, getContentText: () => "" }; };
+  // Cloudflare falso: solo da por buena la prueba "humano" con el secreto correcto.
+  ctx.turnstile = { llamadas: [], caido: false };
+  ctx.turnstileFalso = (url, opciones) => { ctx.turnstile.llamadas.push(opciones.payload); if (ctx.turnstile.caido) throw new Error("sin red"); const bien = opciones.payload.secret === "secreto-turnstile" && opciones.payload.response === "humano"; return { getResponseCode: () => 200, getContentText: () => JSON.stringify({ success: bien }) }; };
+  // La página falsa: lo que dice public/sincronizado.json.
+  ctx.pagina = { datos: null, llamadas: 0 };
+  ctx.paginaFalsa = () => { ctx.pagina.llamadas += 1; return { getResponseCode: () => (ctx.pagina.datos ? 200 : 404), getContentText: () => JSON.stringify(ctx.pagina.datos || {}) }; };
   // PayPal falso: guarda las órdenes creadas y responde como la API real.
   const ordenes = {};
   ctx.paypal = { ordenes, llamadas: [], cobrarDistinto: false, estadoCaptura: "COMPLETED" };

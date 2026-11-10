@@ -56,7 +56,36 @@ const DESCRIPCIONES = {
 
 const COLUMNAS_DE_NUMEROS = ["En stock", "Vendidas", "Precio sugerido (₡)", "Precio de venta (₡)"];
 
-const ETIQUETAS = ["Nuevo", "Preventa", "Pedido especial", "Oferta"];
+// "Preventa" y "Pedido especial" ya no se usan: lo que las tenga sale como Por consultar.
+const ETIQUETAS = ["Nuevo", "Oferta"];
+const ETIQUETAS_VIEJAS = ["Preventa", "Pedido especial"];
+
+export const ESTADOS = {
+  disponible: "Disponible",
+  enCamino: "En camino",
+  porConsultar: "Por consultar",
+  agotado: "Agotado",
+  noPublicado: "No publicado",
+};
+const COLUMNA_ESTADO = "Estado en la página";
+
+/**
+ * El estado de una fila de "Catálogo web". Vacío o Disponible se vende si hay
+ * unidades; cualquier otra cosa no se vende aunque la hoja muestre stock. Debe
+ * decidir igual que estadoDelLote en apps-script/Pedidos.gs.
+ */
+export function estadoDelLote(lote) {
+  if (esNo(lote["Publicado (sí/no)"])) return ESTADOS.noPublicado;
+  const escrito = sinAcentos(String(lote[COLUMNA_ESTADO] ?? "")).trim();
+  if (!escrito) {
+    return ETIQUETAS_VIEJAS.includes(String(lote.Etiqueta ?? "").trim())
+      ? ESTADOS.porConsultar
+      : ESTADOS.disponible;
+  }
+  return (
+    Object.values(ESTADOS).find((estado) => sinAcentos(estado) === escrito) ?? ESTADOS.agotado
+  );
+}
 const CARTAS = ["Carta suelta (single)", "Carta gradada"];
 
 export function leerCsv(texto) {
@@ -112,14 +141,6 @@ export function aMonto(texto) {
 
 function aEntero(texto) {
   return Number.parseInt(String(texto ?? "").replace(/[^\d-]/g, ""), 10) || 0;
-}
-
-/** De dd/mm/yyyy a la fecha que entiende el reloj de preventas. */
-function aFecha(texto) {
-  const partes = String(texto ?? "").trim().match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
-  if (!partes) return undefined;
-  const [, dia, mes, anio] = partes;
-  return `${anio}-${mes.padStart(2, "0")}-${dia.padStart(2, "0")}T12:00:00-06:00`;
 }
 
 const esSi = (texto) => /^s[ií]$/i.test(String(texto ?? "").trim());
@@ -310,10 +331,14 @@ export function armarCatalogo(textoCsv, fotos) {
   lotes.forEach((lote, indice) => {
     const nombre = lote.Producto.trim();
     if (sinAcentos(lote.Juego ?? "").trim() !== "pokemon") return;
-    if (esNo(lote["Publicado (sí/no)"])) return;
+    const estado = estadoDelLote(lote);
+    if (estado === ESTADOS.noPublicado) return;
 
     const clave = aSlug(nombre);
-    const grupo = grupos.get(clave) ?? { clave, nombre, lotes: [], orden: 0 };
+    const grupo = grupos.get(clave) ?? { clave, nombre, lotes: [], orden: 0, stock: 0, estados: new Set() };
+    // Solo cuenta lo que está en el mezzanine: lo demás no es para vender hoy.
+    if (estado === ESTADOS.disponible) grupo.stock += Math.max(aEntero(lote["En stock"]), 0);
+    grupo.estados.add(estado);
     grupo.lotes.push(lote);
     grupo.orden = indice + 1;
     grupos.set(clave, grupo);
@@ -336,7 +361,14 @@ export function armarCatalogo(textoCsv, fotos) {
     const categoria = ultimo("Categoría") || "Otro";
     const carta = CARTAS.includes(categoria) ? datosDeCarta(grupo.nombre) : undefined;
     const etiqueta = ETIQUETAS.find((opcion) => opcion === ultimo("Etiqueta"));
-    const llegada = aFecha(ultimo("Llega (preventas)"));
+    const estado =
+      grupo.stock > 0
+        ? ESTADOS.disponible
+        : grupo.estados.has(ESTADOS.enCamino)
+          ? ESTADOS.enCamino
+          : grupo.estados.has(ESTADOS.porConsultar)
+            ? ESTADOS.porConsultar
+            : ESTADOS.agotado;
     const fotosFinales = fotosDelProducto(
       grupo.nombre,
       ultimo("Fotos (URL)"),
@@ -360,10 +392,9 @@ export function armarCatalogo(textoCsv, fotos) {
         categoriaCorta: CORTAS[categoria] ?? categoria,
         idioma: ultimo("Idioma"),
         precio,
-        stock: Math.max(
-          grupo.lotes.reduce((suma, lote) => suma + aEntero(lote["En stock"]), 0),
-          0,
-        ),
+        // Lo que se puede comprar hoy: 0 si está en camino, por consultar o agotado.
+        stock: grupo.stock,
+        estado,
         ...(etiqueta ? { etiqueta } : {}),
         ...(esSi(ultimo("Destacado (sí/no)")) ? { destacado: true } : {}),
         vendidos: grupo.lotes.reduce(
@@ -373,7 +404,6 @@ export function armarCatalogo(textoCsv, fotos) {
         orden: grupo.orden,
         fotos: fotosFinales,
         descripcion,
-        ...(llegada ? { llegada } : {}),
         ...(carta ? { carta } : {}),
         ...(tipo ? { tipo } : {}),
       },
@@ -412,7 +442,11 @@ export function revisarCambio(previos, nuevos) {
   }
 
   const conStock = previos.filter((producto) => producto.stock > 0);
-  const agotados = conStock.filter((producto) => actuales.get(producto.slug)?.stock === 0);
+  // Pasar algo a "En camino" o "Por consultar" es una decisión, no un error de la hoja.
+  const agotados = conStock.filter((producto) => {
+    const actual = actuales.get(producto.slug);
+    return actual?.stock === 0 && (actual.estado ?? ESTADOS.agotado) === ESTADOS.agotado;
+  });
   if (conStock.length >= 20 && agotados.length > conStock.length * 0.5) {
     motivos.push(
       "Se agotaron de golpe " + agotados.length + " de " + conStock.length +
