@@ -4,7 +4,7 @@ import { Deke } from "@/components/Deke";
 import { BotonGrupo, CabeceraPagina, ZonaBlanca } from "@/components/Estructura";
 
 export const metadata: Metadata = {
-  title: "Cajas misteriosas",
+  title: "Cajas misteriosas", alternates: { canonical: "/cajas-misteriosas" },
   description:
     "No sabés qué traen, pero sí lo mínimo que valen. Deke las arma a mano y adentro viene la lista con el precio de cada cosa.",
 };

@@ -3,7 +3,7 @@ import { Cedula } from "@/components/Cedula";
 import { CabeceraPagina, ZonaBlanca } from "@/components/Estructura";
 
 export const metadata: Metadata = {
-  title: "Cédula de Coleccionista",
+  title: "Cédula de Coleccionista", alternates: { canonical: "/cedula" },
   description:
     "Sacá tu cédula de la República del Mezzanine, juntá stickers y compartila.",
 };

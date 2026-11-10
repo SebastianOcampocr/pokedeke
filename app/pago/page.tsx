@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { CabeceraPagina, ZonaBlanca } from "@/components/Estructura";
 import { Pago } from "@/components/Pago";
 
-export const metadata: Metadata = { title: "Pago" };
+export const metadata: Metadata = { title: "Pago", robots: { index: false, follow: true } };
 
 export default function PaginaPago() {
   return (

@@ -4,7 +4,7 @@ import { Deke } from "@/components/Deke";
 import { BotonGrupo, CabeceraPagina, ZonaBlanca } from "@/components/Estructura";
 
 export const metadata: Metadata = {
-  title: "Caja compartida",
+  title: "Caja compartida", alternates: { canonical: "/caja-compartida" },
   description:
     "Una caja trae 36 sobres. Comprá solo los que querás, la abrimos en vivo y lo que salga en tu sobre es tuyo.",
 };

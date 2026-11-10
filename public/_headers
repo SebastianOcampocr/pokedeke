@@ -1,3 +1,9 @@
+# Para toda la página: solo por HTTPS y ningún otro sitio la puede meter en un marco
+# (así nadie puede disfrazar el botón de pagar dentro de otra página).
+/*
+  Strict-Transport-Security: max-age=31536000
+  X-Frame-Options: SAMEORIGIN
+
 /_next/static/*
   Cache-Control: public, max-age=31536000, immutable
 

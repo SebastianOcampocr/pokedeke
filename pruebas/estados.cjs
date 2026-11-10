@@ -295,4 +295,47 @@ prueba("sin precio de venta o con la fecha vencida, el pedido especial no se ven
   h.ctx.olvidarStock();
   assert.strictEqual(JSON.parse(h.get({ accion: "stock" }).t).productos["caja-de-proveedor"].estado, "Por consultar");
 });
+prueba("un pedido sin pagar de hace más de 24 horas ya no aparta", () => {
+  const h = nuevaHoja();
+  h.ctx.olvidarStock();
+  const antes = JSON.parse(h.get({ accion: "stock" }).t).productos["dos-lotes"].stock;
+  const r = h.post({ accion: "pedido", cliente: "Ana Pérez", whatsapp: "8888-1234", correo: "ana@ejemplo.cr", envio: "retiro-omni", lineas: [{ slug: "dos-lotes", cantidad: 1 }] });
+  assert.strictEqual(r.ok, true);
+  h.ctx.olvidarStock();
+  assert.strictEqual(JSON.parse(h.get({ accion: "stock" }).t).productos["dos-lotes"].stock, antes - 1);
+  const ped = h.hojas["Pedidos web"];
+  ped.escribir(ped.getLastRow(), 2, new Date(Date.now() - 25 * 3600 * 1000));
+  h.ctx.olvidarStock();
+  assert.strictEqual(JSON.parse(h.get({ accion: "stock" }).t).productos["dos-lotes"].stock, antes, "volvió a estar disponible");
+  // Y ya no se puede pagar con tarjeta: el plazo venció.
+});
+prueba("cancelar un pedido libera la unidad", () => {
+  const h = nuevaHoja();
+  h.ctx.olvidarStock();
+  const antes = JSON.parse(h.get({ accion: "stock" }).t).productos["dos-lotes"].stock;
+  h.post({ accion: "pedido", cliente: "Ana Pérez", whatsapp: "8888-1234", correo: "ana@ejemplo.cr", envio: "retiro-omni", lineas: [{ slug: "dos-lotes", cantidad: 1 }] });
+  const ped = h.hojas["Pedidos web"];
+  ped.escribir(ped.getLastRow(), 3, "Cancelado");
+  h.ctx.olvidarStock();
+  assert.strictEqual(JSON.parse(h.get({ accion: "stock" }).t).productos["dos-lotes"].stock, antes);
+});
+prueba("la condición de la carta va en el nombre del pedido", () => {
+  const h = nuevaHoja();
+  h.hojas["Catálogo web"].escribir(5, 11, "Carta usada. Condición: Moderately Played (MP). Tiene desgaste.");
+  h.ctx.olvidarStock();
+  const r = h.post({ accion: "pedido", cliente: "Ana Pérez", whatsapp: "8888-1234", correo: "ana@ejemplo.cr", envio: "retiro-omni", lineas: [{ slug: "carta-lista", cantidad: 1 }] });
+  assert.strictEqual(r.lineas[0].nombre, "Carta lista · MP");
+});
+prueba("consultar pedidos tiene límite por hora", () => {
+  const h = nuevaHoja();
+  for (let i = 0; i < 300; i++) h.get({ accion: "estado", numero: "TCG-" + i, whatsapp: "8888-1234" });
+  assert.match(JSON.parse(h.get({ accion: "estado", numero: "TCG-1", whatsapp: "8888-1234" }).t).error, /muchas consultas/);
+});
+prueba("Sistema avisa si una descripción promete entrega en algo que no está disponible", () => {
+  const h = nuevaHoja();
+  h.hojas["Catálogo web"].escribir(7, 11, "Te la traemos de Estados Unidos: se entrega después del 5 de Diciembre.");
+  h.ctx.pagina.datos = { fecha: "2026-11-10T15:00:00.000Z", productos: 8 };
+  h.ctx.actualizarSistema();
+  assert.match(filas(h.hojas.Sistema, 3).map((f) => f[1]).join("\n"), /Caja de proveedor está por consultar pero su descripción promete entrega/);
+});
 console.log("\n" + ok + " pruebas bien.");

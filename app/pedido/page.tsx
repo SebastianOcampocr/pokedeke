@@ -6,7 +6,7 @@ import {
 } from "@/components/EstadoPedido";
 import { CabeceraPagina, ZonaBlanca } from "@/components/Estructura";
 
-export const metadata: Metadata = { title: "Estado del pedido" };
+export const metadata: Metadata = { title: "Estado del pedido", robots: { index: false, follow: true } };
 
 export default function PaginaPedido() {
   return (

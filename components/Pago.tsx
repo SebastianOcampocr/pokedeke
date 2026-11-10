@@ -42,7 +42,7 @@ import {
   CondicionesEspeciales,
   cuandoSeEntrega,
 } from "./PedidoEspecial";
-import { nombreDeVersion } from "@/lib/productos";
+import { condicionCorta, nombreDeVersion } from "@/lib/productos";
 import { IconoCheque } from "./Iconos";
 import { enDolares, PagoConTarjeta, useConfigPaypal } from "./PagoConTarjeta";
 import { CarritoVacio, Linea } from "./VistaCarrito";
@@ -716,6 +716,7 @@ export function Pago() {
             <li key={producto.slug} className="flex justify-between gap-3">
               <span className="min-w-0">
                 {cantidad} × {producto.nombre}
+                {condicionCorta(producto) ? ` · ${condicionCorta(producto)}` : ""}
               </span>
               <span className="whitespace-nowrap">
                 {colones(precio * cantidad)}

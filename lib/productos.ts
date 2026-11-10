@@ -361,6 +361,17 @@ export function siglaDeCondicion(producto: Producto) {
 
 export const esUsada = (producto: Producto) => siglaDeCondicion(producto) !== "";
 
+/**
+ * La condición para mostrar junto al nombre: "MP", "LP" y también "NM" cuando la
+ * hoja la escribió. Así dos cartas iguales con distinta condición no se confunden
+ * en el buscador, el carrito ni el pago. "" si la hoja no dice nada.
+ */
+export function condicionCorta(producto: Producto) {
+  const condicion = producto.carta?.condicion ?? "";
+  if (!condicion) return "";
+  return condicion.match(/\(([A-Z]{2,3})\)/)?.[1] ?? condicion;
+}
+
 const NOMBRES_DE_CATEGORIA = [
   { categoria: "ETB", texto: "ETB" },
   { categoria: "Booster box", texto: "Booster box" },

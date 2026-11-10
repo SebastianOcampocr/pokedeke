@@ -55,7 +55,7 @@ function Estanteria() {
 }
 
 const NUMEROS = [
-  { valor: disponibles().length, texto: "productos para escoger" },
+  { valor: disponibles().length, texto: "productos disponibles ya" },
   {
     valor: disponibles().filter(esCarta).length,
     texto: "cartas para la vitrina",

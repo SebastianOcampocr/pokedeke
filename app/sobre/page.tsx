@@ -3,7 +3,7 @@ import { CabeceraPagina, ZonaBlanca } from "@/components/Estructura";
 import { SobreDelDia } from "@/components/SobreDelDia";
 
 export const metadata: Metadata = {
-  title: "Sobre del día",
+  title: "Sobre del día", alternates: { canonical: "/sobre" },
   description:
     "Abrí un sobre virtual y pegá las cartas en tu álbum.",
 };

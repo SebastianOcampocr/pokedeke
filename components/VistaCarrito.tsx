@@ -12,6 +12,7 @@ import {
 } from "@/lib/carrito";
 import { calcularTotales, colones, fechaCorta } from "@/lib/formato";
 import {
+  condicionCorta,
   disponibles,
 } from "@/lib/productos";
 import { CUPONES } from "@/lib/tienda";
@@ -229,6 +230,7 @@ export function VistaCarrito() {
                   className="leading-tight font-extrabold underline-offset-2 hover:underline"
                 >
                   {producto.nombre}
+                  {condicionCorta(producto) ? ` · ${condicionCorta(producto)}` : ""}
                 </Link>
                 <p className="text-sm text-gris">
                   {producto.estado === "Pedido especial" ? (

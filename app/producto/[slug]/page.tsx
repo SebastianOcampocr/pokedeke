@@ -14,6 +14,7 @@ import { VistosRecientes } from "@/components/VistosRecientes";
 import { colones } from "@/lib/formato";
 import {
   buscarProducto,
+  condicionCorta,
   esUsada,
   estaAgotado,
   PRODUCTOS,
@@ -151,6 +152,9 @@ async function ContenidoProducto({
             {!producto.idioma || producto.idioma === "Otro" ? null : (
               <span>· {producto.idioma}</span>
             )}
+            {condicionCorta(producto) ? (
+              <span className="font-bold">· Condición {condicionCorta(producto)}</span>
+            ) : null}
             {producto.tipo ? (
               <span className="inline-flex items-center gap-1">
                 · <IconoTipo tipo={producto.tipo} tamano={20} /> {producto.tipo}

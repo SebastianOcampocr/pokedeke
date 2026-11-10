@@ -3,7 +3,7 @@ import { FormularioComentario } from "@/components/Comentarios";
 import { CabeceraPagina, ZonaBlanca } from "@/components/Estructura";
 
 export const metadata: Metadata = {
-  title: "Danos tu opinión",
+  title: "Danos tu opinión", alternates: { canonical: "/comentarios" },
   description: "Contanos cómo te fue con Pokedeke: qué te gustó y qué podemos mejorar.",
 };
 

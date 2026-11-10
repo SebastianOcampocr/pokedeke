@@ -8,7 +8,7 @@ import { categoriasConProducto } from "@/lib/productos";
 import { RUTA_BASE } from "@/lib/tienda";
 
 export const metadata: Metadata = {
-  title: "Guía",
+  title: "Guía", alternates: { canonical: "/guia" },
   description:
     "Qué es un sobre, una ETB o una booster box, y qué regalarle a quien ama Pokémon.",
 };

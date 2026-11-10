@@ -69,6 +69,8 @@ const CONFIG = {
   maxPagosPaypalPorHora: 120,
   maxSolicitudesPorHora: 40,
   maxVerificacionesPorHora: 600,
+  // Consultas de "¿Cómo va mi pedido?": frena a quien pruebe números al azar.
+  maxConsultasPorHora: 300,
   maxBusquedasPorHora: 1500,
   // Tope de términos distintos en la pestaña Búsquedas, para que nadie la llene de basura.
   maxTerminos: 3000,
@@ -164,7 +166,7 @@ const HOJAS = {
 };
 
 // Sube con cada cambio: la página y las pruebas leen esta marca con un GET.
-const VERSION = "2026-11-10-cada-5-minutos";
+const VERSION = "2026-11-10-revision";
 const ENTREGADO = "Entregado";
 const PEDIDO_ESPECIAL = "Pedido especial";
 // Estados del inventario. Los escribe la tienda en la columna "Estado en la página"
@@ -262,6 +264,9 @@ function doGet(e) {
     );
   }
   if (parametros.accion === "estado") {
+    if (!hayCupo("consultas", CONFIG.maxConsultasPorHora)) {
+      return responder({ ok: false, error: "Hay muchas consultas en este momento. Intentá en un rato o escribinos por WhatsApp." });
+    }
     return responder(consultarPedido(parametros));
   }
   if (parametros.accion === "paypal") {
@@ -624,6 +629,11 @@ function productosPorSlug() {
       recientes.map((lote) => lote[columna]).find((valor) => valor !== "" && valor !== 0);
     const precio = Number(ultimo("Precio de venta (₡)") || ultimo("Precio sugerido (₡)")) || 0;
     grupo.nombre = String(ultimo("Nombre para mostrar") || grupo.nombre);
+    grupo.descripcion = String(ultimo("Descripción") || "");
+    // La condición de la carta va en el nombre del pedido, los correos y Ventas: dos
+    // cartas iguales con distinta condición no se pueden confundir.
+    const condicion = grupo.descripcion.match(/Condición:[^.(]*\(([A-Z]{2,3})\)/);
+    if (condicion && grupo.nombre.indexOf("(" + condicion[1] + ")") === -1) grupo.nombre += " · " + condicion[1];
     // Lo del mezzanine manda; después el pedido especial, solo si está encendido.
     const especial = grupo.estados[ESTADOS.pedidoEspecial] && grupo.cupos > 0 && especialesActivos();
     if (grupo.estados[ESTADOS.pedidoEspecial] && !especial) grupo.estados[ESTADOS.porConsultar] = true;
@@ -2130,6 +2140,14 @@ function actualizarSistema() {
     if (producto.estado === ESTADOS.disponible) {
       unidades += Math.max(producto.stock - (reservado[producto.slug] || 0), 0);
       if (!producto.precio) alertas.push(producto.nombre + " tiene unidades pero no tiene precio: no sale en la página.");
+    }
+  });
+
+  // Una descripción que promete fecha de entrega en algo que no está en el mezzanine confunde.
+  productos.forEach((producto) => {
+    if (producto.estado === ESTADOS.disponible || producto.estado === ESTADOS.pedidoEspecial) return;
+    if (/se entrega|te la traemos|te lo traemos|llega el|preventa/i.test(producto.descripcion || "")) {
+      alertas.push(producto.nombre + " está " + producto.estado.toLowerCase() + " pero su descripción promete entrega o llegada: revisá la Descripción.");
     }
   });
 

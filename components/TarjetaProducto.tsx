@@ -8,7 +8,7 @@ import {
   esCarta,
   estaAgotado,
   estadoDe,
-  siglaDeCondicion,
+  condicionCorta,
   type Producto,
 } from "@/lib/productos";
 import { useAgotadosAlFinal, useProductoVivo } from "@/lib/vivo";
@@ -129,7 +129,7 @@ export function TarjetaProducto({
     agotado ? "Agotado" : null,
     producto.categoriaCorta,
     producto.idioma === "Otro" ? null : producto.idioma || null,
-    siglaDeCondicion(producto) || null,
+    condicionCorta(producto) || null,
   ]
     .filter(Boolean)
     .join(" · ");

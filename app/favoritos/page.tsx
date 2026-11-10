@@ -3,7 +3,7 @@ import { CabeceraPagina, ZonaBlanca } from "@/components/Estructura";
 import { VistaFavoritos } from "@/components/VistaFavoritos";
 
 export const metadata: Metadata = {
-  title: "Mi lista",
+  title: "Mi lista", robots: { index: false, follow: true },
   description: "Lo que te gustó, guardado para después o para mandar pistas.",
 };
 

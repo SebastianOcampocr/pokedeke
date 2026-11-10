@@ -151,6 +151,9 @@ export function Catalogo({
     });
   }, [busqueda, juego, categoria, idioma, rango, rareza, orden, etiqueta, grupo]);
   const resultados = useAgotadosAlFinal(encontrados);
+  const listosYa = resultados.filter(
+    (producto) => estadoDe(producto) === "Disponible",
+  ).length;
 
   // Qué se busca y si hay: dos segundos sin escribir cuentan como búsqueda terminada.
   // Se cuenta contra todo el catálogo, sin los demás filtros.
@@ -344,6 +347,10 @@ export function Catalogo({
             {resultados.length === 1
               ? "1 producto"
               : `${resultados.length} productos`}
+            {/* Sin filtros también se ven los agotados y los por consultar: así calza con la portada. */}
+            {!hayFiltros && listosYa < resultados.length ? (
+              <span className="font-medium"> · {listosYa} disponibles ya</span>
+            ) : null}
           </p>
           {hayFiltros ? (
             <button

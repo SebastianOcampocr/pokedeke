@@ -5,7 +5,14 @@ import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { contarBusqueda } from "@/lib/api-pedidos";
 import { colones } from "@/lib/formato";
-import { coincide, disponibles, estaAgotado, estadoDe, PRODUCTOS } from "@/lib/productos";
+import {
+  coincide,
+  condicionCorta,
+  disponibles,
+  estaAgotado,
+  estadoDe,
+  PRODUCTOS,
+} from "@/lib/productos";
 import { conDatosVivos, useInventarioVivo } from "@/lib/vivo";
 import { Deke } from "./Deke";
 import { FotoProducto } from "./FotoProducto";
@@ -152,6 +159,7 @@ export function Buscador() {
                           {estaAgotado(producto)
                             ? estadoDe(producto)
                             : producto.categoriaCorta}
+                          {condicionCorta(producto) ? " · " + condicionCorta(producto) : ""}
                         </span>
                       </span>
                       <span className="font-extrabold whitespace-nowrap text-azul">
