@@ -337,5 +337,24 @@ prueba("Sistema avisa si una descripción promete entrega en algo que no está d
   h.ctx.pagina.datos = { fecha: "2026-11-10T15:00:00.000Z", productos: 8 };
   h.ctx.actualizarSistema();
   assert.match(filas(h.hojas.Sistema, 3).map((f) => f[1]).join("\n"), /Caja de proveedor está por consultar pero su descripción promete entrega/);
+prueba("si falla la cuenta del script, el pedido igual responde bien y no se duplica", () => {
+  const h = nuevaHoja();
+  h.ctx.fallarSesion = true;
+  const pedir = () => h.post({ accion: "pedido", cliente: "Allan Prueba", whatsapp: "8888-1234", correo: "allan@ejemplo.cr", envio: "retiro-omni", metodo: "tarjeta", intento: "reintento-1", lineas: [{ slug: "dos-lotes", cantidad: 1 }] });
+  const r1 = pedir();
+  assert.strictEqual(r1.ok, true, JSON.stringify(r1));
+  assert.ok(r1.clave, "trae la clave para poder pagar");
+  const filas = h.hojas["Pedidos web"].getLastRow();
+  const r2 = pedir();
+  assert.strictEqual(r2.numero, r1.numero, "el reintento devuelve el mismo pedido");
+  assert.strictEqual(h.hojas["Pedidos web"].getLastRow(), filas, "no se anotó otro");
+});
+prueba("si falla un aviso después de anotar, el pedido responde bien y queda la nota", () => {
+  const h = nuevaHoja();
+  h.ctx.fallarUrl = true;
+  const r = h.post({ accion: "pedido", cliente: "Ana Pérez", whatsapp: "8888-1234", correo: "ana@ejemplo.cr", envio: "retiro-omni", lineas: [{ slug: "dos-lotes", cantidad: 1 }] });
+  assert.strictEqual(r.ok, true, JSON.stringify(r));
+  const ped = h.hojas["Pedidos web"];
+  assert.match(String(ped.leer(ped.getLastRow(), 18)), /Ojo: el pedido quedó anotado, pero falló un aviso: Error: falló getUrl/);
 });
 console.log("\n" + ok + " pruebas bien.");

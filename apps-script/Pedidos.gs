@@ -166,7 +166,7 @@ const HOJAS = {
 };
 
 // Sube con cada cambio: la página y las pruebas leen esta marca con un GET.
-const VERSION = "2026-11-10-revision";
+const VERSION = "2026-11-12-revision-y-pedidos-seguros";
 const ENTREGADO = "Entregado";
 const PEDIDO_ESPECIAL = "Pedido especial";
 // Estados del inventario. Los escribe la tienda en la columna "Estado en la página"
@@ -912,7 +912,36 @@ function crearPedido(datos) {
   if (traeEspecial) {
     fila[COL.notas - 1] = "Pedido especial con pago anticipado. Aceptó las condiciones (" + CONDICIONES_ESPECIAL + ") el " + fechaLegible(fila[COL.fecha - 1]) + ".";
   }
-  hoja(HOJAS.pedidos).appendRow(fila);
+  const pestanaPedidos = hoja(HOJAS.pedidos);
+  pestanaPedidos.appendRow(fila);
+  const filaDelPedido = pestanaPedidos.getLastRow();
+  // Desde aquí el pedido ya existe y aparta lo suyo: la persona tiene que recibir su
+  // número para poder pagar, aunque después falle un correo. Si no, la página dice que
+  // falló, no deja pagar y al reintentar se duplica el pedido.
+  const respuesta = { ok: true, numero, clave, subtotal, descuento, costoEnvio, total, lineas };
+  if (intento) {
+    try {
+      memoria.put("intento-" + intento, JSON.stringify(respuesta), 6 * 3600);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  try {
+    avisarPedidoNuevo();
+  } catch (error) {
+    console.error(error);
+    try {
+      pestanaPedidos
+        .getRange(filaDelPedido, COL.notas)
+        .setValue(comoTexto((fila[COL.notas - 1] ? fila[COL.notas - 1] + " " : "") + "Ojo: el pedido quedó anotado, pero falló un aviso: " + String(error).slice(0, 300)));
+    } catch (otroError) {
+      console.error(otroError);
+    }
+  }
+  return respuesta;
+
+  /** Lo que se hace después de anotar el pedido: nada de esto puede tumbarlo. */
+  function avisarPedidoNuevo() {
   if (traeEspecial) anotarPedidoEspecial(fila, lineas[0]);
   olvidarStock();
   try {
@@ -1019,16 +1048,7 @@ function crearPedido(datos) {
     especial,
     conTarjeta,
   });
-
-  const respuesta = { ok: true, numero, clave, subtotal, descuento, costoEnvio, total, lineas };
-  if (intento) {
-    try {
-      memoria.put("intento-" + intento, JSON.stringify(respuesta), 6 * 3600);
-    } catch (error) {
-      console.error(error);
-    }
   }
-  return respuesta;
 }
 
 function esRetiro(fila) {
@@ -2539,18 +2559,23 @@ function capturarPagoPaypal(datos) {
     pestana.getRange(numeroFila, COL.estado).setValue(PAGADO_PAYPAL);
     pestana.getRange(numeroFila, COL.notas).setValue(comoTexto("Pagado con PayPal ($" + esperado + "), pero no pasó a Ventas: " + resultado.aviso));
   }
-  const filaFinal = pestana.getRange(numeroFila, 1, 1, TOTAL_COLUMNAS).getValues()[0];
-  confirmarPago(filaFinal);
-  avisar(
-    "Pago con tarjeta: " + numero + " · $" + esperado,
-    [
-      "Entró un pago con PayPal del pedido " + numero + ": $" + esperado + ".",
-      comision ? "Comisión de PayPal: $" + comision + " · te queda $" + neto + "." : "",
-      resultado.fila ? "Ya está en " + PAGADO_PAYPAL + " y pasó a Ventas. Al cliente le llegó el correo de gracias." : "OJO: quedó " + PAGADO_PAYPAL + " pero no pasó a Ventas: " + resultado.aviso,
-      "",
-      "Coordiná la entrega como siempre.",
-    ],
-  );
+  try {
+    const filaFinal = pestana.getRange(numeroFila, 1, 1, TOTAL_COLUMNAS).getValues()[0];
+    confirmarPago(filaFinal);
+    avisar(
+      "Pago con tarjeta: " + numero + " · $" + esperado,
+      [
+        "Entró un pago con PayPal del pedido " + numero + ": $" + esperado + ".",
+        comision ? "Comisión de PayPal: $" + comision + " · te queda $" + neto + "." : "",
+        resultado.fila ? "Ya está en " + PAGADO_PAYPAL + " y pasó a Ventas. Al cliente le llegó el correo de gracias." : "OJO: quedó " + PAGADO_PAYPAL + " pero no pasó a Ventas: " + resultado.aviso,
+        "",
+        "Coordiná la entrega como siempre.",
+      ],
+    );
+  } catch (error) {
+    // La plata ya entró y quedó anotada: eso es lo que hay que responderle al cliente.
+    console.error(error);
+  }
   return { ok: true, numero };
 }
 
@@ -2783,7 +2808,12 @@ function mandarCorreo(opciones) {
  * de quien administra la hoja nunca debe quedar a la vista. Devuelve si salió.
  */
 function mandarAlCliente(opciones) {
-  const cuenta = Session.getEffectiveUser().getEmail().toLowerCase();
+  let cuenta = "";
+  try {
+    cuenta = String(Session.getEffectiveUser().getEmail() || "").toLowerCase();
+  } catch (error) {
+    console.error(error);
+  }
   if (cuenta !== CONFIG.correoAvisos) {
     console.error("No se le escribió al cliente: el script corre con otra cuenta.");
     return false;
