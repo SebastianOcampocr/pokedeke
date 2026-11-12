@@ -495,9 +495,9 @@
     "categoriaCorta": "Accesorio",
     "idioma": "",
     "precio": 100,
-    "stock": 12,
+    "stock": 13,
     "estado": "Disponible",
-    "vendidos": 1,
+    "vendidos": 0,
     "orden": 23,
     "fotos": [
       "/productos/energia-metalica.webp"
