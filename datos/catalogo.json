@@ -108,9 +108,9 @@
     "categoriaCorta": "Suelta",
     "idioma": "",
     "precio": 1500,
-    "stock": 1,
-    "estado": "Disponible",
-    "vendidos": 0,
+    "stock": 0,
+    "estado": "Agotado",
+    "vendidos": 1,
     "orden": 5,
     "fotos": [
       "/productos/mew-ex-066-30th-celebration.webp"
@@ -3475,9 +3475,9 @@
     "categoriaCorta": "Suelta",
     "idioma": "Inglés",
     "precio": 500,
-    "stock": 2,
+    "stock": 1,
     "estado": "Disponible",
-    "vendidos": 0,
+    "vendidos": 1,
     "orden": 143,
     "fotos": [
       "/productos/slowpoke-029-pitch-black.webp"
@@ -3500,9 +3500,9 @@
     "categoriaCorta": "Suelta",
     "idioma": "Inglés",
     "precio": 500,
-    "stock": 3,
+    "stock": 2,
     "estado": "Disponible",
-    "vendidos": 0,
+    "vendidos": 1,
     "orden": 144,
     "fotos": [
       "/productos/slowbro-030-pitch-black.webp"
@@ -10624,9 +10624,9 @@
     "categoriaCorta": "Suelta",
     "idioma": "Chino",
     "precio": 500,
-    "stock": 1,
-    "estado": "Disponible",
-    "vendidos": 0,
+    "stock": 0,
+    "estado": "Agotado",
+    "vendidos": 1,
     "orden": 435,
     "fotos": [
       "/productos/pikachu-ex-047-chinese-30th-celebration.webp"
@@ -11274,10 +11274,10 @@
     "categoriaCorta": "ETB",
     "idioma": "Inglés",
     "precio": 47000,
-    "stock": 1,
-    "estado": "Disponible",
+    "stock": 0,
+    "estado": "Agotado",
     "destacado": true,
-    "vendidos": 0,
+    "vendidos": 1,
     "orden": 461,
     "fotos": [
       "/productos/preventa-etb-30th-celebration.webp"
@@ -11927,9 +11927,9 @@
     "categoriaCorta": "Suelta",
     "idioma": "Inglés",
     "precio": 500,
-    "stock": 1,
-    "estado": "Disponible",
-    "vendidos": 0,
+    "stock": 0,
+    "estado": "Agotado",
+    "vendidos": 1,
     "orden": 491,
     "fotos": [
       "/productos/gengar-050-perfect-order.webp"
