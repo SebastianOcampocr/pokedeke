@@ -225,11 +225,13 @@ function Confirmacion({
         <Deke animo="guino" className="deke h-24 shrink-0" />
         <div className="flex min-w-0 flex-col gap-2 overflow-x-clip">
           <p className="sello font-display text-2xl leading-tight text-azul">
-            Pedido {pedido.numero} recibido
+            Pedido {pedido.numero} {pagadoConTarjeta ? "pagado" : "recibido"}
           </p>
           <p className="leading-snug">
-            Gracias, {pedido.cliente.split(" ")[0]}. Tenés{" "}
-            {TIENDA.plazoPagoHoras} horas para hacer el pago.
+            Gracias, {pedido.cliente.split(" ")[0]}.
+            {pagadoConTarjeta
+              ? ""
+              : ` Tenés ${TIENDA.plazoPagoHoras} horas para hacer el pago.`}
             {TIENDA_ABIERTA
               ? ` Te mandamos la confirmación a ${pedido.correo}.`
               : null}
