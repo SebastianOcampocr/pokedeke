@@ -12,6 +12,7 @@ import { cuandoSeEntrega } from "./PedidoEspecial";
 
 const PASOS: { estado: Estado; texto: string }[] = [
   { estado: "Pendiente de pago", texto: "Estamos esperando tu pago" },
+  { estado: "Abonado", texto: "Recibimos tu abono: falta pagar el resto" },
   { estado: "Pagado", texto: "Recibimos tu pago" },
   {
     estado: "Conseguido",
@@ -21,12 +22,13 @@ const PASOS: { estado: Estado; texto: string }[] = [
   { estado: "Entregado", texto: "Ya lo tenés en tus manos" },
 ];
 
-function Seguimiento({ pedido }: { pedido: PedidoPublico }) {
-  // "Conseguido" es solo de los pedidos especiales.
-  const pasos =
-    pedido.especial || pedido.estado === "Conseguido"
-      ? PASOS
-      : PASOS.filter((paso) => paso.estado !== "Conseguido");
+export function Seguimiento({ pedido }: { pedido: PedidoPublico }) {
+  // "Conseguido" es solo de los pedidos especiales; "Abonado", de quien pagó una parte.
+  const pasos = PASOS.filter(
+    (paso) =>
+      (paso.estado !== "Conseguido" || pedido.especial || pedido.estado === "Conseguido") &&
+      (paso.estado !== "Abonado" || pedido.estado === "Abonado"),
+  );
   const conPaypal = pedido.estado === "Pagado (PayPal)";
   const estado = conPaypal ? "Pagado" : pedido.estado;
   const actual = pasos.findIndex((paso) => paso.estado === estado);

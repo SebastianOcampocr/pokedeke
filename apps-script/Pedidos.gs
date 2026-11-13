@@ -164,7 +164,7 @@ const HOJAS = {
 };
 
 // Sube con cada cambio: la página y las pruebas leen esta marca con un GET.
-const VERSION = "2026-11-12-pedidos-seguros";
+const VERSION = "2026-11-12-ventas-whatsapp";
 const ENTREGADO = "Entregado";
 const PEDIDO_ESPECIAL = "Pedido especial";
 // Estados del inventario. Los escribe la tienda en la columna "Estado en la página"
@@ -205,6 +205,8 @@ const PENDIENTE = "Pendiente de pago";
 const PAGADO = "Pagado";
 // Lo pone solo el pago con tarjeta: así se distingue de un SINPE confirmado a mano.
 const PAGADO_PAYPAL = "Pagado (PayPal)";
+// Venta por WhatsApp con una parte pagada: ya entra a Ventas con el precio completo.
+const ABONADO = "Abonado";
 const METODO_TARJETA = "Tarjeta (PayPal)";
 // Solo para pedidos especiales ya pagados: avisa al cliente que ya lo tenemos.
 const CONSEGUIDO = "Conseguido";
@@ -263,6 +265,9 @@ function doGet(e) {
   }
   if (parametros.accion === "estado") {
     return responder(consultarPedido(parametros));
+  }
+  if (parametros.accion === "comprobante") {
+    return responder(consultarComprobante(parametros));
   }
   if (parametros.accion === "paypal") {
     return responder(configPaypalPublica());
@@ -2436,6 +2441,8 @@ function crearPagoPaypal(datos) {
   if (error) return { ok: false, error };
   const fila = hallado.fila;
   if (fila[COL.estado - 1] !== PENDIENTE) return { ok: false, error: "Ese pedido ya no está pendiente de pago." };
+  // Con un abono, cobrar el total con tarjeta cobraría de más.
+  if (pagosDelPedido(fila).pagado > 0) return { ok: false, error: "Este pedido ya tiene un abono: el saldo se paga por SINPE Móvil." };
   const limite = Date.now() - CONFIG.horasApartado * 3600 * 1000;
   if (new Date(fila[COL.fecha - 1]).getTime() < limite) {
     return { ok: false, error: "El plazo para pagar este pedido ya venció. Hacé el pedido otra vez." };
@@ -3106,6 +3113,12 @@ function alEditarHoja(e) {
     libro().toast(avisarConseguido(fila), CONFIG.nombreTienda, 8);
     return;
   }
+  if (e.value === ABONADO) {
+    const abono = conCandado(() => pasarAVentas(rango.getRow(), e.oldValue));
+    olvidarStock();
+    libro().toast(abono.aviso, CONFIG.nombreTienda, 8);
+    return;
+  }
   if (e.value !== PAGADO && e.value !== PAGADO_PAYPAL) return;
 
   const resultado = conCandado(() => pasarAVentas(rango.getRow(), e.oldValue));
@@ -3209,13 +3222,19 @@ function pasarAVentas(numeroFila, estadoAnterior, alEntregar) {
   if (!libres) return volver("No quedan filas libres en Ventas.");
 
   const cliente = String(fila[COL.cliente - 1]);
+  const porWhatsapp = detalle.origen === ORIGEN_WHATSAPP;
+  const cuenta = pagosDelPedido(fila);
   const notas = [
     numero,
+    porWhatsapp ? "Venta por WhatsApp" : "",
     fila[COL.envio - 1],
-    String(fila[COL.comprobante - 1]).indexOf("PayPal") === 0
-      ? fila[COL.comprobante - 1]
-      : "SINPE " + (fila[COL.comprobante - 1] || "sin número"),
-    "WhatsApp " + fila[COL.whatsapp - 1],
+    porWhatsapp
+      ? fila[COL.metodoPago - 1] + (fila[COL.comprobante - 1] ? " " + fila[COL.comprobante - 1] : "")
+      : String(fila[COL.comprobante - 1]).indexOf("PayPal") === 0
+        ? fila[COL.comprobante - 1]
+        : "SINPE " + (fila[COL.comprobante - 1] || "sin número"),
+    fila[COL.whatsapp - 1] ? "WhatsApp " + fila[COL.whatsapp - 1] : "",
+    porWhatsapp && cuenta.saldo > 0 ? "Abonó " + colones(cuenta.pagado) + ", falta " + colones(cuenta.saldo) : "",
     detalle.lineas.some((linea) => linea.preventa) ? "Adelanto de preventa" : "",
     detalle.lineas.some((linea) => linea.especial) ? "Pedido especial (" + entregaEspecial(detalle.lineas) + ")" : "",
     ...[...new Set(detalle.lineas.map((linea) => linea.oferta).filter(Boolean))].map(
@@ -3236,7 +3255,7 @@ function pasarAVentas(numeroFila, estadoAnterior, alEntregar) {
           venta.producto,
           venta.cantidad,
           venta.precio,
-          CONFIG.canal,
+          canalDeVenta(detalle.canal),
           comoTexto(cliente),
           comoTexto(notas),
         ],
@@ -3248,3 +3267,503 @@ function pasarAVentas(numeroFila, estadoAnterior, alEntregar) {
     .setValue("Fila " + libres.join(", "));
   return { aviso: numero + " pasó a Ventas.", fila };
 }
+
+/* ---------- Ventas por WhatsApp y comprobantes ---------- */
+
+// Las ventas por WhatsApp van en "Pedidos web" con su propio número TCG y su clave:
+// así tienen comprobante y seguimiento igual que los pedidos de la página. Los pagos
+// quedan en el Detalle (no tocar). La venta entra a Ventas con el precio completo
+// apenas hay un pago, aunque sea un abono.
+const ORIGEN_WHATSAPP = "whatsapp";
+const METODOS_MANUALES = ["SINPE Móvil", "Efectivo", "Transferencia", "PayPal"];
+const SIN_ENVIO = "Por coordinar por WhatsApp";
+const ESTADOS_PAGADOS = [PAGADO, PAGADO_PAYPAL, CONSEGUIDO, "Enviado", ENTREGADO];
+
+/** La lista "Canal de venta" de Config. Si no se halla, la de siempre. */
+function canalesDeVenta() {
+  const respaldo = ["Grupo de WhatsApp TCG CR", "Grupo de Facebook TCG CR", "Instagram", "Marketplace", "En persona o torneo", "Conocidos", "Otro", CONFIG.canal];
+  try {
+    const pestana = hoja("Config");
+    if (!pestana) return respaldo;
+    const valores = pestana.getRange(1, 1, Math.min(Math.max(pestana.getLastRow(), 1), 80), 10).getDisplayValues();
+    for (let r = 0; r < valores.length; r += 1) {
+      const columna = valores[r].indexOf("Canal de venta");
+      if (columna === -1) continue;
+      const lista = [];
+      for (let i = r + 1; i < valores.length && valores[i][columna]; i += 1) lista.push(valores[i][columna]);
+      return lista.length ? lista : respaldo;
+    }
+  } catch (error) {
+    console.error(error);
+  }
+  return respaldo;
+}
+
+function canalDeVenta(canal) {
+  return canal && canalesDeVenta().includes(canal) ? canal : CONFIG.canal;
+}
+
+/**
+ * Lo pagado y lo que falta. Si alguien marcó Pagado (o más adelante) a mano, el
+ * pedido cuenta como pagado completo aunque no se anotaran los abonos.
+ */
+function pagosDelPedido(fila) {
+  const detalle = leerDetalle(fila);
+  const total = Number(fila[COL.total - 1]) || 0;
+  let pagos = (Array.isArray(detalle.pagos) ? detalle.pagos : [])
+    .filter((pago) => Number(pago.monto) > 0)
+    .map((pago) => ({ fecha: String(pago.fecha || ""), monto: Number(pago.monto), metodo: String(pago.metodo || "") }));
+  let pagado = pagos.reduce((suma, pago) => suma + pago.monto, 0);
+  if (ESTADOS_PAGADOS.includes(String(fila[COL.estado - 1])) && pagado < total) {
+    pagos = pagos.concat([{ fecha: "", monto: total - pagado, metodo: String(fila[COL.metodoPago - 1] || "") }]);
+    pagado = total;
+  }
+  return { pagos, pagado, saldo: Math.max(total - pagado, 0), total };
+}
+
+function enlaceComprobante(numero, clave) {
+  return sitio() + "comprobante?pedido=" + encodeURIComponent(numero) + "&clave=" + encodeURIComponent(clave);
+}
+
+/** El link y el mensaje para mandarle al cliente por WhatsApp. */
+function paraCompartir(fila) {
+  const numero = String(fila[COL.numero - 1]);
+  const cuenta = pagosDelPedido(fila);
+  const detalle = leerDetalle(fila);
+  const enlace = enlaceComprobante(numero, String(fila[COL.clave - 1]));
+  const nombre = sinApostrofe(fila[COL.cliente - 1]).split(" ")[0];
+  const mensaje = [
+    "Hola " + nombre + ", ¡gracias por tu compra en Pokedeke! Tu pedido es el " + numero + ".",
+    "Aquí está tu comprobante y podés ver en qué va tu pedido: " + enlace,
+    cuenta.saldo > 0 && cuenta.pagado > 0
+      ? "Abonaste " + colones(cuenta.pagado) + " y te faltan " + colones(cuenta.saldo) + (detalle.saldoCuando ? " (" + detalle.saldoCuando + ")" : "") + "."
+      : cuenta.saldo > 0
+        ? "Total a pagar: " + colones(cuenta.saldo) + " por SINPE Móvil al " + CONFIG.sinpe + ", con " + numero + " en el detalle."
+        : "",
+  ].filter(Boolean).join("\n");
+  const whatsapp = soloDigitos(fila[COL.whatsapp - 1]);
+  return {
+    ok: true,
+    numero,
+    estado: String(fila[COL.estado - 1]),
+    total: cuenta.total,
+    pagado: cuenta.pagado,
+    saldo: cuenta.saldo,
+    enlace,
+    mensaje,
+    abrirWhatsapp: whatsapp.length === 8 ? "https://wa.me/506" + whatsapp + "?text=" + encodeURIComponent(mensaje) : "",
+  };
+}
+
+/** Lo que ve el cliente con el link del comprobante. Sin la clave no se ve nada. */
+function consultarComprobante(parametros) {
+  const hallado = buscarFilaDePedido(parametros.numero);
+  const clave = texto(parametros.clave, 60);
+  if (!hallado || !clave || String(hallado.fila[COL.clave - 1]) !== clave) {
+    return { ok: false, error: "No hallamos ese comprobante. Revisá que el link esté completo." };
+  }
+  const fila = hallado.fila;
+  const detalle = leerDetalle(fila);
+  const cuenta = pagosDelPedido(fila);
+  return {
+    ok: true,
+    pedido: {
+      numero: String(fila[COL.numero - 1]),
+      fecha: fechaIso(fila[COL.fecha - 1]),
+      estado: String(fila[COL.estado - 1]),
+      cliente: sinApostrofe(fila[COL.cliente - 1]),
+      whatsapp: sinApostrofe(fila[COL.whatsapp - 1]),
+      correo: sinApostrofe(fila[COL.correo - 1]),
+      envio: String(fila[COL.envio - 1]),
+      direccion: sinApostrofe(fila[COL.direccion - 1]),
+      ubicacion: sinApostrofe(fila[COL.ubicacion - 1]),
+      guia: String(fila[COL.guia - 1] || ""),
+      lineas: detalle.lineas.map(({ slug, nombre, cantidad, precio }) => ({ slug, nombre, cantidad, precio })),
+      subtotal: Number(fila[COL.subtotal - 1]) || 0,
+      descuento: Number(fila[COL.descuento - 1]) || 0,
+      costoEnvio: Number(fila[COL.costoEnvio - 1]) || 0,
+      total: cuenta.total,
+      pagado: cuenta.pagado,
+      saldo: cuenta.saldo,
+      pagos: cuenta.pagos,
+      saldoCuando: String(detalle.saldoCuando || ""),
+      entrega: String(detalle.entrega || ""),
+      especial: entregaEspecial(detalle.lineas),
+    },
+  };
+}
+
+function hoyIso() {
+  return Utilities.formatDate(new Date(), libro().getSpreadsheetTimeZone(), "yyyy-MM-dd");
+}
+
+/** Anota una venta hecha por WhatsApp. Lo llama la ventana del menú Pokedeke. */
+function anotarVentaWhatsapp(datos) {
+  datos = datos || {};
+  const cliente = texto(datos.cliente, 80);
+  const whatsapp = normalizarWhatsapp(datos.whatsapp);
+  const correo = texto(datos.correo, 120);
+  if (cliente.length < 3) return { ok: false, error: "Escribí el nombre del cliente." };
+  if (texto(datos.whatsapp, 30) && !whatsapp) return { ok: false, error: "Revisá el WhatsApp: deben ser 8 números." };
+  if (correo && !esCorreo(correo)) return { ok: false, error: "Revisá el correo del cliente." };
+  const pedidas = Array.isArray(datos.lineas) ? datos.lineas.slice(0, CONFIG.maxLineasPorPedido) : [];
+  if (pedidas.length === 0) return { ok: false, error: "Agregá al menos un producto." };
+
+  const productos = productosPorSlug();
+  const lineas = [];
+  for (const pedida of pedidas) {
+    const producto = productos[texto(pedida.slug, 200)];
+    if (!producto) return { ok: false, error: "No hallé \"" + texto(pedida.nombre, 80) + "\" en el Catálogo web. Elegilo de la lista." };
+    const cantidad = Math.floor(Number(pedida.cantidad));
+    const precio = Math.round(Number(pedida.precio));
+    if (!Number.isInteger(cantidad) || cantidad < 1) return { ok: false, error: "Revisá la cantidad de " + producto.nombre + "." };
+    if (!Number.isFinite(precio) || precio < 0) return { ok: false, error: "Revisá el precio de " + producto.nombre + "." };
+    lineas.push({ slug: producto.slug, nombre: producto.nombre, cantidad, precio });
+  }
+  const subtotal = lineas.reduce((suma, linea) => suma + linea.precio * linea.cantidad, 0);
+  const costoEnvio = Math.max(Math.round(Number(datos.costoEnvio) || 0), 0);
+  const total = subtotal + costoEnvio;
+  if (total <= 0) return { ok: false, error: "El total tiene que ser mayor que cero." };
+  const pago = Math.max(Math.round(Number(datos.pago) || 0), 0);
+  if (pago > total) return { ok: false, error: "Lo que pagó (" + colones(pago) + ") es más que el total (" + colones(total) + ")." };
+  const metodo = METODOS_MANUALES.includes(datos.metodo) ? datos.metodo : CONFIG.metodoPago;
+  const referencia = texto(datos.referencia, 60);
+  const canales = canalesDeVenta();
+  const canal = canales.includes(datos.canal) ? datos.canal : canales.includes("Otro") ? "Otro" : CONFIG.canal;
+  const envio = texto(datos.envio, 80) || SIN_ENVIO;
+  const pagos = pago > 0 ? [{ fecha: hoyIso(), monto: pago, metodo, referencia }] : [];
+  const estado = pago >= total ? PAGADO : pago > 0 ? ABONADO : PENDIENTE;
+  const resumen = lineas.map((linea) => linea.cantidad + " × " + linea.nombre + " (" + colones(linea.precio) + ")").join("\n");
+  const notas = ["Venta por WhatsApp", texto(datos.notas, 300)].filter(Boolean).join(". ");
+
+  return conCandado(() => {
+    const pestana = hoja(HOJAS.pedidos);
+    const fila = new Array(TOTAL_COLUMNAS).fill("");
+    fila[COL.numero - 1] = siguienteNumero(filasDePedidos());
+    fila[COL.fecha - 1] = new Date();
+    fila[COL.estado - 1] = estado;
+    fila[COL.cliente - 1] = comoTexto(cliente);
+    fila[COL.whatsapp - 1] = comoTexto(whatsapp);
+    fila[COL.envio - 1] = comoTexto(envio);
+    fila[COL.comprobante - 1] = comoTexto(referencia);
+    fila[COL.total - 1] = total;
+    fila[COL.productos - 1] = comoTexto(resumen);
+    fila[COL.direccion - 1] = comoTexto(texto(datos.direccion, 250));
+    fila[COL.correo - 1] = comoTexto(correo);
+    fila[COL.subtotal - 1] = subtotal;
+    fila[COL.descuento - 1] = 0;
+    fila[COL.costoEnvio - 1] = costoEnvio;
+    fila[COL.metodoPago - 1] = metodo;
+    fila[COL.notas - 1] = comoTexto(notas);
+    fila[COL.detalle - 1] = comoTexto(JSON.stringify({
+      lineas, subtotal, descuento: 0, cupon: "",
+      origen: ORIGEN_WHATSAPP, canal, pagos,
+      saldoCuando: texto(datos.saldoCuando, 120),
+      entrega: texto(datos.entrega, 160),
+    }));
+    fila[COL.clave - 1] = Utilities.getUuid();
+    pestana.appendRow(fila);
+    const numeroFila = pestana.getLastRow();
+    const aviso = estado === PENDIENTE ? "" : pasarAVentas(numeroFila, PENDIENTE).aviso;
+    olvidarStock();
+    const guardada = pestana.getRange(numeroFila, 1, 1, TOTAL_COLUMNAS).getValues()[0];
+    return { ...paraCompartir(guardada), aviso };
+  });
+}
+
+/** Anota un pago (abono o el resto) del pedido. Si con eso queda pagado, pasa a Pagado. */
+function anotarPagoDePedido(datos) {
+  datos = datos || {};
+  const monto = Math.round(Number(datos.monto));
+  if (!Number.isFinite(monto) || monto <= 0) return { ok: false, error: "Escribí cuánto pagó." };
+  const metodo = METODOS_MANUALES.includes(datos.metodo) ? datos.metodo : CONFIG.metodoPago;
+  const referencia = texto(datos.referencia, 60);
+  return conCandado(() => {
+    const hallado = buscarFilaDePedido(datos.numero);
+    if (!hallado) return { ok: false, error: "No hallé ese pedido." };
+    const { fila, numeroFila } = hallado;
+    const estadoAntes = String(fila[COL.estado - 1]);
+    if (estadoAntes === "Cancelado") return { ok: false, error: "Ese pedido está cancelado." };
+    const cuenta = pagosDelPedido(fila);
+    if (cuenta.saldo <= 0) return { ok: false, error: "Ese pedido ya está pagado." };
+    if (monto > cuenta.saldo) return { ok: false, error: "Con ese pago se pasa: solo faltan " + colones(cuenta.saldo) + "." };
+    const pestana = hoja(HOJAS.pedidos);
+    const detalle = leerDetalle(fila);
+    detalle.pagos = (Array.isArray(detalle.pagos) ? detalle.pagos : []).concat([{ fecha: hoyIso(), monto, metodo, referencia }]);
+    pestana.getRange(numeroFila, COL.detalle).setValue(comoTexto(JSON.stringify(detalle)));
+    if (referencia) {
+      const antes = sinApostrofe(fila[COL.comprobante - 1]);
+      pestana.getRange(numeroFila, COL.comprobante).setValue(comoTexto(antes ? antes + " · " + referencia : referencia));
+    }
+    const estado = monto >= cuenta.saldo ? PAGADO : ABONADO;
+    pestana.getRange(numeroFila, COL.estado).setValue(estado);
+    let aviso = "";
+    let paraCorreo = null;
+    if (!fila[COL.enVentas - 1]) {
+      const resultado = pasarAVentas(numeroFila, estadoAntes);
+      aviso = resultado.aviso;
+      paraCorreo = resultado.fila;
+    }
+    olvidarStock();
+    // Pedido de la página que se paga por aquí: el cliente recibe el mismo correo de siempre.
+    if (estado === PAGADO && paraCorreo && detalle.origen !== ORIGEN_WHATSAPP) {
+      try {
+        confirmarPago(paraCorreo);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    const guardada = pestana.getRange(numeroFila, 1, 1, TOTAL_COLUMNAS).getValues()[0];
+    return { ...paraCompartir(guardada), aviso };
+  });
+}
+
+/** El link del comprobante de un pedido. Si no tiene clave (muy viejo), le pone una. */
+function comprobanteDePedido(numero) {
+  const hallado = buscarFilaDePedido(numero);
+  if (!hallado) return { ok: false, error: "No hallé ese pedido." };
+  if (!hallado.fila[COL.clave - 1]) {
+    const clave = Utilities.getUuid();
+    hoja(HOJAS.pedidos).getRange(hallado.numeroFila, COL.clave).setValue(clave);
+    hallado.fila[COL.clave - 1] = clave;
+  }
+  return paraCompartir(hallado.fila);
+}
+
+/* Menú y ventanas de la hoja. getUi solo funciona con la hoja abierta. */
+
+function onOpen() {
+  SpreadsheetApp.getUi()
+    .createMenu(CONFIG.nombreTienda)
+    .addItem("Anotar venta por WhatsApp", "abrirVentaWhatsapp")
+    .addItem("Anotar un pago del pedido seleccionado", "abrirPagoDePedido")
+    .addItem("Link del comprobante del pedido seleccionado", "abrirComprobanteDePedido")
+    .addToUi();
+}
+
+function abrirVentaWhatsapp() {
+  const productos = Object.values(productosPorSlug())
+    .map((producto) => ({ slug: producto.slug, nombre: producto.nombre, precio: producto.precio || 0, estado: producto.estado }))
+    .sort((a, b) => a.nombre.localeCompare(b.nombre));
+  const envios = Object.values(CONFIG.envios).map((envio) => envio.nombre).concat([SIN_ENVIO]);
+  mostrarVentana("venta", { productos, envios, canales: canalesDeVenta(), metodos: METODOS_MANUALES }, "Venta por WhatsApp");
+}
+
+function pedidoSeleccionado() {
+  const pestana = SpreadsheetApp.getActiveSheet();
+  if (pestana.getName() !== HOJAS.pedidos) return null;
+  const numeroFila = pestana.getActiveRange().getRow();
+  if (numeroFila < PRIMERA_FILA) return null;
+  const fila = pestana.getRange(numeroFila, 1, 1, TOTAL_COLUMNAS).getValues()[0];
+  return fila[COL.numero - 1] ? fila : null;
+}
+
+function abrirPagoDePedido() {
+  const fila = pedidoSeleccionado();
+  if (!fila) {
+    SpreadsheetApp.getUi().alert("Abrí la pestaña Pedidos web y hacé clic en cualquier celda de la fila del pedido.");
+    return;
+  }
+  const cuenta = pagosDelPedido(fila);
+  mostrarVentana("pago", {
+    numero: String(fila[COL.numero - 1]),
+    cliente: sinApostrofe(fila[COL.cliente - 1]),
+    total: cuenta.total,
+    pagado: cuenta.pagado,
+    saldo: cuenta.saldo,
+    metodos: METODOS_MANUALES,
+  }, "Pago del pedido " + fila[COL.numero - 1]);
+}
+
+function abrirComprobanteDePedido() {
+  const fila = pedidoSeleccionado();
+  if (!fila) {
+    SpreadsheetApp.getUi().alert("Abrí la pestaña Pedidos web y hacé clic en cualquier celda de la fila del pedido.");
+    return;
+  }
+  mostrarVentana("link", comprobanteDePedido(fila[COL.numero - 1]), "Comprobante " + fila[COL.numero - 1]);
+}
+
+function mostrarVentana(modo, datos, titulo) {
+  const html = HtmlService.createHtmlOutput(htmlDeVentana(modo, datos)).setWidth(620).setHeight(modo === "venta" ? 720 : 520);
+  SpreadsheetApp.getUi().showModalDialog(html, titulo);
+}
+
+function htmlDeVentana(modo, datos) {
+  const json = JSON.stringify({ modo, datos }).replace(/</g, "\\u003c");
+  return HTML_VENTANA.replace("__DATOS__", () => json);
+}
+
+const HTML_VENTANA = `<!doctype html>
+<html><head><meta charset="utf-8"><base target="_top">
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: Arial, sans-serif; font-size: 14px; color: #141414; margin: 0; padding: 4px 6px 16px; }
+  h3 { margin: 14px 0 6px; font-size: 13px; text-transform: uppercase; letter-spacing: .5px; color: #c8201a; }
+  label { display: block; font-weight: bold; margin: 8px 0 3px; }
+  input, select, textarea { width: 100%; padding: 8px; font-size: 14px; border: 2px solid #141414; border-radius: 6px; font-family: inherit; }
+  textarea { min-height: 70px; }
+  .dos { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .linea { display: grid; grid-template-columns: 1fr 70px 110px 34px; gap: 6px; margin-bottom: 6px; align-items: center; }
+  .quitar { border: 0; background: none; font-size: 20px; cursor: pointer; color: #a01712; }
+  button.principal { margin-top: 16px; width: 100%; padding: 12px; font-size: 16px; font-weight: bold; color: #fff; background: #c8201a; border: 3px solid #141414; border-radius: 8px; cursor: pointer; }
+  button.principal:disabled { opacity: .6; cursor: wait; }
+  button.chico { padding: 6px 10px; font-weight: bold; border: 2px solid #141414; border-radius: 6px; background: #ffce1f; cursor: pointer; }
+  .total { margin-top: 12px; padding: 10px; background: #fff3c2; border: 2px solid #141414; border-radius: 8px; font-weight: bold; display: flex; justify-content: space-between; }
+  .error { color: #a01712; font-weight: bold; margin-top: 10px; }
+  .ayuda { color: #555; font-size: 12px; margin-top: 3px; }
+  .listo { background: #e9f6ee; border: 2px solid #0e7c43; border-radius: 8px; padding: 10px; font-weight: bold; color: #0b6636; }
+  .fila-copiar { display: flex; gap: 6px; }
+  .fila-copiar input { flex: 1; }
+  a.wa { display: inline-block; margin-top: 8px; padding: 10px 14px; background: #0e7c43; color: #fff; font-weight: bold; border-radius: 8px; text-decoration: none; }
+</style></head>
+<body><div id="app"></div>
+<script>
+const { modo, datos } = __DATOS__;
+const app = document.getElementById("app");
+const colones = (n) => "₡" + String(Math.round(n || 0)).replace(/\\B(?=(\\d{3})+(?!\\d))/g, " ");
+const esc = (t) => String(t == null ? "" : t).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+const opciones = (lista, elegida) => lista.map((o) => '<option' + (o === elegida ? " selected" : "") + ">" + esc(o) + "</option>").join("");
+
+function copiar(id, boton) {
+  const campo = document.getElementById(id);
+  campo.select();
+  let bien = false;
+  try { bien = document.execCommand("copy"); } catch (e) {}
+  if (!bien && navigator.clipboard) navigator.clipboard.writeText(campo.value).catch(() => {});
+  boton.textContent = "¡Copiado!";
+  setTimeout(() => { boton.textContent = "Copiar"; }, 1500);
+}
+
+function mostrarResultado(r) {
+  if (!r || !r.ok) { mostrarError((r && r.error) || "Algo falló. Probá otra vez."); return; }
+  app.innerHTML =
+    '<p class="listo">' + esc(r.numero) + " quedó anotado como " + esc(r.estado) + ". Total " + colones(r.total) +
+    (r.pagado ? ", pagado " + colones(r.pagado) : "") + (r.saldo ? ", falta " + colones(r.saldo) : "") + ".</p>" +
+    (r.aviso ? "<p>" + esc(r.aviso) + "</p>" : "") +
+    "<label>Link del comprobante</label>" +
+    '<div class="fila-copiar"><input id="enlace" readonly value="' + esc(r.enlace) + '"><button class="chico" onclick="copiar(\\'enlace\\', this)">Copiar</button></div>' +
+    "<label>Mensaje para el cliente</label>" +
+    '<textarea id="mensaje" readonly>' + esc(r.mensaje) + "</textarea>" +
+    '<button class="chico" onclick="copiar(\\'mensaje\\', this)">Copiar</button>' +
+    (r.abrirWhatsapp ? ' <a class="wa" href="' + esc(r.abrirWhatsapp) + '" target="_blank">Abrir WhatsApp con el mensaje</a>' : "") +
+    '<button class="principal" onclick="google.script.host.close()">Listo</button>';
+}
+
+function mostrarError(texto) {
+  const caja = document.getElementById("error");
+  if (caja) caja.textContent = texto;
+  const boton = document.getElementById("guardar");
+  if (boton) boton.disabled = false;
+}
+
+function lineaHtml() {
+  return '<div class="linea"><input list="productos" class="producto" placeholder="Producto (elegilo de la lista)">' +
+    '<input type="number" class="cantidad" min="1" value="1">' +
+    '<input type="number" class="precio" min="0" placeholder="Precio c/u">' +
+    '<button type="button" class="quitar" title="Quitar">×</button></div>';
+}
+
+function totalVenta() {
+  let suma = 0;
+  document.querySelectorAll(".linea").forEach((l) => {
+    suma += (Number(l.querySelector(".cantidad").value) || 0) * (Number(l.querySelector(".precio").value) || 0);
+  });
+  suma += Number(document.getElementById("costoEnvio").value) || 0;
+  const pago = Number(document.getElementById("pago").value) || 0;
+  document.getElementById("total").innerHTML = "<span>Total " + colones(suma) + "</span><span>" +
+    (pago > 0 ? (pago >= suma ? "Pagado completo" : "Falta " + colones(suma - pago)) : "Sin pago todavía") + "</span>";
+}
+
+function pintarVenta() {
+  app.innerHTML =
+    '<datalist id="productos">' + datos.productos.map((p) => '<option value="' + esc(p.nombre) + '">' + esc(p.estado + (p.precio ? " · " + colones(p.precio) : "")) + "</option>").join("") + "</datalist>" +
+    "<h3>Cliente</h3>" +
+    '<label>Nombre</label><input id="cliente" autocomplete="off">' +
+    '<div class="dos"><div><label>WhatsApp</label><input id="whatsapp" placeholder="8888-8888"></div>' +
+    '<div><label>Correo (opcional)</label><input id="correo" type="email"></div></div>' +
+    '<label>¿De dónde llegó?</label><select id="canal">' + opciones(datos.canales, datos.canales.indexOf("Otro") >= 0 ? "Otro" : datos.canales[0]) + "</select>" +
+    "<h3>Productos</h3>" +
+    '<div id="lineas">' + lineaHtml() + "</div>" +
+    '<button type="button" class="chico" id="otra">+ Otro producto</button>' +
+    '<p class="ayuda">El precio se llena con el de la página: cambialo si acordaron otro.</p>' +
+    "<h3>Entrega</h3>" +
+    '<div class="dos"><div><label>Envío</label><select id="envio">' + opciones(datos.envios, datos.envios[datos.envios.length - 1]) + "</select></div>" +
+    '<div><label>Costo del envío</label><input id="costoEnvio" type="number" min="0" value="0"></div></div>' +
+    '<label>Dirección (si se envía)</label><input id="direccion">' +
+    '<label>¿Cuándo se entrega?</label><input id="entrega" placeholder="Ej.: Llega entre el 19 y el 22 de Noviembre.">' +
+    "<h3>Pago</h3>" +
+    '<div class="dos"><div><label>¿Cuánto pagó hoy?</label><input id="pago" type="number" min="0" value="0"></div>' +
+    '<div><label>¿Cómo pagó?</label><select id="metodo">' + opciones(datos.metodos, datos.metodos[0]) + "</select></div></div>" +
+    '<div class="dos"><div><label>Comprobante (opcional)</label><input id="referencia"></div>' +
+    '<div><label>¿Cuándo paga el resto?</label><input id="saldoCuando" placeholder="Ej.: el 30 de Noviembre"></div></div>' +
+    '<label>Notas (solo para ustedes)</label><input id="notas">' +
+    '<div class="total" id="total"></div>' +
+    '<p class="error" id="error"></p>' +
+    '<button class="principal" id="guardar">Anotar venta</button>';
+
+  const lineas = document.getElementById("lineas");
+  lineas.addEventListener("input", (e) => {
+    if (e.target.classList.contains("producto")) {
+      const elegido = datos.productos.find((p) => p.nombre === e.target.value);
+      const precio = e.target.closest(".linea").querySelector(".precio");
+      if (elegido && !precio.value) precio.value = elegido.precio || "";
+    }
+    totalVenta();
+  });
+  lineas.addEventListener("click", (e) => {
+    if (e.target.classList.contains("quitar") && document.querySelectorAll(".linea").length > 1) {
+      e.target.closest(".linea").remove();
+      totalVenta();
+    }
+  });
+  document.getElementById("otra").onclick = () => { lineas.insertAdjacentHTML("beforeend", lineaHtml()); };
+  ["costoEnvio", "pago"].forEach((id) => document.getElementById(id).addEventListener("input", totalVenta));
+  totalVenta();
+
+  document.getElementById("guardar").onclick = () => {
+    const valor = (id) => document.getElementById(id).value;
+    const elegidas = [];
+    for (const l of document.querySelectorAll(".linea")) {
+      const nombre = l.querySelector(".producto").value.trim();
+      if (!nombre) continue;
+      const producto = datos.productos.find((p) => p.nombre === nombre);
+      if (!producto) { mostrarError("\\"" + nombre + "\\" no está en el Catálogo web. Elegilo de la lista."); return; }
+      elegidas.push({ slug: producto.slug, nombre, cantidad: l.querySelector(".cantidad").value, precio: l.querySelector(".precio").value });
+    }
+    document.getElementById("guardar").disabled = true;
+    document.getElementById("error").textContent = "";
+    google.script.run.withSuccessHandler(mostrarResultado).withFailureHandler((e) => mostrarError(e.message)).anotarVentaWhatsapp({
+      cliente: valor("cliente"), whatsapp: valor("whatsapp"), correo: valor("correo"), canal: valor("canal"),
+      lineas: elegidas, envio: valor("envio"), costoEnvio: valor("costoEnvio"), direccion: valor("direccion"),
+      entrega: valor("entrega"), pago: valor("pago"), metodo: valor("metodo"), referencia: valor("referencia"),
+      saldoCuando: valor("saldoCuando"), notas: valor("notas"),
+    });
+  };
+}
+
+function pintarPago() {
+  app.innerHTML =
+    "<p><strong>" + esc(datos.numero) + "</strong> · " + esc(datos.cliente) + "</p>" +
+    '<div class="total"><span>Total ' + colones(datos.total) + "</span><span>Pagado " + colones(datos.pagado) + " · Falta " + colones(datos.saldo) + "</span></div>" +
+    (datos.saldo > 0
+      ? '<div class="dos"><div><label>¿Cuánto pagó?</label><input id="monto" type="number" min="1" value="' + datos.saldo + '"></div>' +
+        '<div><label>¿Cómo pagó?</label><select id="metodo">' + opciones(datos.metodos, datos.metodos[0]) + "</select></div></div>" +
+        '<label>Comprobante (opcional)</label><input id="referencia">' +
+        '<p class="error" id="error"></p><button class="principal" id="guardar">Anotar pago</button>'
+      : "<p>Este pedido ya está pagado.</p>");
+  const boton = document.getElementById("guardar");
+  if (!boton) return;
+  boton.onclick = () => {
+    boton.disabled = true;
+    google.script.run.withSuccessHandler(mostrarResultado).withFailureHandler((e) => mostrarError(e.message)).anotarPagoDePedido({
+      numero: datos.numero, monto: document.getElementById("monto").value,
+      metodo: document.getElementById("metodo").value, referencia: document.getElementById("referencia").value,
+    });
+  };
+}
+
+if (modo === "venta") pintarVenta();
+else if (modo === "pago") pintarPago();
+else mostrarResultado(datos);
+</script></body></html>`;

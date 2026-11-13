@@ -225,6 +225,38 @@ export async function consultarPedido(
   }
 }
 
+export type ComprobantePublico = Omit<PedidoPublico, "lineas"> & {
+  fecha: string;
+  cliente: string;
+  whatsapp: string;
+  correo: string;
+  direccion: string;
+  ubicacion: string;
+  lineas: { slug: string; nombre: string; cantidad: number; precio: number }[];
+  subtotal: number;
+  descuento: number;
+  costoEnvio: number;
+  pagado: number;
+  saldo: number;
+  pagos: { fecha: string; monto: number; metodo: string }[];
+  saldoCuando: string;
+  entrega: string;
+};
+
+/** El comprobante de un pedido: solo con el número y la clave del link. */
+export async function consultarComprobante(
+  numero: string,
+  clave: string,
+): Promise<Respuesta<{ pedido: ComprobantePublico }>> {
+  const consulta = new URLSearchParams({ accion: "comprobante", numero, clave });
+  try {
+    const respuesta = await fetch(`${PEDIDOS_URL}?${consulta}`);
+    return (await respuesta.json()) as Respuesta<{ pedido: ComprobantePublico }>;
+  } catch {
+    return { ok: false, error: SIN_CONEXION };
+  }
+}
+
 /** De dónde llega una solicitud de Pokedeke Busca. Debe coincidir con ORIGENES en apps-script/Pedidos.gs. */
 export type OrigenBusca =
   | "portada"
