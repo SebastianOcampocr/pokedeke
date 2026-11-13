@@ -8034,7 +8034,7 @@
     "categoria": "Colección premium / UPC",
     "categoriaCorta": "Premium",
     "idioma": "Inglés",
-    "precio": 180000,
+    "precio": 170000,
     "stock": 0,
     "estado": "Por consultar",
     "vendidos": 1,
@@ -8042,7 +8042,7 @@
     "fotos": [
       "/productos/ultra-premium-collection-30th-celebration-night.webp"
     ],
-    "descripcion": "Ultra-Premium Collection de 30th Celebration, versión Night (con Umbreon en la caja), en inglés. Su precio oficial es $179,99, pero se agotó apenas salió y hoy en Estados Unidos se vende en unos $400. Te la traemos de Estados Unidos: se entrega después del 5 de Diciembre."
+    "descripcion": "Ultra-Premium Collection de 30th Celebration, versión Night (con Umbreon en la caja), en inglés. Su precio oficial es $179,99, pero se agotó apenas salió y hoy en Estados Unidos se vende en unos $400. Llega entre el 19 y el 22 de Noviembre."
   },
   {
     "id": "C335",
@@ -8052,7 +8052,7 @@
     "categoria": "Colección premium / UPC",
     "categoriaCorta": "Premium",
     "idioma": "Inglés",
-    "precio": 172500,
+    "precio": 160000,
     "stock": 0,
     "estado": "Por consultar",
     "vendidos": 1,
@@ -8060,7 +8060,7 @@
     "fotos": [
       "/productos/ultra-premium-collection-30th-celebration-day.webp"
     ],
-    "descripcion": "Ultra-Premium Collection de 30th Celebration, versión Day (con Espeon en la caja), en inglés. Su precio oficial es $179,99, pero se agotó apenas salió y hoy en Estados Unidos se vende en unos $380. Te la traemos de Estados Unidos: se entrega después del 5 de Diciembre."
+    "descripcion": "Ultra-Premium Collection de 30th Celebration, versión Day (con Espeon en la caja), en inglés. Su precio oficial es $179,99, pero se agotó apenas salió y hoy en Estados Unidos se vende en unos $380. Llega entre el 19 y el 22 de Noviembre."
   },
   {
     "id": "C336",
@@ -11273,7 +11273,7 @@
     "categoria": "ETB",
     "categoriaCorta": "ETB",
     "idioma": "Inglés",
-    "precio": 47000,
+    "precio": 66000,
     "stock": 2,
     "estado": "Disponible",
     "destacado": true,
@@ -11365,7 +11365,7 @@
     "categoria": "Tin o caja de colección",
     "categoriaCorta": "Tin",
     "idioma": "Inglés",
-    "precio": 28700,
+    "precio": 19900,
     "stock": 1,
     "estado": "Disponible",
     "vendidos": 0,
