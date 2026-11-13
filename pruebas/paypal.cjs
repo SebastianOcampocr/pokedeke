@@ -20,13 +20,13 @@ prueba("sin llaves no hay botón ni cobro", () => {
 m.ctx.ponerLlavesPaypal();
 prueba("con llaves la página recibe el Client ID y el tipo de cambio", () => {
   const c = JSON.parse(m.get({ accion: "paypal" }).t);
-  assert.strictEqual(c.ok, true); assert.strictEqual(c.clientId, "cliente-prueba"); assert.strictEqual(c.colonesPorDolar, 500); assert.strictEqual(c.secreto, undefined);
+  assert.strictEqual(c.ok, true); assert.strictEqual(c.clientId, "cliente-prueba"); assert.strictEqual(c.colonesPorDolar, 448); assert.strictEqual(c.secreto, undefined);
 });
 const p = pedido();
 prueba("crea el cobro en dólares con el total de la hoja", () => {
   const r = m.post({ accion: "paypal-crear", numero: p.numero, clave: p.clave });
   assert.strictEqual(r.ok, true, JSON.stringify(r));
-  assert.strictEqual(r.dolares, (Math.round(p.total / 500 * 100) / 100).toFixed(2));
+  assert.strictEqual(r.dolares, (Math.round(p.total / 448 * 100) / 100).toFixed(2));
   assert.strictEqual(m.ctx.paypal.ordenes[r.id].custom_id, p.numero);
   p.orden = r.id;
 });

@@ -65,7 +65,7 @@ const CONFIG = {
   // pasa a dólares con este tipo de cambio. Debe ser el mismo que muestra la página
   // (la página lo lee de aquí). Las llaves van en Propiedades del script:
   // PAYPAL_CLIENT_ID, PAYPAL_SECRET y PAYPAL_MODO ("sandbox" o "live").
-  colonesPorDolar: 500,
+  colonesPorDolar: 448,
   maxPagosPaypalPorHora: 120,
   maxSolicitudesPorHora: 40,
   maxVerificacionesPorHora: 600,
