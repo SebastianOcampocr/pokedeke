@@ -11266,25 +11266,6 @@
     "tipo": "Incoloro"
   },
   {
-    "id": "C466",
-    "slug": "etb-30th-celebration-en-stock",
-    "nombre": "ETB 30th Celebration",
-    "juego": "Pokémon",
-    "categoria": "ETB",
-    "categoriaCorta": "ETB",
-    "idioma": "Inglés",
-    "precio": 66000,
-    "stock": 2,
-    "estado": "Disponible",
-    "destacado": true,
-    "vendidos": 1,
-    "orden": 461,
-    "fotos": [
-      "/productos/preventa-etb-30th-celebration.webp"
-    ],
-    "descripcion": "Elite Trainer Box de 30th Celebration, en inglés. Trae sobres de 30th Celebration y accesorios para jugar, en una caja para guardar tus cartas. La tenemos en el mezzanine: sale en el próximo envío."
-  },
-  {
     "id": "C467",
     "slug": "booster-bundle-151",
     "nombre": "Booster Bundle 151",
@@ -11297,7 +11278,7 @@
     "estado": "Disponible",
     "destacado": true,
     "vendidos": 0,
-    "orden": 462,
+    "orden": 461,
     "fotos": [
       "/productos/booster-bundle-151.webp"
     ],
@@ -11315,7 +11296,7 @@
     "stock": 3,
     "estado": "Disponible",
     "vendidos": 0,
-    "orden": 463,
+    "orden": 462,
     "fotos": [
       "/productos/blister-3-sobres-chaos-rising.webp"
     ],
@@ -11333,7 +11314,7 @@
     "stock": 1,
     "estado": "Disponible",
     "vendidos": 0,
-    "orden": 464,
+    "orden": 463,
     "fotos": [
       "/productos/etb-chaos-rising.webp"
     ],
@@ -11351,7 +11332,7 @@
     "stock": 3,
     "estado": "Disponible",
     "vendidos": 0,
-    "orden": 465,
+    "orden": 464,
     "fotos": [
       "/productos/booster-bundle-chaos-rising.webp"
     ],
@@ -11369,7 +11350,7 @@
     "stock": 1,
     "estado": "Disponible",
     "vendidos": 0,
-    "orden": 466,
+    "orden": 465,
     "fotos": [
       "/productos/binder-collection-30th-celebration.webp"
     ],
@@ -11387,7 +11368,7 @@
     "stock": 3,
     "estado": "Disponible",
     "vendidos": 0,
-    "orden": 467,
+    "orden": 466,
     "fotos": [
       "/productos/first-partner-illustration-collection-serie-3.webp"
     ],
@@ -11405,7 +11386,7 @@
     "stock": 1,
     "estado": "Disponible",
     "vendidos": 0,
-    "orden": 468,
+    "orden": 467,
     "fotos": [
       "/productos/build-battle-chaos-rising.webp"
     ],
@@ -11423,7 +11404,7 @@
     "stock": 3,
     "estado": "Disponible",
     "vendidos": 0,
-    "orden": 469,
+    "orden": 468,
     "fotos": [
       "/productos/pokemon-day-2026-collection.webp"
     ],
@@ -11441,7 +11422,7 @@
     "stock": 5,
     "estado": "Disponible",
     "vendidos": 0,
-    "orden": 470,
+    "orden": 469,
     "fotos": [
       "/productos/sobre-chaos-rising.webp"
     ],
@@ -11459,7 +11440,7 @@
     "stock": 4,
     "estado": "Disponible",
     "vendidos": 0,
-    "orden": 471,
+    "orden": 470,
     "fotos": [
       "/productos/acrilico-etb.webp"
     ],
@@ -11477,7 +11458,7 @@
     "stock": 4,
     "estado": "Disponible",
     "vendidos": 0,
-    "orden": 472,
+    "orden": 471,
     "fotos": [
       "https://www.platinumprotectors.com/cdn/shop/files/BoosterBoxProtector_1200x1200.jpg?v=1777572740"
     ],
@@ -11495,7 +11476,7 @@
     "stock": 1,
     "estado": "Disponible",
     "vendidos": 0,
-    "orden": 473,
+    "orden": 472,
     "fotos": [
       "/productos/etb-perfect-order.webp"
     ],
@@ -11513,7 +11494,7 @@
     "stock": 1,
     "estado": "Disponible",
     "vendidos": 0,
-    "orden": 474,
+    "orden": 473,
     "fotos": [
       "/productos/rocket-s-articuno-ex-096-team-rocket-returns.webp"
     ],
@@ -11538,7 +11519,7 @@
     "stock": 1,
     "estado": "Disponible",
     "vendidos": 0,
-    "orden": 475,
+    "orden": 474,
     "fotos": [
       "/productos/giratina-vstar-gg69-crown-zenith-galarian-gallery.webp"
     ],
@@ -11564,7 +11545,7 @@
     "estado": "Disponible",
     "destacado": true,
     "vendidos": 0,
-    "orden": 476,
+    "orden": 475,
     "fotos": [
       "/productos/mega-charizard-x-ex-130-phantasmal-flames.webp"
     ],
@@ -11589,7 +11570,7 @@
     "stock": 1,
     "estado": "Disponible",
     "vendidos": 0,
-    "orden": 477,
+    "orden": 476,
     "fotos": [
       "/productos/gyarados-008-deoxys.webp"
     ],
@@ -11614,7 +11595,7 @@
     "stock": 1,
     "estado": "Disponible",
     "vendidos": 0,
-    "orden": 478,
+    "orden": 477,
     "fotos": [
       "/productos/unown-unseen-forces.webp"
     ],
@@ -11640,7 +11621,7 @@
     "estado": "Disponible",
     "destacado": true,
     "vendidos": 0,
-    "orden": 479,
+    "orden": 478,
     "fotos": [
       "/productos/lillie-s-clefairy-ex-280-ascended-heroes.webp"
     ],
@@ -11665,7 +11646,7 @@
     "stock": 1,
     "estado": "Disponible",
     "vendidos": 0,
-    "orden": 480,
+    "orden": 479,
     "fotos": [
       "/productos/rocket-s-wobbuffet-reverse-holo-047-team-rocket-returns.webp"
     ],
@@ -11690,7 +11671,7 @@
     "stock": 1,
     "estado": "Disponible",
     "vendidos": 0,
-    "orden": 481,
+    "orden": 480,
     "fotos": [
       "/productos/thundurus-ex-110-plasma-freeze.webp"
     ],
@@ -11715,7 +11696,7 @@
     "stock": 1,
     "estado": "Disponible",
     "vendidos": 0,
-    "orden": 482,
+    "orden": 481,
     "fotos": [
       "/productos/kingdra-ex-131-promo.webp"
     ],
@@ -11740,7 +11721,7 @@
     "stock": 1,
     "estado": "Disponible",
     "vendidos": 0,
-    "orden": 483,
+    "orden": 482,
     "fotos": [
       "/productos/regice-ex-097-hidden-legends.webp"
     ],
@@ -11765,7 +11746,7 @@
     "stock": 1,
     "estado": "Disponible",
     "vendidos": 0,
-    "orden": 484,
+    "orden": 483,
     "fotos": [
       "/productos/farfetch-d-reverse-holo-055-skyridge.webp"
     ],
@@ -11790,7 +11771,7 @@
     "stock": 1,
     "estado": "Disponible",
     "vendidos": 0,
-    "orden": 485,
+    "orden": 484,
     "fotos": [
       "/productos/team-rocket-s-moltres-ex-229-destined-rivals.webp"
     ],
@@ -11815,7 +11796,7 @@
     "stock": 1,
     "estado": "Disponible",
     "vendidos": 0,
-    "orden": 486,
+    "orden": 485,
     "fotos": [
       "/productos/151-blooming-waters-premium-collection.webp"
     ],
@@ -11834,7 +11815,7 @@
     "estado": "Disponible",
     "destacado": true,
     "vendidos": 0,
-    "orden": 487,
+    "orden": 486,
     "fotos": [
       "/productos/prismatic-evolutions-super-premium-collection.webp"
     ],
@@ -11853,7 +11834,7 @@
     "estado": "Disponible",
     "destacado": true,
     "vendidos": 0,
-    "orden": 488,
+    "orden": 487,
     "fotos": [
       "/productos/umbreon-ex-161-prismatic-evolutions.webp"
     ],
@@ -11879,7 +11860,7 @@
     "estado": "Disponible",
     "destacado": true,
     "vendidos": 0,
-    "orden": 489,
+    "orden": 488,
     "fotos": [
       "/productos/giratina-vstar-gg69-crown-zenith-galarian-gallery.webp"
     ],
@@ -11905,7 +11886,7 @@
     "estado": "Disponible",
     "destacado": true,
     "vendidos": 0,
-    "orden": 490,
+    "orden": 489,
     "fotos": [
       "/productos/charizard-v-alternate-art-154-brilliant-stars.webp"
     ],
@@ -11930,7 +11911,7 @@
     "stock": 0,
     "estado": "Agotado",
     "vendidos": 1,
-    "orden": 491,
+    "orden": 490,
     "fotos": [
       "/productos/gengar-050-perfect-order.webp"
     ],
@@ -11955,7 +11936,7 @@
     "stock": 1,
     "estado": "Disponible",
     "vendidos": 0,
-    "orden": 492,
+    "orden": 491,
     "fotos": [
       "https://tcgplayer-cdn.tcgplayer.com/product/610594_in_1000x1000.jpg"
     ],
@@ -11980,7 +11961,7 @@
     "stock": 1,
     "estado": "Disponible",
     "vendidos": 0,
-    "orden": 493,
+    "orden": 492,
     "fotos": [
       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTjQ6_uqkFQB4VwiScZ35mJyfJ13ZlS8Mg6xs9BH0BvOQ&s=10"
     ],
@@ -12006,7 +11987,7 @@
     "estado": "Disponible",
     "destacado": true,
     "vendidos": 0,
-    "orden": 494,
+    "orden": 493,
     "fotos": [
       "https://m.media-amazon.com/images/I/71ilu-FwFyL.jpg"
     ],
