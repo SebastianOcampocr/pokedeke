@@ -23,7 +23,7 @@ function nuevaHoja() {
       if (typeof v === "string" && /^[=+@-]/.test(v)) this.formulas.push(v);
       if (typeof v === "string" && v.startsWith("'")) v = v.slice(1);
       this.celdas.set(`${r},${c}`, v); this.ultima = Math.max(this.ultima, r); }
-    valida(r, c, v) { if (c === 2) return Hoja.compras.includes(v); if (c === 5) return v === "Página web"; if (c === 1) return v instanceof Date; return true; }
+    valida(r, c, v) { if (c === 2) return Hoja.compras.includes(v); if (c === 5) return ["Página web", "Conocidos", "Otro", "Grupo de WhatsApp TCG CR", "Marketplace", "Instagram"].includes(v); if (c === 1) return v instanceof Date; return true; }
     getMaxColumns() { return this.columnas || 26; } insertColumnAfter() { this.columnas = this.getMaxColumns() + 1; } setFrozenRows() {}
     getLastColumn() { return Math.max(0, ...[...this.celdas.keys()].map((k) => +k.split(",")[1])); }
     getName() { return this.nombre; } getSheetId() { return 8; } getLastRow() { return this.ultima; } getMaxRows() { return this.max; }

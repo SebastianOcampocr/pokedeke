@@ -1701,3 +1701,29 @@ body {
     list-style: disc;
   }
 }
+
+/* Al imprimir o guardar como PDF (el comprobante): solo el contenido, sin menús. */
+@media print {
+  body > :not(main) {
+    display: none !important;
+  }
+  body {
+    padding-bottom: 0 !important;
+    background: #fff !important;
+  }
+  .solo-pantalla {
+    display: none !important;
+  }
+  main > div {
+    border-top: 0 !important;
+  }
+  main > div > div {
+    padding: 0 !important;
+    min-height: 0 !important;
+  }
+  .comprobante-hoja {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    break-inside: avoid;
+  }
+}
