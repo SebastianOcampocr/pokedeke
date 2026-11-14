@@ -61,7 +61,7 @@ const PREGUNTAS = [
   {
     pregunta: "¿Hacen apartados o preventas?",
     respuesta:
-      "No: ni apartados, ni adelantos, ni pagos en tractos. La única excepción son los pedidos especiales que marcamos en algunos productos de Estados Unidos: pagás el 100% por adelantado, ves la fecha máxima de entrega y, si no lo podemos cumplir, te devolvemos todo. Si buscás algo que no está en la página, pedilo en Pokedeke Busca y revisamos si lo podemos conseguir.",
+      "Como regla, no: ni apartados, ni adelantos, ni pagos en tractos. Hay dos excepciones que marcamos expresamente. Las reservas especiales de productos de alta demanda, como las Ultra Premium Collection 30th Celebration: reservás con el 50% y pagás el resto cuando tengamos el producto, antes de coordinar la entrega. Y los pedidos especiales de algunos productos de Estados Unidos: pagás el 100% por adelantado, ves la fecha máxima de entrega y, si no lo podemos cumplir, te devolvemos todo. Si buscás algo que no está en la página, pedilo en Pokedeke Busca y revisamos si lo podemos conseguir.",
   },
   {
     pregunta: "¿Por qué algunos productos cuestan más?",

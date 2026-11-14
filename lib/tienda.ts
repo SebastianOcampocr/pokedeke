@@ -41,6 +41,20 @@ export const LEMA = "Del mezzanine a tu colección";
  */
 export const TOPE_DESTACADOS = 60000;
 
+/**
+ * Reservas especiales: la única excepción a "no hacemos apartados". Solo los
+ * productos de esta lista, con la fecha estimada del lote. La reserva se coordina
+ * por WhatsApp: la página no cobra el 50% sola.
+ */
+export const RESERVAS_ESPECIALES: Record<string, { entrega: string }> = {
+  "ultra-premium-collection-30th-celebration-night": {
+    entrega: "entre el 18 y el 29 de Noviembre de 2026",
+  },
+  "ultra-premium-collection-30th-celebration-day": {
+    entrega: "entre el 18 y el 29 de Noviembre de 2026",
+  },
+};
+
 export const LUGAR = {
   nombre: "Edificio Omni",
   zona: "San José centro",

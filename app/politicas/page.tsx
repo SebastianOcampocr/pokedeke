@@ -6,13 +6,14 @@ import { CabeceraPagina, ZonaBlanca } from "@/components/Estructura";
 export const metadata: Metadata = {
   alternates: { canonical: "/politicas" },
   title: "Políticas",
-  description: "Envíos, cambios y devoluciones, términos y privacidad.",
+  description: "Envíos, cambios y devoluciones, reservas especiales, términos y privacidad.",
 };
 
 const SECCIONES = [
   { id: "envios", titulo: "Envíos" },
   { id: "cambios", titulo: "Cambios y devoluciones" },
   { id: "pedidos-especiales", titulo: "En camino y por consultar" },
+  { id: "reservas", titulo: "Reservas especiales" },
   { id: "terminos", titulo: "Términos" },
   { id: "privacidad", titulo: "Privacidad" },
 ];
@@ -128,7 +129,11 @@ export default function PaginaPoliticas() {
               </li>
               <li>
                 No hacemos apartados, preventas con adelanto ni pagos en
-                tractos.
+                tractos. La única excepción son las{" "}
+                <a href="#reservas" className="underline">
+                  reservas especiales
+                </a>{" "}
+                de productos de alta demanda que anunciamos expresamente.
               </li>
               <li>
                 <strong>Pedido especial:</strong> solo para productos puntuales
@@ -146,6 +151,66 @@ export default function PaginaPoliticas() {
                 Los pedidos de productos de Estados Unidos que se pagaron antes
                 de este cambio mantienen sus condiciones: si no podemos
                 entregarlo, devolvemos el 100% por el mismo medio de pago.
+              </li>
+            </ul>
+
+            <h2 id="reservas" className="scroll-mt-20">
+              Reservas especiales de productos de alta demanda
+            </h2>
+            <p>
+              Nuestra regla sigue igual: no hacemos apartados, preventas con
+              adelanto ni pagos en tractos. Hacemos una excepción con algunos
+              productos que tienen muchísima demanda y llegan en muy pocas
+              unidades, como las Ultra Premium Collection 30th Celebration. En
+              esos casos aceptamos reservas, para que quien de verdad lo quiere
+              pueda asegurar el suyo antes de que llegue.
+            </p>
+            <p>
+              Solo se puede reservar lo que lo diga expresamente en su ficha.
+              El resto del catálogo se sigue pagando completo al comprarlo.
+            </p>
+            <ul>
+              <li>
+                <strong>Para reservar pagás el 50%</strong> del precio total.
+                Con ese pago confirmamos tu reserva.
+              </li>
+              <li>
+                <strong>El otro 50% lo pagás cuando ya tengamos el
+                producto</strong> en nuestras manos: te avisamos por WhatsApp
+                apenas llegue y, con ese pago, coordinamos la entrega.
+              </li>
+              <li>
+                Las reservas están <strong>sujetas a disponibilidad</strong> y a
+                la cantidad de unidades que contemplamos para cada lote.
+              </li>
+              <li>
+                Las <strong>fechas de entrega son estimadas</strong> y pueden
+                variar por factores logísticos. Para el lote actual de Ultra
+                Premium Collection 30th Celebration, las entregas están
+                previstas entre el 18 y el 29 de Noviembre de 2026.
+              </li>
+              <li>
+                Las reservas se coordinan por{" "}
+                <a
+                  href={enlaceWhatsApp("¡Hola! Quiero consultar por una reserva.")}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="underline"
+                >
+                  WhatsApp
+                </a>
+                : ahí te confirmamos el monto y cómo pagar cada parte.
+              </li>
+              <li>
+                <strong>Si necesitás cancelar:</strong> podés cancelar tu
+                reserva dentro de los 8 días hábiles siguientes a tu primer
+                pago y te devolvemos lo que pagaste, por el mismo medio. Pasado
+                ese plazo, la reserva ya no se puede cancelar.
+              </li>
+              <li>
+                <strong>Si no conseguimos el producto o no llega:</strong> te
+                devolvemos el 100% de lo que pagaste, por el mismo medio, sin
+                rebajos.
               </li>
             </ul>
 
@@ -167,7 +232,11 @@ export default function PaginaPoliticas() {
               tarjeta, se devuelve por PayPal a la misma tarjeta o cuenta. Tenés 24 horas para pagar desde que hacés
               el pedido; si no se recibe el pago en ese plazo, el pedido se
               cancela y las unidades vuelven a estar disponibles. El pedido se confirma cuando verificamos que el SINPE
-              entró.
+              entró. Las{" "}
+              <a href="#reservas" className="underline">
+                reservas especiales
+              </a>{" "}
+              funcionan distinto: se pagan en dos partes, como se explica arriba.
             </p>
 
             <h2 id="privacidad" className="scroll-mt-20">
