@@ -14,6 +14,7 @@ import {
   estadoDe,
   muestraCantidad,
   nombreDeVersion,
+  reservaDe,
   versionesDe,
   type Producto,
 } from "@/lib/productos";
@@ -119,10 +120,11 @@ export function PrecioYStock({ producto: guardado }: { producto: Producto }) {
   const oferta = useOfertaDe(producto.slug);
   const agotado = estaAgotado(producto);
   const estado = estadoDe(producto);
+  const reserva = reservaDe(producto);
 
   return (
     <>
-      {estado === "Por consultar" ? (
+      {estado === "Por consultar" && !reserva ? (
         <p className="mt-1 text-sm font-bold text-gris">Precio de referencia</p>
       ) : null}
       {estado === "Pedido especial" ? (
@@ -154,13 +156,33 @@ export function PrecioYStock({ producto: guardado }: { producto: Producto }) {
               ? "Queda 1"
               : `Quedan ${producto.stock}`)}
       </p>
-      {estado === "En camino" ? (
+      {reserva ? (
+        <div className="mb-3 flex flex-col gap-2 rounded-md border-2 border-tinta bg-crema p-3 text-[15px] leading-snug">
+          <p>
+            <strong>Reserva disponible con el 50%.</strong> El saldo restante
+            se cancela cuando recibamos el producto, antes de coordinar la
+            entrega. Sujeto a disponibilidad.
+          </p>
+          <p>
+            <strong>Para reservar:</strong> {colones(producto.precio / 2)} (el
+            50% de {colones(producto.precio)}).
+            <br />
+            <strong>Entrega estimada:</strong> {reserva.entrega}.
+          </p>
+          <Link
+            href="/politicas#reservas"
+            className="w-fit font-bold underline underline-offset-2"
+          >
+            Cómo funcionan las reservas
+          </Link>
+        </div>
+      ) : estado === "En camino" ? (
         <p className="mb-3 rounded-md bg-crema p-3 text-[15px] leading-snug font-medium">
           Ya lo compramos y viene para el mezzanine. Todavía no se puede
           comprar: pedí que te avisemos y te escribimos apenas llegue.
         </p>
       ) : null}
-      {estado === "Por consultar" ? (
+      {estado === "Por consultar" && !reserva ? (
         <p className="mb-3 rounded-md bg-crema p-3 text-[15px] leading-snug font-medium">
           No lo tenemos en el mezzanine. Revisamos si lo podemos conseguir y te
           confirmamos disponibilidad y precio antes de que pagués nada. El
@@ -197,10 +219,24 @@ export function AccionesProducto({ producto: guardado }: { producto: Producto })
   if (estado === "Pedido especial") {
     return <AccionesEspeciales producto={producto} />;
   }
+  const reserva = reservaDe(producto);
 
   return (
     <div className="flex flex-col gap-3">
-      {estado === "Por consultar" ? (
+      {reserva ? (
+        <a
+          href={enlaceWhatsApp(
+            `¡Hola! Quiero reservar ${producto.nombre} con el 50% (${colones(producto.precio / 2)}).`,
+          )}
+          target="_blank"
+          rel="noreferrer"
+          className="boton boton-verde"
+          onClick={() => contarVisita(producto.slug, "whatsapp")}
+        >
+          <IconoChat tamano={22} />
+          Reservar por WhatsApp
+        </a>
+      ) : estado === "Por consultar" ? (
         <Link href={enlaceBusca(producto)} className="boton boton-rojo">
           Consultar disponibilidad
         </Link>

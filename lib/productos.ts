@@ -1,5 +1,5 @@
 import catalogo from "@/datos/catalogo.json";
-import { PEDIDOS_ESPECIALES, TOPE_DESTACADOS } from "./tienda";
+import { PEDIDOS_ESPECIALES, RESERVAS_ESPECIALES, TOPE_DESTACADOS } from "./tienda";
 
 /**
  * Lo manda la hoja. Disponible: está en el mezzanine y se puede comprar. En
@@ -113,6 +113,16 @@ const SIN_CANTIDAD = new Set(["etb-30th-celebration"]);
 
 export function muestraCantidad(producto: Pick<Producto, "slug">) {
   return !SIN_CANTIDAD.has(producto.slug);
+}
+
+/**
+ * La reserva con el 50% se ofrece solo en los productos de la lista y mientras no
+ * estén en el mezzanine ni agotados (en camino o por consultar).
+ */
+export function reservaDe(producto: Producto) {
+  const reserva = RESERVAS_ESPECIALES[producto.slug];
+  const estado = estadoDe(producto);
+  return reserva && (estado === "Por consultar" || estado === "En camino") ? reserva : null;
 }
 
 /** No se puede comprar ahora: agotado, en camino o por consultar. */

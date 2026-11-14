@@ -9,6 +9,7 @@ import {
   estaAgotado,
   estadoDe,
   muestraCantidad,
+  reservaDe,
   siglaDeCondicion,
   type Producto,
 } from "@/lib/productos";
@@ -190,6 +191,20 @@ export function TarjetaProducto({
             </p>
             <Link href={enlace} className="boton boton-amarillo boton-chico">
               Ver condiciones
+            </Link>
+          </div>
+        ) : reservaDe(producto) ? (
+          <div className="mt-auto flex flex-wrap items-end justify-between gap-2">
+            <p className="mt-1 leading-tight">
+              <span className="block text-[13px] font-bold text-gris">
+                Reserva con el 50%
+              </span>
+              <span className="text-[19px] font-extrabold text-azul">
+                {colones(producto.precio)}
+              </span>
+            </p>
+            <Link href={enlace} className="boton boton-amarillo boton-chico">
+              Ver reserva
             </Link>
           </div>
         ) : estado === "Por consultar" ? (
