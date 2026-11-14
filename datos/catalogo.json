@@ -7891,9 +7891,9 @@
     "categoriaCorta": "ETB",
     "idioma": "Inglés",
     "precio": 55000,
-    "stock": 4,
+    "stock": 3,
     "estado": "Disponible",
-    "vendidos": 0,
+    "vendidos": 1,
     "orden": 321,
     "fotos": [
       "/productos/preventa-etb-30th-celebration.webp"
