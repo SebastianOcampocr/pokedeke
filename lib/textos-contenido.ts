@@ -6,6 +6,7 @@ import {
   destacados,
   disponibles,
   expansionDe,
+  muestraCantidad,
   novedadesVariadas,
   paraPresupuesto,
   porConsultar,
@@ -33,7 +34,7 @@ const ENTREGA =
   "Retiro en el " + LUGAR.nombre + " o envío a todo el país. Pagás por SINPE Móvil o con tarjeta.";
 
 function quedan(producto: Producto) {
-  if (producto.stock <= 0) return "";
+  if (producto.stock <= 0 || !muestraCantidad(producto)) return "";
   return producto.stock === 1 ? "Queda 1." : "Quedan " + producto.stock + ".";
 }
 

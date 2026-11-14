@@ -8,6 +8,7 @@ import {
   esCarta,
   estaAgotado,
   estadoDe,
+  muestraCantidad,
   siglaDeCondicion,
   type Producto,
 } from "@/lib/productos";
@@ -38,7 +39,7 @@ export function Calcomania({ producto: guardado }: { producto: Producto }) {
       </span>
     );
   }
-  if (producto.stock <= 3) {
+  if (producto.stock <= 3 && muestraCantidad(producto)) {
     return (
       <span className="calcomania rotate-3 bg-rojo">
         {producto.stock === 1 ? "¡Queda 1!" : `¡Quedan ${producto.stock}!`}

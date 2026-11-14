@@ -12,6 +12,7 @@ import {
   esCarta,
   estaAgotado,
   estadoDe,
+  muestraCantidad,
   nombreDeVersion,
   versionesDe,
   type Producto,
@@ -145,7 +146,13 @@ export function PrecioYStock({ producto: guardado }: { producto: Producto }) {
             : producto.stock === 1
               ? "Queda 1 cupo para importar"
               : `Quedan ${producto.stock} cupos para importar`)}
-        {!agotado && estado !== "Pedido especial" && (producto.stock === 1 ? "Queda 1" : `Quedan ${producto.stock}`)}
+        {!agotado &&
+          estado !== "Pedido especial" &&
+          (!muestraCantidad(producto)
+            ? "Disponible"
+            : producto.stock === 1
+              ? "Queda 1"
+              : `Quedan ${producto.stock}`)}
       </p>
       {estado === "En camino" ? (
         <p className="mb-3 rounded-md bg-crema p-3 text-[15px] leading-snug font-medium">

@@ -108,6 +108,13 @@ export function coincide(producto: Producto, busqueda: string) {
   return sinAcentos(campos).includes(texto);
 }
 
+/** Productos en los que la página no dice cuántas unidades quedan (lo pidió la tienda). */
+const SIN_CANTIDAD = new Set(["etb-30th-celebration"]);
+
+export function muestraCantidad(producto: Pick<Producto, "slug">) {
+  return !SIN_CANTIDAD.has(producto.slug);
+}
+
 /** No se puede comprar ahora: agotado, en camino o por consultar. */
 export function estaAgotado(producto: Producto) {
   return producto.stock <= 0;

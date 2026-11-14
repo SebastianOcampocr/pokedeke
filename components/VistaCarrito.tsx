@@ -13,6 +13,7 @@ import {
 import { calcularTotales, colones, fechaCorta } from "@/lib/formato";
 import {
   disponibles,
+  muestraCantidad,
 } from "@/lib/productos";
 import { CUPONES } from "@/lib/tienda";
 import { useInventarioVivo, useOfertasVivas } from "@/lib/vivo";
@@ -249,7 +250,9 @@ export function VistaCarrito() {
                   <p role="alert" className="text-sm font-bold text-rojo">
                     {producto.stock === 0
                       ? "Se acaba de agotar."
-                      : `Solo queda${producto.stock === 1 ? "" : "n"} ${producto.stock}.`}
+                      : muestraCantidad(producto)
+                        ? `Solo queda${producto.stock === 1 ? "" : "n"} ${producto.stock}.`
+                        : "No hay tantas disponibles."}
                   </p>
                 ) : null}
               </div>
