@@ -176,8 +176,8 @@ export default function PaginaPoliticas() {
               </li>
               <li>
                 <strong>El otro 50% lo pagás cuando ya tengamos el
-                producto</strong> en nuestras manos, antes de coordinar la
-                entrega.
+                producto</strong> en nuestras manos: te avisamos por WhatsApp
+                apenas llegue y, con ese pago, coordinamos la entrega.
               </li>
               <li>
                 Las reservas están <strong>sujetas a disponibilidad</strong> y a
@@ -200,6 +200,17 @@ export default function PaginaPoliticas() {
                   WhatsApp
                 </a>
                 : ahí te confirmamos el monto y cómo pagar cada parte.
+              </li>
+              <li>
+                <strong>Si necesitás cancelar:</strong> podés cancelar tu
+                reserva dentro de los 8 días hábiles siguientes a tu primer
+                pago y te devolvemos lo que pagaste, por el mismo medio. Pasado
+                ese plazo, la reserva ya no se puede cancelar.
+              </li>
+              <li>
+                <strong>Si no conseguimos el producto o no llega:</strong> te
+                devolvemos el 100% de lo que pagaste, por el mismo medio, sin
+                rebajos.
               </li>
             </ul>
 
