@@ -164,7 +164,7 @@ const HOJAS = {
 };
 
 // Sube con cada cambio: la página y las pruebas leen esta marca con un GET.
-const VERSION = "2026-11-12-ventas-whatsapp";
+const VERSION = "2026-11-13-opiniones";
 const ENTREGADO = "Entregado";
 const PEDIDO_ESPECIAL = "Pedido especial";
 // Estados del inventario. Los escribe la tienda en la columna "Estado en la página"
@@ -2242,12 +2242,18 @@ function pedirOpiniones() {
   if (pendientes.length === 0) return;
 
   const pedidos = leerPedidos();
-  pendientes.slice(0, CONFIG.maxCorreosPorRevision).forEach(([clave]) => {
+  pendientes.slice(0, CONFIG.maxCorreosPorRevision).forEach(([clave, cuando]) => {
     const numero = clave.slice(PREFIJO_OPINION.length);
     const hallado = pedidos.find(({ fila }) => fila[COL.numero - 1] === numero);
     // Si el Estado cambió (por ejemplo, a Cancelado), no se escribe.
-    if (hallado && hallado.fila[COL.estado - 1] === ENTREGADO) pedirOpinion(hallado.fila);
-    propiedades.deleteProperty(clave);
+    const entregado = Boolean(hallado) && hallado.fila[COL.estado - 1] === ENTREGADO;
+    const salio = entregado && pedirOpinion(hallado.fila);
+    // Tiene correo pero no salió (el script corrió con otra cuenta o Google no dejó):
+    // se intenta en la próxima hora. Después de una semana se deja.
+    const reintentar =
+      entregado && !salio && esCorreo(String(hallado.fila[COL.correo - 1])) &&
+      Date.now() - Number(cuando) < (CONFIG.diasParaOpinion + 7) * 24 * 3600 * 1000;
+    if (!reintentar) propiedades.deleteProperty(clave);
   });
 }
 

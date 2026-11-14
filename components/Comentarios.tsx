@@ -14,7 +14,7 @@ const sinBusqueda = () => "";
 const noCambia = () => () => {};
 
 /**
- * El correo de "¿Cómo te fue?" trae ?pedido=PD-0007&clave=…: con eso la hoja
+ * El correo de "¿Cómo te fue?" trae ?pedido=TCG-0007&clave=…: con eso la hoja
  * marca el comentario como compra real.
  */
 function usePedidoDelCorreo() {
@@ -23,7 +23,8 @@ function usePedidoDelCorreo() {
     const parametros = new URLSearchParams(busqueda);
     const pedido = parametros.get("pedido")?.trim().toUpperCase() ?? "";
     const clave = parametros.get("clave")?.trim() ?? "";
-    return /^PD-\d+$/.test(pedido) && clave ? { pedido, clave } : null;
+    // Los pedidos viejos empezaban con PD-; los de ahora, con TCG-.
+    return /^(TCG|PD)-\d+$/.test(pedido) && clave ? { pedido, clave } : null;
   }, [busqueda]);
 }
 

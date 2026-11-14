@@ -286,6 +286,26 @@ prueba("Entregado programa la opinión y se manda a los 2 días, de día", () =>
   assert.match(correos[0].htmlBody, /comentarios\?pedido=PD-0001&amp;clave=clave-PD-0001/);
   assert.ok(!propiedades.has("opinion:PD-0001"));
 });
+prueba("si la opinión la intenta otra cuenta, no se pierde: sale con la de la tienda", () => {
+  correos.length = 0;
+  pedidos.datos[4][2] = "Entregado";
+  propiedades.set("opinion:PD-0001", String(Date.now() - 3 * 24 * 3600 * 1000));
+  horaFalsa = 10;
+  cuenta = "personal@gmail.com";
+  g.pedirOpiniones();
+  assert.strictEqual(correos.length, 0, "desde la cuenta personal no se le escribe al cliente");
+  assert.ok(propiedades.has("opinion:PD-0001"), "queda pendiente para la próxima hora");
+  cuenta = "pokedekestore@gmail.com";
+  g.pedirOpiniones();
+  assert.strictEqual(correos.length, 1);
+  assert.strictEqual(correos[0].to, "ana@example.com");
+  assert.ok(!propiedades.has("opinion:PD-0001"));
+  cuenta = "personal@gmail.com";
+  propiedades.set("opinion:PD-0001", String(Date.now() - 10 * 24 * 3600 * 1000));
+  g.pedirOpiniones();
+  assert.ok(!propiedades.has("opinion:PD-0001"), "después de una semana se deja");
+  cuenta = "pokedekestore@gmail.com";
+});
 prueba("si cambió a Cancelado no pide opinión", () => {
   correos.length = 0;
   propiedades.set("opinion:PD-0002", String(Date.now() - 3 * 24 * 3600 * 1000));
