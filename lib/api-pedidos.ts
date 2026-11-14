@@ -197,7 +197,7 @@ export function configPaypal() {
         ? ({
             clientId: String(datos.clientId),
             modo: datos.modo === "live" ? "live" : "sandbox",
-            colonesPorDolar: Number(datos.colonesPorDolar) || 500,
+            colonesPorDolar: Number(datos.colonesPorDolar) || 448,
           } as ConfigPaypal)
         : null,
     )

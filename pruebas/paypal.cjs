@@ -20,13 +20,13 @@ prueba("sin llaves no hay botón ni cobro", () => {
 m.ctx.ponerLlavesPaypal();
 prueba("con llaves la página recibe el Client ID y el tipo de cambio", () => {
   const c = JSON.parse(m.get({ accion: "paypal" }).t);
-  assert.strictEqual(c.ok, true); assert.strictEqual(c.clientId, "cliente-prueba"); assert.strictEqual(c.colonesPorDolar, 448); assert.strictEqual(c.secreto, undefined);
+  assert.strictEqual(c.ok, true); assert.strictEqual(c.clientId, "cliente-prueba"); assert.strictEqual(c.colonesPorDolar, 448.34, "el del Banco Central"); assert.strictEqual(c.secreto, undefined);
 });
 const p = pedido();
 prueba("crea el cobro en dólares con el total de la hoja", () => {
   const r = m.post({ accion: "paypal-crear", numero: p.numero, clave: p.clave });
   assert.strictEqual(r.ok, true, JSON.stringify(r));
-  assert.strictEqual(r.dolares, (Math.round(p.total / 448 * 100) / 100).toFixed(2));
+  assert.strictEqual(r.dolares, (Math.round(p.total / 448.34 * 100) / 100).toFixed(2));
   assert.strictEqual(m.ctx.paypal.ordenes[r.id].custom_id, p.numero);
   p.orden = r.id;
 });
@@ -108,5 +108,25 @@ prueba("marcar Pagado (PayPal) a mano también pasa a Ventas", () => {
   h.escribir(i, 3, "Pagado (PayPal)");
   m.ctx.alEditarHoja({ value: "Pagado (PayPal)", oldValue: "Pendiente de pago", range: h.getRange(i, 3, 1, 1) });
   assert.match(String(h.leer(i, 19)), /^Fila /);
+});
+prueba("si el dólar cambia entre crear y cobrar, se cobra lo que se pidió", () => {
+  const q = pedido();
+  const c = m.post({ accion: "paypal-crear", numero: q.numero, clave: q.clave });
+  assert.strictEqual(c.dolares, (Math.round(q.total / 448.34 * 100) / 100).toFixed(2));
+  m.ctx.cambio.venta = 460; m.ctx.olvidarCambio();
+  const r = m.post({ accion: "paypal-capturar", numero: q.numero, clave: q.clave, orden: c.id });
+  assert.strictEqual(r.ok, true, JSON.stringify(r));
+  assert.strictEqual(JSON.parse(m.get({ accion: "paypal" }).t).colonesPorDolar, 460, "el nuevo ya vale para lo que sigue");
+});
+prueba("si el Banco Central no responde, sigue el último tipo de cambio", () => {
+  m.ctx.cambio.caido = true; m.ctx.olvidarCambio();
+  assert.strictEqual(JSON.parse(m.get({ accion: "paypal" }).t).colonesPorDolar, 460);
+  m.ctx.cambio.caido = false; m.ctx.cambio.venta = 448.34; m.ctx.olvidarCambio();
+  assert.strictEqual(JSON.parse(m.get({ accion: "paypal" }).t).colonesPorDolar, 448.34, "vuelve el del día");
+});
+prueba("un número raro del Banco Central no se usa para cobrar", () => {
+  m.ctx.cambio.venta = 4.48; m.ctx.olvidarCambio();
+  assert.strictEqual(JSON.parse(m.get({ accion: "paypal" }).t).colonesPorDolar, 448.34);
+  m.ctx.cambio.venta = 448.34; m.ctx.olvidarCambio();
 });
 console.log(`\n${ok} pruebas bien.`);

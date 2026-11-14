@@ -65,6 +65,7 @@ const CONFIG = {
   // pasa a dólares con este tipo de cambio. Debe ser el mismo que muestra la página
   // (la página lo lee de aquí). Las llaves van en Propiedades del script:
   // PAYPAL_CLIENT_ID, PAYPAL_SECRET y PAYPAL_MODO ("sandbox" o "live").
+  // Respaldo: el tipo de cambio de verdad lo trae colonesPorDolar() del Banco Central.
   colonesPorDolar: 448,
   maxPagosPaypalPorHora: 120,
   maxSolicitudesPorHora: 40,
@@ -164,7 +165,7 @@ const HOJAS = {
 };
 
 // Sube con cada cambio: la página y las pruebas leen esta marca con un GET.
-const VERSION = "2026-11-13-opiniones";
+const VERSION = "2026-11-14-dolar-banco-central";
 const ENTREGADO = "Entregado";
 const PEDIDO_ESPECIAL = "Pedido especial";
 // Estados del inventario. Los escribe la tienda en la columna "Estado en la página"
@@ -2390,12 +2391,47 @@ function llavesPaypal() {
 function configPaypalPublica() {
   const llaves = llavesPaypal();
   if (!llaves.listo) return { ok: false };
-  return { ok: true, clientId: llaves.clientId, modo: llaves.modo, colonesPorDolar: CONFIG.colonesPorDolar };
+  return { ok: true, clientId: llaves.clientId, modo: llaves.modo, colonesPorDolar: colonesPorDolar() };
 }
 
-/** ₡120 000 a ₡500 son 240.00. Siempre con dos decimales, como lo pide PayPal. */
+const CLAVE_TIPO_CAMBIO = "tipo-cambio";
+const PREFIJO_ORDEN_PAYPAL = "paypal-orden-";
+
+/**
+ * Colones por dólar para cobrar con tarjeta: el tipo de cambio de venta del Banco
+ * Central, que publica Hacienda sin llave. Se pregunta como mucho cada 6 horas. Si
+ * no responde, sigue el último que dio; si nunca ha respondido, CONFIG.colonesPorDolar.
+ */
+function colonesPorDolar() {
+  const memoria = CacheService.getScriptCache();
+  const guardado = Number(memoria.get(CLAVE_TIPO_CAMBIO));
+  if (guardado > 0) return guardado;
+  const propiedades = PropertiesService.getScriptProperties();
+  let valor = 0;
+  try {
+    const respuesta = UrlFetchApp.fetch("https://api.hacienda.go.cr/indicadores/tc/dolar", { muteHttpExceptions: true });
+    if (respuesta.getResponseCode() === 200) {
+      const datos = JSON.parse(respuesta.getContentText() || "{}");
+      valor = Math.round(Number(datos && datos.venta && datos.venta.valor) * 100) / 100;
+    }
+  } catch (error) {
+    console.error(error);
+  }
+  // Un número raro (la respuesta cambió o vino vacía) nunca se usa para cobrar.
+  if (valor >= 300 && valor <= 1000) {
+    memoria.put(CLAVE_TIPO_CAMBIO, String(valor), 6 * 3600);
+    propiedades.setProperty(CLAVE_TIPO_CAMBIO, String(valor));
+    return valor;
+  }
+  const ultimo = Number(propiedades.getProperty(CLAVE_TIPO_CAMBIO));
+  const respaldo = ultimo > 0 ? ultimo : CONFIG.colonesPorDolar;
+  memoria.put(CLAVE_TIPO_CAMBIO, String(respaldo), 3600);
+  return respaldo;
+}
+
+/** ₡120 000 a ₡448 son 267.86. Siempre con dos decimales, como lo pide PayPal. */
 function montoEnDolares(colonesTotal) {
-  return (Math.round((Number(colonesTotal) / CONFIG.colonesPorDolar) * 100) / 100).toFixed(2);
+  return (Math.round((Number(colonesTotal) / colonesPorDolar()) * 100) / 100).toFixed(2);
 }
 
 function apiPaypal(metodo, ruta, cuerpo, idempotencia) {
@@ -2480,6 +2516,8 @@ function crearPagoPaypal(datos) {
     console.error(JSON.stringify(respuesta.datos));
     return { ok: false, error: "PayPal no respondió. Intentá otra vez o pagá por SINPE." };
   }
+  // El tipo de cambio se mueve cada día: al cobrar se compara con lo que se pidió aquí.
+  CacheService.getScriptCache().put(PREFIJO_ORDEN_PAYPAL + respuesta.datos.id, dolares, 6 * 3600);
   return { ok: true, id: respuesta.datos.id, dolares };
 }
 
@@ -2505,7 +2543,7 @@ function capturarPagoPaypal(datos) {
   const respuesta = apiPaypal("post", "/v2/checkout/orders/" + orden + "/capture", {}, "capturar-" + orden);
   const unidad = (respuesta.datos.purchase_units || [])[0] || {};
   const captura = ((unidad.payments || {}).captures || [])[0] || {};
-  const esperado = montoEnDolares(fila[COL.total - 1]);
+  const esperado = CacheService.getScriptCache().get(PREFIJO_ORDEN_PAYPAL + orden) || montoEnDolares(fila[COL.total - 1]);
   const calza =
     respuesta.estado < 300 &&
     captura.status === "COMPLETED" &&

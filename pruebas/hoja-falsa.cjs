@@ -63,7 +63,7 @@ function nuevaHoja() {
     MailApp: { sendEmail: (o) => { if (ctx.fallarCorreo) throw new Error("x"); correos.push(o); } },
     Session: { getEffectiveUser: () => { if (ctx.fallarSesion) throw new Error("Sin permiso para Session.getEffectiveUser"); return { getEmail: () => ctx.cuenta || "pokedekestore@gmail.com" }; } },
     ScriptApp: { WeekDay: { SUNDAY: "SUNDAY" }, getProjectTriggers: () => activadores.slice(), deleteTrigger: (a) => activadores.splice(activadores.indexOf(a), 1), newTrigger: (f) => { const crear = { create: () => activadores.push({ getHandlerFunction: () => f }) }; return { forSpreadsheet: () => ({ onEdit: () => crear }), timeBased: () => ({ everyHours: () => crear, everyMinutes: () => crear, onWeekDay: () => ({ atHour: () => crear }) }) }; } },
-    UrlFetchApp: { fetch: (url, opciones) => (url.startsWith("https://api.github.com/") ? ctx.githubFalso(url, opciones || {}) : url.startsWith("https://challenges.cloudflare.com/") ? ctx.turnstileFalso(url, opciones || {}) : url.endsWith("/sincronizado.json") ? ctx.paginaFalsa(url) : ctx.paypalFalso(url, opciones || {})) },
+    UrlFetchApp: { fetch: (url, opciones) => (url.startsWith("https://api.github.com/") ? ctx.githubFalso(url, opciones || {}) : url.startsWith("https://challenges.cloudflare.com/") ? ctx.turnstileFalso(url, opciones || {}) : url.endsWith("/sincronizado.json") ? ctx.paginaFalsa(url) : url.startsWith("https://api.hacienda.go.cr/") ? ctx.cambioFalso(url) : ctx.paypalFalso(url, opciones || {})) },
     PropertiesService: { getScriptProperties: () => ({ getProperty: (k) => (k in propiedades ? propiedades[k] : null), setProperty: (k, v) => { propiedades[k] = v; }, getProperties: () => ({ ...propiedades }), deleteProperty: (k) => { delete propiedades[k]; } }) },
   };
   // GitHub falso: anota cada vez que la hoja pide rearmar la página.
@@ -75,6 +75,10 @@ function nuevaHoja() {
   // La página falsa: lo que dice public/sincronizado.json.
   ctx.pagina = { datos: null, llamadas: 0 };
   ctx.paginaFalsa = () => { ctx.pagina.llamadas += 1; return { getResponseCode: () => (ctx.pagina.datos ? 200 : 404), getContentText: () => JSON.stringify(ctx.pagina.datos || {}) }; };
+  // Tipo de cambio falso del Banco Central (como lo publica Hacienda).
+  ctx.cambio = { venta: 448.34, compra: 442.56, caido: false, llamadas: 0 };
+  ctx.cambioFalso = () => { ctx.cambio.llamadas += 1; if (ctx.cambio.caido) throw new Error("sin red"); return { getResponseCode: () => 200, getContentText: () => JSON.stringify({ venta: { fecha: "2026-11-14", valor: ctx.cambio.venta }, compra: { fecha: "2026-11-14", valor: ctx.cambio.compra } }) }; };
+  ctx.olvidarCambio = () => { delete cache["tipo-cambio"]; };
   // PayPal falso: guarda las órdenes creadas y responde como la API real.
   const ordenes = {};
   ctx.paypal = { ordenes, llamadas: [], cobrarDistinto: false, estadoCaptura: "COMPLETED" };
