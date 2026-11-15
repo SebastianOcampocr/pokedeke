@@ -5515,9 +5515,9 @@
     "categoriaCorta": "Suelta",
     "idioma": "Inglés",
     "precio": 14500,
-    "stock": 1,
-    "estado": "Disponible",
-    "vendidos": 0,
+    "stock": 0,
+    "estado": "Agotado",
+    "vendidos": 1,
     "orden": 225,
     "fotos": [
       "/productos/kecleon-117-delta-reign.webp"
