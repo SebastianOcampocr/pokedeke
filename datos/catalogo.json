@@ -11282,5 +11282,27 @@
       "condicion": ""
     },
     "tipo": "Planta"
+  },
+  {
+    "id": "C505",
+    "slug": "mega-malamar-ex-069-delta-reign",
+    "nombre": "Mega Malamar ex #069 (Delta Reign)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 1500,
+    "stock": 1,
+    "estado": "Disponible",
+    "vendidos": 0,
+    "orden": 460,
+    "fotos": [],
+    "descripcion": "Carta de la colección Delta Reign, número 069.",
+    "carta": {
+      "coleccion": "Delta Reign",
+      "numero": "069",
+      "rareza": "",
+      "condicion": ""
+    }
   }
 ]
