@@ -11370,5 +11370,27 @@
       "rareza": "",
       "condicion": ""
     }
+  },
+  {
+    "id": "C509",
+    "slug": "pincurchin-109-delta-reign",
+    "nombre": "Pincurchin #109 (Delta Reign)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 2000,
+    "stock": 1,
+    "estado": "Disponible",
+    "vendidos": 0,
+    "orden": 464,
+    "fotos": [],
+    "descripcion": "Carta de la colección Delta Reign, número 109.",
+    "carta": {
+      "coleccion": "Delta Reign",
+      "numero": "109",
+      "rareza": "",
+      "condicion": ""
+    }
   }
 ]
