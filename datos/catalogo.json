@@ -11392,5 +11392,28 @@
       "rareza": "",
       "condicion": ""
     }
+  },
+  {
+    "id": "C510",
+    "slug": "zorua-112-delta-reign",
+    "nombre": "Zorua #112 (Delta Reign)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 4000,
+    "stock": 1,
+    "estado": "Disponible",
+    "vendidos": 0,
+    "orden": 465,
+    "fotos": [],
+    "descripcion": "Carta de la colección Delta Reign, número 112.",
+    "carta": {
+      "coleccion": "Delta Reign",
+      "numero": "112",
+      "rareza": "",
+      "condicion": ""
+    },
+    "tipo": "Oscuro"
   }
 ]
