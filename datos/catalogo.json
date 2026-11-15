@@ -11232,5 +11232,55 @@
       "https://m.media-amazon.com/images/I/71ilu-FwFyL.jpg"
     ],
     "descripcion": "Booster Bundle de 30th Celebration, en inglés, con Pikachu en la caja. Trae 6 sobres de 30th Celebration."
+  },
+  {
+    "id": "C503",
+    "slug": "mega-golisopod-ex-118-delta-reign",
+    "nombre": "Mega Golisopod ex #118 (Delta Reign)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 2300,
+    "stock": 1,
+    "estado": "Disponible",
+    "vendidos": 0,
+    "orden": 458,
+    "fotos": [
+      "/productos/mega-golisopod-ex-118-delta-reign.webp"
+    ],
+    "descripcion": "Mega Golisopod ex de 340 HP, tipo Planta. Número 118/103 de Delta Reign, Ultra Rare, en inglés. Trae los ataques Finishing Blow y Quadruple Hold.",
+    "carta": {
+      "coleccion": "Delta Reign",
+      "numero": "118",
+      "rareza": "",
+      "condicion": ""
+    },
+    "tipo": "Planta"
+  },
+  {
+    "id": "C504",
+    "slug": "mega-golisopod-ex-011-delta-reign",
+    "nombre": "Mega Golisopod ex #011 (Delta Reign)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 1400,
+    "stock": 1,
+    "estado": "Disponible",
+    "vendidos": 0,
+    "orden": 459,
+    "fotos": [
+      "/productos/mega-golisopod-ex-011-delta-reign.webp"
+    ],
+    "descripcion": "Mega Golisopod ex de 340 HP, tipo Planta. Número 011/103 de Delta Reign, Double Rare, en inglés. Trae los ataques Finishing Blow y Quadruple Hold.",
+    "carta": {
+      "coleccion": "Delta Reign",
+      "numero": "011",
+      "rareza": "",
+      "condicion": ""
+    },
+    "tipo": "Planta"
   }
 ]
