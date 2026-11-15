@@ -11304,5 +11304,49 @@
       "rareza": "",
       "condicion": ""
     }
+  },
+  {
+    "id": "C506",
+    "slug": "heat-rotom-ex-023-delta-reign",
+    "nombre": "Heat Rotom ex #023 (Delta Reign)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 1500,
+    "stock": 1,
+    "estado": "Disponible",
+    "vendidos": 0,
+    "orden": 461,
+    "fotos": [],
+    "descripcion": "Carta de la colección Delta Reign, número 023.",
+    "carta": {
+      "coleccion": "Delta Reign",
+      "numero": "023",
+      "rareza": "",
+      "condicion": ""
+    }
+  },
+  {
+    "id": "C507",
+    "slug": "raikou-ex-033-delta-reign",
+    "nombre": "Raikou ex #033 (Delta Reign)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 1500,
+    "stock": 1,
+    "estado": "Disponible",
+    "vendidos": 0,
+    "orden": 462,
+    "fotos": [],
+    "descripcion": "Carta de la colección Delta Reign, número 033.",
+    "carta": {
+      "coleccion": "Delta Reign",
+      "numero": "033",
+      "rareza": "",
+      "condicion": ""
+    }
   }
 ]
