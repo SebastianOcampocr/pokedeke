@@ -11348,5 +11348,27 @@
       "rareza": "",
       "condicion": ""
     }
+  },
+  {
+    "id": "C508",
+    "slug": "meowscarada-ex-014-delta-reign",
+    "nombre": "Meowscarada ex #014 (Delta Reign)",
+    "juego": "Pokémon",
+    "categoria": "Carta suelta (single)",
+    "categoriaCorta": "Suelta",
+    "idioma": "Inglés",
+    "precio": 1500,
+    "stock": 1,
+    "estado": "Disponible",
+    "vendidos": 0,
+    "orden": 463,
+    "fotos": [],
+    "descripcion": "Carta de la colección Delta Reign, número 014.",
+    "carta": {
+      "coleccion": "Delta Reign",
+      "numero": "014",
+      "rareza": "",
+      "condicion": ""
+    }
   }
 ]
