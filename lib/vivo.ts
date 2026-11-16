@@ -6,7 +6,15 @@ import { PEDIDOS_ESPECIALES, PEDIDOS_URL } from "./tienda";
 
 type Inventario = Record<
   string,
-  { stock: number; precio: number; peso?: number; estado?: Estado; entrega?: string }
+  {
+    stock: number;
+    precio: number;
+    /** Solo con precio de oferta: el precio normal, que la página tacha. */
+    precioAntes?: number;
+    peso?: number;
+    estado?: Estado;
+    entrega?: string;
+  }
 >;
 
 /** Precio especial por llevar varias unidades. La anuncia la hoja, que es la que cobra. */
@@ -115,12 +123,16 @@ export function conDatosVivos(producto: Producto, vivo: Inventario | null): Prod
   // Si la página tiene el pago anticipado apagado, el pedido especial no se ofrece
   // aunque la hoja lo tenga encendido.
   if (estado === "Pedido especial" && !PEDIDOS_ESPECIALES) {
-    return { ...producto, estado: "Por consultar" as const, stock: 0, precio: dato.precio };
+    return { ...producto, estado: "Por consultar" as const, stock: 0, precio: dato.precio, precioAntes: undefined };
   }
   return {
     ...producto,
     stock: seVende ? dato.stock : 0,
     precio: dato.precio,
+    // El tachado lo manda la hoja, que es la que cobra: un servidor viejo no lo manda
+    // y entonces no se muestra, aunque la página lo traiga de cuando se armó.
+    precioAntes:
+      dato.precioAntes && dato.precioAntes > dato.precio ? dato.precioAntes : undefined,
     peso: dato.peso,
     estado,
     entrega: dato.entrega ?? (estado === "Pedido especial" ? producto.entrega : undefined),

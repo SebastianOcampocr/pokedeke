@@ -165,7 +165,7 @@ const HOJAS = {
 };
 
 // Sube con cada cambio: la página y las pruebas leen esta marca con un GET.
-const VERSION = "2026-11-14-dolar-banco-central";
+const VERSION = "2026-11-16-precio-oferta";
 const ENTREGADO = "Entregado";
 const PEDIDO_ESPECIAL = "Pedido especial";
 // Estados del inventario. Los escribe la tienda en la columna "Estado en la página"
@@ -450,6 +450,7 @@ function stockEnVivo(versionDeLaPagina) {
     productos[producto.slug] = {
       stock: Math.max((especial ? producto.cupos : producto.stock) - (reservado[producto.slug] || 0), 0),
       precio: producto.precio,
+      ...(producto.precioAntes ? { precioAntes: producto.precioAntes } : {}),
       peso: producto.peso,
       estado: producto.estado,
       ...(especial ? { entrega: fechaIso(producto.llegada) } : {}),
@@ -644,6 +645,13 @@ function productosPorSlug() {
             ? ESTADOS.porConsultar
             : ESTADOS.agotado;
     grupo.precio = grupo.estado === ESTADOS.pedidoEspecial ? grupo.precioEspecial : precio;
+    // Precio de oferta: si la tienda escribe uno menor que el normal, se cobra ese
+    // y la página tacha el normal. Debe decidir igual que scripts/traer-catalogo.mjs.
+    const oferta = Number(ultimo("Precio de oferta (₡)")) || 0;
+    if (grupo.estado !== ESTADOS.pedidoEspecial && oferta > 0 && oferta < grupo.precio) {
+      grupo.precioAntes = grupo.precio;
+      grupo.precio = oferta;
+    }
     // Ya no hay adelantos ni apartados: todo se cobra completo.
     grupo.precioCobrado = grupo.precio;
     grupo.llegada = grupo.estado === ESTADOS.pedidoEspecial ? grupo.entrega : null;

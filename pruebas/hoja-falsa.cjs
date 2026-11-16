@@ -30,8 +30,8 @@ function nuevaHoja() {
     getRange(r, c, nr, nc) { return new Rango(this, r, c, nr, nc); }
     appendRow(f) { if (this.nombre === "Ventas" || this.nombre === "Compras") throw new Error("appendRow prohibido"); const r = this.ultima + 1; f.forEach((v, j) => this.escribir(r, j + 1, v)); }
   }
-  const T = ["ID", "Producto", "Categoría", "Juego", "Idioma", "En stock", "Vendidas", "Precio sugerido (₡)", "Precio de venta (₡)", "Nombre para mostrar", "Descripción", "Fotos (URL)", "Publicado (sí/no)", "Destacado (sí/no)", "Etiqueta", "Llega (preventas)", "Peso (g)", "Estado en la página"];
-  const fc = (id, p, cat, stock, sug, venta = "", extra = {}) => { const f = [id, p, cat, extra.juego || "Pokémon", "", stock, 0, sug, venta, "", "", "", extra.pub || "", "", extra.et || "", extra.llega ? new Date(extra.llega + "T12:00:00-06:00") : "", extra.peso || "", extra.estado || ""]; return f; };
+  const T = ["ID", "Producto", "Categoría", "Juego", "Idioma", "En stock", "Vendidas", "Precio sugerido (₡)", "Precio de venta (₡)", "Nombre para mostrar", "Descripción", "Fotos (URL)", "Publicado (sí/no)", "Destacado (sí/no)", "Etiqueta", "Llega (preventas)", "Peso (g)", "Estado en la página", "Precio de oferta (₡)"];
+  const fc = (id, p, cat, stock, sug, venta = "", extra = {}) => { const f = [id, p, cat, extra.juego || "Pokémon", "", stock, 0, sug, venta, "", "", "", extra.pub || "", "", extra.et || "", extra.llega ? new Date(extra.llega + "T12:00:00-06:00") : "", extra.peso || "", extra.estado || "", extra.oferta || ""]; return f; };
   const lista = process.env.HOJA_PRODUCTOS ? JSON.parse(fs.readFileSync(process.env.HOJA_PRODUCTOS, "utf8")) : null;
   const cat = lista ? [["Catálogo web"], [""], [""], T, ...lista.map(([id, n, c, st, sug, venta, extra]) => fc(id, n, c, st, sug, venta, extra || {}))] : [["Catálogo web"], [""], [""], T,
     fc("C001", "Eevee ex #174 (Promo)", "Carta suelta (single)", 1, 8000),
@@ -42,7 +42,7 @@ function nuevaHoja() {
     fc("C006", "Preventa X", "ETB", 5, 40000, "", { et: "Preventa" }),
     fc("C007", "One Piece Y", "ETB", 5, 40000, "", { juego: "One Piece" }),
     fc("C008", "Caja pesada", "ETB", 5, 1000, "", { peso: 1500 }),
-    ...Array.from({ length: 6 }, () => new Array(18).fill(""))];
+    ...Array.from({ length: 6 }, () => new Array(19).fill(""))];
   const comp = [[""], [""], [""], ["ID"]];
   (lista ? lista.map(([id, n, , st]) => [id, n, st]) : [["C001", "Eevee ex #174 (Promo)", 1], ["C002", "ETB 30th Celebration", 2], ["C003", "ETB 30th Celebration", 3], ["C004", "Oculta", 3], ["C005", "Sin stock", 0], ["C006", "Preventa X", 5], ["C007", "One Piece Y", 5], ["C008", "Caja pesada", 5]]).forEach(([id, n, st]) => {
     const f = new Array(22).fill(""); f[0] = id; f[2] = n; f[15] = st; f[21] = `${id} · ${n}`; comp.push(f); });

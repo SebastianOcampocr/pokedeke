@@ -54,7 +54,7 @@ const DESCRIPCIONES = {
   "Colección premium / UPC": "Colección especial para quien quiere la pieza grande.",
 };
 
-const COLUMNAS_DE_NUMEROS = ["En stock", "Vendidas", "Precio sugerido (₡)", "Precio de venta (₡)"];
+const COLUMNAS_DE_NUMEROS = ["En stock", "Vendidas", "Precio sugerido (₡)", "Precio de venta (₡)", "Precio de oferta (₡)"];
 
 // "Preventa" y "Pedido especial" ya no se usan: lo que las tenga sale como Por consultar.
 const ETIQUETAS = ["Nuevo", "Oferta"];
@@ -391,6 +391,10 @@ export function armarCatalogo(textoCsv, fotos) {
       return [];
     }
 
+    // Precio de oferta: menor que el normal, se vende a ese y la página tacha el normal.
+    // Debe decidir igual que productosPorSlug en apps-script/Pedidos.gs.
+    const oferta = recientes.map((lote) => aMonto(lote["Precio de oferta (₡)"])).find(Boolean) || 0;
+
     const categoria = ultimo("Categoría") || "Otro";
     const carta = CARTAS.includes(categoria) ? datosDeCarta(grupo.nombre) : undefined;
     const etiqueta = ETIQUETAS.find((opcion) => opcion === ultimo("Etiqueta"));
@@ -429,7 +433,8 @@ export function armarCatalogo(textoCsv, fotos) {
         categoria,
         categoriaCorta: CORTAS[categoria] ?? categoria,
         idioma: ultimo("Idioma"),
-        precio: especial ? grupo.precioEspecial : precio,
+        precio: especial ? grupo.precioEspecial : oferta > 0 && oferta < precio ? oferta : precio,
+        ...(!especial && oferta > 0 && oferta < precio ? { precioAntes: precio } : {}),
         // Lo que se puede comprar hoy: 0 si está en camino, por consultar o agotado. En un
         // pedido especial, los cupos para importar.
         stock: especial ? grupo.cupos : grupo.stock,

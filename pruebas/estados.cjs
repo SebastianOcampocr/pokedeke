@@ -20,6 +20,8 @@ const PRODUCTOS = [
   ["C008", "Dos lotes", "ETB", 2, 20000],
   ["C009", "Dos lotes", "ETB", 3, 20000, "", { estado: "en camino" }],
   ["C010", "Sin unidades", "ETB", 0, 10000, "", { estado: "Disponible" }],
+  ["C011", "Caja en oferta", "ETB", 2, 50000, 55000, { oferta: 49500 }],
+  ["C012", "Oferta al reves", "ETB", 2, 50000, 55000, { oferta: 60000 }],
 ];
 const archivo = path.join(fs.mkdtempSync(path.join(os.tmpdir(), "estados-")), "productos.json");
 fs.writeFileSync(archivo, JSON.stringify(PRODUCTOS));
@@ -64,6 +66,15 @@ prueba("no se puede pedir lo que está en camino ni lo que es por consultar", ()
   assert.match(proveedor.error, /por consultar/);
   assert.strictEqual(pedido([{ slug: "etiqueta-vieja", cantidad: 1 }]).ok, false);
   assert.strictEqual(m.hojas["Pedidos web"].getLastRow(), 4, "no quedó ningún pedido");
+});
+prueba("con precio de oferta se cobra ese y la página tacha el normal", () => {
+  const p = stock();
+  assert.deepStrictEqual([p["caja-en-oferta"].precio, p["caja-en-oferta"].precioAntes], [49500, 55000]);
+  assert.deepStrictEqual([p["oferta-al-reves"].precio, p["oferta-al-reves"].precioAntes], [55000, undefined], "una oferta mayor que el precio no cuenta");
+  assert.strictEqual(p["carta-lista"].precioAntes, undefined);
+  const r = pedido([{ slug: "caja-en-oferta", cantidad: 1 }]);
+  assert.strictEqual(r.ok, true, JSON.stringify(r));
+  assert.strictEqual(r.total, 49500);
 });
 prueba("el precio y el total los pone la hoja, no la página", () => {
   const r = pedido([{ slug: "carta-lista", cantidad: 1, precio: 1 }], { total: 1, intento: "abc-123" });
@@ -146,8 +157,8 @@ prueba("la pestaña Sistema cuenta por estado y junta las alertas", () => {
   const alertas = m.ctx.actualizarSistema();
   const datos = filas(m.hojas.Sistema, 3);
   const valor = (que) => datos.find((f) => f[0] === que)[1];
-  // Disponible: Dos lotes. Carta lista se quedó sin unidades libres, pero sigue siendo Disponible en la hoja.
-  assert.strictEqual(valor("Productos disponibles"), 2);
+  // Disponible: Dos lotes y las dos cajas de oferta. Carta lista se quedó sin unidades libres, pero sigue siendo Disponible en la hoja.
+  assert.strictEqual(valor("Productos disponibles"), 4);
   assert.strictEqual(valor("Productos en camino"), 1);
   assert.strictEqual(valor("Productos por consultar"), 2);
   assert.strictEqual(valor("Productos agotados"), 3);
@@ -155,11 +166,11 @@ prueba("la pestaña Sistema cuenta por estado y junta las alertas", () => {
   assert.strictEqual(valor("Alertas"), alertas);
   const textos = datos.filter((f) => f[0] === "Alerta").map((f) => f[1]).join("\n");
   assert.match(textos, /Fila 11 de Catálogo web: el estado "dispnible" no se entiende/);
-  assert.match(textos, /La página muestra 3 productos y la hoja tiene 8/);
+  assert.match(textos, /La página muestra 3 productos y la hoja tiene 10/);
   assert.deepStrictEqual(m.hojas.Sistema.formulas, []);
   // Con la página al día, esa alerta se va.
   m.ctx.CacheService.getScriptCache().remove("pagina-armada");
-  m.ctx.pagina.datos = { fecha: "2026-11-09T15:00:00.000Z", productos: 8 };
+  m.ctx.pagina.datos = { fecha: "2026-11-09T15:00:00.000Z", productos: 10 };
   m.ctx.actualizarSistema();
   assert.doesNotMatch(filas(m.hojas.Sistema, 3).map((f) => f[1]).join("\n"), /La página muestra/);
 });

@@ -24,6 +24,32 @@ test("la página arma el catálogo con lo que entrega la hoja", () => {
   assert.equal(etb.id, "C002");
 });
 
+test("con precio de oferta la página arma lo mismo que cobra la hoja", () => {
+  const fs = require("node:fs"), os = require("node:os"), path = require("node:path");
+  const archivo = path.join(fs.mkdtempSync(path.join(os.tmpdir(), "oferta-")), "productos.json");
+  fs.writeFileSync(archivo, JSON.stringify([
+    ["C001", "Caja en oferta", "ETB", 2, 50000, 55000, { oferta: 49500 }],
+    ["C002", "Oferta al reves", "ETB", 2, 50000, 55000, { oferta: 60000 }],
+    ["C003", "Sin oferta", "ETB", 2, 50000, 55000],
+  ]));
+  process.env.HOJA_PRODUCTOS = archivo;
+  try {
+    const m = nuevaHoja();
+    const { productos } = armarCatalogo(m.get({ accion: "catalogo" }).t, SIN_FOTOS);
+    const vivo = JSON.parse(m.get({ accion: "stock" }).t).productos;
+    for (const p of productos) {
+      assert.equal(p.precio, vivo[p.slug].precio, p.slug);
+      assert.equal(p.precioAntes, vivo[p.slug].precioAntes, p.slug);
+    }
+    const oferta = productos.find((p) => p.slug === "caja-en-oferta");
+    assert.deepEqual([oferta.precio, oferta.precioAntes], [49500, 55000]);
+    assert.equal(productos.find((p) => p.slug === "oferta-al-reves").precioAntes, undefined);
+    assert.equal(productos.find((p) => p.slug === "sin-oferta").precioAntes, undefined);
+  } finally {
+    delete process.env.HOJA_PRODUCTOS;
+  }
+});
+
 test("la página y la hoja deciden igual el estado y las unidades de cada producto", () => {
   const hoja = nuevaHoja();
   const cat = hoja.hojas["Catálogo web"];
