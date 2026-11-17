@@ -11,7 +11,7 @@ import { IconoChat } from "./Iconos";
 
 /**
  * Pokedeke Busca: "¿Buscás algo que no está aquí?". Anota la solicitud en la
- * hoja (sin nombre ni contacto) y abre WhatsApp con el mensaje listo. Nunca
+ * hoja con el WhatsApp de la persona y abre WhatsApp con el mensaje listo. Nunca
  * promete que se consigue: la tienda revisa y confirma disponibilidad y precio
  * antes de cobrar.
  */
@@ -35,6 +35,7 @@ export function Busca({
   const [cantidad, setCantidad] = useState(1);
   const [detalle, setDetalle] = useState("");
   const [presupuesto, setPresupuesto] = useState("");
+  const [whatsapp, setWhatsapp] = useState("");
   const [conDetalle, setConDetalle] = useState(false);
   const [enviado, setEnviado] = useState(false);
 
@@ -72,6 +73,7 @@ export function Busca({
           cantidad,
           detalle: detalle.trim(),
           presupuesto: presupuesto.trim(),
+          whatsapp: whatsapp.trim(),
           origen,
           // Si cambiaron lo que buscan, ya no es ese producto.
           ...(slug && producto.trim() === productoInicial.trim() ? { slug } : {}),
@@ -136,6 +138,29 @@ export function Busca({
             ))}
           </select>
         </div>
+      </div>
+      <div>
+        <label className="rotulo-campo" htmlFor={id + "-whatsapp"}>
+          Tu WhatsApp
+        </label>
+        <input
+          id={id + "-whatsapp"}
+          className="campo"
+          type="tel"
+          autoComplete="tel"
+          inputMode="tel"
+          required
+          // 8888-1234, 88881234 o +506 8888 1234.
+          pattern="(\+?506[\s\-]?)?[0-9]{4}[\s\-]?[0-9]{4}"
+          title="Tu número de WhatsApp, de 8 dígitos"
+          maxLength={20}
+          placeholder="Ej.: 8888-1234"
+          value={whatsapp}
+          onChange={(evento) => setWhatsapp(evento.target.value)}
+        />
+        <p className="mt-1 text-sm text-gris">
+          Lo usamos solo para escribirte sobre esta búsqueda.
+        </p>
       </div>
       {conDetalle ? (
         <div className="flex flex-col gap-3 sm:flex-row">

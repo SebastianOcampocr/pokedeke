@@ -165,7 +165,7 @@ const HOJAS = {
 };
 
 // Sube con cada cambio: la página y las pruebas leen esta marca con un GET.
-const VERSION = "2026-11-16-precio-oferta";
+const VERSION = "2026-11-16-busca-whatsapp";
 const ENTREGADO = "Entregado";
 const PEDIDO_ESPECIAL = "Pedido especial";
 // Estados del inventario. Los escribe la tienda en la columna "Estado en la página"
@@ -1597,10 +1597,10 @@ function pestanaCon(nombre, ayuda, columnas) {
 /* ---------- Pokedeke Busca ---------- */
 
 // Columnas de "Solicitudes", contando desde 1.
-const COL_SOLICITUD = { fecha: 1, producto: 2, cantidad: 3, detalle: 4, presupuesto: 5, origen: 6, estado: 7, notas: 8, slug: 9 };
-const TITULOS_SOLICITUD = ["Fecha", "Qué busca", "Cantidad", "Enlace o detalle", "Presupuesto", "De dónde llegó", "Estado", "Notas", "Producto del catálogo"];
+const COL_SOLICITUD = { fecha: 1, producto: 2, cantidad: 3, detalle: 4, presupuesto: 5, origen: 6, estado: 7, notas: 8, slug: 9, whatsapp: 10 };
+const TITULOS_SOLICITUD = ["Fecha", "Qué busca", "Cantidad", "Enlace o detalle", "Presupuesto", "De dónde llegó", "Estado", "Notas", "Producto del catálogo", "WhatsApp"];
 const AYUDA_SOLICITUDES =
-  "Lo que la gente pide en Pokedeke Busca. La conversación sigue por WhatsApp; aquí queda qué se pidió. Cambiá el Estado a mano: Nueva, Revisando, Cotizada y al final Conseguida, No disponible o Cerrada. Nada se compra solo: cada solicitud la revisa una persona.";
+  "Lo que la gente pide en Pokedeke Busca, con su WhatsApp para escribirle si no escribió. Aquí queda qué se pidió. Cambiá el Estado a mano: Nueva, Revisando, Cotizada y al final Conseguida, No disponible o Cerrada. Nada se compra solo: cada solicitud la revisa una persona.";
 // En orden: así se ve en el menú de la columna Estado.
 const ESTADOS_SOLICITUD = ["Nueva", "Revisando", "Cotizada", "Conseguida", "No disponible", "Cerrada"];
 const SOLICITUD_NUEVA = "Nueva";
@@ -1616,17 +1616,19 @@ const ORIGENES = {
   eeuu: "Catálogo de Estados Unidos",
 };
 
-/** La columna del producto llegó después: si la pestaña no la tiene, se la pone. */
+/** Las columnas del producto y del WhatsApp llegaron después: si la pestaña no las tiene, se las pone. */
 function prepararColumnaSolicitud(pestana) {
-  if (pestana.getMaxColumns() < COL_SOLICITUD.slug) pestana.insertColumnAfter(COL_SOLICITUD.slug - 1);
-  const titulo = pestana.getRange(PRIMERA_FILA - 1, COL_SOLICITUD.slug);
-  if (!titulo.getValue()) titulo.setValue(TITULOS_SOLICITUD[COL_SOLICITUD.slug - 1]);
+  [COL_SOLICITUD.slug, COL_SOLICITUD.whatsapp].forEach((columna) => {
+    if (pestana.getMaxColumns() < columna) pestana.insertColumnAfter(pestana.getMaxColumns());
+    const titulo = pestana.getRange(PRIMERA_FILA - 1, columna);
+    if (!titulo.getValue()) titulo.setValue(TITULOS_SOLICITUD[columna - 1]);
+  });
 }
 
 /**
  * "¿Buscás algo que no está aquí?": queda anotado aunque la persona no llegue a
- * mandar el WhatsApp. No lleva nombre ni contacto: la conversación sigue por
- * WhatsApp y aquí queda qué se está pidiendo. Nunca promete nada: la tienda
+ * mandar el WhatsApp, con su número para que la tienda le escriba. Un número mal
+ * escrito no tumba la solicitud: queda sin número. Nunca promete nada: la tienda
  * revisa y confirma disponibilidad y precio.
  */
 function guardarSolicitud(datos) {
@@ -1648,6 +1650,7 @@ function guardarSolicitud(datos) {
     SOLICITUD_NUEVA,
     "",
     slug && nombresDeProductos()[slug] ? slug : "",
+    comoTexto(normalizarWhatsapp(datos.whatsapp)),
   ]);
   return { ok: true };
 }
@@ -1664,7 +1667,7 @@ function avisarSolicitudesNuevas() {
   // Si borraron filas, se empieza a contar desde donde quedó la pestaña.
   if (ultima < avisadas) return;
   const nuevas = pestana
-    .getRange(avisadas + 1, 1, ultima - avisadas, COL_SOLICITUD.notas)
+    .getRange(avisadas + 1, 1, ultima - avisadas, COL_SOLICITUD.whatsapp)
     .getValues()
     .filter((fila) => fila[COL_SOLICITUD.producto - 1]);
   if (nuevas.length === 0) return;
@@ -1674,6 +1677,7 @@ function avisarSolicitudesNuevas() {
       fila[COL_SOLICITUD.detalle - 1] ? "detalle: " + fila[COL_SOLICITUD.detalle - 1] : "",
       fila[COL_SOLICITUD.presupuesto - 1] ? "presupuesto: " + fila[COL_SOLICITUD.presupuesto - 1] : "",
       String(fila[COL_SOLICITUD.origen - 1]),
+      fila[COL_SOLICITUD.whatsapp - 1] ? "WhatsApp " + sinApostrofe(fila[COL_SOLICITUD.whatsapp - 1]) : "",
     ].filter(Boolean);
     return fila[COL_SOLICITUD.cantidad - 1] + " × " + fila[COL_SOLICITUD.producto - 1] + " (" + extras.join("; ") + ")";
   });
@@ -1681,7 +1685,7 @@ function avisarSolicitudesNuevas() {
     nuevas.length === 1
       ? "Hay 1 solicitud nueva en Pokedeke Busca"
       : "Hay " + nuevas.length + " solicitudes nuevas en Pokedeke Busca";
-  const cierre = "Quien la mandó sigue por WhatsApp. Si no escribió, igual queda como señal de qué anda buscando la gente.";
+  const cierre = "Si no te escribió por WhatsApp, podés escribirle al número que dejó. Igual queda como señal de qué anda buscando la gente.";
   avisar(
     titulo + " · " + CONFIG.nombreTienda,
     [titulo + ":", ""].concat(lineas).concat(["", cierre]),

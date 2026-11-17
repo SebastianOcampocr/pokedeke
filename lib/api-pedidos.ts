@@ -298,6 +298,8 @@ export function anotarSolicitud(datos: {
   origen: OrigenBusca;
   /** Si sale de la ficha de un producto: así cuenta en su demanda. */
   slug?: string;
+  /** Para que la tienda le escriba, aunque no mande el WhatsApp. */
+  whatsapp: string;
 }): Promise<void> {
   if (!TIENDA_ABIERTA || !PEDIDOS_URL) return Promise.resolve();
   // La prueba ya se viene pidiendo desde que tocaron el formulario. Si Cloudflare

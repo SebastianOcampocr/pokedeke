@@ -254,7 +254,9 @@ export default function PaginaPoliticas() {
               Para saber qué productos interesan, guardamos de forma anónima lo
               que se agrega al carrito (los productos y las cantidades, con un
               número al azar) y cuántas veces se ve cada producto, sin nombre ni
-              contacto. No usamos cookies de publicidad.
+              contacto. No usamos cookies de publicidad. Si pedís algo en
+              Pokedeke Busca, guardamos lo que buscás y tu WhatsApp, y lo
+              usamos solo para escribirte sobre esa búsqueda.
             </p>
             <p>
               Si nos dejás un comentario, lo guardamos para mejorar la tienda;

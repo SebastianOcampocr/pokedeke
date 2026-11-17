@@ -9,16 +9,23 @@ const esFecha = (valor) => Object.prototype.toString.call(valor) === "[object Da
 const filas = (hoja, columnas) => { const o = []; for (let r = 5; r <= hoja.getLastRow(); r++) o.push(Array.from({ length: columnas }, (_, i) => hoja.leer(r, i + 1))); return o; };
 
 const m = nuevaHoja();
-const solicitud = (extra = {}) => m.post({ accion: "solicitud", producto: "Booster Box Phantasmal Flames", cantidad: 2, detalle: "en inglés", presupuesto: "₡90 000", origen: "portada", ...extra });
+const solicitud = (extra = {}) => m.post({ accion: "solicitud", producto: "Booster Box Phantasmal Flames", cantidad: 2, detalle: "en inglés", presupuesto: "₡90 000", origen: "portada", whatsapp: "+506 8888 1234", ...extra });
 
 prueba("la solicitud crea la pestaña y queda anotada como Nueva", () => {
   assert.strictEqual(m.hojas.Solicitudes, undefined);
   assert.deepStrictEqual(solicitud(), { ok: true });
   const hoja = m.hojas.Solicitudes;
   assert.strictEqual(hoja.leer(4, 2), "Qué busca");
-  const [fila] = filas(hoja, 8);
+  const [fila] = filas(hoja, 10);
   assert.ok(esFecha(fila[0]));
-  assert.deepStrictEqual(fila.slice(1), ["Booster Box Phantasmal Flames", 2, "en inglés", "₡90 000", "Portada", "Nueva", ""]);
+  assert.deepStrictEqual(fila.slice(1), ["Booster Box Phantasmal Flames", 2, "en inglés", "₡90 000", "Portada", "Nueva", "", "", "8888-1234"]);
+  assert.strictEqual(hoja.leer(4, 10), "WhatsApp");
+});
+prueba("un WhatsApp mal escrito o que falta no tumba la solicitud", () => {
+  assert.strictEqual(solicitud({ producto: "Sleeves de Pikachu", whatsapp: "123" }).ok, true);
+  assert.strictEqual(filas(m.hojas.Solicitudes, 10).pop()[9], "");
+  assert.strictEqual(solicitud({ producto: "Sleeves de Pikachu", whatsapp: undefined }).ok, true);
+  assert.strictEqual(filas(m.hojas.Solicitudes, 10).pop()[9], "");
 });
 prueba("sin producto no guarda, y un origen raro queda como Otro", () => {
   assert.strictEqual(solicitud({ producto: " a " }).ok, false);
@@ -42,8 +49,8 @@ prueba("una vez por hora sale un solo correo con las solicitudes nuevas", () => 
   const nuevos = m.correos.slice(antes).filter((c) => /Pokedeke Busca/.test(c.subject));
   assert.strictEqual(nuevos.length, 1);
   assert.strictEqual(nuevos[0].to, "pokedekestore@gmail.com");
-  assert.match(nuevos[0].subject, /^Hay 3 solicitudes nuevas/);
-  assert.match(nuevos[0].body, /2 × Booster Box Phantasmal Flames \(detalle: en inglés; presupuesto: ₡90 000; Portada\)/);
+  assert.match(nuevos[0].subject, /^Hay 5 solicitudes nuevas/);
+  assert.match(nuevos[0].body, /2 × Booster Box Phantasmal Flames \(detalle: en inglés; presupuesto: ₡90 000; Portada; WhatsApp 8888-1234\)/);
   m.ctx.tareasCadaHora();
   assert.strictEqual(m.correos.slice(antes).filter((c) => /Pokedeke Busca/.test(c.subject)).length, 1, "sin nada nuevo no repite");
   solicitud({ producto: "Charizard ex 199", origen: "buscador" });
