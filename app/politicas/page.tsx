@@ -158,11 +158,11 @@ export default function PaginaPoliticas() {
               Reservas especiales de productos de alta demanda
             </h2>
             <p>
-              Nuestra regla sigue igual: no hacemos apartados, preventas con
-              adelanto ni pagos en tractos. Hacemos una excepción con algunos
-              productos que tienen muchísima demanda y llegan en muy pocas
-              unidades, como las Ultra Premium Collection 30th Celebration. En
-              esos casos aceptamos reservas, para que quien de verdad lo quiere
+              Nuestra regla sigue igual: no hacemos apartados ni pagos en
+              tractos. Hacemos una excepción con algunos productos que tienen
+              muchísima demanda y llegan en muy pocas unidades, como las Ultra
+              Premium Collection 30th Celebration. En esos casos aceptamos
+              reservas pagadas por completo, para que quien de verdad lo quiere
               pueda asegurar el suyo antes de que llegue.
             </p>
             <p>
@@ -171,13 +171,12 @@ export default function PaginaPoliticas() {
             </p>
             <ul>
               <li>
-                <strong>Para reservar pagás el 50%</strong> del precio total.
-                Con ese pago confirmamos tu reserva.
+                <strong>Toda reserva se paga al 100%</strong> del precio. Con
+                ese pago confirmamos tu reserva.
               </li>
               <li>
-                <strong>El otro 50% lo pagás cuando ya tengamos el
-                producto</strong> en nuestras manos: te avisamos por WhatsApp
-                apenas llegue y, con ese pago, coordinamos la entrega.
+                Apenas tengamos el producto en nuestras manos te avisamos por
+                WhatsApp y coordinamos la entrega.
               </li>
               <li>
                 Las reservas están <strong>sujetas a disponibilidad</strong> y a
@@ -199,18 +198,23 @@ export default function PaginaPoliticas() {
                 >
                   WhatsApp
                 </a>
-                : ahí te confirmamos el monto y cómo pagar cada parte.
+                : ahí te confirmamos el monto y cómo pagar.
               </li>
               <li>
                 <strong>Si necesitás cancelar:</strong> podés cancelar tu
-                reserva dentro de los 8 días hábiles siguientes a tu primer
-                pago y te devolvemos lo que pagaste, por el mismo medio. Pasado
-                ese plazo, la reserva ya no se puede cancelar.
+                reserva dentro de los 8 días hábiles siguientes a tu pago y te
+                devolvemos lo que pagaste, por el mismo medio. Pasado ese
+                plazo, la reserva ya no se puede cancelar.
               </li>
               <li>
                 <strong>Si no conseguimos el producto o no llega:</strong> te
                 devolvemos el 100% de lo que pagaste, por el mismo medio, sin
                 rebajos.
+              </li>
+              <li>
+                Las reservas que se hicieron con el 50% antes del 17 de
+                Noviembre de 2026 mantienen sus condiciones: el otro 50% se
+                paga cuando tengamos el producto.
               </li>
             </ul>
 
@@ -236,7 +240,8 @@ export default function PaginaPoliticas() {
               <a href="#reservas" className="underline">
                 reservas especiales
               </a>{" "}
-              funcionan distinto: se pagan en dos partes, como se explica arriba.
+              se coordinan por WhatsApp y se pagan completas al reservar, como
+              se explica arriba.
             </p>
 
             <h2 id="privacidad" className="scroll-mt-20">

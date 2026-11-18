@@ -159,13 +159,13 @@ export function PrecioYStock({ producto: guardado }: { producto: Producto }) {
       {reserva ? (
         <div className="mb-3 flex flex-col gap-2 rounded-md border-2 border-tinta bg-crema p-3 text-[15px] leading-snug">
           <p>
-            <strong>Reserva disponible con el 50%.</strong> El saldo restante
-            se cancela cuando recibamos el producto, antes de coordinar la
+            <strong>Reserva disponible pagando el 100%.</strong> Apenas
+            tengamos el producto te avisamos por WhatsApp y coordinamos la
             entrega. Sujeto a disponibilidad.
           </p>
           <p>
-            <strong>Para reservar:</strong> {colones(producto.precio / 2)} (el
-            50% de {colones(producto.precio)}).
+            <strong>Para reservar:</strong> {colones(producto.precio)}, el
+            precio completo.
             <br />
             <strong>Entrega estimada:</strong> {reserva.entrega}.
           </p>
@@ -226,7 +226,7 @@ export function AccionesProducto({ producto: guardado }: { producto: Producto })
       {reserva ? (
         <a
           href={enlaceWhatsApp(
-            `¡Hola! Quiero reservar ${producto.nombre} con el 50% (${colones(producto.precio / 2)}).`,
+            `¡Hola! Quiero reservar ${producto.nombre} (${colones(producto.precio)}).`,
           )}
           target="_blank"
           rel="noreferrer"

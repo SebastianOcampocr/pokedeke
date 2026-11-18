@@ -44,7 +44,7 @@ export const TOPE_DESTACADOS = 60000;
 /**
  * Reservas especiales: la única excepción a "no hacemos apartados". Solo los
  * productos de esta lista, con la fecha estimada del lote. La reserva se coordina
- * por WhatsApp: la página no cobra el 50% sola.
+ * por WhatsApp y se paga el 100%: la página no cobra la reserva sola.
  */
 export const RESERVAS_ESPECIALES: Record<string, { entrega: string }> = {
   "ultra-premium-collection-30th-celebration-night": {

@@ -116,7 +116,7 @@ export function muestraCantidad(producto: Pick<Producto, "slug">) {
 }
 
 /**
- * La reserva con el 50% se ofrece solo en los productos de la lista y mientras no
+ * La reserva (pagada al 100%) se ofrece solo en los productos de la lista y mientras no
  * estén en el mezzanine ni agotados (en camino o por consultar).
  */
 export function reservaDe(producto: Producto) {
