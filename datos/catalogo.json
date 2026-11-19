@@ -183,9 +183,9 @@
     "categoriaCorta": "Suelta",
     "idioma": "",
     "precio": 5500,
-    "stock": 1,
-    "estado": "Disponible",
-    "vendidos": 0,
+    "stock": 0,
+    "estado": "Agotado",
+    "vendidos": 1,
     "orden": 8,
     "fotos": [
       "/productos/greninja-break-41-30th-celebration.webp"
@@ -6732,9 +6732,9 @@
     "categoriaCorta": "Suelta",
     "idioma": "Inglés",
     "precio": 1000,
-    "stock": 1,
-    "estado": "Disponible",
-    "vendidos": 0,
+    "stock": 0,
+    "estado": "Agotado",
+    "vendidos": 1,
     "orden": 274,
     "fotos": [
       "/productos/armarouge-086-pitch-black.webp"
@@ -11363,9 +11363,9 @@
     "categoriaCorta": "Suelta",
     "idioma": "Inglés",
     "precio": 2000,
-    "stock": 1,
-    "estado": "Disponible",
-    "vendidos": 0,
+    "stock": 0,
+    "estado": "Agotado",
+    "vendidos": 1,
     "orden": 463,
     "fotos": [],
     "descripcion": "Carta de la colección Delta Reign, número 109.",
