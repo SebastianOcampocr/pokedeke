@@ -5989,9 +5989,9 @@
     "categoriaCorta": "Suelta",
     "idioma": "Inglés",
     "precio": 500,
-    "stock": 1,
-    "estado": "Disponible",
-    "vendidos": 0,
+    "stock": 0,
+    "estado": "Agotado",
+    "vendidos": 1,
     "orden": 244,
     "fotos": [
       "/productos/legendary-trench-098-099-delta-reign.webp"
@@ -7555,9 +7555,9 @@
     "categoriaCorta": "Suelta",
     "idioma": "Inglés",
     "precio": 500,
-    "stock": 1,
-    "estado": "Disponible",
-    "vendidos": 0,
+    "stock": 0,
+    "estado": "Agotado",
+    "vendidos": 1,
     "orden": 307,
     "fotos": [
       "/productos/flareon-013-prismatic-evolutions.webp"
@@ -11006,9 +11006,9 @@
     "categoriaCorta": "Suelta",
     "idioma": "Chino",
     "precio": 1400,
-    "stock": 1,
-    "estado": "Disponible",
-    "vendidos": 0,
+    "stock": 0,
+    "estado": "Agotado",
+    "vendidos": 1,
     "orden": 448,
     "fotos": [
       "/productos/drifloon-111-chinese-30th-celebration.webp"
