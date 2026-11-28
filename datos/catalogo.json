@@ -2238,9 +2238,9 @@
     "categoriaCorta": "Suelta",
     "idioma": "Inglés",
     "precio": 500,
-    "stock": 1,
-    "estado": "Disponible",
-    "vendidos": 0,
+    "stock": 0,
+    "estado": "Agotado",
+    "vendidos": 1,
     "orden": 93,
     "fotos": [
       "/productos/vespiquen-007-delta-reign.webp"
@@ -5940,9 +5940,9 @@
     "categoriaCorta": "Suelta",
     "idioma": "Inglés",
     "precio": 500,
-    "stock": 1,
-    "estado": "Disponible",
-    "vendidos": 0,
+    "stock": 0,
+    "estado": "Agotado",
+    "vendidos": 1,
     "orden": 242,
     "fotos": [
       "/productos/fletchling-086-delta-reign.webp"
@@ -11181,9 +11181,9 @@
     "categoriaCorta": "Suelta",
     "idioma": "Inglés",
     "precio": 500,
-    "stock": 1,
-    "estado": "Disponible",
-    "vendidos": 0,
+    "stock": 0,
+    "estado": "Agotado",
+    "vendidos": 1,
     "orden": 455,
     "fotos": [
       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTjQ6_uqkFQB4VwiScZ35mJyfJ13ZlS8Mg6xs9BH0BvOQ&s=10"
@@ -11341,9 +11341,9 @@
     "categoriaCorta": "Suelta",
     "idioma": "Inglés",
     "precio": 1500,
-    "stock": 1,
-    "estado": "Disponible",
-    "vendidos": 0,
+    "stock": 0,
+    "estado": "Agotado",
+    "vendidos": 1,
     "orden": 462,
     "fotos": [],
     "descripcion": "Carta de la colección Delta Reign, número 014.",
